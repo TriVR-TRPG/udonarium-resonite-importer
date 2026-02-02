@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>Udonarium Resonite Importer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Udonarium Resonite Importer</h1>
+      <p class="subtitle">UdonariumのセーブデータをResoniteにインポート</p>
+    </header>
+
+    <main>
+      <!-- Step 1: File Selection -->
+      <section class="card">
+        <h2>1. ZIPファイルを選択</h2>
+        <div class="file-select">
+          <input type="text" id="file-path" readonly placeholder="ファイルを選択してください...">
+          <button id="select-file-btn" class="btn btn-primary">参照...</button>
+        </div>
+      </section>
+
+      <!-- Step 2: Analysis Result -->
+      <section class="card" id="analysis-section" style="display: none;">
+        <h2>2. 解析結果</h2>
+        <div id="analysis-result">
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-value" id="xml-count">0</span>
+              <span class="stat-label">XMLファイル</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="image-count">0</span>
+              <span class="stat-label">画像ファイル</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="object-count">0</span>
+              <span class="stat-label">オブジェクト</span>
+            </div>
+          </div>
+          <div id="type-breakdown"></div>
+          <div id="analysis-errors" class="errors"></div>
+        </div>
+      </section>
+
+      <!-- Step 3: ResoniteLink Settings -->
+      <section class="card" id="settings-section" style="display: none;">
+        <h2>3. ResoniteLink設定</h2>
+        <div class="settings-grid">
+          <div class="setting-item">
+            <label for="host">ホスト:</label>
+            <input type="text" id="host" value="localhost">
+          </div>
+          <div class="setting-item">
+            <label for="port">ポート:</label>
+            <input type="number" id="port" value="7869" min="1" max="65535">
+          </div>
+        </div>
+        <p class="hint">Resoniteを起動し、ResoniteLinkを有効にしてください。</p>
+      </section>
+
+      <!-- Step 4: Import -->
+      <section class="card" id="import-section" style="display: none;">
+        <h2>4. インポート</h2>
+        <div id="import-controls">
+          <button id="import-btn" class="btn btn-success btn-large">Resoniteにインポート</button>
+        </div>
+        <div id="progress-area" style="display: none;">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <p id="progress-text">準備中...</p>
+        </div>
+        <div id="import-result" style="display: none;"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Udonarium Resonite Importer v1.0.0</p>
+    </footer>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

@@ -8,6 +8,7 @@
 - キャラクター、カード、地形、テーブルなど主要オブジェクトに対応
 - 画像アセットの自動インポート
 - ドライランモードで事前確認が可能
+- **GUI版**（Electron）で初心者でも簡単に使用可能
 
 ## 対応オブジェクト
 
@@ -41,7 +42,24 @@ npm run build
 
 ## 使用方法
 
-### 基本的な使い方
+### GUI版（推奨）
+
+プログラムに詳しくない方はGUI版をご利用ください。
+
+```bash
+# GUIをビルドして起動
+npm run build:gui
+npm run start:gui
+```
+
+1. 「参照...」ボタンでUdonariumのZIPファイルを選択
+2. 解析結果を確認
+3. ResoniteLinkの設定（通常はデフォルトでOK）
+4. 「Resoniteにインポート」ボタンをクリック
+
+### CLI版
+
+#### 基本的な使い方
 
 ```bash
 # Resoniteに接続してインポート
@@ -127,11 +145,40 @@ Udonarium (2D)           Resonite (3D)
 ## 開発
 
 ```bash
+# CLI版ビルド
+npm run build
+
+# GUI版ビルド
+npm run build:gui
+
+# 両方ビルド
+npm run build:all
+
 # 開発モードで実行
 npm run dev -- -i ./save.zip --dry-run
 
-# ビルド
-npm run build
+# GUI開発モード
+npm run dev:gui
+
+# Lint & Format
+npm run lint
+npm run format
+```
+
+## GUI版パッケージング
+
+```bash
+# Windows用
+npm run package:gui:win
+
+# macOS用
+npm run package:gui:mac
+
+# Linux用
+npm run package:gui:linux
+
+# 全プラットフォーム
+npm run package:gui:all
 ```
 
 ## ライセンス
