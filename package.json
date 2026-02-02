@@ -2,19 +2,31 @@
   "name": "udonarium-resonite-importer",
   "version": "1.0.0",
   "description": "Import Udonarium save data into Resonite via ResoniteLink",
-  "main": "dist/index.js",
+  "main": "dist/gui/main.js",
   "bin": {
     "udonarium-resonite-importer": "./dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.cli.json",
+    "build:gui": "tsc -p tsconfig.gui.json",
+    "build:all": "npm run build && npm run build:gui",
     "start": "node dist/index.js",
+    "start:gui": "electron .",
     "dev": "ts-node src/index.ts",
-    "lint": "eslint src/**/*.ts",
+    "dev:gui": "npm run build:gui && electron .",
+    "lint": "eslint 'src/**/*.ts'",
+    "lint:fix": "eslint 'src/**/*.ts' --fix",
+    "format": "prettier --write 'src/**/*.ts'",
+    "format:check": "prettier --check 'src/**/*.ts'",
+    "typecheck": "tsc -p tsconfig.cli.json --noEmit && tsc -p tsconfig.gui.json --noEmit",
     "package:win": "pkg . --targets node18-win-x64 --output dist/udonarium-resonite-importer.exe",
     "package:mac": "pkg . --targets node18-macos-x64 --output dist/udonarium-resonite-importer-macos",
     "package:linux": "pkg . --targets node18-linux-x64 --output dist/udonarium-resonite-importer-linux",
-    "package:all": "npm run package:win && npm run package:mac && npm run package:linux"
+    "package:all": "npm run package:win && npm run package:mac && npm run package:linux",
+    "package:gui:win": "electron-builder --win",
+    "package:gui:mac": "electron-builder --mac",
+    "package:gui:linux": "electron-builder --linux",
+    "package:gui:all": "electron-builder --win --mac --linux"
   },
   "keywords": [
     "udonarium",
@@ -38,9 +50,19 @@
     "@types/adm-zip": "^0.5.5",
     "@types/node": "^20.10.0",
     "@types/ws": "^8.5.10",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.2",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.1.1",
     "typescript": "^5.3.2",
     "ts-node": "^10.9.2",
     "pkg": "^5.8.1"
+  },
+  "optionalDependencies": {
+    "electron": "^28.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -53,5 +75,26 @@
       "node18-macos-x64",
       "node18-linux-x64"
     ]
+  },
+  "build": {
+    "appId": "com.udonarium-resonite-importer",
+    "productName": "Udonarium Resonite Importer",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "src/gui/**/*.html",
+      "src/gui/**/*.css"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   }
 }
