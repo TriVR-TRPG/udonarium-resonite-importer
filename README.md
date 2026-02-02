@@ -1,98 +1,104 @@
 # Udonarium Resonite Importer
 
-[Udonarium](https://github.com/TK11235/udonarium)のセーブデータを、[ResoniteLink](https://github.com/Yellow-Dog-Man/ResoniteLink)経由で[Resonite](https://resonite.com/)にインポートするツールです。
+A tool to import [Udonarium](https://github.com/TK11235/udonarium) save data into [Resonite](https://resonite.com/) via [ResoniteLink](https://github.com/Yellow-Dog-Man/ResoniteLink).
 
-## 特徴
+[日本語版 README](README.ja.md)
 
-- ZIPファイルを指定するだけでインポート可能
-- キャラクター、カード、地形、テーブルなど主要オブジェクトに対応
-- 画像アセットの自動インポート
-- ドライランモードで事前確認が可能
-- **GUI版**（Electron）で初心者でも簡単に使用可能
+## Features
 
-## 対応オブジェクト
+- Import with just a ZIP file
+- Supports major objects: characters, cards, terrain, tables, etc.
+- Automatic image asset import
+- Dry-run mode for preview before import
+- **GUI version** (Electron) for easy use by beginners
 
-| Udonarium | Resonite表現 |
-|-----------|-------------|
-| キャラクター (GameCharacter) | Quad + テクスチャ |
-| カード (Card) | 両面Quad |
-| カードの山 (CardStack) | グループ化されたカード |
-| 地形 (Terrain) | Cube + テクスチャ |
-| テーブル (GameTable) | Quad |
-| テキストノート (TextNote) | UIX Text |
+## Supported Objects
 
-## 必要環境
+| Udonarium | Resonite Representation |
+|-----------|-------------------------|
+| Character (GameCharacter) | Quad + Texture |
+| Card | Double-sided Quad |
+| Card Stack (CardStack) | Grouped cards |
+| Terrain | Cube + Texture |
+| Table (GameTable) | Quad |
+| Text Note (TextNote) | UIX Text |
 
-- Node.js 18以上
-- Resonite + ResoniteLinkが有効化された状態
+## Requirements
 
-## インストール
+- Node.js 18 or higher
+- Resonite with ResoniteLink enabled
+
+## Installation
 
 ```bash
-# リポジトリをクローン
+# Clone the repository
 git clone https://github.com/blhsrwznrghfzpr/udonarium-resonite-importer.git
 cd udonarium-resonite-importer
 
-# 依存関係をインストール
+# Install dependencies
 npm install
 
-# ビルド
+# Build
 npm run build
 ```
 
-## 使用方法
+## Usage
 
-### GUI版（推奨）
+### GUI Version (Recommended)
 
-プログラムに詳しくない方はGUI版をご利用ください。
+For users unfamiliar with command-line tools, we recommend the GUI version.
 
 ```bash
-# GUIをビルドして起動
+# Build and start the GUI
 npm run build:gui
 npm run start:gui
 ```
 
-1. 「参照...」ボタンでUdonariumのZIPファイルを選択
-2. 解析結果を確認
-3. ResoniteLinkの設定（通常はデフォルトでOK）
-4. 「Resoniteにインポート」ボタンをクリック
+1. Click "Browse..." to select a Udonarium ZIP file
+2. Review the analysis results
+3. Configure ResoniteLink settings (default values usually work)
+4. Click "Import to Resonite"
 
-### CLI版
+### CLI Version
 
-#### 基本的な使い方
+#### Basic Usage
 
 ```bash
-# Resoniteに接続してインポート
+# Connect to Resonite and import
 npm run start -- -i ./save.zip
 
-# ポートを指定
+# Specify port
 npm run start -- -i ./save.zip -p 7869
+
+# Specify language
+npm run start -- -i ./save.zip -l en
 ```
 
-### ドライランモード（接続せずに解析のみ）
+### Dry-run Mode (Analysis Only)
 
 ```bash
 npm run start -- -i ./save.zip --dry-run
 ```
 
-### 詳細ログ
+### Verbose Output
 
 ```bash
 npm run start -- -i ./save.zip --verbose
 ```
 
-## CLIオプション
+## CLI Options
 
-| オプション | 短縮形 | 説明 | デフォルト |
-|------------|--------|------|------------|
-| `--input` | `-i` | 入力ZIPファイルパス | (必須) |
-| `--port` | `-p` | ResoniteLinkポート | 7869 |
-| `--host` | `-h` | ResoniteLinkホスト | localhost |
-| `--scale` | `-s` | スケール係数 | 0.02 |
-| `--dry-run` | `-d` | 解析のみ（接続しない） | false |
-| `--verbose` | `-v` | 詳細ログ出力 | false |
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
+| `--input` | `-i` | Input ZIP file path | (required) |
+| `--port` | `-p` | ResoniteLink port | 7869 |
+| `--host` | `-H` | ResoniteLink host | localhost |
+| `--scale` | `-s` | Scale factor | 0.02 |
+| `--dry-run` | `-d` | Analysis only (no connection) | false |
+| `--verbose` | `-v` | Verbose output | false |
+| `--lang` | `-l` | Language (en, ja) | Auto-detect |
 
-## 実行例
+## Example Output
 
 ```
 $ npm run start -- -i session.zip -p 7869
@@ -109,55 +115,55 @@ Import completed successfully!
 Check Resonite to see the imported objects.
 ```
 
-## スタンドアロン実行ファイルの作成
+## Creating Standalone Executables
 
 ```bash
-# Windows用
+# For Windows
 npm run package:win
 
-# macOS用
+# For macOS
 npm run package:mac
 
-# Linux用
+# For Linux
 npm run package:linux
 
-# 全プラットフォーム
+# All platforms
 npm run package:all
 ```
 
-## 座標系変換
+## Coordinate System Conversion
 
-Udonariumの2D座標系からResoniteの3D座標系に変換されます：
+Converts from Udonarium's 2D coordinate system to Resonite's 3D coordinate system:
 
 ```
 Udonarium (2D)           Resonite (3D)
-  +X → 右                  +X → 右
-  +Y → 下                  +Y → 上
-                           +Z → 奥
+  +X → Right               +X → Right
+  +Y → Down                +Y → Up
+                           +Z → Forward
 ```
 
 - `resonite.x = udonarium.x * SCALE_FACTOR`
-- `resonite.y = 0`（テーブル高さ）
+- `resonite.y = 0` (table height)
 - `resonite.z = -udonarium.y * SCALE_FACTOR`
 
-デフォルトの`SCALE_FACTOR`は0.02（50px = 1m）です。
+The default `SCALE_FACTOR` is 0.02 (50px = 1m).
 
-## 開発
+## Development
 
 ```bash
-# CLI版ビルド
+# Build CLI version
 npm run build
 
-# GUI版ビルド
+# Build GUI version
 npm run build:gui
 
-# 両方ビルド
+# Build both
 npm run build:all
 
-# 開発モードで実行
+# Run in development mode
 npm run dev -- -i ./save.zip --dry-run
 
-# GUI開発モード
+# GUI development mode
 npm run dev:gui
 
 # Lint & Format
@@ -165,28 +171,28 @@ npm run lint
 npm run format
 ```
 
-## GUI版パッケージング
+## GUI Packaging
 
 ```bash
-# Windows用
+# For Windows
 npm run package:gui:win
 
-# macOS用
+# For macOS
 npm run package:gui:mac
 
-# Linux用
+# For Linux
 npm run package:gui:linux
 
-# 全プラットフォーム
+# All platforms
 npm run package:gui:all
 ```
 
-## ライセンス
+## License
 
 MIT
 
-## 関連リンク
+## Related Links
 
-- [Udonarium](https://github.com/TK11235/udonarium) - Webベースのバーチャルテーブルトップ
-- [ResoniteLink](https://github.com/Yellow-Dog-Man/ResoniteLink) - Resonite連携ツール
+- [Udonarium](https://github.com/TK11235/udonarium) - Web-based virtual tabletop
+- [ResoniteLink](https://github.com/Yellow-Dog-Man/ResoniteLink) - Resonite integration tool
 - [Resonite Wiki - Connecting to Other Applications](https://wiki.resonite.com/Connecting_Resonite_to_Other_Applications)

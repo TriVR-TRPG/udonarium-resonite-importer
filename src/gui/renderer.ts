@@ -9,12 +9,16 @@ import {
   ProgressInfo,
   ElectronAPI,
 } from './types';
+import { t, initI18n } from './i18n';
 
 declare global {
   interface Window {
     electronAPI: ElectronAPI;
   }
 }
+
+// Initialize i18n
+initI18n();
 
 // Elements
 const filePathInput = document.getElementById('file-path') as HTMLInputElement;
@@ -38,16 +42,45 @@ const importControls = document.getElementById('import-controls') as HTMLElement
 
 let currentFilePath: string | null = null;
 
-// Type name translations
-const typeNames: Record<string, string> = {
-  character: 'キャラクター',
-  card: 'カード',
-  'card-stack': 'カードの山',
-  terrain: '地形',
-  table: 'テーブル',
-  'table-mask': 'テーブルマスク',
-  'text-note': 'テキストノート',
-};
+// Apply translations to UI
+function applyTranslations(): void {
+  // Update static text elements
+  const titleEl = document.querySelector('h1');
+  if (titleEl) titleEl.textContent = t('gui.title');
+
+  const subtitleEl = document.querySelector('.subtitle');
+  if (subtitleEl) subtitleEl.textContent = t('gui.subtitle');
+
+  filePathInput.placeholder = t('gui.selectFilePlaceholder');
+  selectFileBtn.textContent = t('gui.browse');
+  importBtn.textContent = t('gui.importToResonite');
+
+  // Section headers
+  const headers = document.querySelectorAll('.card h2');
+  if (headers[0]) headers[0].textContent = `1. ${t('gui.selectFile')}`;
+  if (headers[1]) headers[1].textContent = `2. ${t('gui.analysisResult')}`;
+  if (headers[2]) headers[2].textContent = `3. ${t('gui.settings')}`;
+  if (headers[3]) headers[3].textContent = `4. ${t('gui.import')}`;
+
+  // Stat labels
+  const statLabels = document.querySelectorAll('.stat-label');
+  if (statLabels[0]) statLabels[0].textContent = t('gui.xmlFiles');
+  if (statLabels[1]) statLabels[1].textContent = t('gui.imageFiles');
+  if (statLabels[2]) statLabels[2].textContent = t('gui.objects');
+
+  // Settings labels
+  const hostLabel = document.querySelector('label[for="host"]');
+  if (hostLabel) hostLabel.textContent = t('gui.host');
+
+  const portLabel = document.querySelector('label[for="port"]');
+  if (portLabel) portLabel.textContent = t('gui.port');
+
+  const hint = document.querySelector('.hint');
+  if (hint) hint.textContent = t('gui.settingsHint');
+}
+
+// Initialize translations on load
+applyTranslations();
 
 // File selection
 selectFileBtn.addEventListener('click', () => {
@@ -71,7 +104,7 @@ async function analyzeFile(filePath: string): Promise<void> {
 
   if (!result.success) {
     analysisSection.style.display = 'block';
-    analysisErrorsEl.textContent = `エラー: ${result.error ?? 'Unknown error'}`;
+    analysisErrorsEl.textContent = `${t('gui.error')}: ${result.error ?? 'Unknown error'}`;
     return;
   }
 
@@ -85,7 +118,8 @@ async function analyzeFile(filePath: string): Promise<void> {
   for (const [type, count] of Object.entries(result.typeCounts)) {
     const badge = document.createElement('span');
     badge.className = 'type-badge';
-    badge.innerHTML = `${typeNames[type] ?? type}: <span class="count">${String(count)}</span>`;
+    const typeName = t(`objectTypes.${type}`);
+    badge.innerHTML = `${typeName}: <span class="count">${String(count)}</span>`;
     typeBreakdownEl.appendChild(badge);
   }
 
@@ -132,17 +166,17 @@ importBtn.addEventListener('click', () => {
     if (result.success) {
       importResult.className = 'success';
       importResult.innerHTML = `
-        <strong>インポート完了!</strong><br>
-        画像: ${String(result.importedImages)}/${String(result.totalImages)}<br>
-        オブジェクト: ${String(result.importedObjects)}/${String(result.totalObjects)}<br>
-        <small>Resoniteで確認してください</small>
+        <strong>${t('gui.importComplete')}</strong><br>
+        ${t('gui.images', { imported: result.importedImages, total: result.totalImages })}<br>
+        ${t('gui.objectsResult', { imported: result.importedObjects, total: result.totalObjects })}<br>
+        <small>${t('gui.checkResonite')}</small>
       `;
     } else {
       importResult.className = 'error';
       importResult.innerHTML = `
-        <strong>エラーが発生しました</strong><br>
+        <strong>${t('gui.errorOccurred')}</strong><br>
         ${result.error ?? 'Unknown error'}<br>
-        <small>Resoniteが起動しているか確認してください</small>
+        <small>${t('gui.ensureResonite')}</small>
       `;
       importControls.style.display = 'block';
       importBtn.disabled = false;

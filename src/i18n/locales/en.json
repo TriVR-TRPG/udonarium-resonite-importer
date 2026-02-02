@@ -1,0 +1,73 @@
+{
+  "app": {
+    "title": "Udonarium Resonite Importer",
+    "version": "v{version}"
+  },
+  "cli": {
+    "description": "Import Udonarium save data into Resonite via ResoniteLink",
+    "extracting": "Extracting ZIP file...",
+    "extracted": "ZIP extracted - XML: {xml}, Images: {images}",
+    "parsing": "Parsing objects...",
+    "parsed": "Parsed {count} objects",
+    "connecting": "Connecting to ResoniteLink ({host}:{port})...",
+    "connected": "Connected to ResoniteLink",
+    "importing": "Importing to Resonite...",
+    "importingImages": "Importing images... {current}/{total}",
+    "importingObjects": "Creating objects... {current}/{total}",
+    "importComplete": "Import complete - Images: {images}, Objects: {objects}",
+    "success": "Import completed successfully!",
+    "checkResonite": "Check Resonite to see the imported objects.",
+    "dryRunMode": "Dry run mode - not connecting to Resonite",
+    "summary": "Summary:",
+    "objectsToImport": "Objects to import: {count}",
+    "imagesToImport": "Images to import: {count}",
+    "error": {
+      "fileNotFound": "Error: File not found: {path}",
+      "extractFailed": "Failed to extract ZIP",
+      "connectFailed": "Failed to connect to ResoniteLink",
+      "importFailed": "Import failed",
+      "ensureResonite": "Make sure Resonite is running with ResoniteLink enabled."
+    }
+  },
+  "gui": {
+    "title": "Udonarium Resonite Importer",
+    "subtitle": "Import Udonarium save data into Resonite",
+    "selectFile": "Select ZIP File",
+    "selectFilePlaceholder": "Select a file...",
+    "browse": "Browse...",
+    "analysisResult": "Analysis Result",
+    "xmlFiles": "XML Files",
+    "imageFiles": "Image Files",
+    "objects": "Objects",
+    "settings": "ResoniteLink Settings",
+    "host": "Host:",
+    "port": "Port:",
+    "settingsHint": "Start Resonite and enable ResoniteLink.",
+    "import": "Import",
+    "importToResonite": "Import to Resonite",
+    "preparing": "Preparing...",
+    "importComplete": "Import Complete!",
+    "images": "Images: {imported}/{total}",
+    "objectsResult": "Objects: {imported}/{total}",
+    "checkResonite": "Check Resonite to see the imported objects.",
+    "error": "Error",
+    "errorOccurred": "An error occurred",
+    "ensureResonite": "Make sure Resonite is running.",
+    "extracting": "Extracting ZIP file...",
+    "parsingObjects": "Parsing objects...",
+    "connectingResonite": "Connecting to ResoniteLink...",
+    "importingData": "Importing...",
+    "importingImages": "Importing images... {current}/{total}",
+    "creatingObjects": "Creating objects... {current}/{total}",
+    "complete": "Complete"
+  },
+  "objectTypes": {
+    "character": "Character",
+    "card": "Card",
+    "card-stack": "Card Stack",
+    "terrain": "Terrain",
+    "table": "Table",
+    "table-mask": "Table Mask",
+    "text-note": "Text Note"
+  }
+}
