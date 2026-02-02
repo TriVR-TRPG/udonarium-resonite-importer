@@ -1,0 +1,57 @@
+{
+  "name": "udonarium-resonite-importer",
+  "version": "1.0.0",
+  "description": "Import Udonarium save data into Resonite via ResoniteLink",
+  "main": "dist/index.js",
+  "bin": {
+    "udonarium-resonite-importer": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "lint": "eslint src/**/*.ts",
+    "package:win": "pkg . --targets node18-win-x64 --output dist/udonarium-resonite-importer.exe",
+    "package:mac": "pkg . --targets node18-macos-x64 --output dist/udonarium-resonite-importer-macos",
+    "package:linux": "pkg . --targets node18-linux-x64 --output dist/udonarium-resonite-importer-linux",
+    "package:all": "npm run package:win && npm run package:mac && npm run package:linux"
+  },
+  "keywords": [
+    "udonarium",
+    "resonite",
+    "resonitelink",
+    "vr",
+    "tabletop",
+    "trpg"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "adm-zip": "^0.5.10",
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "fast-xml-parser": "^4.3.2",
+    "ora": "^5.4.1",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.5",
+    "@types/node": "^20.10.0",
+    "@types/ws": "^8.5.10",
+    "typescript": "^5.3.2",
+    "ts-node": "^10.9.2",
+    "pkg": "^5.8.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "pkg": {
+    "scripts": "dist/**/*.js",
+    "assets": [],
+    "targets": [
+      "node18-win-x64",
+      "node18-macos-x64",
+      "node18-linux-x64"
+    ]
+  }
+}
