@@ -26,7 +26,8 @@
     "package:gui:win": "electron-builder --win",
     "package:gui:mac": "electron-builder --mac",
     "package:gui:linux": "electron-builder --linux",
-    "package:gui:all": "electron-builder --win --mac --linux"
+    "package:gui:all": "electron-builder --win --mac --linux",
+    "prepare": "husky"
   },
   "keywords": [
     "udonarium",
@@ -56,10 +57,12 @@
     "electron-builder": "^24.9.1",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "pkg": "^5.8.1",
     "prettier": "^3.1.1",
-    "typescript": "^5.3.2",
     "ts-node": "^10.9.2",
-    "pkg": "^5.8.1"
+    "typescript": "^5.3.2"
   },
   "optionalDependencies": {
     "electron": "^28.0.0"
@@ -96,5 +99,14 @@
     "linux": {
       "target": "AppImage"
     }
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "volta": {
+    "node": "20.18.2"
   }
 }

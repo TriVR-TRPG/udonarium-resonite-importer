@@ -2,11 +2,7 @@
  * Parser for Udonarium GameCharacter objects
  */
 
-import {
-  GameCharacter,
-  ImageRef,
-  NumberResource,
-} from '../../converter/UdonariumObject';
+import { GameCharacter, ImageRef, NumberResource } from '../../converter/UdonariumObject';
 import { findDataByName, getTextValue, getNumberValue } from './ParserUtils';
 
 export function parseCharacter(data: unknown, fileName: string): GameCharacter {
@@ -15,9 +11,7 @@ export function parseCharacter(data: unknown, fileName: string): GameCharacter {
 
   // Parse image
   const imageData = findDataByName(characterData, 'image');
-  const imageIdentifier = getTextValue(
-    findDataByName(imageData, 'imageIdentifier')
-  );
+  const imageIdentifier = getTextValue(findDataByName(imageData, 'imageIdentifier'));
 
   const images: ImageRef[] = [];
   if (imageIdentifier) {
@@ -55,10 +49,7 @@ export function parseCharacter(data: unknown, fileName: string): GameCharacter {
   };
 }
 
-function parseResourcesFromDetail(
-  detailData: unknown,
-  resources: NumberResource[]
-): void {
+function parseResourcesFromDetail(detailData: unknown, resources: NumberResource[]): void {
   if (!detailData || typeof detailData !== 'object') return;
 
   const dataArray = (detailData as Record<string, unknown>).data;
@@ -70,12 +61,10 @@ function parseResourcesFromDetail(
       typeof item === 'object' &&
       (item as Record<string, unknown>)['@_type'] === 'numberResource'
     ) {
-      const name =
-        ((item as Record<string, unknown>)['@_name'] as string) || '';
+      const name = ((item as Record<string, unknown>)['@_name'] as string) || '';
       const maxValue = getNumberValue((item as Record<string, unknown>)['#text']) || 0;
       const currentValue =
-        getNumberValue((item as Record<string, unknown>)['@_currentValue']) ||
-        maxValue;
+        getNumberValue((item as Record<string, unknown>)['@_currentValue']) || maxValue;
 
       resources.push({ name, currentValue, maxValue });
     }

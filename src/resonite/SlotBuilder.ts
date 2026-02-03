@@ -23,10 +23,7 @@ export class SlotBuilder {
   /**
    * Build a slot from a Resonite object
    */
-  async buildSlot(
-    obj: ResoniteObject,
-    parentId?: string
-  ): Promise<SlotBuildResult> {
+  async buildSlot(obj: ResoniteObject, parentId?: string): Promise<SlotBuildResult> {
     try {
       const slotId = await this.client.addSlot({
         id: obj.id,
@@ -37,11 +34,7 @@ export class SlotBuilder {
       });
 
       // Set rotation if not zero
-      if (
-        obj.rotation.x !== 0 ||
-        obj.rotation.y !== 0 ||
-        obj.rotation.z !== 0
-      ) {
+      if (obj.rotation.x !== 0 || obj.rotation.y !== 0 || obj.rotation.z !== 0) {
         await this.client.updateSlot({
           id: slotId,
           rotation: obj.rotation,

@@ -11,9 +11,7 @@ export function parseTable(data: unknown, fileName: string): GameTable {
 
   // Parse image
   const imageData = findDataByName(tableData, 'image');
-  const imageIdentifier = getTextValue(
-    findDataByName(imageData, 'imageIdentifier')
-  );
+  const imageIdentifier = getTextValue(findDataByName(imageData, 'imageIdentifier'));
 
   const images: ImageRef[] = [];
   if (imageIdentifier) {
@@ -28,10 +26,8 @@ export function parseTable(data: unknown, fileName: string): GameTable {
   const name = getTextValue(findDataByName(commonData, 'name')) || fileName;
   const width = getNumberValue(findDataByName(commonData, 'width')) || 20;
   const height = getNumberValue(findDataByName(commonData, 'height')) || 20;
-  const gridType =
-    getTextValue(findDataByName(commonData, 'gridType')) || 'SQUARE';
-  const gridColor =
-    getTextValue(findDataByName(commonData, 'gridColor')) || '#000000';
+  const gridType = getTextValue(findDataByName(commonData, 'gridType')) || 'SQUARE';
+  const gridColor = getTextValue(findDataByName(commonData, 'gridColor')) || '#000000';
 
   return {
     id: (root['@_identifier'] as string) || fileName,

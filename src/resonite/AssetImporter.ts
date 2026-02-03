@@ -34,10 +34,7 @@ export class AssetImporter {
     }
 
     try {
-      const textureId = await this.client.importTextureFromData(
-        file.data,
-        file.name
-      );
+      const textureId = await this.client.importTextureFromData(file.data, file.name);
 
       this.importedTextures.set(file.name, textureId);
 

@@ -53,7 +53,5 @@ export function getImageByIdentifier(
   imageFiles: ExtractedFile[],
   identifier: string
 ): ExtractedFile | undefined {
-  return imageFiles.find(
-    (img) => img.name === identifier || img.path.includes(identifier)
-  );
+  return imageFiles.find((img) => img.name === identifier || img.path.includes(identifier));
 }

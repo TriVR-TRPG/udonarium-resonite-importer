@@ -31,6 +31,8 @@ export interface ParseError {
   message: string;
 }
 
+type ParsedXml = Record<string, unknown>;
+
 /**
  * Parse XML content and extract Udonarium objects
  */
@@ -41,10 +43,10 @@ export function parseXml(xmlContent: string, fileName: string): ParseResult {
   };
 
   try {
-    const parsed = parser.parse(xmlContent);
+    const parsed: ParsedXml = parser.parse(xmlContent) as ParsedXml;
 
     for (const tag of SUPPORTED_TAGS) {
-      if (parsed[tag]) {
+      if (tag in parsed && parsed[tag] !== undefined) {
         const obj = parseObjectByType(tag, parsed[tag], fileName);
         if (obj) {
           result.objects.push(obj);
@@ -96,9 +98,7 @@ function parseObjectByType(
 /**
  * Parse multiple XML files
  */
-export function parseXmlFiles(
-  files: { name: string; data: Buffer }[]
-): ParseResult {
+export function parseXmlFiles(files: { name: string; data: Buffer }[]): ParseResult {
   const result: ParseResult = {
     objects: [],
     errors: [],

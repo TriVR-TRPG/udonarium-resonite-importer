@@ -13,10 +13,7 @@ type DataNode = {
 /**
  * Find data element by name attribute
  */
-export function findDataByName(
-  data: unknown,
-  name: string
-): DataNode | undefined {
+export function findDataByName(data: unknown, name: string): DataNode | undefined {
   if (!data) return undefined;
 
   // Handle array of data elements
@@ -82,9 +79,7 @@ export function getTextValue(node: DataNode | undefined): string | undefined {
 /**
  * Get number value from data node or raw value
  */
-export function getNumberValue(
-  nodeOrValue: unknown
-): number | undefined {
+export function getNumberValue(nodeOrValue: unknown): number | undefined {
   if (nodeOrValue === undefined || nodeOrValue === null) return undefined;
 
   // Direct number
@@ -113,9 +108,7 @@ export function getNumberValue(
 /**
  * Get boolean value from data node or raw value
  */
-export function getBooleanValue(
-  nodeOrValue: unknown
-): boolean | undefined {
+export function getBooleanValue(nodeOrValue: unknown): boolean | undefined {
   if (nodeOrValue === undefined || nodeOrValue === null) return undefined;
 
   // Direct boolean

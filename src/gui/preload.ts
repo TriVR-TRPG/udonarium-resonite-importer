@@ -4,13 +4,7 @@
  */
 
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import {
-  AnalyzeResult,
-  ImportOptions,
-  ImportResult,
-  ProgressInfo,
-  ElectronAPI,
-} from './types';
+import { AnalyzeResult, ImportOptions, ImportResult, ProgressInfo, ElectronAPI } from './types';
 
 const api: ElectronAPI = {
   selectFile: () => ipcRenderer.invoke('select-file') as Promise<string | null>,

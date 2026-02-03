@@ -70,10 +70,7 @@ export class ResoniteLinkClient {
 
         if (attempt < RETRY_CONFIG.maxAttempts) {
           await this.sleep(delay);
-          delay = Math.min(
-            delay * RETRY_CONFIG.backoffMultiplier,
-            RETRY_CONFIG.maxDelay
-          );
+          delay = Math.min(delay * RETRY_CONFIG.backoffMultiplier, RETRY_CONFIG.maxDelay);
         }
       }
     }
@@ -301,12 +298,7 @@ export class ResoniteLinkClient {
 
   private getImageDimensions(data: Buffer): { width: number; height: number } {
     // PNG signature check
-    if (
-      data[0] === 0x89 &&
-      data[1] === 0x50 &&
-      data[2] === 0x4e &&
-      data[3] === 0x47
-    ) {
+    if (data[0] === 0x89 && data[1] === 0x50 && data[2] === 0x4e && data[3] === 0x47) {
       // PNG: width and height are at offset 16 and 20 (IHDR chunk)
       const width = data.readUInt32BE(16);
       const height = data.readUInt32BE(20);

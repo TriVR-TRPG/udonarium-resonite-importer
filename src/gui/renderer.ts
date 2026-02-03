@@ -2,13 +2,7 @@
  * Renderer Process Script
  */
 
-import {
-  AnalyzeResult,
-  ImportOptions,
-  ImportResult,
-  ProgressInfo,
-  ElectronAPI,
-} from './types';
+import { AnalyzeResult, ImportOptions, ImportResult, ProgressInfo, ElectronAPI } from './types';
 import { t, initI18n } from './i18n';
 
 declare global {

@@ -68,7 +68,7 @@ ipcMain.handle('select-file', async (): Promise<string | null> => {
   return result.filePaths[0];
 });
 
-async function handleAnalyzeZip(filePath: string): Promise<AnalyzeResult> {
+function handleAnalyzeZip(filePath: string): AnalyzeResult {
   try {
     const extractedData = extractZip(filePath);
     const parseResult = parseXmlFiles(extractedData.xmlFiles);
@@ -100,13 +100,10 @@ async function handleAnalyzeZip(filePath: string): Promise<AnalyzeResult> {
   }
 }
 
-ipcMain.handle(
-  'analyze-zip',
-  async (_event: IpcMainInvokeEvent, ...args: unknown[]): Promise<AnalyzeResult> => {
-    const filePath = args[0] as string;
-    return handleAnalyzeZip(filePath);
-  }
-);
+ipcMain.handle('analyze-zip', (_event: IpcMainInvokeEvent, ...args: unknown[]): AnalyzeResult => {
+  const filePath = args[0] as string;
+  return handleAnalyzeZip(filePath);
+});
 
 async function handleImportToResonite(options: ImportOptions): Promise<ImportResult> {
   const { filePath, host, port } = options;
