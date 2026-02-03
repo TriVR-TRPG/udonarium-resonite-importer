@@ -66,7 +66,7 @@ export function parseCardStack(data: unknown, fileName: string): CardStack {
 
   // Parse cards in stack
   const cards: Card[] = [];
-  const cardElements = (root as Record<string, unknown>).card;
+  const cardElements = root.card;
   if (Array.isArray(cardElements)) {
     for (let i = 0; i < cardElements.length; i++) {
       const card = parseCard(cardElements[i], `${fileName}_card_${i}`);
