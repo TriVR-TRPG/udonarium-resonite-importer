@@ -2,7 +2,7 @@
  * Helper for building Resonite slots from Udonarium objects
  */
 
-import { ResoniteObject, AddSlotMessage, Vector3 } from '../converter/ResoniteObject';
+import { ResoniteObject, Vector3 } from '../converter/ResoniteObject';
 import { ResoniteLinkClient } from './ResoniteLinkClient';
 
 export interface SlotBuildResult {
@@ -15,7 +15,7 @@ export class SlotBuilder {
   private client: ResoniteLinkClient;
   private rootSlotId: string;
 
-  constructor(client: ResoniteLinkClient, rootSlotId = 'root') {
+  constructor(client: ResoniteLinkClient, rootSlotId = 'Root') {
     this.client = client;
     this.rootSlotId = rootSlotId;
   }
@@ -23,7 +23,10 @@ export class SlotBuilder {
   /**
    * Build a slot from a Resonite object
    */
-  async buildSlot(obj: ResoniteObject, parentId?: string): Promise<SlotBuildResult> {
+  async buildSlot(
+    obj: ResoniteObject,
+    parentId?: string
+  ): Promise<SlotBuildResult> {
     try {
       const slotId = await this.client.addSlot({
         id: obj.id,
@@ -34,7 +37,11 @@ export class SlotBuilder {
       });
 
       // Set rotation if not zero
-      if (obj.rotation.x !== 0 || obj.rotation.y !== 0 || obj.rotation.z !== 0) {
+      if (
+        obj.rotation.x !== 0 ||
+        obj.rotation.y !== 0 ||
+        obj.rotation.z !== 0
+      ) {
         await this.client.updateSlot({
           id: slotId,
           rotation: obj.rotation,
