@@ -10,23 +10,29 @@
     "build": "npm run build:cli && npm run build:gui",
     "build:cli": "tsc -p tsconfig.cli.json",
     "build:gui": "tsc -p tsconfig.gui.json",
+
     "start": "node dist/index.js",
     "start:gui": "electron .",
+
     "dev": "ts-node src/index.ts",
     "dev:gui": "npm run build:gui && electron .",
+
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint 'src/**/*.ts' --fix",
     "format": "prettier --write 'src/**/*.ts'",
     "format:check": "prettier --check 'src/**/*.ts'",
     "typecheck": "tsc -p tsconfig.cli.json --noEmit && tsc -p tsconfig.gui.json --noEmit",
-    "package:win": "pkg . --targets node18-win-x64 --output dist/udonarium-resonite-importer.exe",
-    "package:mac": "pkg . --targets node18-macos-x64 --output dist/udonarium-resonite-importer-macos",
-    "package:linux": "pkg . --targets node18-linux-x64 --output dist/udonarium-resonite-importer-linux",
-    "package:all": "npm run package:win && npm run package:mac && npm run package:linux",
+
+    "package": "npm run package:cli && npm run package:gui",
+    "package:cli": "npm run package:cli:win && npm run package:cli:mac && npm run package:cli:linux",
+    "package:cli:win": "pkg . --targets node18-win-x64 --output dist/udonarium-resonite-importer.exe",
+    "package:cli:mac": "pkg . --targets node18-macos-x64 --output dist/udonarium-resonite-importer-macos",
+    "package:cli:linux": "pkg . --targets node18-linux-x64 --output dist/udonarium-resonite-importer-linux",
+    "package:gui": "electron-builder --win --mac --linux",
     "package:gui:win": "electron-builder --win",
     "package:gui:mac": "electron-builder --mac",
     "package:gui:linux": "electron-builder --linux",
-    "package:gui:all": "electron-builder --win --mac --linux",
+
     "prepare": "husky"
   },
   "keywords": [
