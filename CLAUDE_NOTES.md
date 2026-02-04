@@ -145,16 +145,37 @@ PR作成に必要な情報:
   - npm-run-all2の導入による並列/順次実行の明確化
   - ワイルドカードパターンによる拡張性の向上
 
-### 中優先度
+### テストの追加（検討中）
+
+#### 高優先度
+| モジュール | テスト種別 | 理由 |
+|-----------|----------|------|
+| ObjectConverter | Unit | 座標変換ロジックはバグが入りやすい |
+| ParserUtils | Unit | 全パーサーの基盤となる純粋関数 |
+| ZipExtractor | Unit + Integration | データ入力の起点 |
+| XmlParser | Unit | XMLパース失敗はデータ損失につながる |
+| ResoniteLinkClient | Unit (モック) | 接続リトライやタイムアウト処理 |
+
+#### 中優先度
+| モジュール | テスト種別 | 理由 |
+|-----------|----------|------|
+| CharacterParser | Unit | 最も複雑なオブジェクト型 |
+| CardParser | Unit | カード/カードスタックの入れ子構造 |
+| SlotBuilder | Unit (モック) | 階層構造の再帰処理 |
+| AssetImporter | Unit (モック) | キャッシュ処理 |
+
+#### 低優先度
+- TerrainParser, TableParser, TextNoteParser（シンプルな構造）
+- GUI renderer.ts（UIテストは複雑）
+
+### その他
 - エラーハンドリングの強化（接続リトライロジック等）
 - GUI版のUX改善（ドラッグ&ドロップ対応等）
-
-### 低優先度
-- テストの追加（Jest等）
 - ドキュメント改善
 
 ## 次回作業の推奨事項
 
-1. PRを作成（`gh pr create`コマンドまたはGitHub Web UI使用）
-2. CI（GitHub Actions）での動作確認
-3. レビュー後にマージ
+1. テストフレームワーク（Vitest推奨）のセットアップ
+2. 高優先度モジュールのユニットテスト作成
+3. PRを作成（`gh pr create`コマンドまたはGitHub Web UI使用）
+4. CI（GitHub Actions）での動作確認
