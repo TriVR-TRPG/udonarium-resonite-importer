@@ -5,6 +5,42 @@
 import { GameTable, TableMask, ImageRef } from '../../converter/UdonariumObject';
 import { findDataByName, getTextValue, getNumberValue } from './ParserUtils';
 
+/**
+ * Parse game-table element with attributes (used in room save data)
+ */
+export function parseGameTable(data: unknown, fileName: string): GameTable {
+  const root = data as Record<string, unknown>;
+
+  // game-table has attributes directly on the element
+  const name = (root['@_name'] as string) || fileName;
+  const width = getNumberValue(root['@_width']) || 20;
+  const height = getNumberValue(root['@_height']) || 15;
+  const gridType = (root['@_gridType'] as string) || 'SQUARE';
+  const gridColor = (root['@_gridColor'] as string) || '#000000';
+  const imageIdentifier = root['@_imageIdentifier'] as string;
+
+  const images: ImageRef[] = [];
+  if (imageIdentifier) {
+    images.push({
+      identifier: imageIdentifier,
+      name: 'surface',
+    });
+  }
+
+  return {
+    id: (root['@_identifier'] as string) || fileName,
+    type: 'table',
+    name,
+    position: { x: 0, y: 0 },
+    width,
+    height,
+    gridType,
+    gridColor,
+    images,
+    properties: new Map(),
+  };
+}
+
 export function parseTable(data: unknown, fileName: string): GameTable {
   const root = data as Record<string, unknown>;
   const tableData = findDataByName(root.data, 'table');

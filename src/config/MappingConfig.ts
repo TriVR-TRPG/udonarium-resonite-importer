@@ -43,6 +43,7 @@ export const SUPPORTED_TAGS = [
   'card-stack',
   'terrain',
   'table',
+  'game-table',
   'table-mask',
   'text-note',
 ] as const;

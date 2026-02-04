@@ -34,8 +34,9 @@ export function parseCharacter(data: unknown, fileName: string): GameCharacter {
   }
 
   // Parse position (if available)
-  const posX = getNumberValue(root['@_posX']) || 0;
-  const posY = getNumberValue(root['@_posY']) || 0;
+  // Udonarium uses location.x/location.y OR posX/posY for position
+  const posX = getNumberValue(root['@_location.x']) || getNumberValue(root['@_posX']) || 0;
+  const posY = getNumberValue(root['@_location.y']) || getNumberValue(root['@_posY']) || 0;
 
   return {
     id: (root['@_identifier'] as string) || fileName,

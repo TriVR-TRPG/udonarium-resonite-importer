@@ -3,12 +3,12 @@
  */
 
 import { XMLParser } from 'fast-xml-parser';
-import { UdonariumObject, ObjectType } from '../converter/UdonariumObject';
+import { UdonariumObject } from '../converter/UdonariumObject';
 import { SUPPORTED_TAGS } from '../config/MappingConfig';
 import { parseCharacter } from './objects/CharacterParser';
 import { parseCard, parseCardStack } from './objects/CardParser';
 import { parseTerrain } from './objects/TerrainParser';
-import { parseTable, parseTableMask } from './objects/TableParser';
+import { parseTable, parseGameTable, parseTableMask } from './objects/TableParser';
 import { parseTextNote } from './objects/TextNoteParser';
 
 const parser = new XMLParser({
@@ -34,6 +34,52 @@ export interface ParseError {
 type ParsedXml = Record<string, unknown>;
 
 /**
+ * Recursively find all supported objects in a parsed XML structure
+ */
+function findObjectsRecursively(data: unknown, fileName: string, result: ParseResult): void {
+  if (data === null || data === undefined) return;
+
+  if (typeof data !== 'object') return;
+
+  const obj = data as Record<string, unknown>;
+
+  // Check if current object has any supported tags
+  for (const tag of SUPPORTED_TAGS) {
+    if (tag in obj && obj[tag] !== undefined) {
+      const tagData = obj[tag];
+      // Handle arrays of objects (multiple elements with same tag)
+      if (Array.isArray(tagData)) {
+        for (const item of tagData) {
+          const parsed = parseObjectByType(tag, item, fileName);
+          if (parsed) {
+            result.objects.push(parsed);
+          }
+        }
+      } else {
+        const parsed = parseObjectByType(tag, tagData, fileName);
+        if (parsed) {
+          result.objects.push(parsed);
+        }
+      }
+    }
+  }
+
+  // Recursively search nested structures (room, game-table, etc.)
+  for (const key of Object.keys(obj)) {
+    const value = obj[key];
+    if (value && typeof value === 'object') {
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          findObjectsRecursively(item, fileName, result);
+        }
+      } else {
+        findObjectsRecursively(value, fileName, result);
+      }
+    }
+  }
+}
+
+/**
  * Parse XML content and extract Udonarium objects
  */
 export function parseXml(xmlContent: string, fileName: string): ParseResult {
@@ -45,14 +91,8 @@ export function parseXml(xmlContent: string, fileName: string): ParseResult {
   try {
     const parsed: ParsedXml = parser.parse(xmlContent) as ParsedXml;
 
-    for (const tag of SUPPORTED_TAGS) {
-      if (tag in parsed && parsed[tag] !== undefined) {
-        const obj = parseObjectByType(tag, parsed[tag], fileName);
-        if (obj) {
-          result.objects.push(obj);
-        }
-      }
-    }
+    // Recursively search for supported objects in the entire structure
+    findObjectsRecursively(parsed, fileName, result);
   } catch (error) {
     result.errors.push({
       file: fileName,
@@ -63,11 +103,13 @@ export function parseXml(xmlContent: string, fileName: string): ParseResult {
   return result;
 }
 
+type SupportedTag = (typeof SUPPORTED_TAGS)[number];
+
 /**
  * Parse object based on its type tag
  */
 function parseObjectByType(
-  type: ObjectType,
+  type: SupportedTag,
   data: unknown,
   fileName: string
 ): UdonariumObject | null {
@@ -83,6 +125,8 @@ function parseObjectByType(
         return parseTerrain(data, fileName);
       case 'table':
         return parseTable(data, fileName);
+      case 'game-table':
+        return parseGameTable(data, fileName);
       case 'table-mask':
         return parseTableMask(data, fileName);
       case 'text-note':
