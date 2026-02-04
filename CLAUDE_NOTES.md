@@ -35,6 +35,28 @@ e18b6ff refactor: Reorganize npm scripts for clarity
 
 ### 今回のセッションで行った作業
 
+1. **ネスト構造XMLパース対応**
+   - `XmlParser.ts`に再帰パース機能（`findObjectsRecursively`）を追加
+   - `<room>`や`<game-table>`内にネストされたオブジェクトを正しく検出
+   - `game-table`タグのサポートを追加（`parseGameTable`関数）
+   - キャラクター位置解析を修正（`location.x`/`location.y`属性対応）
+
+2. **統合テストの拡充（114テスト）**
+   - 実際のUdonariumセーブデータ（`roomdata-sample.zip`）を使用した統合テスト
+   - テスト対象:
+     - room内のキャラクター解析
+     - game-table内の地形オブジェクト解析
+     - カードスタック・単体カードの解析
+     - game-tableの解析
+     - キャラクターリソース（HP/MP）の解析
+     - キャラクター位置の解析
+
+3. **GitHub ActionsでのPRテスト自動実行**
+   - `.github/workflows/lint.yml`にテスト実行ステップを追加
+   - PR時にLint、型チェック、テストを全て実行
+
+### 過去のセッションで行った作業
+
 1. **npm scriptsの再編成**
    - `build` コマンドを `build:cli` と `build:gui` の両方を実行するように変更
    - `build:all` を削除し、`build` に統合
@@ -49,7 +71,7 @@ e18b6ff refactor: Reorganize npm scripts for clarity
    - `"typecheck": "run-p typecheck:*"` - 型チェックを並列実行
    - `"package:cli": "run-p package:cli:*"` - CLIパッケージングを並列実行
 
-4. **ユニットテストの実装（103テスト）**
+4. **ユニットテストの実装**
    - Vitestをセットアップ（vitest.config.ts）
    - 高優先度モジュールのテストを作成:
      - `ObjectConverter.test.ts` (19テスト) - 座標変換、サイズ変換、オブジェクト変換
@@ -91,7 +113,7 @@ udonarium-resonite-importer/
 │   └── resonitelink.js/         # git submodule
 ├── .github/
 │   └── workflows/
-│       └── lint.yml             # PRでのLint自動実行
+│       └── lint.yml             # PRでのLint・テスト自動実行
 └── .husky/
     └── pre-commit               # コミット時のlint-staged実行
 ```
@@ -170,10 +192,9 @@ PR作成に必要な情報:
 - エラーハンドリングの強化（接続リトライロジック等）
 - GUI版のUX改善（ドラッグ&ドロップ対応等）
 - ドキュメント改善
-- CI/CDにテスト実行を追加
 
 ## 次回作業の推奨事項
 
 1. PRを作成（`gh pr create`コマンドまたはGitHub Web UI使用）
-2. CI（GitHub Actions）でテストを実行するように設定
-3. 中優先度のテストを追加
+2. 中優先度のテストを追加（CharacterParser, CardParser等）
+3. エラーハンドリングの強化
