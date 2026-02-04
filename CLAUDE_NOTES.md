@@ -59,6 +59,13 @@ e18b6ff refactor: Reorganize npm scripts for clarity
    - `vitest.config.ts` を `vitest.config.mts` にリネーム
    - CommonJSプロジェクトでVitest 4.xを動作させるための対応
 
+5. **個別パーサーのユニットテスト追加（177テスト総計）**
+   - `CharacterParser.test.ts` (11テスト) - キャラクター解析、リソース解析、位置解析
+   - `CardParser.test.ts` (15テスト) - カード解析、カードスタック解析
+   - `TerrainParser.test.ts` (9テスト) - 地形解析、壁/床テクスチャ解析
+   - `TextNoteParser.test.ts` (10テスト) - テキストノート解析
+   - `TableParser.test.ts` (18テスト) - テーブル解析、game-table解析、マスク解析
+
 ### 過去のセッションで行った作業
 
 1. **npm scriptsの再編成**
@@ -185,12 +192,15 @@ PR作成に必要な情報:
 
 ### 追加テスト（中優先度）
 
-| モジュール | テスト種別 | 理由 |
+| モジュール | テスト種別 | 状況 |
 |-----------|----------|------|
-| CharacterParser | Unit | 最も複雑なオブジェクト型 |
-| CardParser | Unit | カード/カードスタックの入れ子構造 |
-| SlotBuilder | Unit (モック) | 階層構造の再帰処理 |
-| AssetImporter | Unit (モック) | キャッシュ処理 |
+| CharacterParser | Unit | ✅ 完了 (11テスト) |
+| CardParser | Unit | ✅ 完了 (15テスト) |
+| TerrainParser | Unit | ✅ 完了 (9テスト) |
+| TextNoteParser | Unit | ✅ 完了 (10テスト) |
+| TableParser | Unit | ✅ 完了 (18テスト) |
+| SlotBuilder | Unit (モック) | 未着手 - 階層構造の再帰処理 |
+| AssetImporter | Unit (モック) | 未着手 - キャッシュ処理 |
 
 ### その他
 - エラーハンドリングの強化（接続リトライロジック等）
