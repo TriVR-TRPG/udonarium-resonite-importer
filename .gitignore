@@ -35,3 +35,4 @@ temp/
 # Package manager lock files (keep package-lock.json)
 yarn.lock
 pnpm-lock.yaml
+test-results.json
