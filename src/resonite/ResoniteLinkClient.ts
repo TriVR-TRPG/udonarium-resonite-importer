@@ -13,7 +13,7 @@ import {
   createBool,
   createLong,
 } from '../../lib/resonitelink.js/dist';
-import { RETRY_CONFIG, DEFAULT_RESONITE_LINK } from '../config/MappingConfig';
+import { RETRY_CONFIG, getResoniteLinkHost } from '../config/MappingConfig';
 
 export interface ResoniteLinkConfig {
   host: string;
@@ -38,10 +38,10 @@ export class ResoniteLinkClient {
   private config: ResoniteLinkConfig;
   private _isConnected = false;
 
-  constructor(config: Partial<ResoniteLinkConfig> = {}) {
+  constructor(config: { host?: string; port: number }) {
     this.config = {
-      host: config.host || DEFAULT_RESONITE_LINK.host,
-      port: config.port || DEFAULT_RESONITE_LINK.port,
+      host: config.host || getResoniteLinkHost(),
+      port: config.port,
     };
     this.client = new Client({
       host: this.config.host,

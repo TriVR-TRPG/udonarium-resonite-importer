@@ -4,6 +4,10 @@
  * Import Udonarium save data into Resonite via ResoniteLink
  */
 
+import * as dotenv from 'dotenv';
+// Load .env file before other imports that may use environment variables
+dotenv.config();
+
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
@@ -16,15 +20,19 @@ import { convertObjects } from './converter/ObjectConverter';
 import { ResoniteLinkClient } from './resonite/ResoniteLinkClient';
 import { SlotBuilder } from './resonite/SlotBuilder';
 import { AssetImporter } from './resonite/AssetImporter';
-import { DEFAULT_RESONITE_LINK, SCALE_FACTOR } from './config/MappingConfig';
+import {
+  SCALE_FACTOR,
+  getResoniteLinkPort,
+  getResoniteLinkHost,
+} from './config/MappingConfig';
 import { t, setLocale, Locale } from './i18n';
 
 const VERSION = '1.0.0';
 
 interface CLIOptions {
   input: string;
-  port: number;
-  host: string;
+  port?: string;
+  host?: string;
   scale: number;
   dryRun: boolean;
   verbose: boolean;
@@ -38,8 +46,14 @@ program
   .description(t('cli.description'))
   .version(VERSION)
   .requiredOption('-i, --input <path>', 'Input ZIP file path')
-  .option('-p, --port <number>', 'ResoniteLink port', String(DEFAULT_RESONITE_LINK.port))
-  .option('-H, --host <string>', 'ResoniteLink host', DEFAULT_RESONITE_LINK.host)
+  .option(
+    '-p, --port <number>',
+    'ResoniteLink port (required, or set RESONITELINK_PORT env var)'
+  )
+  .option(
+    '-H, --host <string>',
+    'ResoniteLink host (default: localhost, or set RESONITELINK_HOST env var)'
+  )
   .option('-s, --scale <number>', 'Scale factor', String(SCALE_FACTOR))
   .option('-d, --dry-run', 'Analyze only, do not connect to Resonite', false)
   .option('-v, --verbose', 'Verbose output', false)
@@ -55,6 +69,34 @@ async function run(options: CLIOptions): Promise<void> {
   console.log(chalk.bold.cyan(`\n${t('app.title')} ${t('app.version', { version: VERSION })}`));
   console.log(chalk.cyan('='.repeat(40)));
   console.log();
+
+  // Resolve port from CLI option or environment variable
+  let port: number | undefined;
+  if (options.port) {
+    port = parseInt(options.port, 10);
+    if (isNaN(port) || port < 1 || port > 65535) {
+      console.error(chalk.red('Invalid port number. Must be between 1 and 65535.'));
+      process.exit(1);
+    }
+  } else {
+    port = getResoniteLinkPort();
+  }
+
+  // Port is required unless dry-run mode
+  if (!port && !options.dryRun) {
+    console.error(
+      chalk.red(
+        'ResoniteLink port is required.\n' +
+          'Specify via CLI: -p <port>\n' +
+          'Or set environment variable: RESONITELINK_PORT=<port>\n' +
+          'Or create a .env file with: RESONITELINK_PORT=<port>'
+      )
+    );
+    process.exit(1);
+  }
+
+  // Resolve host from CLI option or environment variable
+  const host = options.host || getResoniteLinkHost();
 
   // Validate input file
   const inputPath = path.resolve(options.input);
@@ -127,13 +169,15 @@ async function run(options: CLIOptions): Promise<void> {
   }
 
   // Step 3: Connect to ResoniteLink
+  // At this point, port is guaranteed to be defined (validated above, not dry-run)
+  const resolvedPort = port as number;
   const connectSpinner = ora(
-    `[3/4] ${t('cli.connecting', { host: options.host, port: options.port })}`
+    `[3/4] ${t('cli.connecting', { host, port: resolvedPort })}`
   ).start();
 
   const client = new ResoniteLinkClient({
-    host: options.host,
-    port: Number(options.port),
+    host,
+    port: resolvedPort,
   });
 
   try {

@@ -5,10 +5,12 @@
  * They are skipped by default and only run when RESONITE_LINK_AVAILABLE=true.
  *
  * To run integration tests:
- *   RESONITE_LINK_AVAILABLE=true npm run test -- --testNamePattern="Integration"
+ *   RESONITE_LINK_AVAILABLE=true RESONITELINK_PORT=<port> npm run test -- --testNamePattern="Integration"
  *
  * Or:
- *   npm run test:integration
+ *   RESONITELINK_PORT=<port> npm run test:integration
+ *
+ * You can also set RESONITELINK_PORT in a .env file.
  */
 
 import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
@@ -17,9 +19,14 @@ import { SlotBuilder } from './SlotBuilder';
 import { AssetImporter } from './AssetImporter';
 import { ResoniteObject } from '../converter/ResoniteObject';
 import { ExtractedFile } from '../parser/ZipExtractor';
+import { getResoniteLinkPort, getResoniteLinkHost } from '../config/MappingConfig';
 
 const SKIP_INTEGRATION = process.env.RESONITE_LINK_AVAILABLE !== 'true';
 const TEST_TIMEOUT = 30000; // 30 seconds for integration tests
+
+// Get connection settings from environment variables
+const RESONITELINK_PORT = getResoniteLinkPort();
+const RESONITELINK_HOST = getResoniteLinkHost();
 
 // Helper to create test objects
 const createTestResoniteObject = (id: string, name: string): ResoniteObject => ({
@@ -164,7 +171,14 @@ describe.skipIf(SKIP_INTEGRATION)('ResoniteLink Integration Tests', () => {
   const createdSlotIds: string[] = [];
 
   beforeAll(async () => {
-    client = new ResoniteLinkClient({ host: 'localhost', port: 7869 });
+    if (!RESONITELINK_PORT) {
+      throw new Error(
+        'RESONITELINK_PORT environment variable is required for integration tests.\n' +
+          'Set it via: RESONITELINK_PORT=<port> npm run test:integration\n' +
+          'Or add RESONITELINK_PORT=<port> to your .env file.'
+      );
+    }
+    client = new ResoniteLinkClient({ host: RESONITELINK_HOST, port: RESONITELINK_PORT });
     await client.connect();
   }, TEST_TIMEOUT);
 
@@ -435,7 +449,10 @@ describe.skipIf(SKIP_INTEGRATION)('ResoniteLink Connection Test', () => {
   it(
     'can connect and disconnect',
     async () => {
-      const client = new ResoniteLinkClient({ host: 'localhost', port: 7869 });
+      if (!RESONITELINK_PORT) {
+        throw new Error('RESONITELINK_PORT environment variable is required');
+      }
+      const client = new ResoniteLinkClient({ host: RESONITELINK_HOST, port: RESONITELINK_PORT });
 
       await client.connect();
       expect(client.isConnected()).toBe(true);

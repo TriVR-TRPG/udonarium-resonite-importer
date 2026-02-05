@@ -1,5 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { DEFAULT_RESONITE_LINK } from '../config/MappingConfig';
+
+// Default test port for unit tests
+const TEST_PORT = 12345;
 
 // Create mock client instance
 const createMockClientInstance = () => ({
@@ -61,14 +63,14 @@ describe('ResoniteLinkClient', () => {
     vi.clearAllMocks();
     mockClientInstance = createMockClientInstance();
     ClientConstructorCalls = [];
-    client = new ResoniteLinkClient();
+    client = new ResoniteLinkClient({ port: TEST_PORT });
   });
 
   describe('constructor', () => {
-    it('should use default config when no options provided', () => {
+    it('should use default host when only port is provided', () => {
       expect(ClientConstructorCalls[0]).toEqual({
-        host: DEFAULT_RESONITE_LINK.host,
-        port: DEFAULT_RESONITE_LINK.port,
+        host: 'localhost',
+        port: TEST_PORT,
       });
     });
 

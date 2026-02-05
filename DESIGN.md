@@ -92,7 +92,8 @@ save.zip
 ### 3.1 通信プロトコル
 - **プロトコル**: WebSocket
 - **データ形式**: JSON
-- **デフォルトポート**: 7869（ユーザー指定可能）
+- **ポート**: ユーザー指定必須（ワールドごとに異なるため）
+- **ポート設定方法**: CLIオプション `-p` / 環境変数 `RESONITELINK_PORT` / `.env`ファイル
 
 ### 3.2 主要APIメッセージ
 
@@ -291,32 +292,55 @@ Udonarium size = 2 → Resonite scale = (0.2, 0.2, 0.2)
 ### 6.1 基本コマンド
 
 ```bash
-# 基本使用
-udonarium-resonite-importer --input ./save.zip --port 7869
+# 基本使用（ポート指定必須）
+udonarium-resonite-importer --input ./save.zip --port 12345
 
 # 短縮オプション
-udonarium-resonite-importer -i ./save.zip -p 7869
+udonarium-resonite-importer -i ./save.zip -p 12345
+
+# 環境変数でポート指定
+RESONITELINK_PORT=12345 udonarium-resonite-importer -i ./save.zip
+
+# .envファイル使用（RESONITELINK_PORT=12345）
+udonarium-resonite-importer -i ./save.zip
 
 # オプション付き
-udonarium-resonite-importer -i ./save.zip -p 7869 --scale 0.02 --dry-run
+udonarium-resonite-importer -i ./save.zip -p 12345 --scale 0.02 --dry-run
+
+# 解析のみ（ポート不要）
+udonarium-resonite-importer -i ./save.zip --dry-run
 ```
 
-### 6.2 オプション一覧
+### 6.2 環境変数
+
+| 環境変数 | 説明 | デフォルト |
+|----------|------|------------|
+| `RESONITELINK_PORT` | ResoniteLinkポート | (必須) |
+| `RESONITELINK_HOST` | ResoniteLinkホスト | localhost |
+
+`.env`ファイルでも設定可能:
+```
+RESONITELINK_PORT=12345
+RESONITELINK_HOST=localhost
+```
+
+### 6.3 オプション一覧
 
 | オプション | 短縮 | 説明 | デフォルト |
 |------------|------|------|------------|
 | `--input` | `-i` | 入力ZIPファイルパス | (必須) |
-| `--port` | `-p` | ResoniteLinkポート | 7869 |
-| `--host` | `-h` | ResoniteLinkホスト | localhost |
+| `--port` | `-p` | ResoniteLinkポート | (必須、または環境変数) |
+| `--host` | `-H` | ResoniteLinkホスト | localhost（または環境変数） |
 | `--scale` | `-s` | スケール係数 | 0.02 |
 | `--dry-run` | `-d` | 接続せずに解析結果のみ表示 | false |
 | `--verbose` | `-v` | 詳細ログ出力 | false |
+| `--lang` | `-l` | 言語 (en, ja) | システム設定 |
 | `--help` | | ヘルプ表示 | |
 
-### 6.3 出力例
+### 6.4 出力例
 
 ```
-$ udonarium-resonite-importer -i session.zip -p 7869
+$ udonarium-resonite-importer -i session.zip -p 12345
 
 Udonarium Resonite Importer v1.0.0
 ==================================

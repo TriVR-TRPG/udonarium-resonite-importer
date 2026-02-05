@@ -27,11 +27,35 @@ export const RETRY_CONFIG = {
 };
 
 /**
- * Default ResoniteLink settings
+ * Get ResoniteLink port from environment variable
+ * Returns undefined if not set (port is required)
+ */
+export function getResoniteLinkPort(): number | undefined {
+  const portStr = process.env.RESONITELINK_PORT;
+  if (!portStr) {
+    return undefined;
+  }
+  const port = parseInt(portStr, 10);
+  if (isNaN(port) || port < 1 || port > 65535) {
+    return undefined;
+  }
+  return port;
+}
+
+/**
+ * Get ResoniteLink host from environment variable
+ * Defaults to 'localhost' if not set
+ */
+export function getResoniteLinkHost(): string {
+  return process.env.RESONITELINK_HOST || 'localhost';
+}
+
+/**
+ * Default ResoniteLink settings (for backward compatibility)
+ * Note: Port should be provided via environment variable or CLI argument
  */
 export const DEFAULT_RESONITE_LINK = {
   host: 'localhost',
-  port: 7869,
 };
 
 /**

@@ -6,17 +6,7 @@ Udonarium（Webベースのバーチャルテーブルトップ）のセーブ�
 
 ## 現在のブランチ状況
 
-- **作業ブランチ**: `claude/udonarium-resonite-importer-odZc3`
-- **ベースブランチ**: `origin/main`
-
-### origin/mainとの差分コミット
-
-```
-b145ce9 refactor: Use wildcard patterns for parallel npm scripts
-36cc7b5 refactor: Use npm-run-all2 for cleaner script definitions
-e18b6ff refactor: Reorganize npm scripts for clarity
-351a350 refactor: Reorganize build scripts for consistency
-```
+- **作業ブランチ**: `main`
 
 ## 完了した作業
 
@@ -110,6 +100,19 @@ e18b6ff refactor: Reorganize npm scripts for clarity
     - `stefanzweifel/git-auto-commit-action@v5` を使用
     - 自動修正後に検証ステップを実行
 
+14. **ResoniteLinkポート設定の必須化と環境変数対応**
+    - Resoniteはワールド起動ごとに異なるポートを使用するため、デフォルトポートを削除
+    - `dotenv`パッケージを追加し、`.env`ファイルからの設定読み込みに対応
+    - 環境変数: `RESONITELINK_PORT`（必須）、`RESONITELINK_HOST`（オプション、デフォルト: localhost）
+    - CLI: `-p`オプションまたは環境変数でポート指定必須（`--dry-run`時は不要）
+    - 変更ファイル:
+      - `src/config/MappingConfig.ts` - 環境変数読み取り関数追加
+      - `src/index.ts` - dotenv読み込み、ポート検証ロジック追加
+      - `src/resonite/ResoniteLinkClient.ts` - コンストラクタでポート必須化
+      - `src/resonite/integration.test.ts` - 環境変数からポート読み取り
+      - `DESIGN.md` - CLI仕様更新
+      - `.env.example` - 新規作成
+
 ### 過去のセッションで行った作業
 
 1. **npm scriptsの再編成**
@@ -194,6 +197,19 @@ npm run package        # CLI/GUIパッケージング（順次）
 
 - **Node.js**: 20.18.2（Voltaで固定）
 - **パッケージマネージャー**: npm
+
+### ResoniteLink接続設定
+
+ポートはワールド起動ごとに変わるため、以下のいずれかで設定:
+
+1. CLIオプション: `-p 12345`
+2. 環境変数: `RESONITELINK_PORT=12345`
+3. `.env`ファイル: `.env.example`をコピーして設定
+
+```bash
+# 統合テスト実行例
+RESONITELINK_PORT=12345 npm run test:integration
+```
 
 ## 技術的なメモ
 
