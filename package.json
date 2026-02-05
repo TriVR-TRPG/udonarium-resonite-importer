@@ -21,6 +21,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "collect:resonitelink": "ts-node scripts/collect-resonitelink-data.ts",
     "typecheck": "run-p typecheck:*",
     "typecheck:cli": "tsc -p tsconfig.cli.json --noEmit",
     "typecheck:gui": "tsc -p tsconfig.gui.json --noEmit",

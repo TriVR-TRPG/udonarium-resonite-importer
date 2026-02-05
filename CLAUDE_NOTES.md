@@ -79,6 +79,12 @@ e18b6ff refactor: Reorganize npm scripts for clarity
    - `SlotBuilder.test.ts` (20テスト) - スロット構築、子スロット再帰処理、インポートグループ作成
    - `AssetImporter.test.ts` (19テスト) - 画像インポート、キャッシュ処理、複数ファイルインポート
 
+9. **ResoniteLinkデータ収集スクリプト**
+   - `scripts/collect-resonitelink-data.ts` - 実際のResoniteLinkからレスポンスデータを収集
+   - `src/__fixtures__/resonitelink/` - 収集したデータの保存先
+   - `npm run collect:resonitelink` で実行可能
+   - ResoniteLinkのAPI変更時にモックデータを再生成するために使用
+
 ### 過去のセッションで行った作業
 
 1. **npm scriptsの再編成**
@@ -154,6 +160,7 @@ npm run format         # Prettierフォーマット
 npm run test           # ユニットテスト実行
 npm run test:watch     # テストをウォッチモードで実行
 npm run test:coverage  # カバレッジ付きテスト実行
+npm run collect:resonitelink  # ResoniteLinkからモック用データを収集
 npm run package        # CLI/GUIパッケージング（順次）
 ```
 
