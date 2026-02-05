@@ -96,6 +96,11 @@ e18b6ff refactor: Reorganize npm scripts for clarity
     - 実行方法: `npm run test:integration`（Resoniteが起動している必要あり）
     - 通常の `npm run test` ではスキップされる（CI環境で安全）
 
+11. **READMEの更新**
+    - `README.md` と `README.ja.md` にテストセクションを追加
+    - ビルドコマンド、テストコマンド、データ収集スクリプトの説明を追加
+    - プロジェクト構成セクションを追加
+
 ### 過去のセッションで行った作業
 
 1. **npm scriptsの再編成**

@@ -33,6 +33,9 @@
 git clone https://github.com/blhsrwznrghfzpr/udonarium-resonite-importer.git
 cd udonarium-resonite-importer
 
+# サブモジュールを初期化
+git submodule update --init --recursive
+
 # 依存関係をインストール
 npm install
 
@@ -117,16 +120,16 @@ Check Resonite to see the imported objects.
 
 ```bash
 # Windows用
-npm run package:win
+npm run package:cli:win
 
 # macOS用
-npm run package:mac
+npm run package:cli:mac
 
 # Linux用
-npm run package:linux
+npm run package:cli:linux
 
-# 全プラットフォーム
-npm run package:all
+# 全プラットフォーム（CLI）
+npm run package:cli
 ```
 
 ## 座標系変換
@@ -148,15 +151,17 @@ Udonarium (2D)           Resonite (3D)
 
 ## 開発
 
+### ビルドコマンド
+
 ```bash
-# CLI版ビルド
+# CLI版とGUI版を並列ビルド
 npm run build
 
-# GUI版ビルド
-npm run build:gui
+# CLI版のみビルド
+npm run build:cli
 
-# 両方ビルド
-npm run build:all
+# GUI版のみビルド
+npm run build:gui
 
 # 開発モードで実行
 npm run dev -- -i ./save.zip --dry-run
@@ -167,7 +172,56 @@ npm run dev:gui
 # Lint & Format
 npm run lint
 npm run format
+
+# 型チェック
+npm run typecheck
 ```
+
+### テスト
+
+このプロジェクトでは[Vitest](https://vitest.dev/)を使用しています。
+
+```bash
+# ユニットテスト実行
+npm run test
+
+# ウォッチモードでテスト
+npm run test:watch
+
+# カバレッジレポート付きテスト
+npm run test:coverage
+
+# 統合テスト実行（Resonite + ResoniteLinkが必要）
+npm run test:integration
+```
+
+#### テスト構成
+
+| 種別 | 説明 | テスト数 |
+|------|------|---------|
+| ユニットテスト | モックを使用した高速テスト | 216 |
+| 統合テスト | 実際のResoniteLinkに接続するテスト | 15 |
+
+統合テストは**デフォルトでスキップ**され、`RESONITE_LINK_AVAILABLE=true`が設定された場合のみ実行されます。これにより、Resoniteが不要なCI環境でも安全に動作します。
+
+#### テストカバレッジ
+
+```bash
+npm run test:coverage
+```
+
+カバレッジレポートは`coverage/`ディレクトリに生成されます。
+
+### ResoniteLinkモックデータ収集
+
+ResoniteLinkのAPIが変更された場合、テスト用のモックデータを再生成できます：
+
+```bash
+# Resonite + ResoniteLinkが有効な状態で実行
+npm run collect:resonitelink
+```
+
+実際のAPIレスポンスを収集し、`src/__fixtures__/resonitelink/`に保存します。
 
 ## GUI版パッケージング
 
@@ -182,7 +236,28 @@ npm run package:gui:mac
 npm run package:gui:linux
 
 # 全プラットフォーム
-npm run package:gui:all
+npm run package:gui
+```
+
+## プロジェクト構成
+
+```
+udonarium-resonite-importer/
+├── src/
+│   ├── index.ts                 # CLIエントリーポイント
+│   ├── config/                  # 設定
+│   ├── parser/                  # ZIP/XML解析
+│   │   └── objects/             # オブジェクト別パーサー
+│   ├── converter/               # Udonarium → Resonite変換
+│   ├── resonite/                # ResoniteLinkクライアント
+│   ├── gui/                     # Electron GUI
+│   ├── i18n/                    # 国際化
+│   └── __fixtures__/            # テストフィクスチャ
+├── scripts/                     # ユーティリティスクリプト
+├── lib/
+│   └── resonitelink.js/         # ResoniteLinkライブラリ（サブモジュール）
+└── .github/
+    └── workflows/               # CI/CDパイプライン
 ```
 
 ## ライセンス
