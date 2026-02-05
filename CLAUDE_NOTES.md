@@ -75,6 +75,41 @@ e18b6ff refactor: Reorganize npm scripts for clarity
    - `vitest-coverage-report-action` を導入
    - PR時にカバレッジサマリーがコメントとして自動投稿される
 
+8. **SlotBuilder・AssetImporterのモック付きユニットテスト（216テスト総計）**
+   - `SlotBuilder.test.ts` (20テスト) - スロット構築、子スロット再帰処理、インポートグループ作成
+   - `AssetImporter.test.ts` (19テスト) - 画像インポート、キャッシュ処理、複数ファイルインポート
+
+9. **ResoniteLinkデータ収集スクリプト**
+   - `scripts/collect-resonitelink-data.ts` - 実際のResoniteLinkからレスポンスデータを収集
+   - `src/__fixtures__/resonitelink/` - 収集したデータの保存先
+   - `npm run collect:resonitelink` で実行可能
+   - ResoniteLinkのAPI変更時にモックデータを再生成するために使用
+
+10. **ResoniteLink統合テスト（231テスト総計、うち15が統合テスト）**
+    - `src/resonite/integration.test.ts` (15テスト) - 実際のResoniteLinkに接続してテスト
+    - テスト内容:
+      - ResoniteLinkClientの接続・切断
+      - スロットの作成・更新
+      - テクスチャのインポート
+      - SlotBuilderの階層構造作成
+      - AssetImporterのキャッシュ機能
+    - 実行方法: `npm run test:integration`（Resoniteが起動している必要あり）
+    - 通常の `npm run test` ではスキップされる（CI環境で安全）
+
+11. **READMEの更新**
+    - `README.md` と `README.ja.md` にテストセクションを追加
+    - ビルドコマンド、テストコマンド、データ収集スクリプトの説明を追加
+    - プロジェクト構成セクションを追加
+
+12. **pre-commitフックの強化**
+    - lint-staged + typecheck + test を実行するように更新
+    - コミット時にlint、型チェック、テストが全て通ることを保証
+
+13. **GitHub Actions CI/CDの改善**
+    - PR時にlint/format問題を自動修正してコミット
+    - `stefanzweifel/git-auto-commit-action@v5` を使用
+    - 自動修正後に検証ステップを実行
+
 ### 過去のセッションで行った作業
 
 1. **npm scriptsの再編成**
@@ -147,9 +182,11 @@ npm run build:gui      # GUI版のみビルド
 npm run typecheck      # 型チェック（並列）
 npm run lint           # ESLintチェック
 npm run format         # Prettierフォーマット
-npm run test           # ユニットテスト実行
+npm run test           # ユニットテスト実行（統合テストはスキップ）
 npm run test:watch     # テストをウォッチモードで実行
 npm run test:coverage  # カバレッジ付きテスト実行
+npm run test:integration  # 統合テスト実行（Resonite起動必須）
+npm run collect:resonitelink  # ResoniteLinkからモック用データを収集
 npm run package        # CLI/GUIパッケージング（順次）
 ```
 
@@ -208,8 +245,8 @@ PR作成に必要な情報:
 | TerrainParser | Unit | ✅ 完了 (9テスト) |
 | TextNoteParser | Unit | ✅ 完了 (10テスト) |
 | TableParser | Unit | ✅ 完了 (18テスト) |
-| SlotBuilder | Unit (モック) | 未着手 - 階層構造の再帰処理 |
-| AssetImporter | Unit (モック) | 未着手 - キャッシュ処理 |
+| SlotBuilder | Unit (モック) | ✅ 完了 (20テスト) - 階層構造の再帰処理 |
+| AssetImporter | Unit (モック) | ✅ 完了 (19テスト) - キャッシュ処理 |
 
 ### その他
 - エラーハンドリングの強化（接続リトライロジック等）
@@ -219,5 +256,6 @@ PR作成に必要な情報:
 ## 次回作業の推奨事項
 
 1. PRを作成（`gh pr create`コマンドまたはGitHub Web UI使用）
-2. 中優先度のテストを追加（CharacterParser, CardParser等）
-3. エラーハンドリングの強化
+2. エラーハンドリングの強化
+3. GUI版のUX改善（ドラッグ&ドロップ対応等）
+4. カバレッジ向上（現在53%）

@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
 
 jobs:
@@ -19,6 +19,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Volta
         uses: volta-cli/action@v4
@@ -32,10 +34,24 @@ jobs:
           npm ci
           npm run build
 
-      - name: Run ESLint
+      - name: Run ESLint with auto-fix
+        run: npm run lint:fix
+        continue-on-error: true
+
+      - name: Run Prettier with auto-fix
+        run: npm run format
+
+      - name: Commit auto-fixed changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: Auto-fix lint and format issues"
+          commit_options: "--no-verify"
+        if: github.event_name == 'pull_request'
+
+      - name: Run ESLint (verify)
         run: npm run lint
 
-      - name: Check Prettier formatting
+      - name: Check Prettier formatting (verify)
         run: npm run format:check
 
       - name: Type check

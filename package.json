@@ -21,6 +21,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:integration": "RESONITE_LINK_AVAILABLE=true vitest run --testNamePattern='Integration'",
+    "collect:resonitelink": "ts-node scripts/collect-resonitelink-data.ts",
     "typecheck": "run-p typecheck:*",
     "typecheck:cli": "tsc -p tsconfig.cli.json --noEmit",
     "typecheck:gui": "tsc -p tsconfig.gui.json --noEmit",

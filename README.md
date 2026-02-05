@@ -25,7 +25,7 @@ A tool to import [Udonarium](https://github.com/TK11235/udonarium) save data int
 
 ## Requirements
 
-- Node.js 18 or higher
+- Node.js 18 or higher (20.18.2 recommended, managed by [Volta](https://volta.sh/))
 - Resonite with ResoniteLink enabled
 
 ## Installation
@@ -34,6 +34,9 @@ A tool to import [Udonarium](https://github.com/TK11235/udonarium) save data int
 # Clone the repository
 git clone https://github.com/blhsrwznrghfzpr/udonarium-resonite-importer.git
 cd udonarium-resonite-importer
+
+# Initialize submodules
+git submodule update --init --recursive
 
 # Install dependencies
 npm install
@@ -119,16 +122,16 @@ Check Resonite to see the imported objects.
 
 ```bash
 # For Windows
-npm run package:win
+npm run package:cli:win
 
 # For macOS
-npm run package:mac
+npm run package:cli:mac
 
 # For Linux
-npm run package:linux
+npm run package:cli:linux
 
-# All platforms
-npm run package:all
+# All platforms (CLI)
+npm run package:cli
 ```
 
 ## Coordinate System Conversion
@@ -150,15 +153,17 @@ The default `SCALE_FACTOR` is 0.02 (50px = 1m).
 
 ## Development
 
+### Build Commands
+
 ```bash
-# Build CLI version
+# Build CLI and GUI (parallel)
 npm run build
 
-# Build GUI version
-npm run build:gui
+# Build CLI version only
+npm run build:cli
 
-# Build both
-npm run build:all
+# Build GUI version only
+npm run build:gui
 
 # Run in development mode
 npm run dev -- -i ./save.zip --dry-run
@@ -169,7 +174,56 @@ npm run dev:gui
 # Lint & Format
 npm run lint
 npm run format
+
+# Type check
+npm run typecheck
 ```
+
+### Testing
+
+This project uses [Vitest](https://vitest.dev/) for testing.
+
+```bash
+# Run unit tests
+npm run test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage report
+npm run test:coverage
+
+# Run integration tests (requires Resonite with ResoniteLink)
+npm run test:integration
+```
+
+#### Test Structure
+
+| Type | Description | Count |
+|------|-------------|-------|
+| Unit Tests | Fast tests with mocked dependencies | 216 |
+| Integration Tests | Tests against live ResoniteLink | 15 |
+
+Integration tests are **skipped by default** and only run when `RESONITE_LINK_AVAILABLE=true` is set. This ensures CI pipelines work without requiring Resonite.
+
+#### Test Coverage
+
+```bash
+npm run test:coverage
+```
+
+Coverage reports are generated in the `coverage/` directory.
+
+### ResoniteLink Mock Data Collection
+
+When ResoniteLink API changes, you can regenerate mock data for tests:
+
+```bash
+# Requires Resonite with ResoniteLink enabled
+npm run collect:resonitelink
+```
+
+This collects actual API responses and saves them to `src/__fixtures__/resonitelink/` for use in mock tests.
 
 ## GUI Packaging
 
@@ -184,7 +238,28 @@ npm run package:gui:mac
 npm run package:gui:linux
 
 # All platforms
-npm run package:gui:all
+npm run package:gui
+```
+
+## Project Structure
+
+```
+udonarium-resonite-importer/
+├── src/
+│   ├── index.ts                 # CLI entry point
+│   ├── config/                  # Configuration
+│   ├── parser/                  # ZIP/XML parsing
+│   │   └── objects/             # Object-specific parsers
+│   ├── converter/               # Udonarium → Resonite conversion
+│   ├── resonite/                # ResoniteLink client
+│   ├── gui/                     # Electron GUI
+│   ├── i18n/                    # Internationalization
+│   └── __fixtures__/            # Test fixtures
+├── scripts/                     # Utility scripts
+├── lib/
+│   └── resonitelink.js/         # ResoniteLink library (submodule)
+└── .github/
+    └── workflows/               # CI/CD pipelines
 ```
 
 ## License
