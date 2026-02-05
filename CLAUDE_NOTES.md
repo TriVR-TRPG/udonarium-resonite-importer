@@ -101,6 +101,15 @@ e18b6ff refactor: Reorganize npm scripts for clarity
     - ビルドコマンド、テストコマンド、データ収集スクリプトの説明を追加
     - プロジェクト構成セクションを追加
 
+12. **pre-commitフックの強化**
+    - lint-staged + typecheck + test を実行するように更新
+    - コミット時にlint、型チェック、テストが全て通ることを保証
+
+13. **GitHub Actions CI/CDの改善**
+    - PR時にlint/format問題を自動修正してコミット
+    - `stefanzweifel/git-auto-commit-action@v5` を使用
+    - 自動修正後に検証ステップを実行
+
 ### 過去のセッションで行った作業
 
 1. **npm scriptsの再編成**
