@@ -41,10 +41,11 @@ const createTestResoniteObject = (id: string, name: string): ResoniteObject => (
 });
 
 // Helper to create a minimal PNG image
+let testImageCounter = 0;
 const createTestImage = (): ExtractedFile => {
   // Create a minimal 2x2 red PNG
   const pngData = createMinimalPNG(2, 2, [255, 0, 0, 255]);
-  const name = `test-image-${Date.now()}.png`;
+  const name = `test-image-${Date.now()}-${testImageCounter++}.png`;
   return {
     path: `images/${name}`,
     name,

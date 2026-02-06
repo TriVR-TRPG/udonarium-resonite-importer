@@ -5,6 +5,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import sharp from 'sharp';
 import { ResoniteLinkClient } from './ResoniteLinkClient';
 import { ExtractedFile } from '../parser/ZipExtractor';
 
@@ -39,7 +40,7 @@ export class AssetImporter {
     }
 
     try {
-      const tempFile = this.writeTempFile(file);
+      const tempFile = await this.writeTempFile(file);
       const textureId = await this.client.importTexture(tempFile);
 
       this.importedTextures.set(file.name, textureId);
@@ -82,6 +83,13 @@ export class AssetImporter {
   }
 
   /**
+   * Register an external URL as a texture (no file import needed)
+   */
+  registerExternalUrl(identifier: string, url: string): void {
+    this.importedTextures.set(identifier, url);
+  }
+
+  /**
    * Get texture ID for a previously imported identifier
    */
   getTextureId(identifier: string): string | undefined {
@@ -112,10 +120,21 @@ export class AssetImporter {
     return this.tempDir;
   }
 
-  private writeTempFile(file: ExtractedFile): string {
+  private async writeTempFile(file: ExtractedFile): Promise<string> {
     const dir = this.getTempDir();
-    // Use path from ZIP to preserve the original filename with extension
-    const filePath = path.join(dir, file.path.replace(/\//g, '_'));
+    const flatName = file.path.replace(/\//g, '_');
+    const ext = path.extname(flatName).toLowerCase();
+
+    if (ext === '.svg') {
+      // Convert SVG to PNG since Resonite doesn't support SVG
+      const pngName = flatName.replace(/\.svg$/i, '.png');
+      const filePath = path.join(dir, pngName);
+      const pngBuffer = await sharp(file.data).png().toBuffer();
+      fs.writeFileSync(filePath, pngBuffer);
+      return filePath;
+    }
+
+    const filePath = path.join(dir, flatName);
     fs.writeFileSync(filePath, file.data);
     return filePath;
   }

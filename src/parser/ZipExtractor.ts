@@ -38,7 +38,7 @@ export function extractZip(zipPath: string): ExtractedData {
 
     if (ext === '.xml') {
       xmlFiles.push(file);
-    } else if (['.png', '.jpg', '.jpeg', '.gif', '.webp'].includes(ext)) {
+    } else if (['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg'].includes(ext)) {
       imageFiles.push(file);
     }
   }
