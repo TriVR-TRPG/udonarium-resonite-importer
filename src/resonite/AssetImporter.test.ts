@@ -50,7 +50,9 @@ describe('AssetImporter', () => {
 
       const result = await assetImporter.importImage(file);
 
-      expect(mockClient.importTexture).toHaveBeenCalledWith(expect.stringContaining('character.png'));
+      expect(mockClient.importTexture).toHaveBeenCalledWith(
+        expect.stringContaining('character.png')
+      );
       expect(result.success).toBe(true);
       expect(result.identifier).toBe('character.png');
       expect(result.textureId).toBe('texture-id-001');
@@ -264,12 +266,14 @@ describe('AssetImporter', () => {
     });
 
     it('should return all imported textures', async () => {
-      mockClient.importTexture
-        .mockResolvedValueOnce('tex-1')
-        .mockResolvedValueOnce('tex-2');
+      mockClient.importTexture.mockResolvedValueOnce('tex-1').mockResolvedValueOnce('tex-2');
 
-      await assetImporter.importImage(createExtractedFile({ path: 'images/img1.png', name: 'img1.png' }));
-      await assetImporter.importImage(createExtractedFile({ path: 'images/img2.png', name: 'img2.png' }));
+      await assetImporter.importImage(
+        createExtractedFile({ path: 'images/img1.png', name: 'img1.png' })
+      );
+      await assetImporter.importImage(
+        createExtractedFile({ path: 'images/img2.png', name: 'img2.png' })
+      );
 
       const textures = assetImporter.getImportedTextures();
 
@@ -293,8 +297,12 @@ describe('AssetImporter', () => {
         .mockResolvedValueOnce('success-tex')
         .mockRejectedValueOnce(new Error('Failed'));
 
-      await assetImporter.importImage(createExtractedFile({ path: 'images/success.png', name: 'success.png' }));
-      await assetImporter.importImage(createExtractedFile({ path: 'images/fail.png', name: 'fail.png' }));
+      await assetImporter.importImage(
+        createExtractedFile({ path: 'images/success.png', name: 'success.png' })
+      );
+      await assetImporter.importImage(
+        createExtractedFile({ path: 'images/fail.png', name: 'fail.png' })
+      );
 
       const textures = assetImporter.getImportedTextures();
 

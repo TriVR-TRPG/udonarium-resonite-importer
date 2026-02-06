@@ -302,5 +302,4 @@ export class ResoniteLinkClient {
       w: cx * cy * cz + sx * sy * sz,
     };
   }
-
 }
