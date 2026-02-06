@@ -25,7 +25,7 @@ A tool to import [Udonarium](https://github.com/TK11235/udonarium) save data int
 
 ## Requirements
 
-- Node.js 18 or higher (20.18.2 recommended, managed by [Volta](https://volta.sh/))
+- Node.js 18 or higher (20.18.2 recommended, managed by [mise](https://mise.jdx.dev/))
 - Resonite with ResoniteLink enabled
 
 ## Installation

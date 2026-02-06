@@ -21,7 +21,7 @@ Udonarium（Webベースのバーチャルテーブルトップ）のセーブ�
 - resonitelink.js をgit submoduleとして追加
 - husky + lint-staged によるpre-commitフック
 - GitHub Actions によるPR時のLint自動実行
-- Volta によるNode.jsバージョン固定
+- mise によるNode.jsバージョン固定
 
 ### 今回のセッションで行った作業
 
@@ -140,7 +140,13 @@ Udonarium（Webベースのバーチャルテーブルトップ）のセーブ�
     - `ResoniteLinkClient`から`importTextureFromData`を削除（一時ファイル管理はAssetImporterに移動）
     - `importTexture`のレスポンスを`assetURL`ベースに修正
 
-18. **npm scriptsの`validate`/`fix`名前空間への集約**
+18. **VoltaからmiseへのNode.jsバージョン管理移行**
+    - Voltaがメンテナンス終了のため、miseに移行
+    - `package.json`の`volta`セクションを削除
+    - `.mise.toml`を作成（`node = "20.18.2"`）
+    - CIの`volta-cli/action@v4`を`jdx/mise-action@v2`に変更
+
+19. **npm scriptsの`validate`/`fix`名前空間への集約**
     - コーディングルール関連のスクリプトを統一的な名前空間に再編成
     - `validate:*` - チェック系: `validate:lint`, `validate:format`, `validate:types`, `validate:test`
     - `fix:*` - 自動修正系: `fix:lint`, `fix:format`
@@ -245,7 +251,7 @@ npm run collect:resonitelink  # ResoniteLinkからモック用データを収集
 
 ## 環境設定
 
-- **Node.js**: 20.18.2（Voltaで固定）
+- **Node.js**: 20.18.2（miseで固定、`.mise.toml`）
 - **パッケージマネージャー**: npm
 
 ### ResoniteLink接続設定

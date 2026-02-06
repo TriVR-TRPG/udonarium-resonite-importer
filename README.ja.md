@@ -23,7 +23,7 @@
 
 ## 必要環境
 
-- Node.js 18以上（20.18.2推奨、[Volta](https://volta.sh/)で管理）
+- Node.js 18以上（20.18.2推奨、[mise](https://mise.jdx.dev/)で管理）
 - Resonite + ResoniteLinkが有効化された状態
 
 ## インストール
