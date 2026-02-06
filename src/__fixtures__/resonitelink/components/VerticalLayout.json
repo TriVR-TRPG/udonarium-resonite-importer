@@ -2,7 +2,7 @@
   "componentType": "[FrooxEngine]FrooxEngine.UIX.VerticalLayout",
   "addResponse": {
     "$type": "response",
-    "sourceMessageId": "766cdb7b-f02f-4fe3-86e5-fcf121a863d1",
+    "sourceMessageId": "84660197-4524-44a8-a544-b23c58d76e53",
     "success": true,
     "errorInfo": null
   },
@@ -14,70 +14,70 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_E3"
+          "id": "Reso_2C3"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_E4"
+          "id": "Reso_2C4"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_E5"
+          "id": "Reso_2C5"
         },
         "PaddingTop": {
           "$type": "float",
           "value": 0,
-          "id": "Reso_E6"
+          "id": "Reso_2C6"
         },
         "PaddingRight": {
           "$type": "float",
           "value": 0,
-          "id": "Reso_E7"
+          "id": "Reso_2C7"
         },
         "PaddingBottom": {
           "$type": "float",
           "value": 0,
-          "id": "Reso_E8"
+          "id": "Reso_2C8"
         },
         "PaddingLeft": {
           "$type": "float",
           "value": 0,
-          "id": "Reso_E9"
+          "id": "Reso_2C9"
         },
         "Spacing": {
           "$type": "float",
           "value": 0,
-          "id": "Reso_EA"
+          "id": "Reso_2CA"
         },
         "HorizontalAlign": {
           "$type": "enum",
           "value": "Center",
           "enumType": "LayoutHorizontalAlignment",
-          "id": "Reso_EB"
+          "id": "Reso_2CB"
         },
         "VerticalAlign": {
           "$type": "enum",
           "value": "Middle",
           "enumType": "LayoutVerticalAlignment",
-          "id": "Reso_EC"
+          "id": "Reso_2CC"
         },
         "ForceExpandWidth": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_ED"
+          "id": "Reso_2CD"
         },
         "ForceExpandHeight": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_EE"
+          "id": "Reso_2CE"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_UIX_VerticalLayout_1770374938222",
+      "id": "test_[FrooxEngine]FrooxEngine_UIX_VerticalLayout_1770375260776",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "27536741-c42e-43dd-ad35-dae592b51aef",
+    "sourceMessageId": "e6b9bcf9-ef96-470e-9d3f-fc578f17a213",
     "success": true,
     "errorInfo": null
   }

@@ -2,7 +2,7 @@
   "componentType": "[FrooxEngine]FrooxEngine.UnlitMaterial",
   "addResponse": {
     "$type": "response",
-    "sourceMessageId": "124a9b64-50fc-44f9-836c-5827c5d4b7e5",
+    "sourceMessageId": "824008be-b620-4fe9-8757-c57e8f7b8849",
     "success": true,
     "errorInfo": null
   },
@@ -14,22 +14,22 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_52"
+          "id": "Reso_234"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_53"
+          "id": "Reso_235"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_54"
+          "id": "Reso_236"
         },
         "HighPriorityIntegration": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_55"
+          "id": "Reso_237"
         },
         "TintColor": {
           "$type": "colorX",
@@ -40,13 +40,13 @@
             "a": 1,
             "profile": "sRGB"
           },
-          "id": "Reso_56"
+          "id": "Reso_238"
         },
         "Texture": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
-          "id": "Reso_57"
+          "id": "Reso_239"
         },
         "TextureScale": {
           "$type": "float2",
@@ -54,7 +54,7 @@
             "x": 1,
             "y": 1
           },
-          "id": "Reso_58"
+          "id": "Reso_23A"
         },
         "TextureOffset": {
           "$type": "float2",
@@ -62,13 +62,13 @@
             "x": 0,
             "y": 0
           },
-          "id": "Reso_59"
+          "id": "Reso_23B"
         },
         "MaskTexture": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
-          "id": "Reso_5A"
+          "id": "Reso_23C"
         },
         "MaskScale": {
           "$type": "float2",
@@ -76,7 +76,7 @@
             "x": 1,
             "y": 1
           },
-          "id": "Reso_5B"
+          "id": "Reso_23D"
         },
         "MaskOffset": {
           "$type": "float2",
@@ -84,53 +84,53 @@
             "x": 0,
             "y": 0
           },
-          "id": "Reso_5C"
+          "id": "Reso_23E"
         },
         "MaskMode": {
           "$type": "enum",
           "value": "MultiplyAlpha",
           "enumType": "MaskTextureMode",
-          "id": "Reso_5D"
+          "id": "Reso_23F"
         },
         "BlendMode": {
           "$type": "enum",
           "value": "Opaque",
           "enumType": "BlendMode",
-          "id": "Reso_5E"
+          "id": "Reso_240"
         },
         "AlphaCutoff": {
           "$type": "float",
           "value": 0.5,
-          "id": "Reso_5F"
+          "id": "Reso_241"
         },
         "UseVertexColors": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_60"
+          "id": "Reso_242"
         },
         "VertexColorInterpolationSpace": {
           "$type": "enum",
           "value": "Linear",
           "enumType": "ColorProfile",
-          "id": "Reso_61"
+          "id": "Reso_243"
         },
         "Sidedness": {
           "$type": "enum",
           "value": "Auto",
           "enumType": "Sidedness",
-          "id": "Reso_62"
+          "id": "Reso_244"
         },
         "ZWrite": {
           "$type": "enum",
           "value": "Auto",
           "enumType": "ZWrite",
-          "id": "Reso_63"
+          "id": "Reso_245"
         },
         "OffsetTexture": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
-          "id": "Reso_64"
+          "id": "Reso_246"
         },
         "OffsetMagnitude": {
           "$type": "float2",
@@ -138,7 +138,7 @@
             "x": 0,
             "y": 0
           },
-          "id": "Reso_65"
+          "id": "Reso_247"
         },
         "OffsetTextureScale": {
           "$type": "float2",
@@ -146,7 +146,7 @@
             "x": 1,
             "y": 1
           },
-          "id": "Reso_66"
+          "id": "Reso_248"
         },
         "OffsetTextureOffset": {
           "$type": "float2",
@@ -154,22 +154,22 @@
             "x": 0,
             "y": 0
           },
-          "id": "Reso_67"
+          "id": "Reso_249"
         },
         "PolarUVmapping": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_68"
+          "id": "Reso_24A"
         },
         "PolarPower": {
           "$type": "float",
           "value": 1,
-          "id": "Reso_69"
+          "id": "Reso_24B"
         },
         "StereoTextureTransform": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_6A"
+          "id": "Reso_24C"
         },
         "RightEyeTextureScale": {
           "$type": "float2",
@@ -177,7 +177,7 @@
             "x": 1,
             "y": 1
           },
-          "id": "Reso_6B"
+          "id": "Reso_24D"
         },
         "RightEyeTextureOffset": {
           "$type": "float2",
@@ -185,32 +185,32 @@
             "x": 0,
             "y": 0
           },
-          "id": "Reso_6C"
+          "id": "Reso_24E"
         },
         "DecodeAsNormalMap": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_6D"
+          "id": "Reso_24F"
         },
         "UseBillboardGeometry": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_6E"
+          "id": "Reso_250"
         },
         "UsePerBillboardScale": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_6F"
+          "id": "Reso_251"
         },
         "UsePerBillboardRotation": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_70"
+          "id": "Reso_252"
         },
         "UsePerBillboardUV": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_71"
+          "id": "Reso_253"
         },
         "BillboardSize": {
           "$type": "float2",
@@ -218,40 +218,40 @@
             "x": 0.005,
             "y": 0.005
           },
-          "id": "Reso_72"
+          "id": "Reso_254"
         },
         "OffsetFactor": {
           "$type": "float",
           "value": 0,
-          "id": "Reso_73"
+          "id": "Reso_255"
         },
         "OffsetUnits": {
           "$type": "float",
           "value": 0,
-          "id": "Reso_74"
+          "id": "Reso_256"
         },
         "RenderQueue": {
           "$type": "int",
           "value": -1,
-          "id": "Reso_75"
+          "id": "Reso_257"
         },
         "_unlit": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Shader>",
-          "id": "Reso_76"
+          "id": "Reso_258"
         },
         "_unlitBillboard": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Shader>",
-          "id": "Reso_77"
+          "id": "Reso_259"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_UnlitMaterial_1770374938188",
+      "id": "test_[FrooxEngine]FrooxEngine_UnlitMaterial_1770375260740",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "06ba5a11-7d0b-4434-a5d1-7102f2dc2b23",
+    "sourceMessageId": "15dfce03-ad25-4315-8041-1307635dee5b",
     "success": true,
     "errorInfo": null
   }

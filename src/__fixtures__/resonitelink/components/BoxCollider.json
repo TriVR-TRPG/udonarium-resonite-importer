@@ -2,7 +2,7 @@
   "componentType": "[FrooxEngine]FrooxEngine.BoxCollider",
   "addResponse": {
     "$type": "response",
-    "sourceMessageId": "fbdc55cf-9d4a-4818-b11e-30d27c6a52f6",
+    "sourceMessageId": "0ccc4813-85f1-4bb7-994e-e8c9dc61e27b",
     "success": true,
     "errorInfo": null
   },
@@ -14,17 +14,17 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_A4"
+          "id": "Reso_286"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 1000000,
-          "id": "Reso_A5"
+          "id": "Reso_287"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_A6"
+          "id": "Reso_288"
         },
         "Offset": {
           "$type": "float3",
@@ -33,28 +33,28 @@
             "y": 0,
             "z": 0
           },
-          "id": "Reso_A7"
+          "id": "Reso_289"
         },
         "Type": {
           "$type": "enum",
           "value": "Static",
           "enumType": "ColliderType",
-          "id": "Reso_A8"
+          "id": "Reso_28A"
         },
         "Mass": {
           "$type": "float",
           "value": 1,
-          "id": "Reso_A9"
+          "id": "Reso_28B"
         },
         "CharacterCollider": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_AA"
+          "id": "Reso_28C"
         },
         "IgnoreRaycasts": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_AB"
+          "id": "Reso_28D"
         },
         "Size": {
           "$type": "float3",
@@ -63,13 +63,13 @@
             "y": 1,
             "z": 1
           },
-          "id": "Reso_AC"
+          "id": "Reso_28E"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_BoxCollider_1770374938205",
+      "id": "test_[FrooxEngine]FrooxEngine_BoxCollider_1770375260757",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "9ce221f9-f5bd-4689-bf2d-b3b9ee097809",
+    "sourceMessageId": "ff7b531c-58db-4579-a28c-a535a15b68b0",
     "success": true,
     "errorInfo": null
   }

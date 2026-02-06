@@ -2,7 +2,7 @@
   "componentType": "[FrooxEngine]FrooxEngine.BoxMesh",
   "addResponse": {
     "$type": "response",
-    "sourceMessageId": "09ff308f-0bbb-4f1f-bb96-97796c13956e",
+    "sourceMessageId": "25cf1283-fd5d-4a04-a986-07e63f7113a2",
     "success": true,
     "errorInfo": null
   },
@@ -14,33 +14,33 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_23"
+          "id": "Reso_205"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_24"
+          "id": "Reso_206"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_25"
+          "id": "Reso_207"
         },
         "HighPriorityIntegration": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_26"
+          "id": "Reso_208"
         },
         "OverrideBoundingBox": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_27"
+          "id": "Reso_209"
         },
         "Profile": {
           "$type": "enum",
           "value": "Linear",
           "enumType": "ColorProfile",
-          "id": "Reso_28"
+          "id": "Reso_20A"
         },
         "Size": {
           "$type": "float3",
@@ -49,7 +49,7 @@
             "y": 1,
             "z": 1
           },
-          "id": "Reso_29"
+          "id": "Reso_20B"
         },
         "UVScale": {
           "$type": "float3",
@@ -58,18 +58,18 @@
             "y": 1,
             "z": 1
           },
-          "id": "Reso_2A"
+          "id": "Reso_20C"
         },
         "ScaleUVWithSize": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_2B"
+          "id": "Reso_20D"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_BoxMesh_1770374938168",
+      "id": "test_[FrooxEngine]FrooxEngine_BoxMesh_1770375260720",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "0d8f9f2a-9892-43ac-aa35-86de87f2560d",
+    "sourceMessageId": "7efa5c10-9719-4051-9f88-21842634486f",
     "success": true,
     "errorInfo": null
   }

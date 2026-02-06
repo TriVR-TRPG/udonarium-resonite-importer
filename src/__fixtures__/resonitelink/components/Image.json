@@ -2,7 +2,7 @@
   "componentType": "[FrooxEngine]FrooxEngine.UIX.Image",
   "addResponse": {
     "$type": "response",
-    "sourceMessageId": "32541b37-51f7-4011-854c-627fabf32c3d",
+    "sourceMessageId": "e7ec42d6-b21b-4ff6-a5a3-07df9e7cbdc2",
     "success": true,
     "errorInfo": null
   },
@@ -14,60 +14,60 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_EF"
+          "id": "Reso_2CF"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_F0"
+          "id": "Reso_2D0"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_F1"
+          "id": "Reso_2D1"
         },
         "Sprite": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Sprite>",
-          "id": "Reso_F2"
+          "id": "Reso_2D2"
         },
         "Material": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Material>",
-          "id": "Reso_F3"
+          "id": "Reso_2D3"
         },
         "PreserveAspect": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_F4"
+          "id": "Reso_2D4"
         },
         "NineSliceSizing": {
           "$type": "enum",
           "value": "TextureSize",
           "enumType": "NineSliceSizing",
-          "id": "Reso_F5"
+          "id": "Reso_2D5"
         },
         "FlipHorizontally": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_F6"
+          "id": "Reso_2D6"
         },
         "FlipVertically": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_F7"
+          "id": "Reso_2D7"
         },
         "InteractionTarget": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_F8"
+          "id": "Reso_2D8"
         },
         "__legacyZWrite": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_F9"
+          "id": "Reso_2D9"
         },
         "Tint": {
           "$type": "colorX",
@@ -78,13 +78,13 @@
             "a": 1,
             "profile": "sRGB"
           },
-          "id": "Reso_FA"
+          "id": "Reso_2DA"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_UIX_Image_1770374938228",
+      "id": "test_[FrooxEngine]FrooxEngine_UIX_Image_1770375260781",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "8d31c83e-a8b1-4b66-965b-10cc65cac488",
+    "sourceMessageId": "4f23f3d6-07bd-4e98-87bc-7ec45dd5a76f",
     "success": true,
     "errorInfo": null
   }

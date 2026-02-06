@@ -2,7 +2,7 @@
   "componentType": "[FrooxEngine]FrooxEngine.UIX.Canvas",
   "addResponse": {
     "$type": "response",
-    "sourceMessageId": "d6bd640c-2896-409d-8baa-21c5ccf168ce",
+    "sourceMessageId": "7e1066f3-ca16-4386-bcca-9a531ed170c2",
     "success": true,
     "errorInfo": null
   },
@@ -14,17 +14,17 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_AD"
+          "id": "Reso_28F"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 100000,
-          "id": "Reso_AE"
+          "id": "Reso_290"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_AF"
+          "id": "Reso_291"
         },
         "Size": {
           "$type": "float2",
@@ -32,103 +32,103 @@
             "x": 1920,
             "y": 1080
           },
-          "id": "Reso_B0"
+          "id": "Reso_292"
         },
         "EditModeOnly": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_B1"
+          "id": "Reso_293"
         },
         "AcceptRemoteTouch": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_B2"
+          "id": "Reso_294"
         },
         "AcceptPhysicalTouch": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_B3"
+          "id": "Reso_295"
         },
         "AcceptExistingTouch": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_B4"
+          "id": "Reso_296"
         },
         "HighPriorityIntegration": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_B5"
+          "id": "Reso_297"
         },
         "IgnoreTouchesFromBehind": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_B6"
+          "id": "Reso_298"
         },
         "BlockAllInteractions": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_B7"
+          "id": "Reso_299"
         },
         "LaserPassThrough": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_B8"
+          "id": "Reso_29A"
         },
         "PixelScale": {
           "$type": "float",
           "value": 1,
-          "id": "Reso_B9"
+          "id": "Reso_29B"
         },
         "UnitScale": {
           "$type": "float",
           "value": 1,
-          "id": "Reso_BA"
+          "id": "Reso_29C"
         },
         "_rootRect": {
           "$type": "reference",
-          "targetId": "Reso_BB",
+          "targetId": "Reso_29D",
           "targetType": "[FrooxEngine]FrooxEngine.UIX.RectTransform",
-          "id": "Reso_BC"
+          "id": "Reso_29E"
         },
         "Collider": {
           "$type": "reference",
-          "targetId": "Reso_BD",
+          "targetId": "Reso_29F",
           "targetType": "[FrooxEngine]FrooxEngine.BoxCollider",
-          "id": "Reso_BE"
+          "id": "Reso_2A0"
         },
         "DefaultCulling": {
           "$type": "enum",
           "value": "Back",
           "enumType": "Culling",
-          "id": "Reso_BF"
+          "id": "Reso_2A1"
         },
         "_colliderSize": {
           "$type": "reference",
-          "targetId": "Reso_C0",
+          "targetId": "Reso_2A2",
           "targetType": "[FrooxEngine]FrooxEngine.IField<float3>",
-          "id": "Reso_C1"
+          "id": "Reso_2A3"
         },
         "_colliderOffset": {
           "$type": "reference",
-          "targetId": "Reso_C2",
+          "targetId": "Reso_2A4",
           "targetType": "[FrooxEngine]FrooxEngine.IField<float3>",
-          "id": "Reso_C3"
+          "id": "Reso_2A5"
         },
         "StartingOffset": {
           "$type": "int",
           "value": -32000,
-          "id": "Reso_C4"
+          "id": "Reso_2A6"
         },
         "StartingMaskDepth": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_C5"
+          "id": "Reso_2A7"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_UIX_Canvas_1770374938211",
+      "id": "test_[FrooxEngine]FrooxEngine_UIX_Canvas_1770375260762",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "90d920b4-8a49-4c6e-8cc2-66d583bdfd3a",
+    "sourceMessageId": "5f4bdcee-e5bf-4dd3-8953-d3f21d6aac49",
     "success": true,
     "errorInfo": null
   }
