@@ -133,6 +133,13 @@ Udonarium（Webベースのバーチャルテーブルトップ）のセーブ�
     - 不要になった旧コンポーネントレスポンスファイルを削除（addComponent-response.json等）
     - README.mdにコンポーネントフィクスチャのドキュメントを追加
 
+17. **テクスチャインポート処理の修正**
+    - `importTexture2DRawData`は生のRGBAピクセルデータを期待するが、PNG/JPEGエンコードデータを送信していた問題を修正
+    - `scripts/collect-resonitelink-data.ts`: 生のRGBAデータを送信するように変更
+    - `ResoniteLinkClient.importTextureFromData`: PNG/JPEG画像を一時ファイルに書き出し`importTexture2DFile`を使用
+    - 新メソッド`importTextureFromRawData`: 生RGBAデータを直接インポート
+    - 画像形式検出ヘルパー`getImageExtension`を追加
+
 ### 過去のセッションで行った作業
 
 1. **npm scriptsの再編成**
