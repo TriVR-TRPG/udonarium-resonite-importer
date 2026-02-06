@@ -24,17 +24,14 @@ npm run dev:gui
 ## Validation & Auto-fix
 
 ```bash
-# Run all checks in parallel (lint, format, types, test)
-npm run validate
+# Auto-fix then validate (lint, format, types)
+npm run check
 
-# Individual checks
-npm run validate:lint        # ESLint
-npm run validate:format      # Prettier
-npm run validate:types       # TypeScript type check (CLI + GUI)
-npm run validate:test        # Unit tests
+# Validate only (no auto-fix)
+npm run check:validate
 
-# Auto-fix lint and format issues
-npm run fix
+# Auto-fix only
+npm run check:fix
 ```
 
 ## Testing

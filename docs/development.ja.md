@@ -24,17 +24,14 @@ npm run dev:gui
 ## 検証・自動修正
 
 ```bash
-# 全チェックを並列実行（lint, format, types, test）
-npm run validate
+# 自動修正してから検証（lint, format, types）
+npm run check
 
-# 個別チェック
-npm run validate:lint        # ESLint
-npm run validate:format      # Prettier
-npm run validate:types       # TypeScript型チェック（CLI + GUI）
-npm run validate:test        # ユニットテスト
+# 検証のみ（自動修正なし）
+npm run check:validate
 
-# lint・formatの自動修正
-npm run fix
+# 自動修正のみ
+npm run check:fix
 ```
 
 ## テスト

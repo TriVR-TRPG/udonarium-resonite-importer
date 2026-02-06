@@ -34,12 +34,8 @@ jobs:
           npm ci
           npm run build
 
-      - name: Run ESLint with auto-fix
-        run: npm run fix:lint
-        continue-on-error: true
-
-      - name: Run Prettier with auto-fix
-        run: npm run fix:format
+      - name: Auto-fix (lint, format)
+        run: npm run check:fix
 
       - name: Commit auto-fixed changes
         uses: stefanzweifel/git-auto-commit-action@v5
@@ -48,14 +44,8 @@ jobs:
           commit_options: "--no-verify"
         if: github.event_name == 'pull_request'
 
-      - name: Run ESLint (verify)
-        run: npm run validate:lint
-
-      - name: Check Prettier formatting (verify)
-        run: npm run validate:format
-
-      - name: Type check
-        run: npm run validate:types
+      - name: Validate (lint, format, types)
+        run: npm run check:validate
 
       - name: Run tests with coverage
         run: npm run test:coverage -- --reporter=json --outputFile=test-results.json
