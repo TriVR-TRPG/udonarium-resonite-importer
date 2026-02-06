@@ -1,0 +1,70 @@
+{
+  "componentType": "[FrooxEngine]FrooxEngine.MeshRenderer",
+  "addResponse": {
+    "$type": "response",
+    "sourceMessageId": "d5f9ad3c-fa6e-4396-8b62-b85c86f36fe3",
+    "success": true,
+    "errorInfo": null
+  },
+  "getResponse": {
+    "$type": "componentData",
+    "data": {
+      "componentType": "[FrooxEngine]FrooxEngine.MeshRenderer",
+      "members": {
+        "persistent": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_20E"
+        },
+        "UpdateOrder": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_20F"
+        },
+        "Enabled": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_210"
+        },
+        "Mesh": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Mesh>",
+          "id": "Reso_211"
+        },
+        "Materials": {
+          "$type": "list",
+          "elements": [],
+          "id": "Reso_212"
+        },
+        "MaterialPropertyBlocks": {
+          "$type": "list",
+          "elements": [],
+          "id": "Reso_213"
+        },
+        "ShadowCastMode": {
+          "$type": "enum",
+          "value": "On",
+          "enumType": "ShadowCastMode",
+          "id": "Reso_214"
+        },
+        "MotionVectorMode": {
+          "$type": "enum",
+          "value": "Object",
+          "enumType": "MotionVectorMode",
+          "id": "Reso_215"
+        },
+        "SortingOrder": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_216"
+        }
+      },
+      "id": "test_[FrooxEngine]FrooxEngine_MeshRenderer_1770375260727",
+      "isReferenceOnly": false
+    },
+    "sourceMessageId": "e8c26525-0e3e-4db8-9938-5b3d0319c21a",
+    "success": true,
+    "errorInfo": null
+  }
+}

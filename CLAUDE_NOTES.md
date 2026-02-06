@@ -119,6 +119,20 @@ Udonarium（Webベースのバーチャルテーブルトップ）のセーブ�
     - `electron-builder` のターゲットを `zip` に更新（LinuxはAppImageのまま）
     - 非技術者向けのZIP配布方針に実装を合わせるための調整
 
+16. **コンポーネントフィクスチャデータの収集**
+    - Udonariumオブジェクト表現に必要な12種類のコンポーネントのテストデータを収集
+    - `src/__fixtures__/resonitelink/components/` に各コンポーネントのフィクスチャを保存
+    - コンポーネントタイプ形式: `[FrooxEngine]FrooxEngine.ComponentName`
+    - 対象コンポーネント:
+      - Mesh: QuadMesh, BoxMesh
+      - Rendering: MeshRenderer
+      - Materials: PBS_Metallic, UnlitMaterial
+      - Textures: StaticTexture2D
+      - Interaction: Grabbable, BoxCollider
+      - UIX: Canvas, Text, VerticalLayout, Image
+    - 不要になった旧コンポーネントレスポンスファイルを削除（addComponent-response.json等）
+    - README.mdにコンポーネントフィクスチャのドキュメントを追加
+
 ### 過去のセッションで行った作業
 
 1. **npm scriptsの再編成**

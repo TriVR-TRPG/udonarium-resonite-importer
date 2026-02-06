@@ -1,0 +1,84 @@
+{
+  "componentType": "[FrooxEngine]FrooxEngine.UIX.VerticalLayout",
+  "addResponse": {
+    "$type": "response",
+    "sourceMessageId": "84660197-4524-44a8-a544-b23c58d76e53",
+    "success": true,
+    "errorInfo": null
+  },
+  "getResponse": {
+    "$type": "componentData",
+    "data": {
+      "componentType": "[FrooxEngine]FrooxEngine.UIX.VerticalLayout",
+      "members": {
+        "persistent": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_2C3"
+        },
+        "UpdateOrder": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_2C4"
+        },
+        "Enabled": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_2C5"
+        },
+        "PaddingTop": {
+          "$type": "float",
+          "value": 0,
+          "id": "Reso_2C6"
+        },
+        "PaddingRight": {
+          "$type": "float",
+          "value": 0,
+          "id": "Reso_2C7"
+        },
+        "PaddingBottom": {
+          "$type": "float",
+          "value": 0,
+          "id": "Reso_2C8"
+        },
+        "PaddingLeft": {
+          "$type": "float",
+          "value": 0,
+          "id": "Reso_2C9"
+        },
+        "Spacing": {
+          "$type": "float",
+          "value": 0,
+          "id": "Reso_2CA"
+        },
+        "HorizontalAlign": {
+          "$type": "enum",
+          "value": "Center",
+          "enumType": "LayoutHorizontalAlignment",
+          "id": "Reso_2CB"
+        },
+        "VerticalAlign": {
+          "$type": "enum",
+          "value": "Middle",
+          "enumType": "LayoutVerticalAlignment",
+          "id": "Reso_2CC"
+        },
+        "ForceExpandWidth": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_2CD"
+        },
+        "ForceExpandHeight": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_2CE"
+        }
+      },
+      "id": "test_[FrooxEngine]FrooxEngine_UIX_VerticalLayout_1770375260776",
+      "isReferenceOnly": false
+    },
+    "sourceMessageId": "e6b9bcf9-ef96-470e-9d3f-fc578f17a213",
+    "success": true,
+    "errorInfo": null
+  }
+}

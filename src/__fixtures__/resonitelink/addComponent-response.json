@@ -1,6 +1,0 @@
-{
-  "$type": "response",
-  "sourceMessageId": "a7bf4627-d8d4-44a4-9e10-a4737e399ede",
-  "success": false,
-  "errorInfo": "Invalid component type. Error: Failed to resolve type"
-}

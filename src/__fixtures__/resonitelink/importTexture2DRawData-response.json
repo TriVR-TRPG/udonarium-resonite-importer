@@ -1,7 +1,7 @@
 {
   "$type": "assetData",
   "assetURL": null,
-  "sourceMessageId": "195c4c10-8af5-420e-b4a7-3441f0387cb3",
+  "sourceMessageId": "5121f87e-fab7-4af8-bd92-74890ced08ac",
   "success": false,
   "errorInfo": "Width or Height was changed after data was already accessed. This is not supported"
 }

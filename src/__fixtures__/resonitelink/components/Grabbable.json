@@ -1,0 +1,131 @@
+{
+  "componentType": "[FrooxEngine]FrooxEngine.Grabbable",
+  "addResponse": {
+    "$type": "response",
+    "sourceMessageId": "f83fe65f-7767-4a8a-a16a-5e8241906575",
+    "success": true,
+    "errorInfo": null
+  },
+  "getResponse": {
+    "$type": "componentData",
+    "data": {
+      "componentType": "[FrooxEngine]FrooxEngine.Grabbable",
+      "members": {
+        "persistent": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_271"
+        },
+        "UpdateOrder": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_272"
+        },
+        "Enabled": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_273"
+        },
+        "ReparentOnRelease": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_274"
+        },
+        "PreserveUserSpace": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_275"
+        },
+        "DestroyOnRelease": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_276"
+        },
+        "GrabPriority": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_277"
+        },
+        "GrabPriorityWhenGrabbed": {
+          "$type": "int?",
+          "value": null,
+          "id": "Reso_278"
+        },
+        "CustomCanGrabCheck": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.GrabCheck",
+          "id": "Reso_279"
+        },
+        "EditModeOnly": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_27A"
+        },
+        "AllowSteal": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_27B"
+        },
+        "DropOnDisable": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_27C"
+        },
+        "ActiveUserFilter": {
+          "$type": "enum",
+          "value": "Disabled",
+          "enumType": "ActiveUserHandling",
+          "id": "Reso_27D"
+        },
+        "OnlyUsers": {
+          "$type": "list",
+          "elements": [],
+          "id": "Reso_27E"
+        },
+        "Scalable": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_27F"
+        },
+        "Receivable": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_280"
+        },
+        "AllowOnlyPhysicalGrab": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_281"
+        },
+        "_grabber": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.Grabber",
+          "id": "Reso_282"
+        },
+        "_lastParent": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.Slot",
+          "id": "Reso_283"
+        },
+        "_lastParentIsUserSpace": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_284"
+        },
+        "__legacyActiveUserRootOnly": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_285"
+        }
+      },
+      "id": "test_[FrooxEngine]FrooxEngine_Grabbable_1770375260751",
+      "isReferenceOnly": false
+    },
+    "sourceMessageId": "1fd20b97-507f-4cc9-970a-8d5f7244f92a",
+    "success": true,
+    "errorInfo": null
+  }
+}

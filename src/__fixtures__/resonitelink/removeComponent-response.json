@@ -1,6 +1,0 @@
-{
-  "$type": "response",
-  "sourceMessageId": "26fd75af-28ab-4e48-b0d5-a9280d5da7e3",
-  "success": false,
-  "errorInfo": "Component with ID 'test_comp_1770289444309' not found."
-}

@@ -1,0 +1,135 @@
+{
+  "componentType": "[FrooxEngine]FrooxEngine.UIX.Canvas",
+  "addResponse": {
+    "$type": "response",
+    "sourceMessageId": "7e1066f3-ca16-4386-bcca-9a531ed170c2",
+    "success": true,
+    "errorInfo": null
+  },
+  "getResponse": {
+    "$type": "componentData",
+    "data": {
+      "componentType": "[FrooxEngine]FrooxEngine.UIX.Canvas",
+      "members": {
+        "persistent": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_28F"
+        },
+        "UpdateOrder": {
+          "$type": "int",
+          "value": 100000,
+          "id": "Reso_290"
+        },
+        "Enabled": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_291"
+        },
+        "Size": {
+          "$type": "float2",
+          "value": {
+            "x": 1920,
+            "y": 1080
+          },
+          "id": "Reso_292"
+        },
+        "EditModeOnly": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_293"
+        },
+        "AcceptRemoteTouch": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_294"
+        },
+        "AcceptPhysicalTouch": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_295"
+        },
+        "AcceptExistingTouch": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_296"
+        },
+        "HighPriorityIntegration": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_297"
+        },
+        "IgnoreTouchesFromBehind": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_298"
+        },
+        "BlockAllInteractions": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_299"
+        },
+        "LaserPassThrough": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_29A"
+        },
+        "PixelScale": {
+          "$type": "float",
+          "value": 1,
+          "id": "Reso_29B"
+        },
+        "UnitScale": {
+          "$type": "float",
+          "value": 1,
+          "id": "Reso_29C"
+        },
+        "_rootRect": {
+          "$type": "reference",
+          "targetId": "Reso_29D",
+          "targetType": "[FrooxEngine]FrooxEngine.UIX.RectTransform",
+          "id": "Reso_29E"
+        },
+        "Collider": {
+          "$type": "reference",
+          "targetId": "Reso_29F",
+          "targetType": "[FrooxEngine]FrooxEngine.BoxCollider",
+          "id": "Reso_2A0"
+        },
+        "DefaultCulling": {
+          "$type": "enum",
+          "value": "Back",
+          "enumType": "Culling",
+          "id": "Reso_2A1"
+        },
+        "_colliderSize": {
+          "$type": "reference",
+          "targetId": "Reso_2A2",
+          "targetType": "[FrooxEngine]FrooxEngine.IField<float3>",
+          "id": "Reso_2A3"
+        },
+        "_colliderOffset": {
+          "$type": "reference",
+          "targetId": "Reso_2A4",
+          "targetType": "[FrooxEngine]FrooxEngine.IField<float3>",
+          "id": "Reso_2A5"
+        },
+        "StartingOffset": {
+          "$type": "int",
+          "value": -32000,
+          "id": "Reso_2A6"
+        },
+        "StartingMaskDepth": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_2A7"
+        }
+      },
+      "id": "test_[FrooxEngine]FrooxEngine_UIX_Canvas_1770375260762",
+      "isReferenceOnly": false
+    },
+    "sourceMessageId": "5f4bdcee-e5bf-4dd3-8953-d3f21d6aac49",
+    "success": true,
+    "errorInfo": null
+  }
+}
