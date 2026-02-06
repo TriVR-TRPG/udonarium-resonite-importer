@@ -2,7 +2,7 @@
   "componentType": "[FrooxEngine]FrooxEngine.StaticTexture2D",
   "addResponse": {
     "$type": "response",
-    "sourceMessageId": "f860a3a7-a693-4d1f-ba4e-b60d5166a87e",
+    "sourceMessageId": "09387c12-e772-40de-a0b2-c809c0e5d5ec",
     "success": true,
     "errorInfo": null
   },
@@ -14,129 +14,129 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_25A"
+          "id": "Reso_34A"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_25B"
+          "id": "Reso_34B"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_25C"
+          "id": "Reso_34C"
         },
         "URL": {
           "$type": "Uri",
           "value": null,
-          "id": "Reso_25D"
+          "id": "Reso_34D"
         },
         "FilterMode": {
           "$type": "enum?",
           "value": null,
           "enumType": "TextureFilterMode",
-          "id": "Reso_25E"
+          "id": "Reso_34E"
         },
         "AnisotropicLevel": {
           "$type": "int?",
           "value": null,
-          "id": "Reso_25F"
+          "id": "Reso_34F"
         },
         "Uncompressed": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_260"
+          "id": "Reso_350"
         },
         "DirectLoad": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_261"
+          "id": "Reso_351"
         },
         "ForceExactVariant": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_262"
+          "id": "Reso_352"
         },
         "PreferredFormat": {
           "$type": "enum?",
           "value": null,
           "enumType": "TextureCompression",
-          "id": "Reso_263"
+          "id": "Reso_353"
         },
         "PreferredProfile": {
           "$type": "enum?",
           "value": null,
           "enumType": "ColorProfile",
-          "id": "Reso_264"
+          "id": "Reso_354"
         },
         "MipMapBias": {
           "$type": "float",
           "value": 0,
-          "id": "Reso_265"
+          "id": "Reso_355"
         },
         "IsNormalMap": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_266"
+          "id": "Reso_356"
         },
         "WrapModeU": {
           "$type": "enum",
           "value": "Repeat",
           "enumType": "TextureWrapMode",
-          "id": "Reso_267"
+          "id": "Reso_357"
         },
         "WrapModeV": {
           "$type": "enum",
           "value": "Repeat",
           "enumType": "TextureWrapMode",
-          "id": "Reso_268"
+          "id": "Reso_358"
         },
         "PowerOfTwoAlignThreshold": {
           "$type": "float",
           "value": 0.05,
-          "id": "Reso_269"
+          "id": "Reso_359"
         },
         "CrunchCompressed": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_26A"
+          "id": "Reso_35A"
         },
         "MinSize": {
           "$type": "int?",
           "value": null,
-          "id": "Reso_26B"
+          "id": "Reso_35B"
         },
         "MaxSize": {
           "$type": "int?",
           "value": null,
-          "id": "Reso_26C"
+          "id": "Reso_35C"
         },
         "MipMaps": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_26D"
+          "id": "Reso_35D"
         },
         "KeepOriginalMipMaps": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_26E"
+          "id": "Reso_35E"
         },
         "MipMapFilter": {
           "$type": "enum",
           "value": "Box",
           "enumType": "Filtering",
-          "id": "Reso_26F"
+          "id": "Reso_35F"
         },
         "Readable": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_270"
+          "id": "Reso_360"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_StaticTexture2D_1770375260745",
+      "id": "test_[FrooxEngine]FrooxEngine_StaticTexture2D_1770376790885",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "4ec0e8e9-d277-4d1c-9bbc-479cd9bc6abf",
+    "sourceMessageId": "71802279-94ec-4b26-aac7-941e99538741",
     "success": true,
     "errorInfo": null
   }

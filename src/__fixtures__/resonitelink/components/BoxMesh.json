@@ -2,7 +2,7 @@
   "componentType": "[FrooxEngine]FrooxEngine.BoxMesh",
   "addResponse": {
     "$type": "response",
-    "sourceMessageId": "25cf1283-fd5d-4a04-a986-07e63f7113a2",
+    "sourceMessageId": "0c65a348-4431-44b4-adf3-8dd2eeb0635d",
     "success": true,
     "errorInfo": null
   },
@@ -14,33 +14,33 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_205"
+          "id": "Reso_2F5"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_206"
+          "id": "Reso_2F6"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_207"
+          "id": "Reso_2F7"
         },
         "HighPriorityIntegration": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_208"
+          "id": "Reso_2F8"
         },
         "OverrideBoundingBox": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_209"
+          "id": "Reso_2F9"
         },
         "Profile": {
           "$type": "enum",
           "value": "Linear",
           "enumType": "ColorProfile",
-          "id": "Reso_20A"
+          "id": "Reso_2FA"
         },
         "Size": {
           "$type": "float3",
@@ -49,7 +49,7 @@
             "y": 1,
             "z": 1
           },
-          "id": "Reso_20B"
+          "id": "Reso_2FB"
         },
         "UVScale": {
           "$type": "float3",
@@ -58,18 +58,18 @@
             "y": 1,
             "z": 1
           },
-          "id": "Reso_20C"
+          "id": "Reso_2FC"
         },
         "ScaleUVWithSize": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_20D"
+          "id": "Reso_2FD"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_BoxMesh_1770375260720",
+      "id": "test_[FrooxEngine]FrooxEngine_BoxMesh_1770376790863",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "7efa5c10-9719-4051-9f88-21842634486f",
+    "sourceMessageId": "697d6b2a-9d46-4cb6-87df-351ff92af616",
     "success": true,
     "errorInfo": null
   }

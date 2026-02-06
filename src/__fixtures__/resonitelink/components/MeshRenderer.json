@@ -2,7 +2,7 @@
   "componentType": "[FrooxEngine]FrooxEngine.MeshRenderer",
   "addResponse": {
     "$type": "response",
-    "sourceMessageId": "d5f9ad3c-fa6e-4396-8b62-b85c86f36fe3",
+    "sourceMessageId": "790ded60-c8fd-4ae5-b1f2-7c2226f01156",
     "success": true,
     "errorInfo": null
   },
@@ -14,56 +14,56 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_20E"
+          "id": "Reso_2FE"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_20F"
+          "id": "Reso_2FF"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_210"
+          "id": "Reso_300"
         },
         "Mesh": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Mesh>",
-          "id": "Reso_211"
+          "id": "Reso_301"
         },
         "Materials": {
           "$type": "list",
           "elements": [],
-          "id": "Reso_212"
+          "id": "Reso_302"
         },
         "MaterialPropertyBlocks": {
           "$type": "list",
           "elements": [],
-          "id": "Reso_213"
+          "id": "Reso_303"
         },
         "ShadowCastMode": {
           "$type": "enum",
           "value": "On",
           "enumType": "ShadowCastMode",
-          "id": "Reso_214"
+          "id": "Reso_304"
         },
         "MotionVectorMode": {
           "$type": "enum",
           "value": "Object",
           "enumType": "MotionVectorMode",
-          "id": "Reso_215"
+          "id": "Reso_305"
         },
         "SortingOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_216"
+          "id": "Reso_306"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_MeshRenderer_1770375260727",
+      "id": "test_[FrooxEngine]FrooxEngine_MeshRenderer_1770376790868",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "e8c26525-0e3e-4db8-9938-5b3d0319c21a",
+    "sourceMessageId": "c04ec42a-ba1f-4059-b9b8-29c360b23f0b",
     "success": true,
     "errorInfo": null
   }
