@@ -1,0 +1,201 @@
+{
+  "componentType": "[FrooxEngine]FrooxEngine.PBS_Metallic",
+  "addResponse": {
+    "$type": "response",
+    "sourceMessageId": "36f558a6-c121-4b0d-b7fe-d83c9a58a5f2",
+    "success": true,
+    "errorInfo": null
+  },
+  "getResponse": {
+    "$type": "componentData",
+    "data": {
+      "componentType": "[FrooxEngine]FrooxEngine.PBS_Metallic",
+      "members": {
+        "persistent": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_35"
+        },
+        "UpdateOrder": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_36"
+        },
+        "Enabled": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_37"
+        },
+        "HighPriorityIntegration": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_38"
+        },
+        "_shader": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Shader>",
+          "id": "Reso_39"
+        },
+        "TextureScale": {
+          "$type": "float2",
+          "value": {
+            "x": 1,
+            "y": 1
+          },
+          "id": "Reso_3A"
+        },
+        "TextureOffset": {
+          "$type": "float2",
+          "value": {
+            "x": 0,
+            "y": 0
+          },
+          "id": "Reso_3B"
+        },
+        "DetailTextureScale": {
+          "$type": "float2",
+          "value": {
+            "x": 1,
+            "y": 1
+          },
+          "id": "Reso_3C"
+        },
+        "DetailTextureOffset": {
+          "$type": "float2",
+          "value": {
+            "x": 0,
+            "y": 0
+          },
+          "id": "Reso_3D"
+        },
+        "AlbedoColor": {
+          "$type": "colorX",
+          "value": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1,
+            "profile": "sRGB"
+          },
+          "id": "Reso_3E"
+        },
+        "AlbedoTexture": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
+          "id": "Reso_3F"
+        },
+        "EmissiveColor": {
+          "$type": "colorX",
+          "value": {
+            "r": 0,
+            "g": 0,
+            "b": 0,
+            "a": 1,
+            "profile": "sRGB"
+          },
+          "id": "Reso_40"
+        },
+        "EmissiveMap": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
+          "id": "Reso_41"
+        },
+        "NormalScale": {
+          "$type": "float",
+          "value": 1,
+          "id": "Reso_42"
+        },
+        "NormalMap": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
+          "id": "Reso_43"
+        },
+        "HeightMap": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
+          "id": "Reso_44"
+        },
+        "HeightScale": {
+          "$type": "float",
+          "value": 0.02,
+          "id": "Reso_45"
+        },
+        "OcclusionMap": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
+          "id": "Reso_46"
+        },
+        "DetailAlbedoTexture": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
+          "id": "Reso_47"
+        },
+        "DetailNormalMap": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
+          "id": "Reso_48"
+        },
+        "DetailNormalScale": {
+          "$type": "float",
+          "value": 1,
+          "id": "Reso_49"
+        },
+        "BlendMode": {
+          "$type": "enum",
+          "value": "Opaque",
+          "enumType": "BlendMode",
+          "id": "Reso_4A"
+        },
+        "AlphaCutoff": {
+          "$type": "float",
+          "value": 0.5,
+          "id": "Reso_4B"
+        },
+        "OffsetFactor": {
+          "$type": "float",
+          "value": 0,
+          "id": "Reso_4C"
+        },
+        "OffsetUnits": {
+          "$type": "float",
+          "value": 0,
+          "id": "Reso_4D"
+        },
+        "RenderQueue": {
+          "$type": "int",
+          "value": -1,
+          "id": "Reso_4E"
+        },
+        "Metallic": {
+          "$type": "float",
+          "value": 0,
+          "id": "Reso_4F"
+        },
+        "Smoothness": {
+          "$type": "float",
+          "value": 0.25,
+          "id": "Reso_50"
+        },
+        "MetallicMap": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
+          "id": "Reso_51"
+        }
+      },
+      "id": "test_[FrooxEngine]FrooxEngine_PBS_Metallic_1770374938182",
+      "isReferenceOnly": false
+    },
+    "sourceMessageId": "51938321-8a46-4fe8-b862-683bd4e4927a",
+    "success": true,
+    "errorInfo": null
+  }
+}

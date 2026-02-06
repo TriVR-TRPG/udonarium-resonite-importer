@@ -1,0 +1,146 @@
+{
+  "componentType": "[FrooxEngine]FrooxEngine.QuadMesh",
+  "addResponse": {
+    "$type": "response",
+    "sourceMessageId": "cd284342-5ab1-4269-af99-909aa671de06",
+    "success": true,
+    "errorInfo": null
+  },
+  "getResponse": {
+    "$type": "componentData",
+    "data": {
+      "componentType": "[FrooxEngine]FrooxEngine.QuadMesh",
+      "members": {
+        "persistent": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_12"
+        },
+        "UpdateOrder": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_13"
+        },
+        "Enabled": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_14"
+        },
+        "HighPriorityIntegration": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_15"
+        },
+        "OverrideBoundingBox": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_16"
+        },
+        "Profile": {
+          "$type": "enum",
+          "value": "Linear",
+          "enumType": "ColorProfile",
+          "id": "Reso_17"
+        },
+        "Rotation": {
+          "$type": "floatQ",
+          "value": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          },
+          "id": "Reso_18"
+        },
+        "Size": {
+          "$type": "float2",
+          "value": {
+            "x": 1,
+            "y": 1
+          },
+          "id": "Reso_19"
+        },
+        "UVOffset": {
+          "$type": "float2",
+          "value": {
+            "x": 0,
+            "y": 0
+          },
+          "id": "Reso_1A"
+        },
+        "UVScale": {
+          "$type": "float2",
+          "value": {
+            "x": 1,
+            "y": 1
+          },
+          "id": "Reso_1B"
+        },
+        "ScaleUVWithSize": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_1C"
+        },
+        "DualSided": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_1D"
+        },
+        "UseVertexColors": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_1E"
+        },
+        "UpperLeftColor": {
+          "$type": "colorX",
+          "value": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1,
+            "profile": "sRGB"
+          },
+          "id": "Reso_1F"
+        },
+        "LowerLeftColor": {
+          "$type": "colorX",
+          "value": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1,
+            "profile": "sRGB"
+          },
+          "id": "Reso_20"
+        },
+        "LowerRightColor": {
+          "$type": "colorX",
+          "value": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1,
+            "profile": "sRGB"
+          },
+          "id": "Reso_21"
+        },
+        "UpperRightColor": {
+          "$type": "colorX",
+          "value": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1,
+            "profile": "sRGB"
+          },
+          "id": "Reso_22"
+        }
+      },
+      "id": "test_[FrooxEngine]FrooxEngine_QuadMesh_1770374938157",
+      "isReferenceOnly": false
+    },
+    "sourceMessageId": "dd892c51-8070-4d8f-9e64-62a7d49f8032",
+    "success": true,
+    "errorInfo": null
+  }
+}

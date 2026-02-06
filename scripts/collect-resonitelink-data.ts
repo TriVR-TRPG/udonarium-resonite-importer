@@ -21,6 +21,7 @@ import { ResoniteLinkClient } from '../src/resonite/ResoniteLinkClient';
 import { getResoniteLinkPort, getResoniteLinkHost } from '../src/config/MappingConfig';
 
 const FIXTURES_DIR = path.join(__dirname, '../src/__fixtures__/resonitelink');
+const COMPONENTS_DIR = path.join(FIXTURES_DIR, 'components');
 const DEFAULT_TIMEOUT = 10000;
 
 interface CollectedData {
@@ -29,9 +30,50 @@ interface CollectedData {
   responses: Record<string, unknown>;
 }
 
+/**
+ * Component types needed for Udonarium object representation in Resonite
+ * Format: [Assembly]Namespace.ClassName
+ * Reference: reso-decompile sources and resolink-mcp
+ */
+const REQUIRED_COMPONENTS = {
+  // Mesh components (FrooxEngine namespace)
+  mesh: [
+    '[FrooxEngine]FrooxEngine.QuadMesh',
+    '[FrooxEngine]FrooxEngine.BoxMesh',
+  ],
+  // Rendering components (FrooxEngine namespace)
+  rendering: [
+    '[FrooxEngine]FrooxEngine.MeshRenderer',
+  ],
+  // Material components (FrooxEngine namespace)
+  materials: [
+    '[FrooxEngine]FrooxEngine.PBS_Metallic',
+    '[FrooxEngine]FrooxEngine.UnlitMaterial',
+  ],
+  // Texture components (FrooxEngine namespace)
+  textures: [
+    '[FrooxEngine]FrooxEngine.StaticTexture2D',
+  ],
+  // Interaction components (FrooxEngine namespace)
+  interaction: [
+    '[FrooxEngine]FrooxEngine.Grabbable',
+    '[FrooxEngine]FrooxEngine.BoxCollider',
+  ],
+  // UIX components (FrooxEngine.UIX namespace)
+  uix: [
+    '[FrooxEngine]FrooxEngine.UIX.Canvas',
+    '[FrooxEngine]FrooxEngine.UIX.Text',
+    '[FrooxEngine]FrooxEngine.UIX.VerticalLayout',
+    '[FrooxEngine]FrooxEngine.UIX.Image',
+  ],
+} as const;
+
 async function ensureFixturesDir(): Promise<void> {
   if (!fs.existsSync(FIXTURES_DIR)) {
     fs.mkdirSync(FIXTURES_DIR, { recursive: true });
+  }
+  if (!fs.existsSync(COMPONENTS_DIR)) {
+    fs.mkdirSync(COMPONENTS_DIR, { recursive: true });
   }
 }
 
@@ -116,6 +158,83 @@ async function collectSlotData(client: ResoniteLinkClient): Promise<void> {
   saveJson('removeSlot-response.json', removeResponse);
 }
 
+/**
+ * Helper to save component test results
+ */
+function saveComponentJson(componentType: string, data: unknown): void {
+  // Convert component type to filename (e.g., "FrooxEngine.QuadMesh" -> "QuadMesh")
+  const filename = componentType.split('.').pop() + '.json';
+  const filepath = path.join(COMPONENTS_DIR, filename);
+  fs.writeFileSync(filepath, JSON.stringify(data, null, 2) + '\n');
+  console.log(`    ✓ ${componentType} -> ${filename}`);
+}
+
+/**
+ * Test creating a single component type
+ */
+async function testComponent(
+  client: ResoniteLinkClient,
+  slotId: string,
+  componentType: string
+): Promise<{ success: boolean; response: unknown; error?: string }> {
+  const underlyingClient = client.getClient();
+  const componentId = `test_${componentType.replace(/\./g, '_')}_${Date.now()}`;
+
+  try {
+    // Add component
+    const addResponse = await underlyingClient.send({
+      $type: 'addComponent',
+      containerSlotId: slotId,
+      data: {
+        id: componentId,
+        componentType: componentType,
+        members: {},
+      },
+    });
+
+    // Get component data if creation succeeded
+    if (addResponse.success) {
+      const getResponse = await underlyingClient.send({
+        $type: 'getComponent',
+        componentId: componentId,
+      });
+
+      // Remove component (cleanup)
+      await underlyingClient.send({
+        $type: 'removeComponent',
+        componentId: componentId,
+      });
+
+      return {
+        success: true,
+        response: {
+          componentType,
+          addResponse,
+          getResponse,
+        },
+      };
+    } else {
+      return {
+        success: false,
+        response: {
+          componentType,
+          addResponse,
+        },
+        error: addResponse.errorInfo || 'Unknown error',
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      response: {
+        componentType,
+        error: error instanceof Error ? error.message : String(error),
+      },
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
 async function collectComponentData(client: ResoniteLinkClient): Promise<void> {
   console.log('\n🔧 Collecting Component Data...');
 
@@ -138,32 +257,47 @@ async function collectComponentData(client: ResoniteLinkClient): Promise<void> {
     },
   });
 
-  // Add a component
-  const componentId = `test_comp_${Date.now()}`;
-  const addComponentResponse = await underlyingClient.send({
-    $type: 'addComponent',
-    containerSlotId: testSlotId,
-    data: {
-      id: componentId,
-      componentType: 'FrooxEngine.Comment',
-      members: {},
-    },
-  });
-  saveJson('addComponent-response.json', addComponentResponse);
+  const results: Record<string, unknown> = {};
+  const allComponents = [
+    ...REQUIRED_COMPONENTS.mesh,
+    ...REQUIRED_COMPONENTS.rendering,
+    ...REQUIRED_COMPONENTS.materials,
+    ...REQUIRED_COMPONENTS.textures,
+    ...REQUIRED_COMPONENTS.interaction,
+    ...REQUIRED_COMPONENTS.uix,
+  ];
 
-  // Get component
-  const getComponentResponse = await underlyingClient.send({
-    $type: 'getComponent',
-    componentId: componentId,
-  });
-  saveJson('getComponent-response.json', getComponentResponse);
+  console.log(`  Testing ${allComponents.length} component types...`);
 
-  // Remove component
-  const removeComponentResponse = await underlyingClient.send({
-    $type: 'removeComponent',
-    componentId: componentId,
-  });
-  saveJson('removeComponent-response.json', removeComponentResponse);
+  for (const componentType of allComponents) {
+    const result = await testComponent(client, testSlotId, componentType);
+    results[componentType] = result;
+    saveComponentJson(componentType, result.response);
+
+    if (!result.success) {
+      console.log(`    ⚠ ${componentType}: ${result.error}`);
+    }
+  }
+
+  // Save summary
+  const summary = {
+    testedAt: new Date().toISOString(),
+    totalComponents: allComponents.length,
+    successful: Object.values(results).filter((r: unknown) => (r as { success: boolean }).success).length,
+    failed: Object.values(results).filter((r: unknown) => !(r as { success: boolean }).success).length,
+    results: Object.fromEntries(
+      Object.entries(results).map(([type, result]) => [
+        type,
+        {
+          success: (result as { success: boolean }).success,
+          error: (result as { error?: string }).error,
+        },
+      ])
+    ),
+  };
+  saveJson('components/_summary.json', summary);
+
+  console.log(`\n  Summary: ${summary.successful}/${summary.totalComponents} components successful`);
 
   // Cleanup: remove the test slot
   await underlyingClient.send({

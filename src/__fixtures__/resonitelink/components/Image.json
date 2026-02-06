@@ -1,0 +1,91 @@
+{
+  "componentType": "[FrooxEngine]FrooxEngine.UIX.Image",
+  "addResponse": {
+    "$type": "response",
+    "sourceMessageId": "32541b37-51f7-4011-854c-627fabf32c3d",
+    "success": true,
+    "errorInfo": null
+  },
+  "getResponse": {
+    "$type": "componentData",
+    "data": {
+      "componentType": "[FrooxEngine]FrooxEngine.UIX.Image",
+      "members": {
+        "persistent": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_EF"
+        },
+        "UpdateOrder": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_F0"
+        },
+        "Enabled": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_F1"
+        },
+        "Sprite": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Sprite>",
+          "id": "Reso_F2"
+        },
+        "Material": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Material>",
+          "id": "Reso_F3"
+        },
+        "PreserveAspect": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_F4"
+        },
+        "NineSliceSizing": {
+          "$type": "enum",
+          "value": "TextureSize",
+          "enumType": "NineSliceSizing",
+          "id": "Reso_F5"
+        },
+        "FlipHorizontally": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_F6"
+        },
+        "FlipVertically": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_F7"
+        },
+        "InteractionTarget": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_F8"
+        },
+        "__legacyZWrite": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_F9"
+        },
+        "Tint": {
+          "$type": "colorX",
+          "value": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1,
+            "profile": "sRGB"
+          },
+          "id": "Reso_FA"
+        }
+      },
+      "id": "test_[FrooxEngine]FrooxEngine_UIX_Image_1770374938228",
+      "isReferenceOnly": false
+    },
+    "sourceMessageId": "8d31c83e-a8b1-4b66-965b-10cc65cac488",
+    "success": true,
+    "errorInfo": null
+  }
+}

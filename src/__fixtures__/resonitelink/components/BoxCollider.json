@@ -1,0 +1,76 @@
+{
+  "componentType": "[FrooxEngine]FrooxEngine.BoxCollider",
+  "addResponse": {
+    "$type": "response",
+    "sourceMessageId": "fbdc55cf-9d4a-4818-b11e-30d27c6a52f6",
+    "success": true,
+    "errorInfo": null
+  },
+  "getResponse": {
+    "$type": "componentData",
+    "data": {
+      "componentType": "[FrooxEngine]FrooxEngine.BoxCollider",
+      "members": {
+        "persistent": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_A4"
+        },
+        "UpdateOrder": {
+          "$type": "int",
+          "value": 1000000,
+          "id": "Reso_A5"
+        },
+        "Enabled": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_A6"
+        },
+        "Offset": {
+          "$type": "float3",
+          "value": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "id": "Reso_A7"
+        },
+        "Type": {
+          "$type": "enum",
+          "value": "Static",
+          "enumType": "ColliderType",
+          "id": "Reso_A8"
+        },
+        "Mass": {
+          "$type": "float",
+          "value": 1,
+          "id": "Reso_A9"
+        },
+        "CharacterCollider": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_AA"
+        },
+        "IgnoreRaycasts": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_AB"
+        },
+        "Size": {
+          "$type": "float3",
+          "value": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "id": "Reso_AC"
+        }
+      },
+      "id": "test_[FrooxEngine]FrooxEngine_BoxCollider_1770374938205",
+      "isReferenceOnly": false
+    },
+    "sourceMessageId": "9ce221f9-f5bd-4689-bf2d-b3b9ee097809",
+    "success": true,
+    "errorInfo": null
+  }
+}

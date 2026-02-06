@@ -1,0 +1,44 @@
+{
+  "testedAt": "2026-02-06T10:48:58.234Z",
+  "totalComponents": 12,
+  "successful": 12,
+  "failed": 0,
+  "results": {
+    "[FrooxEngine]FrooxEngine.QuadMesh": {
+      "success": true
+    },
+    "[FrooxEngine]FrooxEngine.BoxMesh": {
+      "success": true
+    },
+    "[FrooxEngine]FrooxEngine.MeshRenderer": {
+      "success": true
+    },
+    "[FrooxEngine]FrooxEngine.PBS_Metallic": {
+      "success": true
+    },
+    "[FrooxEngine]FrooxEngine.UnlitMaterial": {
+      "success": true
+    },
+    "[FrooxEngine]FrooxEngine.StaticTexture2D": {
+      "success": true
+    },
+    "[FrooxEngine]FrooxEngine.Grabbable": {
+      "success": true
+    },
+    "[FrooxEngine]FrooxEngine.BoxCollider": {
+      "success": true
+    },
+    "[FrooxEngine]FrooxEngine.UIX.Canvas": {
+      "success": true
+    },
+    "[FrooxEngine]FrooxEngine.UIX.Text": {
+      "success": true
+    },
+    "[FrooxEngine]FrooxEngine.UIX.VerticalLayout": {
+      "success": true
+    },
+    "[FrooxEngine]FrooxEngine.UIX.Image": {
+      "success": true
+    }
+  }
+}

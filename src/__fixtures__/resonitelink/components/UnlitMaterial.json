@@ -1,0 +1,258 @@
+{
+  "componentType": "[FrooxEngine]FrooxEngine.UnlitMaterial",
+  "addResponse": {
+    "$type": "response",
+    "sourceMessageId": "124a9b64-50fc-44f9-836c-5827c5d4b7e5",
+    "success": true,
+    "errorInfo": null
+  },
+  "getResponse": {
+    "$type": "componentData",
+    "data": {
+      "componentType": "[FrooxEngine]FrooxEngine.UnlitMaterial",
+      "members": {
+        "persistent": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_52"
+        },
+        "UpdateOrder": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_53"
+        },
+        "Enabled": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_54"
+        },
+        "HighPriorityIntegration": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_55"
+        },
+        "TintColor": {
+          "$type": "colorX",
+          "value": {
+            "r": 1,
+            "g": 1,
+            "b": 1,
+            "a": 1,
+            "profile": "sRGB"
+          },
+          "id": "Reso_56"
+        },
+        "Texture": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
+          "id": "Reso_57"
+        },
+        "TextureScale": {
+          "$type": "float2",
+          "value": {
+            "x": 1,
+            "y": 1
+          },
+          "id": "Reso_58"
+        },
+        "TextureOffset": {
+          "$type": "float2",
+          "value": {
+            "x": 0,
+            "y": 0
+          },
+          "id": "Reso_59"
+        },
+        "MaskTexture": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
+          "id": "Reso_5A"
+        },
+        "MaskScale": {
+          "$type": "float2",
+          "value": {
+            "x": 1,
+            "y": 1
+          },
+          "id": "Reso_5B"
+        },
+        "MaskOffset": {
+          "$type": "float2",
+          "value": {
+            "x": 0,
+            "y": 0
+          },
+          "id": "Reso_5C"
+        },
+        "MaskMode": {
+          "$type": "enum",
+          "value": "MultiplyAlpha",
+          "enumType": "MaskTextureMode",
+          "id": "Reso_5D"
+        },
+        "BlendMode": {
+          "$type": "enum",
+          "value": "Opaque",
+          "enumType": "BlendMode",
+          "id": "Reso_5E"
+        },
+        "AlphaCutoff": {
+          "$type": "float",
+          "value": 0.5,
+          "id": "Reso_5F"
+        },
+        "UseVertexColors": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_60"
+        },
+        "VertexColorInterpolationSpace": {
+          "$type": "enum",
+          "value": "Linear",
+          "enumType": "ColorProfile",
+          "id": "Reso_61"
+        },
+        "Sidedness": {
+          "$type": "enum",
+          "value": "Auto",
+          "enumType": "Sidedness",
+          "id": "Reso_62"
+        },
+        "ZWrite": {
+          "$type": "enum",
+          "value": "Auto",
+          "enumType": "ZWrite",
+          "id": "Reso_63"
+        },
+        "OffsetTexture": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
+          "id": "Reso_64"
+        },
+        "OffsetMagnitude": {
+          "$type": "float2",
+          "value": {
+            "x": 0,
+            "y": 0
+          },
+          "id": "Reso_65"
+        },
+        "OffsetTextureScale": {
+          "$type": "float2",
+          "value": {
+            "x": 1,
+            "y": 1
+          },
+          "id": "Reso_66"
+        },
+        "OffsetTextureOffset": {
+          "$type": "float2",
+          "value": {
+            "x": 0,
+            "y": 0
+          },
+          "id": "Reso_67"
+        },
+        "PolarUVmapping": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_68"
+        },
+        "PolarPower": {
+          "$type": "float",
+          "value": 1,
+          "id": "Reso_69"
+        },
+        "StereoTextureTransform": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_6A"
+        },
+        "RightEyeTextureScale": {
+          "$type": "float2",
+          "value": {
+            "x": 1,
+            "y": 1
+          },
+          "id": "Reso_6B"
+        },
+        "RightEyeTextureOffset": {
+          "$type": "float2",
+          "value": {
+            "x": 0,
+            "y": 0
+          },
+          "id": "Reso_6C"
+        },
+        "DecodeAsNormalMap": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_6D"
+        },
+        "UseBillboardGeometry": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_6E"
+        },
+        "UsePerBillboardScale": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_6F"
+        },
+        "UsePerBillboardRotation": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_70"
+        },
+        "UsePerBillboardUV": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_71"
+        },
+        "BillboardSize": {
+          "$type": "float2",
+          "value": {
+            "x": 0.005,
+            "y": 0.005
+          },
+          "id": "Reso_72"
+        },
+        "OffsetFactor": {
+          "$type": "float",
+          "value": 0,
+          "id": "Reso_73"
+        },
+        "OffsetUnits": {
+          "$type": "float",
+          "value": 0,
+          "id": "Reso_74"
+        },
+        "RenderQueue": {
+          "$type": "int",
+          "value": -1,
+          "id": "Reso_75"
+        },
+        "_unlit": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Shader>",
+          "id": "Reso_76"
+        },
+        "_unlitBillboard": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.Shader>",
+          "id": "Reso_77"
+        }
+      },
+      "id": "test_[FrooxEngine]FrooxEngine_UnlitMaterial_1770374938188",
+      "isReferenceOnly": false
+    },
+    "sourceMessageId": "06ba5a11-7d0b-4434-a5d1-7102f2dc2b23",
+    "success": true,
+    "errorInfo": null
+  }
+}

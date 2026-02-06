@@ -1,0 +1,76 @@
+{
+  "componentType": "[FrooxEngine]FrooxEngine.BoxMesh",
+  "addResponse": {
+    "$type": "response",
+    "sourceMessageId": "09ff308f-0bbb-4f1f-bb96-97796c13956e",
+    "success": true,
+    "errorInfo": null
+  },
+  "getResponse": {
+    "$type": "componentData",
+    "data": {
+      "componentType": "[FrooxEngine]FrooxEngine.BoxMesh",
+      "members": {
+        "persistent": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_23"
+        },
+        "UpdateOrder": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_24"
+        },
+        "Enabled": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_25"
+        },
+        "HighPriorityIntegration": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_26"
+        },
+        "OverrideBoundingBox": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_27"
+        },
+        "Profile": {
+          "$type": "enum",
+          "value": "Linear",
+          "enumType": "ColorProfile",
+          "id": "Reso_28"
+        },
+        "Size": {
+          "$type": "float3",
+          "value": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "id": "Reso_29"
+        },
+        "UVScale": {
+          "$type": "float3",
+          "value": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          "id": "Reso_2A"
+        },
+        "ScaleUVWithSize": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_2B"
+        }
+      },
+      "id": "test_[FrooxEngine]FrooxEngine_BoxMesh_1770374938168",
+      "isReferenceOnly": false
+    },
+    "sourceMessageId": "0d8f9f2a-9892-43ac-aa35-86de87f2560d",
+    "success": true,
+    "errorInfo": null
+  }
+}

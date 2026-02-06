@@ -1,0 +1,135 @@
+{
+  "componentType": "[FrooxEngine]FrooxEngine.UIX.Canvas",
+  "addResponse": {
+    "$type": "response",
+    "sourceMessageId": "d6bd640c-2896-409d-8baa-21c5ccf168ce",
+    "success": true,
+    "errorInfo": null
+  },
+  "getResponse": {
+    "$type": "componentData",
+    "data": {
+      "componentType": "[FrooxEngine]FrooxEngine.UIX.Canvas",
+      "members": {
+        "persistent": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_AD"
+        },
+        "UpdateOrder": {
+          "$type": "int",
+          "value": 100000,
+          "id": "Reso_AE"
+        },
+        "Enabled": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_AF"
+        },
+        "Size": {
+          "$type": "float2",
+          "value": {
+            "x": 1920,
+            "y": 1080
+          },
+          "id": "Reso_B0"
+        },
+        "EditModeOnly": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_B1"
+        },
+        "AcceptRemoteTouch": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_B2"
+        },
+        "AcceptPhysicalTouch": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_B3"
+        },
+        "AcceptExistingTouch": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_B4"
+        },
+        "HighPriorityIntegration": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_B5"
+        },
+        "IgnoreTouchesFromBehind": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_B6"
+        },
+        "BlockAllInteractions": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_B7"
+        },
+        "LaserPassThrough": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_B8"
+        },
+        "PixelScale": {
+          "$type": "float",
+          "value": 1,
+          "id": "Reso_B9"
+        },
+        "UnitScale": {
+          "$type": "float",
+          "value": 1,
+          "id": "Reso_BA"
+        },
+        "_rootRect": {
+          "$type": "reference",
+          "targetId": "Reso_BB",
+          "targetType": "[FrooxEngine]FrooxEngine.UIX.RectTransform",
+          "id": "Reso_BC"
+        },
+        "Collider": {
+          "$type": "reference",
+          "targetId": "Reso_BD",
+          "targetType": "[FrooxEngine]FrooxEngine.BoxCollider",
+          "id": "Reso_BE"
+        },
+        "DefaultCulling": {
+          "$type": "enum",
+          "value": "Back",
+          "enumType": "Culling",
+          "id": "Reso_BF"
+        },
+        "_colliderSize": {
+          "$type": "reference",
+          "targetId": "Reso_C0",
+          "targetType": "[FrooxEngine]FrooxEngine.IField<float3>",
+          "id": "Reso_C1"
+        },
+        "_colliderOffset": {
+          "$type": "reference",
+          "targetId": "Reso_C2",
+          "targetType": "[FrooxEngine]FrooxEngine.IField<float3>",
+          "id": "Reso_C3"
+        },
+        "StartingOffset": {
+          "$type": "int",
+          "value": -32000,
+          "id": "Reso_C4"
+        },
+        "StartingMaskDepth": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_C5"
+        }
+      },
+      "id": "test_[FrooxEngine]FrooxEngine_UIX_Canvas_1770374938211",
+      "isReferenceOnly": false
+    },
+    "sourceMessageId": "90d920b4-8a49-4c6e-8cc2-66d583bdfd3a",
+    "success": true,
+    "errorInfo": null
+  }
+}
