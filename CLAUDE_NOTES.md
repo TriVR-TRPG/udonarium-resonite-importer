@@ -103,3 +103,17 @@ resonite.z = -udonarium.y * 0.02
     - `card-stack` の子スロット高さオフセット
     - `text-note` のフォントサイズ下限 (min=8)
 - 追加後に `npm run test` と `npm run check:validate` を実行し、すべて通過を確認。
+- AIレビュー指摘への対応を実施。
+  - `src/converter/objectConverters/cardConverter.ts`
+    - `Card.isFaceUp` と `frontImage` / `backImage` を使って表示テクスチャを選択するよう修正。
+    - フォールバック順:
+      - 表向き: `frontImage` -> `backImage` -> `images[0]`
+      - 裏向き: `backImage` -> `frontImage` -> `images[0]`
+  - `src/converter/objectConverters/cardConverter.test.ts`
+    - 表裏状態とフォールバックの単体テストを追加。
+  - `src/resonite/registerExternalUrls.ts` を新規追加し、外部URL画像登録処理を共通化。
+  - `src/gui/main.ts`
+    - GUIインポートフローでも `registerExternalUrls(parseResult.objects, assetImporter)` を実行するよう修正。
+  - `src/index.ts`
+    - CLI側の外部URL登録処理を共通モジュール利用へ置換。
+- 検証コマンド: `npm run check`（fix + validate）を実行し、通過を確認。

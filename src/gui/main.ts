@@ -10,6 +10,7 @@ import { convertObjects, resolveTexturePlaceholders } from '../converter/ObjectC
 import { ResoniteLinkClient } from '../resonite/ResoniteLinkClient';
 import { SlotBuilder } from '../resonite/SlotBuilder';
 import { AssetImporter } from '../resonite/AssetImporter';
+import { registerExternalUrls } from '../resonite/registerExternalUrls';
 import { AnalyzeResult, ImportOptions, ImportResult } from './types';
 
 let mainWindow: BrowserWindow | null = null;
@@ -138,6 +139,7 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     sendProgress('import', 0, 'インポート中...');
     const assetImporter = new AssetImporter(client);
     const slotBuilder = new SlotBuilder(client);
+    registerExternalUrls(parseResult.objects, assetImporter);
 
     // Create import group
     const groupName = `Udonarium Import - ${path.basename(filePath, '.zip')}`;
