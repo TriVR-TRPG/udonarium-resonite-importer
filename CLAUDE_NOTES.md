@@ -152,3 +152,17 @@ resonite.z = -udonarium.y * 0.02
   - `npm run test` 通過
 - 開発環境の Node.js を最新LTS系へ更新。
   - `/.mise.toml` の `node` を `20.18.2` から `24` へ変更（24.x LTS 系を利用）。
+- `npm ci` の warning 低減対応として依存更新を実施。
+  - `package.json`
+    - `eslint` を `^9.39.2` へ更新
+    - `@typescript-eslint/parser` / `@typescript-eslint/eslint-plugin` を `^8.54.0` へ更新
+    - `eslint-config-prettier` を `^10.1.8` へ更新
+    - `electron-builder` を `^26.7.0` へ更新
+    - `fast-xml-parser` を `^5.3.4` へ更新（実行時依存の `dependencies` で管理）
+  - `eslint.config.cjs` を追加し、ESLint 9 の flat config 形式で既存 `.eslintrc.json` を互換利用する構成へ移行。
+- 検証:
+  - `mise x -- npm run check` 通過
+  - `mise x -- npm run test` 通過
+  - `mise x -- npm ci` 実行時の warning は一部残存
+    - 残存 warning の主因は `electron@28` / `electron-builder` 配下の推移依存（`boolean@3`, `glob@7/10`, `inflight`, `rimraf@2`）で、現行メジャー範囲では解消不可。
+    - `npm audit` の残件は moderate 2件（`electron`, `pkg`）。`electron` は `40.x` へのメジャー更新で解消可能、`pkg` は fixAvailable なし。
