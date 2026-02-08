@@ -4,7 +4,7 @@ const TEXTURE_PLACEHOLDER_PREFIX = 'texture://';
 
 export function buildQuadMeshComponents(
   slotId: string,
-  textureIdentifier?: string,
+  textureValue?: string,
   dualSided: boolean = false
 ): ResoniteComponent[] {
   const meshId = `${slotId}-mesh`;
@@ -16,45 +16,43 @@ export function buildQuadMeshComponents(
       type: '[FrooxEngine]FrooxEngine.QuadMesh',
       fields: dualSided ? { DualSided: { $type: 'bool', value: true } } : {},
     },
-    {
-      id: materialId,
-      type: '[FrooxEngine]FrooxEngine.UnlitMaterial',
-      fields: textureIdentifier
-        ? {
-            Texture: { $type: 'reference', targetId: textureId },
-          }
-        : {},
-    },
-    {
-      id: `${slotId}-renderer`,
-      type: '[FrooxEngine]FrooxEngine.MeshRenderer',
-      fields: {
-        Mesh: { $type: 'reference', targetId: meshId },
-        Materials: {
-          $type: 'list',
-          elements: [{ $type: 'reference', targetId: materialId }],
-        },
-      },
-    },
   ];
 
-  if (textureIdentifier) {
+  if (textureValue) {
     components.push({
       id: textureId,
       type: '[FrooxEngine]FrooxEngine.StaticTexture2D',
       fields: {
-        URL: { $type: 'Uri', value: toTexturePlaceholder(textureIdentifier) },
+        URL: { $type: 'Uri', value: textureValue },
       },
     });
   }
 
+  components.push({
+    id: materialId,
+    type: '[FrooxEngine]FrooxEngine.UnlitMaterial',
+    fields: textureValue
+      ? {
+          Texture: { $type: 'reference', targetId: textureId },
+        }
+      : {},
+  });
+  components.push({
+    id: `${slotId}-renderer`,
+    type: '[FrooxEngine]FrooxEngine.MeshRenderer',
+    fields: {
+      Mesh: { $type: 'reference', targetId: meshId },
+      Materials: {
+        $type: 'list',
+        elements: [{ $type: 'reference', targetId: materialId }],
+      },
+    },
+  });
+
   return components;
 }
 
-export function buildBoxMeshComponents(
-  slotId: string,
-  textureIdentifier?: string
-): ResoniteComponent[] {
+export function buildBoxMeshComponents(slotId: string, textureValue?: string): ResoniteComponent[] {
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
   const textureId = `${slotId}-tex`;
@@ -64,43 +62,57 @@ export function buildBoxMeshComponents(
       type: '[FrooxEngine]FrooxEngine.BoxMesh',
       fields: {},
     },
-    {
-      id: materialId,
-      type: '[FrooxEngine]FrooxEngine.PBS_Metallic',
-      fields: textureIdentifier
-        ? {
-            AlbedoTexture: { $type: 'reference', targetId: textureId },
-          }
-        : {},
-    },
-    {
-      id: `${slotId}-renderer`,
-      type: '[FrooxEngine]FrooxEngine.MeshRenderer',
-      fields: {
-        Mesh: { $type: 'reference', targetId: meshId },
-        Materials: {
-          $type: 'list',
-          elements: [{ $type: 'reference', targetId: materialId }],
-        },
-      },
-    },
   ];
 
-  if (textureIdentifier) {
+  if (textureValue) {
     components.push({
       id: textureId,
       type: '[FrooxEngine]FrooxEngine.StaticTexture2D',
       fields: {
-        URL: { $type: 'Uri', value: toTexturePlaceholder(textureIdentifier) },
+        URL: { $type: 'Uri', value: textureValue },
       },
     });
   }
+
+  components.push({
+    id: materialId,
+    type: '[FrooxEngine]FrooxEngine.PBS_Metallic',
+    fields: textureValue
+      ? {
+          AlbedoTexture: { $type: 'reference', targetId: textureId },
+        }
+      : {},
+  });
+  components.push({
+    id: `${slotId}-renderer`,
+    type: '[FrooxEngine]FrooxEngine.MeshRenderer',
+    fields: {
+      Mesh: { $type: 'reference', targetId: meshId },
+      Materials: {
+        $type: 'list',
+        elements: [{ $type: 'reference', targetId: materialId }],
+      },
+    },
+  });
 
   return components;
 }
 
 export function toTexturePlaceholder(identifier: string): string {
   return `${TEXTURE_PLACEHOLDER_PREFIX}${identifier}`;
+}
+
+export function resolveTextureValue(
+  identifier?: string,
+  textureMap?: Map<string, string>
+): string | undefined {
+  if (!identifier) {
+    return undefined;
+  }
+  if (textureMap) {
+    return textureMap.get(identifier) ?? identifier;
+  }
+  return toTexturePlaceholder(identifier);
 }
 
 export function replaceTexturesInValue(value: unknown, textureMap: Map<string, string>): unknown {

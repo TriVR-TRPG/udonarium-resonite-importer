@@ -34,9 +34,9 @@ describe('applyCharacterConversion', () => {
     expect(resoniteObj.scale).toEqual(converted);
     expect(resoniteObj.components.map((c) => c.type)).toEqual([
       '[FrooxEngine]FrooxEngine.QuadMesh',
+      '[FrooxEngine]FrooxEngine.StaticTexture2D',
       '[FrooxEngine]FrooxEngine.UnlitMaterial',
       '[FrooxEngine]FrooxEngine.MeshRenderer',
-      '[FrooxEngine]FrooxEngine.StaticTexture2D',
     ]);
   });
 });

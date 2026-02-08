@@ -6,7 +6,7 @@ import { app, BrowserWindow, ipcMain, dialog, IpcMainInvokeEvent } from 'electro
 import * as path from 'path';
 import { extractZip } from '../parser/ZipExtractor';
 import { parseXmlFiles } from '../parser/XmlParser';
-import { convertObjects, resolveTexturePlaceholders } from '../converter/ObjectConverter';
+import { convertObjectsWithTextureMap } from '../converter/ObjectConverter';
 import { ResoniteLinkClient } from '../resonite/ResoniteLinkClient';
 import { SlotBuilder } from '../resonite/SlotBuilder';
 import { AssetImporter } from '../resonite/AssetImporter';
@@ -126,7 +126,6 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     // Step 2: Parse objects
     sendProgress('parse', 0, 'オブジェクトを解析中...');
     const parseResult = parseXmlFiles(extractedData.xmlFiles);
-    const resoniteObjects = convertObjects(parseResult.objects);
     sendProgress('parse', 100);
 
     // Step 3: Connect to ResoniteLink
@@ -147,7 +146,7 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
 
     // Import images
     const totalImages = extractedData.imageFiles.length;
-    const totalObjects = resoniteObjects.length;
+    const totalObjects = parseResult.objects.length;
     const totalSteps = totalImages + totalObjects;
     let currentStep = 0;
 
@@ -163,7 +162,10 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
       }
     );
 
-    resolveTexturePlaceholders(resoniteObjects, assetImporter.getImportedTextures());
+    const resoniteObjects = convertObjectsWithTextureMap(
+      parseResult.objects,
+      assetImporter.getImportedTextures()
+    );
 
     // Build slots
     const slotResults = await slotBuilder.buildSlots(resoniteObjects, (current, total) => {

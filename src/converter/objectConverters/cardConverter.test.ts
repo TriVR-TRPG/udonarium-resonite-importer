@@ -45,7 +45,10 @@ describe('applyCardConversion', () => {
 
     applyCardConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.components[3].fields).toEqual({
+    const textureComponent = resoniteObj.components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
+    );
+    expect(textureComponent?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://front.png' },
     });
   });
@@ -57,7 +60,10 @@ describe('applyCardConversion', () => {
 
     applyCardConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.components[3].fields).toEqual({
+    const textureComponent = resoniteObj.components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
+    );
+    expect(textureComponent?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://back.png' },
     });
   });
@@ -70,7 +76,10 @@ describe('applyCardConversion', () => {
 
     applyCardConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.components[3].fields).toEqual({
+    const textureComponent = resoniteObj.components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
+    );
+    expect(textureComponent?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://front.png' },
     });
   });
@@ -85,7 +94,10 @@ describe('applyCardConversion', () => {
 
     applyCardConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.components[3].fields).toEqual({
+    const textureComponent = resoniteObj.components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
+    );
+    expect(textureComponent?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://fallback.png' },
     });
   });

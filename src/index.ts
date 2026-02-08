@@ -16,7 +16,7 @@ import * as path from 'path';
 
 import { extractZip } from './parser/ZipExtractor';
 import { parseXmlFiles } from './parser/XmlParser';
-import { convertObjects, resolveTexturePlaceholders } from './converter/ObjectConverter';
+import { convertObjects, convertObjectsWithTextureMap } from './converter/ObjectConverter';
 import { ResoniteLinkClient } from './resonite/ResoniteLinkClient';
 import { SlotBuilder } from './resonite/SlotBuilder';
 import { AssetImporter } from './resonite/AssetImporter';
@@ -138,11 +138,11 @@ async function run(options: CLIOptions): Promise<void> {
     }
   }
 
-  // Convert to Resonite objects
-  const resoniteObjects = convertObjects(parseResult.objects);
-
   // Dry run - stop here
   if (options.dryRun) {
+    // Convert to Resonite objects (dry-run only)
+    const resoniteObjects = convertObjects(parseResult.objects);
+
     console.log();
     console.log(chalk.yellow(t('cli.dryRunMode')));
     console.log();
@@ -228,8 +228,11 @@ async function run(options: CLIOptions): Promise<void> {
       }
     }
 
-    // Resolve texture placeholders in object components using imported texture URLs.
-    resolveTexturePlaceholders(resoniteObjects, assetImporter.getImportedTextures());
+    // Build objects after texture import so StaticTexture2D.URL can be set directly from imported URLs.
+    const resoniteObjects = convertObjectsWithTextureMap(
+      parseResult.objects,
+      assetImporter.getImportedTextures()
+    );
 
     // Build slots
     let builtSlots = 0;

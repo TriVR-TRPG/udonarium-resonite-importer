@@ -13,6 +13,7 @@
  * You can also set RESONITELINK_PORT in a .env file.
  */
 
+import * as dotenv from 'dotenv';
 import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { ResoniteLinkClient } from './ResoniteLinkClient';
 import { SlotBuilder } from './SlotBuilder';
@@ -20,6 +21,8 @@ import { AssetImporter } from './AssetImporter';
 import { ResoniteObject } from '../converter/ResoniteObject';
 import { ExtractedFile } from '../parser/ZipExtractor';
 import { getResoniteLinkPort, getResoniteLinkHost } from '../config/MappingConfig';
+
+dotenv.config();
 
 const SKIP_INTEGRATION = process.env.RESONITE_LINK_AVAILABLE !== 'true';
 const TEST_TIMEOUT = 30000; // 30 seconds for integration tests
@@ -184,6 +187,10 @@ describe.skipIf(SKIP_INTEGRATION)('ResoniteLink Integration Tests', () => {
   }, TEST_TIMEOUT);
 
   afterAll(async () => {
+    if (!client) {
+      return;
+    }
+
     // Cleanup: Remove all created slots
     const underlyingClient = client.getClient();
     for (const slotId of createdSlotIds) {

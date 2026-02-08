@@ -45,6 +45,13 @@ export function convertSize(size: number): Vector3 {
  * Convert a single Udonarium object to Resonite object
  */
 export function convertObject(udonObj: UdonariumObject): ResoniteObject {
+  return convertObjectWithTextures(udonObj);
+}
+
+function convertObjectWithTextures(
+  udonObj: UdonariumObject,
+  textureMap?: Map<string, string>
+): ResoniteObject {
   const position = convertPosition(udonObj.position.x, udonObj.position.y);
 
   const slotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
@@ -62,19 +69,21 @@ export function convertObject(udonObj: UdonariumObject): ResoniteObject {
   // Apply type-specific conversions
   switch (udonObj.type) {
     case 'character':
-      applyCharacterConversion(udonObj, resoniteObj, convertSize);
+      applyCharacterConversion(udonObj, resoniteObj, convertSize, textureMap);
       break;
     case 'terrain':
-      applyTerrainConversion(udonObj, resoniteObj);
+      applyTerrainConversion(udonObj, resoniteObj, textureMap);
       break;
     case 'table':
-      applyTableConversion(udonObj, resoniteObj);
+      applyTableConversion(udonObj, resoniteObj, textureMap);
       break;
     case 'card':
-      applyCardConversion(udonObj, resoniteObj);
+      applyCardConversion(udonObj, resoniteObj, textureMap);
       break;
     case 'card-stack':
-      applyCardStackConversion(udonObj, resoniteObj, convertObject);
+      applyCardStackConversion(udonObj, resoniteObj, (obj) =>
+        convertObjectWithTextures(obj, textureMap)
+      );
       break;
     case 'text-note':
       applyTextNoteConversion(udonObj, resoniteObj);
@@ -90,7 +99,17 @@ export function convertObject(udonObj: UdonariumObject): ResoniteObject {
  * Convert multiple Udonarium objects to Resonite objects
  */
 export function convertObjects(udonObjects: UdonariumObject[]): ResoniteObject[] {
-  return udonObjects.map(convertObject);
+  return udonObjects.map((obj) => convertObjectWithTextures(obj));
+}
+
+/**
+ * Convert multiple Udonarium objects using imported texture URL map.
+ */
+export function convertObjectsWithTextureMap(
+  udonObjects: UdonariumObject[],
+  textureMap: Map<string, string>
+): ResoniteObject[] {
+  return udonObjects.map((obj) => convertObjectWithTextures(obj, textureMap));
 }
 
 /**

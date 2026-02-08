@@ -39,9 +39,9 @@ describe('applyTerrainConversion', () => {
     });
     expect(resoniteObj.components.map((c) => c.type)).toEqual([
       '[FrooxEngine]FrooxEngine.BoxMesh',
+      '[FrooxEngine]FrooxEngine.StaticTexture2D',
       '[FrooxEngine]FrooxEngine.PBS_Metallic',
       '[FrooxEngine]FrooxEngine.MeshRenderer',
-      '[FrooxEngine]FrooxEngine.StaticTexture2D',
     ]);
   });
 });
