@@ -20,12 +20,13 @@ export function parseTextNote(data: unknown, fileName: string): TextNote {
   // Parse position
   const posX = getNumberValue(root['@_posX']) || 0;
   const posY = getNumberValue(root['@_posY']) || 0;
+  const posZ = getNumberValue(root['@_posZ']) || 0;
 
   return {
     id: (root['@_identifier'] as string) || fileName,
     type: 'text-note',
     name,
-    position: { x: posX, y: posY },
+    position: { x: posX, y: posY, z: posZ },
     text,
     fontSize,
     images: [],

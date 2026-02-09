@@ -1,11 +1,53 @@
 import { ResoniteComponent } from '../ResoniteObject';
 
 const TEXTURE_PLACEHOLDER_PREFIX = 'texture://';
+const GIF_EXTENSION_PATTERN = /\.gif(?:$|[?#])/i;
+
+type StaticTexture2DFields = {
+  URL: { $type: 'Uri'; value: string };
+  FilterMode?: { $type: 'enum?'; value: 'Point'; enumType: 'TextureFilterMode' };
+};
+type QuadSize = { x: number; y: number };
+type BoxSize = { x: number; y: number; z: number };
+
+type BlendModeField = { $type: 'enum'; value: 'Cutout'; enumType: 'BlendMode' };
+
+function createCutoutBlendModeField(): BlendModeField {
+  return {
+    $type: 'enum',
+    value: 'Cutout',
+    enumType: 'BlendMode',
+  };
+}
+
+function buildStaticTexture2DFields(textureValue: string): StaticTexture2DFields {
+  const fields: StaticTexture2DFields = {
+    URL: { $type: 'Uri', value: textureValue },
+  };
+
+  if (isGifTexture(textureValue)) {
+    fields.FilterMode = {
+      $type: 'enum?',
+      value: 'Point',
+      enumType: 'TextureFilterMode',
+    };
+  }
+
+  return fields;
+}
+
+function isGifTexture(textureValue: string): boolean {
+  if (textureValue.startsWith(TEXTURE_PLACEHOLDER_PREFIX)) {
+    return GIF_EXTENSION_PATTERN.test(textureValue.slice(TEXTURE_PLACEHOLDER_PREFIX.length));
+  }
+  return GIF_EXTENSION_PATTERN.test(textureValue);
+}
 
 export function buildQuadMeshComponents(
   slotId: string,
   textureValue?: string,
-  dualSided: boolean = false
+  dualSided: boolean = false,
+  size: QuadSize = { x: 1, y: 1 }
 ): ResoniteComponent[] {
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
@@ -14,7 +56,10 @@ export function buildQuadMeshComponents(
     {
       id: meshId,
       type: '[FrooxEngine]FrooxEngine.QuadMesh',
-      fields: dualSided ? { DualSided: { $type: 'bool', value: true } } : {},
+      fields: {
+        Size: { $type: 'float2', value: size },
+        ...(dualSided ? { DualSided: { $type: 'bool', value: true } } : {}),
+      },
     },
   ];
 
@@ -22,20 +67,21 @@ export function buildQuadMeshComponents(
     components.push({
       id: textureId,
       type: '[FrooxEngine]FrooxEngine.StaticTexture2D',
-      fields: {
-        URL: { $type: 'Uri', value: textureValue },
-      },
+      fields: buildStaticTexture2DFields(textureValue),
     });
   }
 
   components.push({
     id: materialId,
     type: '[FrooxEngine]FrooxEngine.UnlitMaterial',
-    fields: textureValue
-      ? {
-          Texture: { $type: 'reference', targetId: textureId },
-        }
-      : {},
+    fields: {
+      ...(textureValue
+        ? {
+            Texture: { $type: 'reference', targetId: textureId },
+          }
+        : {}),
+      BlendMode: createCutoutBlendModeField(),
+    },
   });
   components.push({
     id: `${slotId}-renderer`,
@@ -52,7 +98,11 @@ export function buildQuadMeshComponents(
   return components;
 }
 
-export function buildBoxMeshComponents(slotId: string, textureValue?: string): ResoniteComponent[] {
+export function buildBoxMeshComponents(
+  slotId: string,
+  textureValue?: string,
+  size: BoxSize = { x: 1, y: 1, z: 1 }
+): ResoniteComponent[] {
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
   const textureId = `${slotId}-tex`;
@@ -60,7 +110,9 @@ export function buildBoxMeshComponents(slotId: string, textureValue?: string): R
     {
       id: meshId,
       type: '[FrooxEngine]FrooxEngine.BoxMesh',
-      fields: {},
+      fields: {
+        Size: { $type: 'float3', value: size },
+      },
     },
   ];
 
@@ -68,20 +120,21 @@ export function buildBoxMeshComponents(slotId: string, textureValue?: string): R
     components.push({
       id: textureId,
       type: '[FrooxEngine]FrooxEngine.StaticTexture2D',
-      fields: {
-        URL: { $type: 'Uri', value: textureValue },
-      },
+      fields: buildStaticTexture2DFields(textureValue),
     });
   }
 
   components.push({
     id: materialId,
     type: '[FrooxEngine]FrooxEngine.PBS_Metallic',
-    fields: textureValue
-      ? {
-          AlbedoTexture: { $type: 'reference', targetId: textureId },
-        }
-      : {},
+    fields: {
+      ...(textureValue
+        ? {
+            AlbedoTexture: { $type: 'reference', targetId: textureId },
+          }
+        : {}),
+      BlendMode: createCutoutBlendModeField(),
+    },
   });
   components.push({
     id: `${slotId}-renderer`,

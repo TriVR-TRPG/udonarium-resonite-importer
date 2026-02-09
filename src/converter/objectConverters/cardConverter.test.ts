@@ -8,7 +8,7 @@ describe('applyCardConversion', () => {
     id: 'card-1',
     type: 'card',
     name: 'Card',
-    position: { x: 0, y: 0 },
+    position: { x: 0, y: 0, z: 0 },
     images: [{ identifier: 'front.png', name: 'front.png' }],
     properties: new Map(),
     isFaceUp: true,
@@ -33,8 +33,10 @@ describe('applyCardConversion', () => {
 
     applyCardConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.scale).toEqual({ x: 0.06, y: 0.001, z: 0.09 });
+    expect(resoniteObj.rotation).toEqual({ x: 90, y: 0, z: 0 });
+    expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
     expect(resoniteObj.components[0].fields).toEqual({
+      Size: { $type: 'float2', value: { x: 0.6, y: 0.9 } },
       DualSided: { $type: 'bool', value: true },
     });
   });
@@ -99,6 +101,24 @@ describe('applyCardConversion', () => {
     );
     expect(textureComponent?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://fallback.png' },
+    });
+  });
+
+  it('GIFテクスチャではFilterModeをPointに設定する', () => {
+    const udonObj = createBaseCard();
+    udonObj.frontImage = { identifier: 'front.gif', name: 'front.gif' };
+    udonObj.images = [{ identifier: 'front.gif', name: 'front.gif' }];
+    const resoniteObj = createBaseResonite();
+    resoniteObj.textures = ['front.gif', 'back.png'];
+
+    applyCardConversion(udonObj, resoniteObj);
+
+    const textureComponent = resoniteObj.components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
+    );
+    expect(textureComponent?.fields).toEqual({
+      URL: { $type: 'Uri', value: 'texture://front.gif' },
+      FilterMode: { $type: 'enum?', value: 'Point', enumType: 'TextureFilterMode' },
     });
   });
 });

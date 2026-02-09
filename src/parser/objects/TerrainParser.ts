@@ -34,6 +34,7 @@ export function parseTerrain(data: unknown, fileName: string): Terrain {
   // Parse position
   const posX = getNumberValue(root['@_posX']) || 0;
   const posY = getNumberValue(root['@_posY']) || 0;
+  const posZ = getNumberValue(root['@_posZ']) || 0;
 
   const images: ImageRef[] = [];
   if (wallImage) images.push(wallImage);
@@ -43,7 +44,7 @@ export function parseTerrain(data: unknown, fileName: string): Terrain {
     id: (root['@_identifier'] as string) || fileName,
     type: 'terrain',
     name,
-    position: { x: posX, y: posY },
+    position: { x: posX, y: posY, z: posZ },
     width,
     height,
     depth,

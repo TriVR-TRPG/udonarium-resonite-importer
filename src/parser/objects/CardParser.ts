@@ -34,6 +34,7 @@ export function parseCard(data: unknown, fileName: string): Card {
   // Parse position
   const posX = getNumberValue(root['@_posX']) || 0;
   const posY = getNumberValue(root['@_posY']) || 0;
+  const posZ = getNumberValue(root['@_posZ']) || 0;
 
   const images: ImageRef[] = [];
   if (frontImage) images.push(frontImage);
@@ -43,7 +44,7 @@ export function parseCard(data: unknown, fileName: string): Card {
     id: (root['@_identifier'] as string) || fileName,
     type: 'card',
     name,
-    position: { x: posX, y: posY },
+    position: { x: posX, y: posY, z: posZ },
     images,
     properties: new Map(),
     isFaceUp,
@@ -63,6 +64,7 @@ export function parseCardStack(data: unknown, fileName: string): CardStack {
   // Parse position
   const posX = getNumberValue(root['@_posX']) || 0;
   const posY = getNumberValue(root['@_posY']) || 0;
+  const posZ = getNumberValue(root['@_posZ']) || 0;
 
   // Parse cards in stack
   const cards: Card[] = [];
@@ -81,7 +83,7 @@ export function parseCardStack(data: unknown, fileName: string): CardStack {
     id: (root['@_identifier'] as string) || fileName,
     type: 'card-stack',
     name,
-    position: { x: posX, y: posY },
+    position: { x: posX, y: posY, z: posZ },
     images: [],
     properties: new Map(),
     cards,

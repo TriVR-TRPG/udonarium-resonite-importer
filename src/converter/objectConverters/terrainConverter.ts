@@ -1,6 +1,5 @@
 import { Terrain } from '../UdonariumObject';
 import { ResoniteObject } from '../ResoniteObject';
-import { SIZE_MULTIPLIER } from '../../config/MappingConfig';
 import { buildBoxMeshComponents, resolveTextureValue } from './componentBuilders';
 
 export function applyTerrainConversion(
@@ -8,12 +7,11 @@ export function applyTerrainConversion(
   resoniteObj: ResoniteObject,
   textureMap?: Map<string, string>
 ): void {
-  resoniteObj.scale = {
-    x: udonObj.width * SIZE_MULTIPLIER,
-    y: udonObj.height * SIZE_MULTIPLIER,
-    z: udonObj.depth * SIZE_MULTIPLIER,
-  };
   const textureIdentifier = udonObj.floorImage?.identifier ?? udonObj.images[0]?.identifier;
   const textureValue = resolveTextureValue(textureIdentifier, textureMap);
-  resoniteObj.components = buildBoxMeshComponents(resoniteObj.id, textureValue);
+  resoniteObj.components = buildBoxMeshComponents(resoniteObj.id, textureValue, {
+    x: udonObj.width,
+    y: udonObj.height,
+    z: udonObj.depth,
+  });
 }

@@ -171,6 +171,7 @@ describe('TerrainParser', () => {
         '@_identifier': 'terrain-005',
         '@_posX': '500',
         '@_posY': '600',
+        '@_posZ': '30',
         data: [
           {
             '@_name': 'terrain',
@@ -188,6 +189,7 @@ describe('TerrainParser', () => {
 
       expect(result.position.x).toBe(500);
       expect(result.position.y).toBe(600);
+      expect(result.position.z).toBe(30);
     });
 
     it('should default position to (0, 0)', () => {
@@ -204,6 +206,7 @@ describe('TerrainParser', () => {
 
       expect(result.position.x).toBe(0);
       expect(result.position.y).toBe(0);
+      expect(result.position.z).toBe(0);
     });
 
     it('should handle empty data gracefully', () => {

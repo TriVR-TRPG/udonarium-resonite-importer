@@ -31,7 +31,7 @@ export function parseGameTable(data: unknown, fileName: string): GameTable {
     id: (root['@_identifier'] as string) || fileName,
     type: 'table',
     name,
-    position: { x: 0, y: 0 },
+    position: { x: 0, y: 0, z: 0 },
     width,
     height,
     gridType,
@@ -69,7 +69,7 @@ export function parseTable(data: unknown, fileName: string): GameTable {
     id: (root['@_identifier'] as string) || fileName,
     type: 'table',
     name,
-    position: { x: 0, y: 0 },
+    position: { x: 0, y: 0, z: 0 },
     width,
     height,
     gridType,
@@ -92,12 +92,13 @@ export function parseTableMask(data: unknown, fileName: string): TableMask {
   // Parse position
   const posX = getNumberValue(root['@_posX']) || 0;
   const posY = getNumberValue(root['@_posY']) || 0;
+  const posZ = getNumberValue(root['@_posZ']) || 0;
 
   return {
     id: (root['@_identifier'] as string) || fileName,
     type: 'table-mask',
     name,
-    position: { x: posX, y: posY },
+    position: { x: posX, y: posY, z: posZ },
     width,
     height,
     images: [],

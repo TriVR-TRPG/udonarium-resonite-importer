@@ -96,6 +96,7 @@ describe('CharacterParser', () => {
         '@_identifier': 'char-003',
         '@_location.x': '100',
         '@_location.y': '200',
+        '@_posZ': '25',
         data: [
           {
             '@_name': 'character',
@@ -113,6 +114,7 @@ describe('CharacterParser', () => {
 
       expect(result.position.x).toBe(100);
       expect(result.position.y).toBe(200);
+      expect(result.position.z).toBe(25);
     });
 
     it('should parse position from posX/posY attributes as fallback', () => {
@@ -120,6 +122,7 @@ describe('CharacterParser', () => {
         '@_identifier': 'char-004',
         '@_posX': '50',
         '@_posY': '75',
+        '@_posZ': '10',
         data: [
           {
             '@_name': 'character',
@@ -137,6 +140,7 @@ describe('CharacterParser', () => {
 
       expect(result.position.x).toBe(50);
       expect(result.position.y).toBe(75);
+      expect(result.position.z).toBe(10);
     });
 
     it('should default position to (0, 0)', () => {
@@ -153,6 +157,7 @@ describe('CharacterParser', () => {
 
       expect(result.position.x).toBe(0);
       expect(result.position.y).toBe(0);
+      expect(result.position.z).toBe(0);
     });
 
     it('should parse numberResource from detail', () => {

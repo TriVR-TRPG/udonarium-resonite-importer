@@ -9,7 +9,7 @@ describe('applyCardStackConversion', () => {
       id: 'card-a',
       type: 'card',
       name: 'A',
-      position: { x: 1, y: 2 },
+      position: { x: 1, y: 2, z: 0 },
       images: [],
       properties: new Map(),
       isFaceUp: true,
@@ -25,7 +25,7 @@ describe('applyCardStackConversion', () => {
       id: 'stack-1',
       type: 'card-stack',
       name: 'Stack',
-      position: { x: 0, y: 0 },
+      position: { x: 0, y: 0, z: 0 },
       images: [],
       properties: new Map(),
       cards: [cardA, cardB],
@@ -56,7 +56,7 @@ describe('applyCardStackConversion', () => {
     applyCardStackConversion(udonObj, resoniteObj, convertObject);
 
     expect(convertObject).toHaveBeenCalledTimes(2);
-    expect(resoniteObj.scale).toEqual({ x: 0.06, y: 0.001, z: 0.09 });
+    expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
     expect(resoniteObj.components).toEqual([]);
     expect(resoniteObj.children).toHaveLength(2);
     expect(resoniteObj.children[0].position).toEqual({ x: 0, y: 0, z: 0 });

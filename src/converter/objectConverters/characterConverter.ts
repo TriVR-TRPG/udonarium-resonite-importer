@@ -8,7 +8,10 @@ export function applyCharacterConversion(
   convertSize: (size: number) => Vector3,
   textureMap?: Map<string, string>
 ): void {
-  resoniteObj.scale = convertSize(udonObj.size);
+  const size = convertSize(udonObj.size);
   const textureValue = resolveTextureValue(udonObj.images[0]?.identifier, textureMap);
-  resoniteObj.components = buildQuadMeshComponents(resoniteObj.id, textureValue, true);
+  resoniteObj.components = buildQuadMeshComponents(resoniteObj.id, textureValue, true, {
+    x: size.x,
+    y: size.y,
+  });
 }

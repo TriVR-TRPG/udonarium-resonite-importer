@@ -163,6 +163,7 @@ describe('CardParser', () => {
         '@_identifier': 'card-006',
         '@_posX': '150',
         '@_posY': '250',
+        '@_posZ': '12',
         data: [
           {
             '@_name': 'card',
@@ -175,6 +176,7 @@ describe('CardParser', () => {
 
       expect(result.position.x).toBe(150);
       expect(result.position.y).toBe(250);
+      expect(result.position.z).toBe(12);
     });
 
     it('should default position to (0, 0)', () => {
@@ -191,6 +193,7 @@ describe('CardParser', () => {
 
       expect(result.position.x).toBe(0);
       expect(result.position.y).toBe(0);
+      expect(result.position.z).toBe(0);
     });
   });
 
@@ -333,6 +336,7 @@ describe('CardParser', () => {
         '@_identifier': 'stack-005',
         '@_posX': '300',
         '@_posY': '400',
+        '@_posZ': '8',
         data: [
           {
             '@_name': 'card-stack',
@@ -345,6 +349,7 @@ describe('CardParser', () => {
 
       expect(result.position.x).toBe(300);
       expect(result.position.y).toBe(400);
+      expect(result.position.z).toBe(8);
     });
 
     it('should use fileName as fallback for name and id', () => {

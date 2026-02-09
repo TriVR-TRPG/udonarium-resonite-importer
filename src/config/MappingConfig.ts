@@ -11,10 +11,10 @@
 export const SCALE_FACTOR = 0.02;
 
 /**
- * Size multiplier for converting Udonarium size to Resonite scale
- * Udonarium size 1 = 10cm in Resonite
+ * Scale for the import root group slot.
+ * This applies uniformly to all imported objects after conversion.
  */
-export const SIZE_MULTIPLIER = 0.1;
+export const IMPORT_GROUP_SCALE = 0.1;
 
 /**
  * Retry configuration for ResoniteLink connection
@@ -57,6 +57,19 @@ export function getResoniteLinkHost(): string {
 export const DEFAULT_RESONITE_LINK = {
   host: 'localhost',
 };
+
+/**
+ * Known Udonarium image identifiers mapped to their asset URLs.
+ * These are built-in images used by default Udonarium save data.
+ */
+export const KNOWN_IMAGE_IDENTIFIERS: ReadonlyMap<string, string> = new Map([
+  ['testTableBackgroundImage_image', 'https://udonarium.app/assets/images/BG10a_80.jpg'],
+  ['testCharacter_1_image', 'https://udonarium.app/assets/images/mon_052.gif'],
+  ['testCharacter_3_image', 'https://udonarium.app/assets/images/mon_128.gif'],
+  ['testCharacter_4_image', 'https://udonarium.app/assets/images/mon_150.gif'],
+  ['testCharacter_5_image', 'https://udonarium.app/assets/images/mon_211.gif'],
+  ['testCharacter_6_image', 'https://udonarium.app/assets/images/mon_135.gif'],
+]);
 
 /**
  * Supported object type tags in Udonarium XML

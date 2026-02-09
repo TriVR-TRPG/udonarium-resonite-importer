@@ -116,6 +116,7 @@ describe('TextNoteParser', () => {
         '@_identifier': 'note-004',
         '@_posX': '100',
         '@_posY': '200',
+        '@_posZ': '6',
         data: [
           {
             '@_name': 'text-note',
@@ -133,6 +134,7 @@ describe('TextNoteParser', () => {
 
       expect(result.position.x).toBe(100);
       expect(result.position.y).toBe(200);
+      expect(result.position.z).toBe(6);
     });
 
     it('should default position to (0, 0)', () => {
@@ -149,6 +151,7 @@ describe('TextNoteParser', () => {
 
       expect(result.position.x).toBe(0);
       expect(result.position.y).toBe(0);
+      expect(result.position.z).toBe(0);
     });
 
     it('should have empty images array', () => {

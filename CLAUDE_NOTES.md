@@ -166,3 +166,137 @@ resonite.z = -udonarium.y * 0.02
   - `mise x -- npm ci` 実行時の warning は一部残存
     - 残存 warning の主因は `electron@28` / `electron-builder` 配下の推移依存（`boolean@3`, `glob@7/10`, `inflight`, `rimraf@2`）で、現行メジャー範囲では解消不可。
     - `npm audit` の残件は moderate 2件（`electron`, `pkg`）。`electron` は `40.x` へのメジャー更新で解消可能、`pkg` は fixAvailable なし。
+- `--dry-run --verbose` 時に `UdonariumObject[]` のパース結果を JSON ファイルに出力する機能を追加。
+  - `src/index.ts`
+    - verbose 時に `parseResult.objects` を `{入力ZIP名}.parsed.json` としてファイル出力するよう変更。
+    - `Map` は `Object.fromEntries()` で変換してシリアライズ。
+  - `.gitignore`
+    - `*.parsed.json` を追加。
+  - 用途: converter 実装時に実データの構造を確認するためのデバッグ支援。
+- JSON出力を `--dump-json` 専用オプションに分離（`--verbose` との結合を解除）。
+  - `src/index.ts`
+    - `CLIOptions` に `dumpJson: boolean` を追加。
+    - `--dump-json` 指定時のみ `{入力ZIP名}.parsed.json` を出力するよう変更。
+- Udonarium 組み込みアセット識別子の外部URL解決を追加。
+  - `src/config/MappingConfig.ts`
+    - `KNOWN_IMAGE_IDENTIFIERS` マップを追加（例: `testTableBackgroundImage_image` → `https://udonarium.app/assets/images/BG10a_80.jpg`）。
+  - `src/resonite/registerExternalUrls.ts`
+    - `tryRegister` ヘルパーを導入し、`./` 相対パスと既知識別子の両方を処理するよう拡張。
+- MeshRenderer の Materials（SyncList）割り当てを修正。
+  - **根本原因**: ResoniteLink の `addComponent` / `updateComponent` では SyncList の要素追加時に `targetId` が無視される。2段階プロトコルが必要。
+    1. `id` なしで要素を追加（`targetId` は null になる）
+    2. `getComponent` でサーバーが割り振った要素 `id` を取得
+    3. `id` 付きで再送して `targetId` を設定
+  - `src/resonite/ResoniteLinkClient.ts`
+    - `updateComponent`: メンバーを更新する汎用メソッドを追加。
+    - `getComponentMembers`: コンポーネントのメンバー情報を取得するメソッドを追加。
+    - `updateListFields`: 上記2段階プロトコルを実装するメソッドを追加。
+  - `src/resonite/SlotBuilder.ts`
+    - `splitListFields`: コンポーネントの fields から `$type: "list"` を分離するヘルパーを追加。
+    - コンポーネント追加時に list フィールドを分離し、`addComponent` 後に `updateListFields` で設定するよう変更。
+  - 参照: `resolink-mcp/CLAUDE.md` の「Materials リストの更新（2段階必要）」セクション。
+
+## 最近の更新 (2026-02-09)
+- 画像が GIF の場合、`StaticTexture2D.FilterMode` を `Point` に設定する処理を追加。
+  - `src/converter/objectConverters/componentBuilders.ts`
+    - GIF判定 (`.gif` + query/hash 対応) を追加。
+    - `StaticTexture2D` の fields 構築を共通化し、GIF時のみ `FilterMode` を付与。
+  - `src/converter/objectConverters/cardConverter.test.ts`
+    - GIFテクスチャ時に `FilterMode=Point` になることを検証するテストを追加。
+- すべてのマテリアルを `Cutout` に統一。
+  - `src/converter/objectConverters/componentBuilders.ts`
+    - `UnlitMaterial.BlendMode` を `Cutout` に固定。
+    - `PBS_Metallic.BlendMode` を `Cutout` に固定。
+  - `src/converter/objectConverters/characterConverter.test.ts`
+    - `UnlitMaterial.BlendMode=Cutout` を検証するテストを追加。
+  - `src/converter/objectConverters/terrainConverter.test.ts`
+    - `PBS_Metallic.BlendMode=Cutout` を検証するテストを追加。
+- 文字化け対策として日本語ドキュメントを UTF-8 BOM 付きに統一。
+  - `README.ja.md`
+  - `docs/development.ja.md`
+  - `docs/design.md`
+- 検証:
+  - `npm run test -- src/converter/objectConverters` 通過
+- 補足:
+  - `FilterMode` が反映されないように見えた原因は、`src` 変更前の `dist` を実行していたため。
+  - ResoniteLink の `addComponent/getComponent` レスポンス上では `FilterMode=Point` の設定が確認できることを実測済み。
+- オブジェクトスケール基準を「1マス=1m」に統一し、最終サイズを維持するためインポートルートコンテナへ縮尺を適用。
+  - `src/config/MappingConfig.ts`
+    - `SIZE_MULTIPLIER` を `1.0` へ更新。
+  - `src/converter/objectConverters/tableConverter.ts`
+    - `x/z` のスケールを `width/height * SIZE_MULTIPLIER` に変更。
+    - テーブル厚みを `0.1`、Yオフセットを `-0.1` に変更。
+  - `src/converter/objectConverters/cardConverter.ts`
+    - カードスケールを `{ x: 0.6, y: 0.01, z: 0.9 }` に変更。
+  - `src/converter/objectConverters/cardStackConverter.ts`
+    - 山の親スロットスケールを `{ x: 0.6, y: 0.01, z: 0.9 }` に変更。
+  - `src/converter/objectConverters/textNoteConverter.ts`
+    - スケールを `{ x: 1, y: 1, z: 1 }` に変更。
+  - `src/resonite/SlotBuilder.ts`
+    - `createImportGroup()` のルートコンテナスケールを `{ x: 0.1, y: 0.1, z: 0.1 }` に変更。
+  - 意図:
+    - コンバータ内部は 1マス=1m で整合させつつ、最上位コンテナで 0.1 倍して最終的に 1マス=10cm を維持。
+- `BoxCollider` の設定を見直し、見た目メッシュに合わせたコライダー寸法へ調整。
+  - `src/converter/ObjectConverter.ts`
+    - `ensureBoxCollider()` にメッシュ種別判定を追加。
+    - `QuadMesh` の場合: `Size = { x: 1, y: 1, z: 0.01 }`
+    - `BoxMesh` の場合: `Size = { x: 1, y: 1, z: 1 }`
+    - メッシュ未設定の場合: `Size = { x: 1, y: 1, z: 1 }`（フォールバック）
+  - 背景:
+    - `Size` にスロットスケールを入れると二重スケールとなり、見た目とコライダーが不一致になるため。
+- テスト更新:
+  - `src/converter/ObjectConverter.test.ts`
+  - `src/converter/objectConverters/cardConverter.test.ts`
+  - `src/converter/objectConverters/cardStackConverter.test.ts`
+  - `src/converter/objectConverters/tableConverter.test.ts`
+  - `src/converter/objectConverters/textNoteConverter.test.ts`
+  - `src/resonite/SlotBuilder.test.ts`
+- QuadMesh/BoxMesh のサイズを `Slot.scale` ではなく Mesh の `Size` で定義するように統一。
+  - `src/converter/objectConverters/componentBuilders.ts`
+    - `buildQuadMeshComponents()` に `size` 引数を追加し、`QuadMesh.Size(float2)` を設定。
+    - `buildBoxMeshComponents()` に `size` 引数を追加し、`BoxMesh.Size(float3)` を設定。
+  - `src/converter/objectConverters/characterConverter.ts`
+    - `convertSize()` 結果を `QuadMesh.Size` に反映。
+  - `src/converter/objectConverters/cardConverter.ts`
+    - カードの大きさを `QuadMesh.Size = { x: 0.6, y: 0.9 }` に変更（横置きは維持）。
+  - `src/converter/objectConverters/tableConverter.ts`
+    - テーブルの大きさを `QuadMesh.Size = { x: width, y: height } * SIZE_MULTIPLIER` に変更。
+  - `src/converter/objectConverters/terrainConverter.ts`
+    - 地形サイズを `BoxMesh.Size = { x: width, y: height, z: depth } * SIZE_MULTIPLIER` に変更。
+  - `src/converter/objectConverters/cardStackConverter.ts`
+    - 親スロットの `scale` 固定値を削除（子カードにメッシュサイズを持たせる方式に統一）。
+- コライダーサイズをメッシュ `Size` 参照に変更。
+  - `src/converter/ObjectConverter.ts`
+    - `QuadMesh.Size` / `BoxMesh.Size` を読み取り、`BoxCollider.Size` を決定する実装に更新。
+    - `QuadMesh` は厚み `z=0.01` を付与。
+- converter ごとの `resoniteObj.scale` 代入を削除。
+  - 対象:
+    - `src/converter/objectConverters/characterConverter.ts`
+    - `src/converter/objectConverters/cardConverter.ts`
+    - `src/converter/objectConverters/cardStackConverter.ts`
+    - `src/converter/objectConverters/tableConverter.ts`
+    - `src/converter/objectConverters/terrainConverter.ts`
+    - `src/converter/objectConverters/textNoteConverter.ts`
+- 検証:
+  - `npm run test -- src/converter/objectConverters src/converter/ObjectConverter.test.ts` 通過
+  - `npm run check` 通過
+- `SIZE_MULTIPLIER` を廃止し、オブジェクト寸法は Udonarium 値をそのまま Mesh `Size` に反映する方針へ整理。
+  - `src/config/MappingConfig.ts`
+    - `SIZE_MULTIPLIER` を削除。
+    - インポートルートの縮尺定数 `IMPORT_GROUP_SCALE` を追加。
+  - `src/converter/ObjectConverter.ts`
+    - `convertSize()` を単純な等倍変換に変更（`size -> {x:size,y:size,z:size}`）。
+  - `src/converter/objectConverters/tableConverter.ts`
+    - `QuadMesh.Size` を `width/height` の直接値で設定。
+  - `src/converter/objectConverters/terrainConverter.ts`
+    - `BoxMesh.Size` を `width/height/depth` の直接値で設定。
+  - `src/resonite/SlotBuilder.ts`
+    - ルートコンテナの `scale` を `IMPORT_GROUP_SCALE` 参照へ変更。
+  - テスト更新:
+    - `src/converter/ObjectConverter.test.ts`
+    - `src/converter/objectConverters/tableConverter.test.ts`
+    - `src/converter/objectConverters/terrainConverter.test.ts`
+    - `src/resonite/SlotBuilder.test.ts`
+  - 検証:
+    - `npm run test -- src/converter/ObjectConverter.test.ts src/converter/objectConverters/tableConverter.test.ts src/converter/objectConverters/terrainConverter.test.ts src/resonite/SlotBuilder.test.ts` 通過
+    - `npm run check` 通過

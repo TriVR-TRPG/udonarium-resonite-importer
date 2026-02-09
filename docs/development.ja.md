@@ -1,4 +1,4 @@
-# 開発ガイド
+﻿# 開発ガイド
 
 [English](development.md)
 

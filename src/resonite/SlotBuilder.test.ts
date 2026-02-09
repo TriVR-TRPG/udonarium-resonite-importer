@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { SlotBuilder } from './SlotBuilder';
 import { ResoniteLinkClient } from './ResoniteLinkClient';
 import { ResoniteObject } from '../converter/ResoniteObject';
+import { IMPORT_GROUP_SCALE } from '../config/MappingConfig';
 
 // Mock ResoniteLinkClient
 vi.mock('./ResoniteLinkClient', () => {
@@ -301,7 +302,7 @@ describe('SlotBuilder', () => {
           parentId: 'Root',
           name: 'My Import',
           position: { x: 0, y: 0, z: 0 },
-          scale: { x: 1, y: 1, z: 1 },
+          scale: { x: IMPORT_GROUP_SCALE, y: IMPORT_GROUP_SCALE, z: IMPORT_GROUP_SCALE },
         })
       );
 

@@ -9,7 +9,7 @@ describe('applyTextNoteConversion', () => {
       id: 'note-1',
       type: 'text-note',
       name: 'Note',
-      position: { x: 0, y: 0 },
+      position: { x: 0, y: 0, z: 0 },
       images: [],
       properties: new Map(),
       text: 'hello',
@@ -28,7 +28,7 @@ describe('applyTextNoteConversion', () => {
 
     applyTextNoteConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.scale).toEqual({ x: 0.1, y: 0.1, z: 0.1 });
+    expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
     expect(resoniteObj.components).toEqual([
       {
         id: 'slot-note-1-text',
@@ -46,7 +46,7 @@ describe('applyTextNoteConversion', () => {
       id: 'note-2',
       type: 'text-note',
       name: 'Note',
-      position: { x: 0, y: 0 },
+      position: { x: 0, y: 0, z: 0 },
       images: [],
       properties: new Map(),
       text: 'tiny',

@@ -1,4 +1,4 @@
-# Udonarium Resonite Importer
+﻿# Udonarium Resonite Importer
 
 [Udonarium](https://github.com/TK11235/udonarium)のセーブデータを、[ResoniteLink](https://github.com/Yellow-Dog-Man/ResoniteLink)経由で[Resonite](https://resonite.com/)にインポートするツールです。
 

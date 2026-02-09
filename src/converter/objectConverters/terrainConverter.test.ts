@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { applyTerrainConversion } from './terrainConverter';
 import { Terrain } from '../UdonariumObject';
 import { ResoniteObject } from '../ResoniteObject';
-import { SIZE_MULTIPLIER } from '../../config/MappingConfig';
 
 describe('applyTerrainConversion', () => {
   it('地形サイズを反映し、Box系コンポーネントを設定する', () => {
@@ -10,7 +9,7 @@ describe('applyTerrainConversion', () => {
       id: 'terrain-1',
       type: 'terrain',
       name: 'Terrain',
-      position: { x: 0, y: 0 },
+      position: { x: 0, y: 0, z: 0 },
       images: [{ identifier: 'wall.png', name: 'wall.png' }],
       properties: new Map(),
       width: 10,
@@ -32,16 +31,30 @@ describe('applyTerrainConversion', () => {
 
     applyTerrainConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.scale).toEqual({
-      x: 10 * SIZE_MULTIPLIER,
-      y: 2 * SIZE_MULTIPLIER,
-      z: 4 * SIZE_MULTIPLIER,
-    });
+    expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
     expect(resoniteObj.components.map((c) => c.type)).toEqual([
       '[FrooxEngine]FrooxEngine.BoxMesh',
       '[FrooxEngine]FrooxEngine.StaticTexture2D',
       '[FrooxEngine]FrooxEngine.PBS_Metallic',
       '[FrooxEngine]FrooxEngine.MeshRenderer',
     ]);
+    expect(resoniteObj.components[0].fields).toEqual({
+      Size: {
+        $type: 'float3',
+        value: {
+          x: 10,
+          y: 2,
+          z: 4,
+        },
+      },
+    });
+
+    const materialComponent = resoniteObj.components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.PBS_Metallic'
+    );
+    expect(materialComponent?.fields).toEqual({
+      AlbedoTexture: { $type: 'reference', targetId: 'slot-terrain-1-tex' },
+      BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' },
+    });
   });
 });

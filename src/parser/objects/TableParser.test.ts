@@ -115,6 +115,7 @@ describe('TableParser', () => {
 
       expect(result.position.x).toBe(0);
       expect(result.position.y).toBe(0);
+      expect(result.position.z).toBe(0);
     });
   });
 
@@ -190,6 +191,7 @@ describe('TableParser', () => {
 
       expect(result.position.x).toBe(0);
       expect(result.position.y).toBe(0);
+      expect(result.position.z).toBe(0);
     });
   });
 
@@ -260,6 +262,7 @@ describe('TableParser', () => {
         '@_identifier': 'mask-002',
         '@_posX': '150',
         '@_posY': '250',
+        '@_posZ': '4',
         data: [
           {
             '@_name': 'table-mask',
@@ -272,6 +275,7 @@ describe('TableParser', () => {
 
       expect(result.position.x).toBe(150);
       expect(result.position.y).toBe(250);
+      expect(result.position.z).toBe(4);
     });
 
     it('should default position to (0, 0)', () => {
@@ -288,6 +292,7 @@ describe('TableParser', () => {
 
       expect(result.position.x).toBe(0);
       expect(result.position.y).toBe(0);
+      expect(result.position.z).toBe(0);
     });
 
     it('should have empty images array', () => {

@@ -17,9 +17,10 @@ export interface ImageRef {
   data?: Buffer;
 }
 
-export interface Vector2 {
+export interface Vector3 {
   x: number;
   y: number;
+  z: number;
 }
 
 export interface NumberResource {
@@ -32,7 +33,7 @@ export interface BaseUdonariumObject {
   id: string;
   type: ObjectType;
   name: string;
-  position: Vector2;
+  position: Vector3;
   images: ImageRef[];
   properties: Map<string, string | number>;
 }

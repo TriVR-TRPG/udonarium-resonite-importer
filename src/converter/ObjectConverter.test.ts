@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { convertPosition, convertSize, convertObject, convertObjects } from './ObjectConverter';
-import { SCALE_FACTOR, SIZE_MULTIPLIER } from '../config/MappingConfig';
+import { SCALE_FACTOR } from '../config/MappingConfig';
 import type {
   GameCharacter,
   Card,
@@ -12,8 +12,8 @@ import type {
 
 describe('ObjectConverter', () => {
   describe('convertPosition', () => {
-    it('should convert origin (0, 0) to origin', () => {
-      const result = convertPosition(0, 0);
+    it('should convert origin (0, 0, 0) to origin', () => {
+      const result = convertPosition(0, 0, 0);
       expect(result.x).toBe(0);
       expect(result.y).toBe(0);
       // Note: -0 * SCALE_FACTOR = -0, which is equal to 0 numerically
@@ -21,21 +21,21 @@ describe('ObjectConverter', () => {
     });
 
     it('should scale X coordinate by SCALE_FACTOR', () => {
-      const result = convertPosition(100, 0);
+      const result = convertPosition(100, 0, 0);
       expect(result.x).toBe(100 * SCALE_FACTOR);
       expect(result.y).toBe(0);
       expect(result.z).toBeCloseTo(0);
     });
 
     it('should invert and scale Y to Z coordinate', () => {
-      const result = convertPosition(0, 100);
+      const result = convertPosition(0, 100, 0);
       expect(result.x).toBe(0);
       expect(result.y).toBe(0);
       expect(result.z).toBe(-100 * SCALE_FACTOR);
     });
 
     it('should handle negative coordinates', () => {
-      const result = convertPosition(-50, -75);
+      const result = convertPosition(-50, -75, 0);
       expect(result.x).toBe(-50 * SCALE_FACTOR);
       expect(result.y).toBe(0);
       expect(result.z).toBe(75 * SCALE_FACTOR);
@@ -43,32 +43,32 @@ describe('ObjectConverter', () => {
 
     it('should convert typical Udonarium pixel values', () => {
       // 50px = 1 grid = 1m in Resonite
-      const result = convertPosition(50, 50);
+      const result = convertPosition(50, 50, 0);
       expect(result.x).toBeCloseTo(1); // 50 * 0.02 = 1
       expect(result.z).toBeCloseTo(-1); // -50 * 0.02 = -1
     });
   });
 
   describe('convertSize', () => {
-    it('should convert size 1 to SIZE_MULTIPLIER', () => {
+    it('should keep size 1 as-is', () => {
       const result = convertSize(1);
       expect(result).toEqual({
-        x: SIZE_MULTIPLIER,
-        y: SIZE_MULTIPLIER,
-        z: SIZE_MULTIPLIER,
+        x: 1,
+        y: 1,
+        z: 1,
       });
     });
 
-    it('should scale size uniformly', () => {
+    it('should keep size value uniformly', () => {
       const result = convertSize(5);
-      expect(result.x).toBe(5 * SIZE_MULTIPLIER);
-      expect(result.y).toBe(5 * SIZE_MULTIPLIER);
-      expect(result.z).toBe(5 * SIZE_MULTIPLIER);
+      expect(result.x).toBe(5);
+      expect(result.y).toBe(5);
+      expect(result.z).toBe(5);
     });
 
     it('should handle decimal sizes', () => {
       const result = convertSize(1.5);
-      expect(result.x).toBeCloseTo(1.5 * SIZE_MULTIPLIER);
+      expect(result.x).toBeCloseTo(1.5);
     });
   });
 
@@ -76,7 +76,7 @@ describe('ObjectConverter', () => {
     const createBaseObject = () => ({
       id: 'test-id',
       name: 'Test Object',
-      position: { x: 100, y: 200 },
+      position: { x: 100, y: 200, z: 50 },
       images: [{ identifier: 'img1', name: 'image1.png' }],
       properties: new Map<string, string | number>(),
     });
@@ -94,8 +94,8 @@ describe('ObjectConverter', () => {
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
         expect(result.name).toBe('Test Object');
-        expect(result.position).toEqual(convertPosition(100, 200));
-        expect(result.scale).toEqual(convertSize(2));
+        expect(result.position).toEqual(convertPosition(100, 200, 50));
+        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
         expect(result.textures).toEqual(['img1']);
       });
     });
@@ -115,11 +115,7 @@ describe('ObjectConverter', () => {
         const result = convertObject(terrain);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({
-          x: 10 * SIZE_MULTIPLIER,
-          y: 5 * SIZE_MULTIPLIER,
-          z: 3 * SIZE_MULTIPLIER,
-        });
+        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
       });
     });
 
@@ -137,12 +133,8 @@ describe('ObjectConverter', () => {
         const result = convertObject(table);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({
-          x: 20 * SCALE_FACTOR,
-          y: 0.01,
-          z: 20 * SCALE_FACTOR,
-        });
-        expect(result.position.y).toBe(-0.01);
+        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
+        expect(result.position.y).toBe(0.9);
       });
     });
 
@@ -159,7 +151,7 @@ describe('ObjectConverter', () => {
         const result = convertObject(card);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 0.06, y: 0.001, z: 0.09 });
+        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
       });
     });
 
@@ -174,7 +166,7 @@ describe('ObjectConverter', () => {
         const result = convertObject(cardStack);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 0.06, y: 0.001, z: 0.09 });
+        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
       });
     });
 
@@ -190,8 +182,76 @@ describe('ObjectConverter', () => {
         const result = convertObject(textNote);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 0.1, y: 0.1, z: 0.1 });
+        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
       });
+    });
+
+    it('should add BoxCollider to all object types', () => {
+      const objects = [
+        {
+          ...createBaseObject(),
+          type: 'character' as const,
+          size: 1,
+          resources: [],
+        },
+        {
+          ...createBaseObject(),
+          type: 'terrain' as const,
+          width: 1,
+          height: 1,
+          depth: 1,
+          wallImage: null,
+          floorImage: null,
+        },
+        {
+          ...createBaseObject(),
+          type: 'table' as const,
+          width: 1,
+          height: 1,
+          gridType: 'square' as const,
+          gridColor: '#000000',
+        },
+        {
+          ...createBaseObject(),
+          type: 'card' as const,
+          isFaceUp: true,
+          frontImage: { identifier: 'front', name: 'front.png' },
+          backImage: { identifier: 'back', name: 'back.png' },
+        },
+        {
+          ...createBaseObject(),
+          type: 'card-stack' as const,
+          cards: [],
+        },
+        {
+          ...createBaseObject(),
+          type: 'text-note' as const,
+          text: 'note',
+          fontSize: 12,
+        },
+      ];
+      const expectedSizes = [
+        { x: 1, y: 1, z: 0.01 }, // character -> QuadMesh
+        { x: 1, y: 1, z: 1 }, // terrain -> BoxMesh
+        { x: 1, y: 1, z: 0.01 }, // table -> QuadMesh
+        { x: 0.6, y: 0.9, z: 0.01 }, // card -> QuadMesh
+        { x: 1, y: 1, z: 1 }, // card-stack parent -> meshless fallback
+        { x: 1, y: 1, z: 1 }, // text-note -> meshless fallback
+      ];
+
+      for (const [index, obj] of objects.entries()) {
+        const result = convertObject(obj);
+        const collider = result.components.find(
+          (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
+        );
+        expect(collider).toBeDefined();
+        expect(collider?.fields).toEqual({
+          Size: {
+            $type: 'float3',
+            value: expectedSizes[index],
+          },
+        });
+      }
     });
 
     it('should preserve rotation as zero', () => {
@@ -250,7 +310,7 @@ describe('ObjectConverter', () => {
           id: 'char1',
           type: 'character',
           name: 'Character 1',
-          position: { x: 0, y: 0 },
+          position: { x: 0, y: 0, z: 0 },
           images: [],
           properties: new Map(),
           size: 1,
@@ -260,7 +320,7 @@ describe('ObjectConverter', () => {
           id: 'char2',
           type: 'character',
           name: 'Character 2',
-          position: { x: 100, y: 100 },
+          position: { x: 100, y: 100, z: 0 },
           images: [],
           properties: new Map(),
           size: 2,
@@ -282,7 +342,7 @@ describe('ObjectConverter', () => {
           id: 'data',
           type: 'character',
           name: 'Monster A',
-          position: { x: 0, y: 0 },
+          position: { x: 0, y: 0, z: 0 },
           images: [],
           properties: new Map(),
           size: 1,
@@ -292,7 +352,7 @@ describe('ObjectConverter', () => {
           id: 'data',
           type: 'character',
           name: 'Monster B',
-          position: { x: 100, y: 0 },
+          position: { x: 100, y: 0, z: 0 },
           images: [],
           properties: new Map(),
           size: 1,
@@ -302,7 +362,7 @@ describe('ObjectConverter', () => {
           id: 'data',
           type: 'character',
           name: 'Monster C',
-          position: { x: 200, y: 0 },
+          position: { x: 200, y: 0, z: 0 },
           images: [],
           properties: new Map(),
           size: 1,

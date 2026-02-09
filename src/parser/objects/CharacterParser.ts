@@ -34,15 +34,16 @@ export function parseCharacter(data: unknown, fileName: string): GameCharacter {
   }
 
   // Parse position (if available)
-  // Udonarium uses location.x/location.y OR posX/posY for position
+  // Udonarium uses location.x/location.y OR posX/posY for 2D position, and posZ for Z axis.
   const posX = getNumberValue(root['@_location.x']) || getNumberValue(root['@_posX']) || 0;
   const posY = getNumberValue(root['@_location.y']) || getNumberValue(root['@_posY']) || 0;
+  const posZ = getNumberValue(root['@_posZ']) || 0;
 
   return {
     id: (root['@_identifier'] as string) || fileName,
     type: 'character',
     name,
-    position: { x: posX, y: posY },
+    position: { x: posX, y: posY, z: posZ },
     size,
     images,
     properties: new Map(),

@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { applyTableConversion } from './tableConverter';
 import { GameTable } from '../UdonariumObject';
 import { ResoniteObject } from '../ResoniteObject';
-import { SCALE_FACTOR } from '../../config/MappingConfig';
 
 describe('applyTableConversion', () => {
   it('テーブルサイズ・Yオフセット・Quad系コンポーネントを設定する', () => {
@@ -10,7 +9,7 @@ describe('applyTableConversion', () => {
       id: 'table-1',
       type: 'table',
       name: 'Table',
-      position: { x: 0, y: 0 },
+      position: { x: 0, y: 0, z: 0 },
       images: [{ identifier: 'table.png', name: 'table.png' }],
       properties: new Map(),
       width: 20,
@@ -31,12 +30,14 @@ describe('applyTableConversion', () => {
 
     applyTableConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.scale).toEqual({
-      x: 20 * SCALE_FACTOR,
-      y: 0.01,
-      z: 10 * SCALE_FACTOR,
+    expect(resoniteObj.rotation).toEqual({ x: 90, y: 0, z: 0 });
+    expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
+    expect(resoniteObj.position.y).toBe(-0.1);
+    expect(resoniteObj.components[0].fields).toEqual({
+      Size: {
+        $type: 'float2',
+        value: { x: 20, y: 10 },
+      },
     });
-    expect(resoniteObj.position.y).toBe(-0.01);
-    expect(resoniteObj.components[0].fields).toEqual({});
   });
 });

@@ -6,7 +6,7 @@ describe('XmlParser', () => {
     describe('character parsing', () => {
       it('should parse basic character XML', () => {
         const xml = `
-          <character identifier="char-001" posX="100" posY="200">
+          <character identifier="char-001" posX="100" posY="200" posZ="50">
             <data name="character">
               <data name="image">
                 <data name="imageIdentifier">#text=token123</data>
@@ -27,7 +27,7 @@ describe('XmlParser', () => {
         const char = result.objects[0];
         expect(char.type).toBe('character');
         expect(char.id).toBe('char-001');
-        expect(char.position).toEqual({ x: 100, y: 200 });
+        expect(char.position).toEqual({ x: 100, y: 200, z: 50 });
       });
 
       it('should use fileName as fallback for missing name', () => {

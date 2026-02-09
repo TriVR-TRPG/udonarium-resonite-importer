@@ -6,7 +6,6 @@ export function applyCardStackConversion(
   resoniteObj: ResoniteObject,
   convertObject: (obj: UdonariumObject) => ResoniteObject
 ): void {
-  resoniteObj.scale = { x: 0.06, y: 0.001, z: 0.09 };
   resoniteObj.components = [];
   resoniteObj.children = udonObj.cards.map((card, i) => {
     const child = convertObject(card);
