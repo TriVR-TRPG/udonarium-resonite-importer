@@ -16,6 +16,8 @@ export function applyCardConversion(
       udonObj.images[0]?.identifier);
   const textureValue = resolveTextureValue(textureIdentifier, textureMap);
 
-  resoniteObj.scale = { x: 0.6, y: 0.01, z: 0.9 };
+  // Lay cards flat on the table (horizontal quad).
+  resoniteObj.rotation = { x: 90, y: 0, z: 0 };
+  resoniteObj.scale = { x: 0.6, y: 0.9, z: 0.01 };
   resoniteObj.components = buildQuadMeshComponents(resoniteObj.id, textureValue, true);
 }

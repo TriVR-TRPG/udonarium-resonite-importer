@@ -31,6 +31,7 @@ describe('applyTableConversion', () => {
 
     applyTableConversion(udonObj, resoniteObj);
 
+    expect(resoniteObj.rotation).toEqual({ x: -90, y: 0, z: 0 });
     expect(resoniteObj.scale).toEqual({
       x: 20 * SIZE_MULTIPLIER,
       y: 0.1,
