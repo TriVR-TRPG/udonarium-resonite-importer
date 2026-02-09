@@ -56,7 +56,7 @@ describe('applyCardStackConversion', () => {
     applyCardStackConversion(udonObj, resoniteObj, convertObject);
 
     expect(convertObject).toHaveBeenCalledTimes(2);
-    expect(resoniteObj.scale).toEqual({ x: 0.06, y: 0.001, z: 0.09 });
+    expect(resoniteObj.scale).toEqual({ x: 0.6, y: 0.01, z: 0.9 });
     expect(resoniteObj.components).toEqual([]);
     expect(resoniteObj.children).toHaveLength(2);
     expect(resoniteObj.children[0].position).toEqual({ x: 0, y: 0, z: 0 });

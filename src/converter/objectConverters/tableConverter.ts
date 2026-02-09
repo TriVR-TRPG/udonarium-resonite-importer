@@ -1,6 +1,6 @@
 import { GameTable } from '../UdonariumObject';
 import { ResoniteObject } from '../ResoniteObject';
-import { SCALE_FACTOR } from '../../config/MappingConfig';
+import { SIZE_MULTIPLIER } from '../../config/MappingConfig';
 import { buildQuadMeshComponents, resolveTextureValue } from './componentBuilders';
 
 export function applyTableConversion(
@@ -9,11 +9,11 @@ export function applyTableConversion(
   textureMap?: Map<string, string>
 ): void {
   resoniteObj.scale = {
-    x: udonObj.width * SCALE_FACTOR,
-    y: 0.01,
-    z: udonObj.height * SCALE_FACTOR,
+    x: udonObj.width * SIZE_MULTIPLIER,
+    y: 0.1,
+    z: udonObj.height * SIZE_MULTIPLIER,
   };
-  resoniteObj.position.y = -0.01;
+  resoniteObj.position.y = -0.1;
   const textureValue = resolveTextureValue(udonObj.images[0]?.identifier, textureMap);
   resoniteObj.components = buildQuadMeshComponents(resoniteObj.id, textureValue, false);
 }

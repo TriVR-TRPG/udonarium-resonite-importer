@@ -28,7 +28,7 @@ describe('applyTextNoteConversion', () => {
 
     applyTextNoteConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.scale).toEqual({ x: 0.1, y: 0.1, z: 0.1 });
+    expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
     expect(resoniteObj.components).toEqual([
       {
         id: 'slot-note-1-text',

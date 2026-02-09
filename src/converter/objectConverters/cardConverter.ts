@@ -16,6 +16,6 @@ export function applyCardConversion(
       udonObj.images[0]?.identifier);
   const textureValue = resolveTextureValue(textureIdentifier, textureMap);
 
-  resoniteObj.scale = { x: 0.06, y: 0.001, z: 0.09 };
+  resoniteObj.scale = { x: 0.6, y: 0.01, z: 0.9 };
   resoniteObj.components = buildQuadMeshComponents(resoniteObj.id, textureValue, true);
 }

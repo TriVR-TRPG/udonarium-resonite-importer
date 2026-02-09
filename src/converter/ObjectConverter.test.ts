@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { convertPosition, convertSize, convertObject, convertObjects } from './ObjectConverter';
-import { SCALE_FACTOR, SIZE_MULTIPLIER } from '../config/MappingConfig';
+import { SIZE_MULTIPLIER, SCALE_FACTOR } from '../config/MappingConfig';
 import type {
   GameCharacter,
   Card,
@@ -138,11 +138,11 @@ describe('ObjectConverter', () => {
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
         expect(result.scale).toEqual({
-          x: 20 * SCALE_FACTOR,
-          y: 0.01,
-          z: 20 * SCALE_FACTOR,
+          x: 20 * SIZE_MULTIPLIER,
+          y: 0.1,
+          z: 20 * SIZE_MULTIPLIER,
         });
-        expect(result.position.y).toBe(-0.01);
+        expect(result.position.y).toBe(-0.1);
       });
     });
 
@@ -159,7 +159,7 @@ describe('ObjectConverter', () => {
         const result = convertObject(card);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 0.06, y: 0.001, z: 0.09 });
+        expect(result.scale).toEqual({ x: 0.6, y: 0.01, z: 0.9 });
       });
     });
 
@@ -174,7 +174,7 @@ describe('ObjectConverter', () => {
         const result = convertObject(cardStack);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 0.06, y: 0.001, z: 0.09 });
+        expect(result.scale).toEqual({ x: 0.6, y: 0.01, z: 0.9 });
       });
     });
 
@@ -190,7 +190,7 @@ describe('ObjectConverter', () => {
         const result = convertObject(textNote);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 0.1, y: 0.1, z: 0.1 });
+        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
       });
     });
 

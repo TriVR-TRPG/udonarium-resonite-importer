@@ -12,9 +12,9 @@ export const SCALE_FACTOR = 0.02;
 
 /**
  * Size multiplier for converting Udonarium size to Resonite scale
- * Udonarium size 1 = 10cm in Resonite
+ * Udonarium size 1 = 1m (1 grid) in Resonite
  */
-export const SIZE_MULTIPLIER = 0.1;
+export const SIZE_MULTIPLIER = 1.0;
 
 /**
  * Retry configuration for ResoniteLink connection

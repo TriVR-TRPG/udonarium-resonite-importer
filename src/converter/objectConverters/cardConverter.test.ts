@@ -33,7 +33,7 @@ describe('applyCardConversion', () => {
 
     applyCardConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.scale).toEqual({ x: 0.06, y: 0.001, z: 0.09 });
+    expect(resoniteObj.scale).toEqual({ x: 0.6, y: 0.01, z: 0.9 });
     expect(resoniteObj.components[0].fields).toEqual({
       DualSided: { $type: 'bool', value: true },
     });

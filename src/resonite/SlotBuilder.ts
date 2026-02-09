@@ -128,7 +128,7 @@ export class SlotBuilder {
   async createImportGroup(name: string): Promise<string> {
     const groupId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
     const position: Vector3 = { x: 0, y: 0, z: 0 };
-    const scale: Vector3 = { x: 1, y: 1, z: 1 };
+    const scale: Vector3 = { x: 0.1, y: 0.1, z: 0.1 };
 
     await this.client.addSlot({
       id: groupId,
