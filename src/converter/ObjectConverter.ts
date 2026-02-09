@@ -5,7 +5,7 @@
 import { randomUUID } from 'crypto';
 import { UdonariumObject } from './UdonariumObject';
 import { ResoniteObject, Vector3 } from './ResoniteObject';
-import { SCALE_FACTOR, SIZE_MULTIPLIER } from '../config/MappingConfig';
+import { SCALE_FACTOR } from '../config/MappingConfig';
 import { applyCharacterConversion } from './objectConverters/characterConverter';
 import { applyCardConversion } from './objectConverters/cardConverter';
 import { applyCardStackConversion } from './objectConverters/cardStackConverter';
@@ -36,11 +36,10 @@ export function convertPosition(x: number, y: number): Vector3 {
  * Convert Udonarium size to Resonite scale
  */
 export function convertSize(size: number): Vector3 {
-  const scale = size * SIZE_MULTIPLIER;
   return {
-    x: scale,
-    y: scale,
-    z: scale,
+    x: size,
+    y: size,
+    z: size,
   };
 }
 

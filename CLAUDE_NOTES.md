@@ -280,3 +280,23 @@ resonite.z = -udonarium.y * 0.02
 - 検証:
   - `npm run test -- src/converter/objectConverters src/converter/ObjectConverter.test.ts` 通過
   - `npm run check` 通過
+- `SIZE_MULTIPLIER` を廃止し、オブジェクト寸法は Udonarium 値をそのまま Mesh `Size` に反映する方針へ整理。
+  - `src/config/MappingConfig.ts`
+    - `SIZE_MULTIPLIER` を削除。
+    - インポートルートの縮尺定数 `IMPORT_GROUP_SCALE` を追加。
+  - `src/converter/ObjectConverter.ts`
+    - `convertSize()` を単純な等倍変換に変更（`size -> {x:size,y:size,z:size}`）。
+  - `src/converter/objectConverters/tableConverter.ts`
+    - `QuadMesh.Size` を `width/height` の直接値で設定。
+  - `src/converter/objectConverters/terrainConverter.ts`
+    - `BoxMesh.Size` を `width/height/depth` の直接値で設定。
+  - `src/resonite/SlotBuilder.ts`
+    - ルートコンテナの `scale` を `IMPORT_GROUP_SCALE` 参照へ変更。
+  - テスト更新:
+    - `src/converter/ObjectConverter.test.ts`
+    - `src/converter/objectConverters/tableConverter.test.ts`
+    - `src/converter/objectConverters/terrainConverter.test.ts`
+    - `src/resonite/SlotBuilder.test.ts`
+  - 検証:
+    - `npm run test -- src/converter/ObjectConverter.test.ts src/converter/objectConverters/tableConverter.test.ts src/converter/objectConverters/terrainConverter.test.ts src/resonite/SlotBuilder.test.ts` 通過
+    - `npm run check` 通過

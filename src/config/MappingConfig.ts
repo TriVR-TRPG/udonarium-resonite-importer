@@ -11,10 +11,10 @@
 export const SCALE_FACTOR = 0.02;
 
 /**
- * Size multiplier for converting Udonarium size to Resonite scale
- * Udonarium size 1 = 1m (1 grid) in Resonite
+ * Scale for the import root group slot.
+ * This applies uniformly to all imported objects after conversion.
  */
-export const SIZE_MULTIPLIER = 1.0;
+export const IMPORT_GROUP_SCALE = 0.1;
 
 /**
  * Retry configuration for ResoniteLink connection

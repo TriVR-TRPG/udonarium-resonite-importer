@@ -4,6 +4,7 @@
 
 import { randomUUID } from 'crypto';
 import { ResoniteObject, Vector3 } from '../converter/ResoniteObject';
+import { IMPORT_GROUP_SCALE } from '../config/MappingConfig';
 import { ResoniteLinkClient } from './ResoniteLinkClient';
 
 const SLOT_ID_PREFIX = 'udon-imp';
@@ -128,7 +129,11 @@ export class SlotBuilder {
   async createImportGroup(name: string): Promise<string> {
     const groupId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
     const position: Vector3 = { x: 0, y: 0, z: 0 };
-    const scale: Vector3 = { x: 0.1, y: 0.1, z: 0.1 };
+    const scale: Vector3 = {
+      x: IMPORT_GROUP_SCALE,
+      y: IMPORT_GROUP_SCALE,
+      z: IMPORT_GROUP_SCALE,
+    };
 
     await this.client.addSlot({
       id: groupId,

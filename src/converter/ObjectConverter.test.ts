@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { convertPosition, convertSize, convertObject, convertObjects } from './ObjectConverter';
-import { SIZE_MULTIPLIER, SCALE_FACTOR } from '../config/MappingConfig';
+import { SCALE_FACTOR } from '../config/MappingConfig';
 import type {
   GameCharacter,
   Card,
@@ -50,25 +50,25 @@ describe('ObjectConverter', () => {
   });
 
   describe('convertSize', () => {
-    it('should convert size 1 to SIZE_MULTIPLIER', () => {
+    it('should keep size 1 as-is', () => {
       const result = convertSize(1);
       expect(result).toEqual({
-        x: SIZE_MULTIPLIER,
-        y: SIZE_MULTIPLIER,
-        z: SIZE_MULTIPLIER,
+        x: 1,
+        y: 1,
+        z: 1,
       });
     });
 
-    it('should scale size uniformly', () => {
+    it('should keep size value uniformly', () => {
       const result = convertSize(5);
-      expect(result.x).toBe(5 * SIZE_MULTIPLIER);
-      expect(result.y).toBe(5 * SIZE_MULTIPLIER);
-      expect(result.z).toBe(5 * SIZE_MULTIPLIER);
+      expect(result.x).toBe(5);
+      expect(result.y).toBe(5);
+      expect(result.z).toBe(5);
     });
 
     it('should handle decimal sizes', () => {
       const result = convertSize(1.5);
-      expect(result.x).toBeCloseTo(1.5 * SIZE_MULTIPLIER);
+      expect(result.x).toBeCloseTo(1.5);
     });
   });
 

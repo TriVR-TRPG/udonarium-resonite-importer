@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { applyTableConversion } from './tableConverter';
 import { GameTable } from '../UdonariumObject';
 import { ResoniteObject } from '../ResoniteObject';
-import { SIZE_MULTIPLIER } from '../../config/MappingConfig';
 
 describe('applyTableConversion', () => {
   it('テーブルサイズ・Yオフセット・Quad系コンポーネントを設定する', () => {
@@ -37,7 +36,7 @@ describe('applyTableConversion', () => {
     expect(resoniteObj.components[0].fields).toEqual({
       Size: {
         $type: 'float2',
-        value: { x: 20 * SIZE_MULTIPLIER, y: 10 * SIZE_MULTIPLIER },
+        value: { x: 20, y: 10 },
       },
     });
   });
