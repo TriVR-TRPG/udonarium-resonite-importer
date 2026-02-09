@@ -8,6 +8,28 @@ import { ResoniteLinkClient } from './ResoniteLinkClient';
 
 const SLOT_ID_PREFIX = 'udon-imp';
 
+function isListField(value: unknown): boolean {
+  return (
+    !!value && typeof value === 'object' && (value as Record<string, unknown>).$type === 'list'
+  );
+}
+
+function splitListFields(fields: Record<string, unknown>): {
+  creationFields: Record<string, unknown>;
+  listFields: Record<string, unknown>;
+} {
+  const creationFields: Record<string, unknown> = {};
+  const listFields: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(fields)) {
+    if (isListField(value)) {
+      listFields[key] = value;
+    } else {
+      creationFields[key] = value;
+    }
+  }
+  return { creationFields, listFields };
+}
+
 export interface SlotBuildResult {
   slotId: string;
   success: boolean;
@@ -45,13 +67,22 @@ export class SlotBuilder {
       }
 
       // Attach components in the order they are defined.
+      // SyncList fields (e.g. Materials) require a 2-step update protocol:
+      //  1. addComponent with non-list fields only
+      //  2. updateListFields: add elements → fetch element IDs → set references
       for (const component of obj.components) {
-        await this.client.addComponent({
+        const { creationFields, listFields } = splitListFields(component.fields);
+
+        const componentId = await this.client.addComponent({
           id: component.id,
           slotId,
           componentType: component.type,
-          fields: component.fields,
+          fields: creationFields,
         });
+
+        if (Object.keys(listFields).length > 0) {
+          await this.client.updateListFields(componentId, listFields);
+        }
       }
 
       // Build children recursively

@@ -279,6 +279,87 @@ export class ResoniteLinkClient {
   }
 
   /**
+   * Update members on an existing component
+   */
+  async updateComponent(options: {
+    componentId: string;
+    fields: Record<string, unknown>;
+  }): Promise<void> {
+    if (!this.isConnected()) {
+      throw new Error('Not connected to ResoniteLink');
+    }
+
+    const response = (await this.client.send({
+      $type: 'updateComponent' as const,
+      data: {
+        id: options.componentId,
+        members: options.fields as Record<string, never>,
+      },
+    })) as { success?: boolean; errorInfo?: string };
+
+    if (!response.success) {
+      throw new Error(response.errorInfo || 'Failed to update component');
+    }
+  }
+
+  /**
+   * Get component members from Resonite.
+   * Returns the raw members object keyed by member name.
+   */
+  async getComponentMembers(componentId: string): Promise<Record<string, Record<string, unknown>>> {
+    if (!this.isConnected()) {
+      throw new Error('Not connected to ResoniteLink');
+    }
+
+    const component = await this.client.getComponent(componentId);
+    if (!component) {
+      throw new Error(`Component not found: ${componentId}`);
+    }
+
+    return component.members as unknown as Record<string, Record<string, unknown>>;
+  }
+
+  /**
+   * Update SyncList fields on a component using the 2-step protocol:
+   *  1. Send list with elements (id omitted) to add new elements (targetId ignored)
+   *  2. Fetch component to get server-assigned element IDs
+   *  3. Send list with elements including id to set targetId
+   */
+  async updateListFields(componentId: string, listFields: Record<string, unknown>): Promise<void> {
+    // Step 1: Add elements (targetId will be null)
+    await this.updateComponent({ componentId, fields: listFields });
+
+    // Step 2: Fetch server-assigned element IDs
+    const members = await this.getComponentMembers(componentId);
+
+    // Step 3: For each list field, re-send with server-assigned element IDs
+    const resolvedFields: Record<string, unknown> = {};
+    for (const [fieldName, listValue] of Object.entries(listFields)) {
+      const list = listValue as { $type: string; elements: Array<Record<string, unknown>> };
+      const serverList = members[fieldName] as {
+        $type: string;
+        elements: Array<{ id: string; $type: string }>;
+      };
+
+      if (!serverList?.elements?.length) continue;
+
+      const resolvedElements = list.elements.map((element: Record<string, unknown>, i: number) => ({
+        ...element,
+        id: serverList.elements[i].id,
+      }));
+
+      resolvedFields[fieldName] = {
+        $type: list.$type,
+        elements: resolvedElements,
+      };
+    }
+
+    if (Object.keys(resolvedFields).length > 0) {
+      await this.updateComponent({ componentId, fields: resolvedFields });
+    }
+  }
+
+  /**
    * Add multiple components to a slot
    */
   async addComponents(

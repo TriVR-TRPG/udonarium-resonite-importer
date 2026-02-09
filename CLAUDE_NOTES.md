@@ -173,3 +173,25 @@ resonite.z = -udonarium.y * 0.02
   - `.gitignore`
     - `*.parsed.json` を追加。
   - 用途: converter 実装時に実データの構造を確認するためのデバッグ支援。
+- JSON出力を `--dump-json` 専用オプションに分離（`--verbose` との結合を解除）。
+  - `src/index.ts`
+    - `CLIOptions` に `dumpJson: boolean` を追加。
+    - `--dump-json` 指定時のみ `{入力ZIP名}.parsed.json` を出力するよう変更。
+- Udonarium 組み込みアセット識別子の外部URL解決を追加。
+  - `src/config/MappingConfig.ts`
+    - `KNOWN_IMAGE_IDENTIFIERS` マップを追加（例: `testTableBackgroundImage_image` → `https://udonarium.app/assets/images/BG10a_80.jpg`）。
+  - `src/resonite/registerExternalUrls.ts`
+    - `tryRegister` ヘルパーを導入し、`./` 相対パスと既知識別子の両方を処理するよう拡張。
+- MeshRenderer の Materials（SyncList）割り当てを修正。
+  - **根本原因**: ResoniteLink の `addComponent` / `updateComponent` では SyncList の要素追加時に `targetId` が無視される。2段階プロトコルが必要。
+    1. `id` なしで要素を追加（`targetId` は null になる）
+    2. `getComponent` でサーバーが割り振った要素 `id` を取得
+    3. `id` 付きで再送して `targetId` を設定
+  - `src/resonite/ResoniteLinkClient.ts`
+    - `updateComponent`: メンバーを更新する汎用メソッドを追加。
+    - `getComponentMembers`: コンポーネントのメンバー情報を取得するメソッドを追加。
+    - `updateListFields`: 上記2段階プロトコルを実装するメソッドを追加。
+  - `src/resonite/SlotBuilder.ts`
+    - `splitListFields`: コンポーネントの fields から `$type: "list"` を分離するヘルパーを追加。
+    - コンポーネント追加時に list フィールドを分離し、`addComponent` 後に `updateListFields` で設定するよう変更。
+  - 参照: `resolink-mcp/CLAUDE.md` の「Materials リストの更新（2段階必要）」セクション。
