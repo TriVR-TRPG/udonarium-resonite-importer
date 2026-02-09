@@ -59,6 +59,14 @@ export const DEFAULT_RESONITE_LINK = {
 };
 
 /**
+ * Known Udonarium image identifiers mapped to their asset URLs.
+ * These are built-in images used by default Udonarium save data.
+ */
+export const KNOWN_IMAGE_IDENTIFIERS: ReadonlyMap<string, string> = new Map([
+  ['testTableBackgroundImage_image', 'https://udonarium.app/assets/images/BG10a_80.jpg'],
+]);
+
+/**
  * Supported object type tags in Udonarium XML
  */
 export const SUPPORTED_TAGS = [
