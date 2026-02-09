@@ -32,17 +32,23 @@ describe('applyTerrainConversion', () => {
 
     applyTerrainConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.scale).toEqual({
-      x: 10 * SIZE_MULTIPLIER,
-      y: 2 * SIZE_MULTIPLIER,
-      z: 4 * SIZE_MULTIPLIER,
-    });
+    expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
     expect(resoniteObj.components.map((c) => c.type)).toEqual([
       '[FrooxEngine]FrooxEngine.BoxMesh',
       '[FrooxEngine]FrooxEngine.StaticTexture2D',
       '[FrooxEngine]FrooxEngine.PBS_Metallic',
       '[FrooxEngine]FrooxEngine.MeshRenderer',
     ]);
+    expect(resoniteObj.components[0].fields).toEqual({
+      Size: {
+        $type: 'float3',
+        value: {
+          x: 10 * SIZE_MULTIPLIER,
+          y: 2 * SIZE_MULTIPLIER,
+          z: 4 * SIZE_MULTIPLIER,
+        },
+      },
+    });
 
     const materialComponent = resoniteObj.components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.PBS_Metallic'

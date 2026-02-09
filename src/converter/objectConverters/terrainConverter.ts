@@ -8,12 +8,11 @@ export function applyTerrainConversion(
   resoniteObj: ResoniteObject,
   textureMap?: Map<string, string>
 ): void {
-  resoniteObj.scale = {
+  const textureIdentifier = udonObj.floorImage?.identifier ?? udonObj.images[0]?.identifier;
+  const textureValue = resolveTextureValue(textureIdentifier, textureMap);
+  resoniteObj.components = buildBoxMeshComponents(resoniteObj.id, textureValue, {
     x: udonObj.width * SIZE_MULTIPLIER,
     y: udonObj.height * SIZE_MULTIPLIER,
     z: udonObj.depth * SIZE_MULTIPLIER,
-  };
-  const textureIdentifier = udonObj.floorImage?.identifier ?? udonObj.images[0]?.identifier;
-  const textureValue = resolveTextureValue(textureIdentifier, textureMap);
-  resoniteObj.components = buildBoxMeshComponents(resoniteObj.id, textureValue);
+  });
 }

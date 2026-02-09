@@ -95,7 +95,7 @@ describe('ObjectConverter', () => {
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
         expect(result.name).toBe('Test Object');
         expect(result.position).toEqual(convertPosition(100, 200));
-        expect(result.scale).toEqual(convertSize(2));
+        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
         expect(result.textures).toEqual(['img1']);
       });
     });
@@ -115,11 +115,7 @@ describe('ObjectConverter', () => {
         const result = convertObject(terrain);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({
-          x: 10 * SIZE_MULTIPLIER,
-          y: 5 * SIZE_MULTIPLIER,
-          z: 3 * SIZE_MULTIPLIER,
-        });
+        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
       });
     });
 
@@ -137,11 +133,7 @@ describe('ObjectConverter', () => {
         const result = convertObject(table);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({
-          x: 20 * SIZE_MULTIPLIER,
-          y: 0.1,
-          z: 20 * SIZE_MULTIPLIER,
-        });
+        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
         expect(result.position.y).toBe(-0.1);
       });
     });
@@ -159,7 +151,7 @@ describe('ObjectConverter', () => {
         const result = convertObject(card);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 0.6, y: 0.01, z: 0.9 });
+        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
       });
     });
 
@@ -174,7 +166,7 @@ describe('ObjectConverter', () => {
         const result = convertObject(cardStack);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 0.6, y: 0.01, z: 0.9 });
+        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
       });
     });
 
@@ -242,7 +234,7 @@ describe('ObjectConverter', () => {
         { x: 1, y: 1, z: 0.01 }, // character -> QuadMesh
         { x: 1, y: 1, z: 1 }, // terrain -> BoxMesh
         { x: 1, y: 1, z: 0.01 }, // table -> QuadMesh
-        { x: 1, y: 1, z: 0.01 }, // card -> QuadMesh
+        { x: 0.6, y: 0.9, z: 0.01 }, // card -> QuadMesh
         { x: 1, y: 1, z: 1 }, // card-stack parent -> meshless fallback
         { x: 1, y: 1, z: 1 }, // text-note -> meshless fallback
       ];

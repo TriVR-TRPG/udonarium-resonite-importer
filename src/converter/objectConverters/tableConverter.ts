@@ -10,12 +10,10 @@ export function applyTableConversion(
 ): void {
   // Lay table surface flat (horizontal quad).
   resoniteObj.rotation = { x: 90, y: 0, z: 0 };
-  resoniteObj.scale = {
-    x: udonObj.width * SIZE_MULTIPLIER,
-    y: udonObj.height * SIZE_MULTIPLIER,
-    z: 0.1,
-  };
   resoniteObj.position.y = -0.1;
   const textureValue = resolveTextureValue(udonObj.images[0]?.identifier, textureMap);
-  resoniteObj.components = buildQuadMeshComponents(resoniteObj.id, textureValue, false);
+  resoniteObj.components = buildQuadMeshComponents(resoniteObj.id, textureValue, false, {
+    x: udonObj.width * SIZE_MULTIPLIER,
+    y: udonObj.height * SIZE_MULTIPLIER,
+  });
 }

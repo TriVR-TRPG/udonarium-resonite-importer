@@ -251,3 +251,32 @@ resonite.z = -udonarium.y * 0.02
   - `src/converter/objectConverters/tableConverter.test.ts`
   - `src/converter/objectConverters/textNoteConverter.test.ts`
   - `src/resonite/SlotBuilder.test.ts`
+- QuadMesh/BoxMesh のサイズを `Slot.scale` ではなく Mesh の `Size` で定義するように統一。
+  - `src/converter/objectConverters/componentBuilders.ts`
+    - `buildQuadMeshComponents()` に `size` 引数を追加し、`QuadMesh.Size(float2)` を設定。
+    - `buildBoxMeshComponents()` に `size` 引数を追加し、`BoxMesh.Size(float3)` を設定。
+  - `src/converter/objectConverters/characterConverter.ts`
+    - `convertSize()` 結果を `QuadMesh.Size` に反映。
+  - `src/converter/objectConverters/cardConverter.ts`
+    - カードの大きさを `QuadMesh.Size = { x: 0.6, y: 0.9 }` に変更（横置きは維持）。
+  - `src/converter/objectConverters/tableConverter.ts`
+    - テーブルの大きさを `QuadMesh.Size = { x: width, y: height } * SIZE_MULTIPLIER` に変更。
+  - `src/converter/objectConverters/terrainConverter.ts`
+    - 地形サイズを `BoxMesh.Size = { x: width, y: height, z: depth } * SIZE_MULTIPLIER` に変更。
+  - `src/converter/objectConverters/cardStackConverter.ts`
+    - 親スロットの `scale` 固定値を削除（子カードにメッシュサイズを持たせる方式に統一）。
+- コライダーサイズをメッシュ `Size` 参照に変更。
+  - `src/converter/ObjectConverter.ts`
+    - `QuadMesh.Size` / `BoxMesh.Size` を読み取り、`BoxCollider.Size` を決定する実装に更新。
+    - `QuadMesh` は厚み `z=0.01` を付与。
+- converter ごとの `resoniteObj.scale` 代入を削除。
+  - 対象:
+    - `src/converter/objectConverters/characterConverter.ts`
+    - `src/converter/objectConverters/cardConverter.ts`
+    - `src/converter/objectConverters/cardStackConverter.ts`
+    - `src/converter/objectConverters/tableConverter.ts`
+    - `src/converter/objectConverters/terrainConverter.ts`
+    - `src/converter/objectConverters/textNoteConverter.ts`
+- 検証:
+  - `npm run test -- src/converter/objectConverters src/converter/ObjectConverter.test.ts` 通過
+  - `npm run check` 通過

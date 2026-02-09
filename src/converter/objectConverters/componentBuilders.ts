@@ -7,6 +7,8 @@ type StaticTexture2DFields = {
   URL: { $type: 'Uri'; value: string };
   FilterMode?: { $type: 'enum?'; value: 'Point'; enumType: 'TextureFilterMode' };
 };
+type QuadSize = { x: number; y: number };
+type BoxSize = { x: number; y: number; z: number };
 
 type BlendModeField = { $type: 'enum'; value: 'Cutout'; enumType: 'BlendMode' };
 
@@ -44,7 +46,8 @@ function isGifTexture(textureValue: string): boolean {
 export function buildQuadMeshComponents(
   slotId: string,
   textureValue?: string,
-  dualSided: boolean = false
+  dualSided: boolean = false,
+  size: QuadSize = { x: 1, y: 1 }
 ): ResoniteComponent[] {
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
@@ -53,7 +56,10 @@ export function buildQuadMeshComponents(
     {
       id: meshId,
       type: '[FrooxEngine]FrooxEngine.QuadMesh',
-      fields: dualSided ? { DualSided: { $type: 'bool', value: true } } : {},
+      fields: {
+        Size: { $type: 'float2', value: size },
+        ...(dualSided ? { DualSided: { $type: 'bool', value: true } } : {}),
+      },
     },
   ];
 
@@ -92,7 +98,11 @@ export function buildQuadMeshComponents(
   return components;
 }
 
-export function buildBoxMeshComponents(slotId: string, textureValue?: string): ResoniteComponent[] {
+export function buildBoxMeshComponents(
+  slotId: string,
+  textureValue?: string,
+  size: BoxSize = { x: 1, y: 1, z: 1 }
+): ResoniteComponent[] {
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
   const textureId = `${slotId}-tex`;
@@ -100,7 +110,9 @@ export function buildBoxMeshComponents(slotId: string, textureValue?: string): R
     {
       id: meshId,
       type: '[FrooxEngine]FrooxEngine.BoxMesh',
-      fields: {},
+      fields: {
+        Size: { $type: 'float3', value: size },
+      },
     },
   ];
 

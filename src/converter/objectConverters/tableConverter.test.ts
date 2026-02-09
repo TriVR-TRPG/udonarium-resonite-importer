@@ -31,13 +31,14 @@ describe('applyTableConversion', () => {
 
     applyTableConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.rotation).toEqual({ x: -90, y: 0, z: 0 });
-    expect(resoniteObj.scale).toEqual({
-      x: 20 * SIZE_MULTIPLIER,
-      y: 0.1,
-      z: 10 * SIZE_MULTIPLIER,
-    });
+    expect(resoniteObj.rotation).toEqual({ x: 90, y: 0, z: 0 });
+    expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
     expect(resoniteObj.position.y).toBe(-0.1);
-    expect(resoniteObj.components[0].fields).toEqual({});
+    expect(resoniteObj.components[0].fields).toEqual({
+      Size: {
+        $type: 'float2',
+        value: { x: 20 * SIZE_MULTIPLIER, y: 10 * SIZE_MULTIPLIER },
+      },
+    });
   });
 });
