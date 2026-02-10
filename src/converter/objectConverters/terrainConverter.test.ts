@@ -38,16 +38,19 @@ describe('applyTerrainConversion', () => {
       '[FrooxEngine]FrooxEngine.PBS_Metallic',
       '[FrooxEngine]FrooxEngine.MeshRenderer',
     ]);
+    // Udonarium height→Resonite Z, Udonarium depth→Resonite Y
     expect(resoniteObj.components[0].fields).toEqual({
       Size: {
         $type: 'float3',
         value: {
           x: 10,
-          y: 2,
-          z: 4,
+          y: 4,
+          z: 2,
         },
       },
     });
+    // Bottom-origin offset: position.y += depth / 2
+    expect(resoniteObj.position.y).toBe(2);
 
     const materialComponent = resoniteObj.components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.PBS_Metallic'

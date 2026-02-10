@@ -14,4 +14,6 @@ export function applyCharacterConversion(
     x: size.x,
     y: size.y,
   });
+  // Udonarium positions at object bottom; Resonite positions at center
+  resoniteObj.position.y += size.y / 2;
 }
