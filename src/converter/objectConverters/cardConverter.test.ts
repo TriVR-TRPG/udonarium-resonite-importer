@@ -39,6 +39,12 @@ describe('applyCardConversion', () => {
       Size: { $type: 'float2', value: { x: 0.6, y: 0.9 } },
       DualSided: { $type: 'bool', value: true },
     });
+    const colliderComponent = resoniteObj.components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
+    );
+    expect(colliderComponent?.fields).toEqual({
+      Size: { $type: 'float3', value: { x: 0.6, y: 0.9, z: 0.01 } },
+    });
   });
 
   it('表向きカードではfrontImageを使う', () => {

@@ -65,12 +65,19 @@ export interface Terrain extends BaseUdonariumObject {
   floorImage: ImageRef | null;
 }
 
+/**
+ * Types that can be children of a GameTable.
+ * Excludes GameTable itself to avoid circular type reference.
+ */
+export type GameTableChild = GameCharacter | Card | CardStack | Terrain | TableMask | TextNote;
+
 export interface GameTable extends BaseUdonariumObject {
   type: 'table';
   width: number;
   height: number;
   gridType: string;
   gridColor: string;
+  children: GameTableChild[];
 }
 
 export interface TableMask extends BaseUdonariumObject {

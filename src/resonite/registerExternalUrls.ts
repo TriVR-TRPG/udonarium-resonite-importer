@@ -40,5 +40,8 @@ export function registerExternalUrls(
         if (card.backImage) tryRegister(card.backImage.identifier, assetImporter);
       }
     }
+    if (obj.type === 'table' && obj.children.length > 0) {
+      registerExternalUrls(obj.children, assetImporter);
+    }
   }
 }

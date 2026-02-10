@@ -3,13 +3,20 @@
  */
 
 import { XMLParser } from 'fast-xml-parser';
-import { UdonariumObject } from '../converter/UdonariumObject';
+import { UdonariumObject, GameTable, GameTableChild } from '../converter/UdonariumObject';
 import { SUPPORTED_TAGS } from '../config/MappingConfig';
 import { parseCharacter } from './objects/CharacterParser';
 import { parseCard, parseCardStack } from './objects/CardParser';
 import { parseTerrain } from './objects/TerrainParser';
 import { parseTable, parseGameTable, parseTableMask } from './objects/TableParser';
 import { parseTextNote } from './objects/TextNoteParser';
+
+/**
+ * Container tags whose XML children should not be recursed into.
+ * - game-table: children collected into GameTable.children
+ * - card-stack: children already handled by parseCardStack internally
+ */
+const CONTAINER_TAGS: ReadonlySet<string> = new Set(['game-table', 'card-stack']);
 
 const parser = new XMLParser({
   ignoreAttributes: false,
@@ -34,7 +41,10 @@ export interface ParseError {
 type ParsedXml = Record<string, unknown>;
 
 /**
- * Recursively find all supported objects in a parsed XML structure
+ * Recursively find all supported objects in a parsed XML structure.
+ * Container tags (game-table, card-stack) are not recursed into:
+ * - game-table: child objects are collected into GameTable.children
+ * - card-stack: child cards are already handled by parseCardStack
  */
 function findObjectsRecursively(data: unknown, fileName: string, result: ParseResult): void {
   if (data === null || data === undefined) return;
@@ -42,30 +52,38 @@ function findObjectsRecursively(data: unknown, fileName: string, result: ParseRe
   if (typeof data !== 'object') return;
 
   const obj = data as Record<string, unknown>;
+  const consumedKeys = new Set<string>();
 
   // Check if current object has any supported tags
   for (const tag of SUPPORTED_TAGS) {
-    if (tag in obj && obj[tag] !== undefined) {
-      const tagData = obj[tag];
-      // Handle arrays of objects (multiple elements with same tag)
-      if (Array.isArray(tagData)) {
-        for (const item of tagData) {
-          const parsed = parseObjectByType(tag, item, fileName);
-          if (parsed) {
-            result.objects.push(parsed);
-          }
+    if (!(tag in obj) || obj[tag] === undefined) continue;
+
+    const tagData = obj[tag];
+    const items = Array.isArray(tagData) ? tagData : [tagData];
+
+    for (const item of items) {
+      const parsed = parseObjectByType(tag, item, fileName);
+      if (parsed) {
+        // game-table: collect child objects into GameTable.children
+        if (tag === 'game-table') {
+          const childResult: ParseResult = { objects: [], errors: [] };
+          findObjectsRecursively(item, fileName, childResult);
+          (parsed as GameTable).children = childResult.objects as GameTableChild[];
+          result.errors.push(...childResult.errors);
         }
-      } else {
-        const parsed = parseObjectByType(tag, tagData, fileName);
-        if (parsed) {
-          result.objects.push(parsed);
-        }
+        result.objects.push(parsed);
       }
+    }
+
+    // Container tags: skip recursing into their XML children
+    if (CONTAINER_TAGS.has(tag)) {
+      consumedKeys.add(tag);
     }
   }
 
-  // Recursively search nested structures (room, game-table, etc.)
+  // Recursively search nested structures, skipping consumed container keys
   for (const key of Object.keys(obj)) {
+    if (consumedKeys.has(key)) continue;
     const value = obj[key];
     if (value && typeof value === 'object') {
       if (Array.isArray(value)) {

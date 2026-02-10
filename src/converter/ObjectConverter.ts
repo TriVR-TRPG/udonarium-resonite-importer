@@ -15,9 +15,6 @@ import { applyTextNoteConversion } from './objectConverters/textNoteConverter';
 import { replaceTexturesInValue } from './objectConverters/componentBuilders';
 
 const SLOT_ID_PREFIX = 'udon-imp';
-const BOX_COLLIDER_TYPE = '[FrooxEngine]FrooxEngine.BoxCollider';
-const QUAD_MESH_TYPE = '[FrooxEngine]FrooxEngine.QuadMesh';
-const BOX_MESH_TYPE = '[FrooxEngine]FrooxEngine.BoxMesh';
 
 /**
  * Convert Udonarium 2D coordinates to Resonite 3D coordinates
@@ -77,7 +74,9 @@ function convertObjectWithTextures(
       applyTerrainConversion(udonObj, resoniteObj, textureMap);
       break;
     case 'table':
-      applyTableConversion(udonObj, resoniteObj, textureMap);
+      applyTableConversion(udonObj, resoniteObj, textureMap, (obj) =>
+        convertObjectWithTextures(obj, textureMap)
+      );
       break;
     case 'card':
       applyCardConversion(udonObj, resoniteObj, textureMap);
@@ -94,64 +93,7 @@ function convertObjectWithTextures(
       break;
   }
 
-  ensureBoxCollider(resoniteObj);
   return resoniteObj;
-}
-
-function ensureBoxCollider(resoniteObj: ResoniteObject): void {
-  const hasBoxCollider = resoniteObj.components.some(
-    (component) => component.type === BOX_COLLIDER_TYPE
-  );
-  if (hasBoxCollider) {
-    return;
-  }
-
-  resoniteObj.components.push({
-    id: `${resoniteObj.id}-collider`,
-    type: BOX_COLLIDER_TYPE,
-    fields: {
-      Size: {
-        $type: 'float3',
-        value: resolveColliderSizeByMesh(resoniteObj),
-      },
-    },
-  });
-}
-
-function resolveColliderSizeByMesh(resoniteObj: ResoniteObject): Vector3 {
-  const boxMesh = resoniteObj.components.find((component) => component.type === BOX_MESH_TYPE);
-  if (boxMesh) {
-    return readBoxMeshSize(boxMesh.fields) ?? { x: 1, y: 1, z: 1 };
-  }
-
-  const quadMesh = resoniteObj.components.find((component) => component.type === QUAD_MESH_TYPE);
-  if (quadMesh) {
-    return readQuadMeshSize(quadMesh.fields) ?? { x: 1, y: 1, z: 0.01 };
-  }
-
-  // Fallback for meshless objects (e.g., card-stack parent, UI-only objects)
-  return { x: 1, y: 1, z: 1 };
-}
-
-function readBoxMeshSize(fields: Record<string, unknown>): Vector3 | undefined {
-  const size = fields.Size as { value?: { x?: number; y?: number; z?: number } } | undefined;
-  if (
-    size?.value &&
-    typeof size.value.x === 'number' &&
-    typeof size.value.y === 'number' &&
-    typeof size.value.z === 'number'
-  ) {
-    return { x: size.value.x, y: size.value.y, z: size.value.z };
-  }
-  return undefined;
-}
-
-function readQuadMeshSize(fields: Record<string, unknown>): Vector3 | undefined {
-  const size = fields.Size as { value?: { x?: number; y?: number } } | undefined;
-  if (size?.value && typeof size.value.x === 'number' && typeof size.value.y === 'number') {
-    return { x: size.value.x, y: size.value.y, z: 0.01 };
-  }
-  return undefined;
 }
 
 /**

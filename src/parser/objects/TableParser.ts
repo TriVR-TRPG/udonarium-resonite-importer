@@ -38,6 +38,7 @@ export function parseGameTable(data: unknown, fileName: string): GameTable {
     gridColor,
     images,
     properties: new Map(),
+    children: [],
   };
 }
 
@@ -76,6 +77,7 @@ export function parseTable(data: unknown, fileName: string): GameTable {
     gridColor,
     images,
     properties: new Map(),
+    children: [],
   };
 }
 

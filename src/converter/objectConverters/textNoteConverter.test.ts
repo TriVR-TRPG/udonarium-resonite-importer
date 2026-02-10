@@ -38,6 +38,13 @@ describe('applyTextNoteConversion', () => {
           Size: { $type: 'float', value: 14 },
         },
       },
+      {
+        id: 'slot-note-1-collider',
+        type: '[FrooxEngine]FrooxEngine.BoxCollider',
+        fields: {
+          Size: { $type: 'float3', value: { x: 1, y: 0.02, z: 1 } },
+        },
+      },
     ]);
   });
 
@@ -68,6 +75,9 @@ describe('applyTextNoteConversion', () => {
     expect(resoniteObj.components[0].fields).toEqual({
       Content: { $type: 'string', value: 'tiny' },
       Size: { $type: 'float', value: 8 },
+    });
+    expect(resoniteObj.components[1].fields).toEqual({
+      Size: { $type: 'float3', value: { x: 1, y: 0.02, z: 1 } },
     });
   });
 });

@@ -1,18 +1,47 @@
-import { GameTable } from '../UdonariumObject';
+import { GameTable, UdonariumObject } from '../UdonariumObject';
 import { ResoniteObject } from '../ResoniteObject';
-import { buildQuadMeshComponents, resolveTextureValue } from './componentBuilders';
+import {
+  buildBoxColliderComponent,
+  buildQuadMeshComponents,
+  resolveTextureValue,
+} from './componentBuilders';
 
 export function applyTableConversion(
   udonObj: GameTable,
   resoniteObj: ResoniteObject,
-  textureMap?: Map<string, string>
+  textureMap?: Map<string, string>,
+  convertObject?: (obj: UdonariumObject) => ResoniteObject
 ): void {
-  // Lay table surface flat (horizontal quad).
-  resoniteObj.rotation = { x: 90, y: 0, z: 0 };
-  resoniteObj.position.y -= 0.1;
+  // Keep table container unrotated so child object positions stay stable.
+  resoniteObj.rotation = { x: 0, y: 0, z: 0 };
+  resoniteObj.components = [
+    buildBoxColliderComponent(resoniteObj.id, {
+      x: udonObj.width,
+      y: 0.02,
+      z: udonObj.height,
+    }),
+  ];
+
+  const tableVisual: ResoniteObject = {
+    id: `${resoniteObj.id}-surface`,
+    name: `${resoniteObj.name}-surface`,
+    position: { x: 0, y: -0.1, z: 0 },
+    rotation: { x: 90, y: 0, z: 0 },
+    scale: { x: 1, y: 1, z: 1 },
+    textures: [],
+    components: [],
+    children: [],
+  };
+
   const textureValue = resolveTextureValue(udonObj.images[0]?.identifier, textureMap);
-  resoniteObj.components = buildQuadMeshComponents(resoniteObj.id, textureValue, false, {
+  tableVisual.components = buildQuadMeshComponents(tableVisual.id, textureValue, false, {
     x: udonObj.width,
     y: udonObj.height,
   });
+
+  const convertedChildren =
+    convertObject && udonObj.children.length > 0
+      ? udonObj.children.map((child) => convertObject(child))
+      : [];
+  resoniteObj.children = [tableVisual, ...convertedChildren];
 }

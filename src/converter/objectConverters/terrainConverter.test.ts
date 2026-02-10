@@ -37,6 +37,7 @@ describe('applyTerrainConversion', () => {
       '[FrooxEngine]FrooxEngine.StaticTexture2D',
       '[FrooxEngine]FrooxEngine.PBS_Metallic',
       '[FrooxEngine]FrooxEngine.MeshRenderer',
+      '[FrooxEngine]FrooxEngine.BoxCollider',
     ]);
     // Udonarium height→Resonite Z, Udonarium depth→Resonite Y
     expect(resoniteObj.components[0].fields).toEqual({
@@ -58,6 +59,16 @@ describe('applyTerrainConversion', () => {
     expect(materialComponent?.fields).toEqual({
       AlbedoTexture: { $type: 'reference', targetId: 'slot-terrain-1-tex' },
       BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' },
+    });
+    expect(resoniteObj.components[4].fields).toEqual({
+      Size: {
+        $type: 'float3',
+        value: {
+          x: 10,
+          y: 4,
+          z: 2,
+        },
+      },
     });
   });
 });

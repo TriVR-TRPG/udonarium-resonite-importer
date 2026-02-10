@@ -59,19 +59,23 @@ describe('Integration: Sample Save Data', () => {
       expect(names).toContain('モンスターC');
     });
 
-    it('should parse terrain objects from game-table', () => {
+    it('should parse terrain objects as children of game-table', () => {
       const extracted = extractZip(SAMPLE_ZIP_PATH);
       const dataFile = extracted.xmlFiles.find((f) => f.name === 'data');
       const content = dataFile!.data.toString('utf-8');
 
       const result = parseXml(content, 'data.xml');
 
-      // Should find terrain objects inside <game-table>
-      const terrains = result.objects.filter((o) => o.type === 'terrain');
-      expect(terrains.length).toBeGreaterThanOrEqual(3); // At least 3 terrains in sample
+      // Terrains should be inside game-table's children, not at top level
+      const tables = result.objects.filter((o) => o.type === 'table');
+      expect(tables.length).toBeGreaterThanOrEqual(1);
 
-      // Verify terrain has dimensions
-      if (terrains.length > 0) {
+      const table = tables[0];
+      if (table.type === 'table') {
+        const terrains = table.children.filter((o) => o.type === 'terrain');
+        expect(terrains.length).toBeGreaterThanOrEqual(3); // At least 3 terrains in sample
+
+        // Verify terrain has dimensions
         const terrain = terrains[0];
         expect(terrain.type).toBe('terrain');
         expect('width' in terrain).toBe(true);
@@ -96,16 +100,25 @@ describe('Integration: Sample Save Data', () => {
       expect(stackNames).toContain('山札');
     });
 
-    it('should parse standalone card objects', () => {
+    it('should not duplicate cards from card-stacks as standalone objects', () => {
       const extracted = extractZip(SAMPLE_ZIP_PATH);
       const dataFile = extracted.xmlFiles.find((f) => f.name === 'data');
       const content = dataFile!.data.toString('utf-8');
 
       const result = parseXml(content, 'data.xml');
 
-      // Should find standalone card objects (not inside card-stack)
-      const cards = result.objects.filter((o) => o.type === 'card');
-      expect(cards.length).toBeGreaterThanOrEqual(3); // At least 3 standalone cards
+      // Cards inside card-stacks should NOT appear as standalone top-level objects
+      const cardStacks = result.objects.filter((o) => o.type === 'card-stack');
+      expect(cardStacks.length).toBeGreaterThanOrEqual(2);
+
+      // Cards should be inside card-stack.cards, not at top level
+      let totalCardsInStacks = 0;
+      for (const stack of cardStacks) {
+        if (stack.type === 'card-stack') {
+          totalCardsInStacks += stack.cards.length;
+        }
+      }
+      expect(totalCardsInStacks).toBeGreaterThan(0);
     });
 
     it('should parse game-table', () => {
@@ -133,18 +146,21 @@ describe('Integration: Sample Save Data', () => {
 
       const result = parseXml(content, 'data.xml');
 
-      // Get unique types
-      const types = [...new Set(result.objects.map((o) => o.type))];
+      // Collect types from top-level and game-table children
+      const allTypes = new Set(result.objects.map((o) => o.type));
+      for (const obj of result.objects) {
+        if (obj.type === 'table') {
+          for (const child of obj.children) {
+            allTypes.add(child.type);
+          }
+        }
+      }
 
-      // Sample data should have these types
-      expect(types).toContain('character');
-      expect(types).toContain('terrain');
-      expect(types).toContain('card');
-      expect(types).toContain('card-stack');
-      expect(types).toContain('table');
-
-      // Total count should be reasonable
-      expect(result.objects.length).toBeGreaterThanOrEqual(10);
+      // Sample data should have these types (some may be nested in game-table)
+      expect(allTypes).toContain('character');
+      expect(allTypes).toContain('terrain');
+      expect(allTypes).toContain('card-stack');
+      expect(allTypes).toContain('table');
     });
   });
 
@@ -162,8 +178,8 @@ describe('Integration: Sample Save Data', () => {
       // Should have no errors
       expect(result.errors).toHaveLength(0);
 
-      // Should find objects from data.xml
-      expect(result.objects.length).toBeGreaterThanOrEqual(10);
+      // Should find objects from data.xml (some are nested in game-table children)
+      expect(result.objects.length).toBeGreaterThanOrEqual(3);
     });
   });
 

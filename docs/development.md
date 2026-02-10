@@ -118,14 +118,17 @@ udonarium-resonite-importer/
 Converts from Udonarium's 2D coordinate system to Resonite's 3D coordinate system:
 
 ```
-Udonarium (2D)           Resonite (3D)
+Udonarium (2D)           Resonite (3D, Y-up)
   +X → Right               +X → Right
   +Y → Down                +Y → Up
-                           +Z → Forward
+  posZ → Height            +Z → Forward
 ```
 
-- `resonite.x = udonarium.x * SCALE_FACTOR`
-- `resonite.y = 0` (table height)
-- `resonite.z = -udonarium.y * SCALE_FACTOR`
+- `resonite.x =  udonarium.x    * SCALE_FACTOR`
+- `resonite.y =  udonarium.posZ * SCALE_FACTOR`
+- `resonite.z = -udonarium.y    * SCALE_FACTOR`
 
 The default `SCALE_FACTOR` is 0.02 (50px = 1m).
+
+Udonarium uses `location.x` / `location.y` / `posZ` for coordinates.
+Objects use bottom-origin in Udonarium but center-origin in Resonite, so a Y-offset is applied for terrain and character objects.

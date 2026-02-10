@@ -62,12 +62,19 @@ export function parseCardStack(data: unknown, fileName: string): CardStack {
   // Parse position
   const position = parsePosition(root);
 
-  // Parse cards in stack
+  // Parse cards in stack.
+  // Cards may be direct children or inside <node name="cardRoot">.
   const cards: Card[] = [];
-  const cardElements = root.card;
+  let cardElements = root.card;
+  if (!cardElements) {
+    const nodeElement = root.node as Record<string, unknown> | undefined;
+    if (nodeElement) {
+      cardElements = nodeElement.card;
+    }
+  }
   if (Array.isArray(cardElements)) {
     for (let i = 0; i < cardElements.length; i++) {
-      const card = parseCard(cardElements[i], `${fileName}_card_${i}`);
+      const card = parseCard(cardElements[i] as unknown, `${fileName}_card_${i}`);
       cards.push(card);
     }
   } else if (cardElements) {

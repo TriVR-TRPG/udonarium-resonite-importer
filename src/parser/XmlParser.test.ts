@@ -543,20 +543,23 @@ describe('XmlParser', () => {
       const result = parseXml(xml, 'stack.xml');
 
       expect(result.errors).toHaveLength(0);
-      // card-stack + 2 nested cards (cards are found recursively too)
+      // Only card-stack at top level; cards are NOT duplicated as standalone objects
       const stacks = result.objects.filter((o) => o.type === 'card-stack');
-      const cards = result.objects.filter((o) => o.type === 'card');
+      const standaloneCards = result.objects.filter((o) => o.type === 'card');
 
       expect(stacks).toHaveLength(1);
+      expect(standaloneCards).toHaveLength(0); // cards only inside card-stack.cards
+
       const stack = stacks[0];
       expect(stack.name).toBe('トランプ山札');
       expect(stack.position).toEqual({ x: 750, y: 625, z: 0 });
 
-      // Cards found inside the stack via recursive search
-      expect(cards.length).toBeGreaterThanOrEqual(2);
-      const card = cards[0];
-      expect(card.position.x).toBeCloseTo(865.518, 2);
-      expect(card.position.y).toBeCloseTo(656.039, 2);
+      // Cards are inside the stack's cards array
+      if (stack.type === 'card-stack') {
+        expect(stack.cards).toHaveLength(2);
+        expect(stack.cards[0].position.x).toBeCloseTo(865.518, 2);
+        expect(stack.cards[0].position.y).toBeCloseTo(656.039, 2);
+      }
     });
 
     it('should parse room data with game-table containing terrains', () => {
@@ -604,15 +607,22 @@ describe('XmlParser', () => {
       expect(result.errors).toHaveLength(0);
 
       const tables = result.objects.filter((o) => o.type === 'table');
-      const terrains = result.objects.filter((o) => o.type === 'terrain');
+      const topLevelTerrains = result.objects.filter((o) => o.type === 'terrain');
       const characters = result.objects.filter((o) => o.type === 'character');
 
       expect(tables).toHaveLength(1);
-      expect(terrains).toHaveLength(1);
+      // Terrain is inside game-table's children, NOT at top level
+      expect(topLevelTerrains).toHaveLength(0);
       expect(characters).toHaveLength(1);
 
-      const terrain = terrains[0];
-      expect(terrain.position).toEqual({ x: 575, y: 175, z: 100 });
+      // Terrain is a child of the table
+      const table = tables[0];
+      if (table.type === 'table') {
+        expect(table.children).toHaveLength(1);
+        const terrain = table.children[0];
+        expect(terrain.type).toBe('terrain');
+        expect(terrain.position).toEqual({ x: 575, y: 175, z: 100 });
+      }
 
       const character = characters[0];
       expect(character.name).toBe('モンスターC');

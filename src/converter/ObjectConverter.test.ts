@@ -133,13 +133,14 @@ describe('ObjectConverter', () => {
           height: 20,
           gridType: 'square',
           gridColor: '#000000',
+          children: [],
         };
 
         const result = convertObject(table);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
         expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
-        expect(result.position.y).toBe(0.9);
+        expect(result.position.y).toBe(1);
       });
     });
 
@@ -215,6 +216,7 @@ describe('ObjectConverter', () => {
           height: 1,
           gridType: 'square' as const,
           gridColor: '#000000',
+          children: [],
         },
         {
           ...createBaseObject(),
@@ -236,12 +238,12 @@ describe('ObjectConverter', () => {
         },
       ];
       const expectedSizes = [
-        { x: 1, y: 1, z: 0.01 }, // character -> QuadMesh
-        { x: 1, y: 1, z: 1 }, // terrain -> BoxMesh
-        { x: 1, y: 1, z: 0.01 }, // table -> QuadMesh
-        { x: 0.6, y: 0.9, z: 0.01 }, // card -> QuadMesh
-        { x: 1, y: 1, z: 1 }, // card-stack parent -> meshless fallback
-        { x: 1, y: 1, z: 1 }, // text-note -> meshless fallback
+        { x: 1, y: 1, z: 0.05 }, // character -> converter-defined collider
+        { x: 1, y: 1, z: 1 }, // terrain -> converter-defined collider
+        { x: 1, y: 0.02, z: 1 }, // table -> converter-defined collider
+        { x: 0.6, y: 0.9, z: 0.01 }, // card -> converter-defined collider
+        { x: 0.6, y: 0.05, z: 0.9 }, // card-stack -> converter-defined collider
+        { x: 1, y: 0.02, z: 1 }, // text-note -> converter-defined collider
       ];
 
       for (const [index, obj] of objects.entries()) {

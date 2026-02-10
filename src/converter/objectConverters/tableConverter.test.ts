@@ -1,10 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import { applyTableConversion } from './tableConverter';
-import { GameTable } from '../UdonariumObject';
+import { GameTable, Terrain } from '../UdonariumObject';
 import { ResoniteObject } from '../ResoniteObject';
 
 describe('applyTableConversion', () => {
-  it('テーブルサイズ・Yオフセット・Quad系コンポーネントを設定する', () => {
+  it('keeps the table container unrotated and builds visual quad as a child slot', () => {
+    const childTerrain: Terrain = {
+      id: 'terrain-1',
+      type: 'terrain',
+      name: 'Terrain',
+      position: { x: 10, y: 20, z: 0 },
+      images: [],
+      properties: new Map(),
+      width: 1,
+      height: 1,
+      depth: 1,
+      wallImage: null,
+      floorImage: null,
+    };
+
     const udonObj: GameTable = {
       id: 'table-1',
       type: 'table',
@@ -16,7 +30,9 @@ describe('applyTableConversion', () => {
       height: 10,
       gridType: 'square',
       gridColor: '#ffffff',
+      children: [childTerrain],
     };
+
     const resoniteObj: ResoniteObject = {
       id: 'slot-table-1',
       name: 'Table',
@@ -28,16 +44,39 @@ describe('applyTableConversion', () => {
       children: [],
     };
 
-    applyTableConversion(udonObj, resoniteObj);
+    const convertedTerrain: ResoniteObject = {
+      id: 'slot-terrain-1',
+      name: 'Terrain',
+      position: { x: 1, y: 2, z: 3 },
+      rotation: { x: 0, y: 0, z: 0 },
+      scale: { x: 1, y: 1, z: 1 },
+      textures: [],
+      components: [],
+      children: [],
+    };
 
-    expect(resoniteObj.rotation).toEqual({ x: 90, y: 0, z: 0 });
+    applyTableConversion(udonObj, resoniteObj, undefined, () => convertedTerrain);
+
+    expect(resoniteObj.rotation).toEqual({ x: 0, y: 0, z: 0 });
     expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
-    expect(resoniteObj.position.y).toBe(-0.1);
-    expect(resoniteObj.components[0].fields).toEqual({
-      Size: {
-        $type: 'float2',
-        value: { x: 20, y: 10 },
+    expect(resoniteObj.components).toEqual([
+      {
+        id: 'slot-table-1-collider',
+        type: '[FrooxEngine]FrooxEngine.BoxCollider',
+        fields: {
+          Size: { $type: 'float3', value: { x: 20, y: 0.02, z: 10 } },
+        },
       },
+    ]);
+    expect(resoniteObj.children).toHaveLength(2);
+
+    const visual = resoniteObj.children[0];
+    expect(visual.position).toEqual({ x: 0, y: -0.1, z: 0 });
+    expect(visual.rotation).toEqual({ x: 90, y: 0, z: 0 });
+    expect(visual.components[0].fields).toEqual({
+      Size: { $type: 'float2', value: { x: 20, y: 10 } },
     });
+
+    expect(resoniteObj.children[1]).toBe(convertedTerrain);
   });
 });
