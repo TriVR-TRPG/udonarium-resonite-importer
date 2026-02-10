@@ -260,8 +260,8 @@ describe('TableParser', () => {
     it('should parse position', () => {
       const data = {
         '@_identifier': 'mask-002',
-        '@_posX': '150',
-        '@_posY': '250',
+        '@_location.x': '150',
+        '@_location.y': '250',
         '@_posZ': '4',
         data: [
           {

@@ -114,8 +114,8 @@ describe('TextNoteParser', () => {
     it('should parse position', () => {
       const data = {
         '@_identifier': 'note-004',
-        '@_posX': '100',
-        '@_posY': '200',
+        '@_location.x': '100',
+        '@_location.y': '200',
         '@_posZ': '6',
         data: [
           {

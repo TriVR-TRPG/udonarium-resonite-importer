@@ -108,15 +108,14 @@ export function getNumberValue(nodeOrValue: unknown): number | undefined {
 /**
  * Parse position from XML element attributes.
  * Udonarium uses location.x/location.y for 2D position and posZ for Z axis.
- * Falls back to posX/posY for compatibility.
  */
 export function parsePosition(root: Record<string, unknown>): {
   x: number;
   y: number;
   z: number;
 } {
-  const x = getNumberValue(root['@_location.x']) || getNumberValue(root['@_posX']) || 0;
-  const y = getNumberValue(root['@_location.y']) || getNumberValue(root['@_posY']) || 0;
+  const x = getNumberValue(root['@_location.x']) || 0;
+  const y = getNumberValue(root['@_location.y']) || 0;
   const z = getNumberValue(root['@_posZ']) || 0;
   return { x, y, z };
 }

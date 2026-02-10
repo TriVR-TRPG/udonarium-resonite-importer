@@ -161,8 +161,8 @@ describe('CardParser', () => {
     it('should parse position', () => {
       const data = {
         '@_identifier': 'card-006',
-        '@_posX': '150',
-        '@_posY': '250',
+        '@_location.x': '150',
+        '@_location.y': '250',
         '@_posZ': '12',
         data: [
           {
@@ -355,8 +355,8 @@ describe('CardParser', () => {
     it('should parse position', () => {
       const data = {
         '@_identifier': 'stack-005',
-        '@_posX': '300',
-        '@_posY': '400',
+        '@_location.x': '300',
+        '@_location.y': '400',
         '@_posZ': '8',
         data: [
           {

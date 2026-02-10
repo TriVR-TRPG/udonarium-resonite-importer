@@ -7,7 +7,7 @@ describe('XmlParser', () => {
     describe('character parsing', () => {
       it('should parse basic character XML', () => {
         const xml = `
-          <character identifier="char-001" posX="100" posY="200" posZ="50">
+          <character identifier="char-001" location.x="100" location.y="200" posZ="50">
             <data name="character">
               <data name="image">
                 <data name="imageIdentifier">#text=token123</data>
@@ -50,7 +50,7 @@ describe('XmlParser', () => {
     describe('card parsing', () => {
       it('should parse card XML', () => {
         const xml = `
-          <card identifier="card-001" posX="50" posY="75">
+          <card identifier="card-001" location.x="50" location.y="75">
             <data name="card">
               <data name="image">
                 <data name="front">#text=front123</data>
@@ -94,7 +94,7 @@ describe('XmlParser', () => {
     describe('terrain parsing', () => {
       it('should parse terrain XML', () => {
         const xml = `
-          <terrain identifier="terrain-001" posX="0" posY="0">
+          <terrain identifier="terrain-001" location.x="0" location.y="0">
             <data name="terrain">
               <data name="common">
                 <data name="name">#text=Wall</data>
@@ -142,7 +142,7 @@ describe('XmlParser', () => {
     describe('table-mask parsing', () => {
       it('should parse table-mask XML', () => {
         const xml = `
-          <table-mask identifier="mask-001" posX="10" posY="20">
+          <table-mask identifier="mask-001" location.x="10" location.y="20">
             <data name="table-mask">
               <data name="common">
                 <data name="name">#text=Fog of War</data>
@@ -162,7 +162,7 @@ describe('XmlParser', () => {
     describe('text-note parsing', () => {
       it('should parse text-note XML', () => {
         const xml = `
-          <text-note identifier="note-001" posX="300" posY="150">
+          <text-note identifier="note-001" location.x="300" location.y="150">
             <data name="text-note">
               <data name="common">
                 <data name="name">#text=Session Notes</data>

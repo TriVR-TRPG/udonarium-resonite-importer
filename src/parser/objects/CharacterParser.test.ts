@@ -117,11 +117,11 @@ describe('CharacterParser', () => {
       expect(result.position.z).toBe(25);
     });
 
-    it('should parse position from posX/posY attributes as fallback', () => {
+    it('should parse position from location.x/location.y with posZ', () => {
       const data = {
         '@_identifier': 'char-004',
-        '@_posX': '50',
-        '@_posY': '75',
+        '@_location.x': '50',
+        '@_location.y': '75',
         '@_posZ': '10',
         data: [
           {
