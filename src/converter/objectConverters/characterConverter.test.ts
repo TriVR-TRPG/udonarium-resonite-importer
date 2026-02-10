@@ -37,6 +37,7 @@ describe('applyCharacterConversion', () => {
       '[FrooxEngine]FrooxEngine.StaticTexture2D',
       '[FrooxEngine]FrooxEngine.UnlitMaterial',
       '[FrooxEngine]FrooxEngine.MeshRenderer',
+      '[FrooxEngine]FrooxEngine.BoxCollider',
     ]);
     expect(resoniteObj.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 0.3, y: 0.3 } },
@@ -51,6 +52,9 @@ describe('applyCharacterConversion', () => {
     expect(materialComponent?.fields).toEqual({
       Texture: { $type: 'reference', targetId: 'slot-char-1-tex' },
       BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' },
+    });
+    expect(resoniteObj.components[4].fields).toEqual({
+      Size: { $type: 'float3', value: { x: 0.3, y: 0.3, z: 0.05 } },
     });
   });
 });

@@ -151,6 +151,16 @@ export function buildBoxMeshComponents(
   return components;
 }
 
+export function buildBoxColliderComponent(slotId: string, size: BoxSize): ResoniteComponent {
+  return {
+    id: `${slotId}-collider`,
+    type: '[FrooxEngine]FrooxEngine.BoxCollider',
+    fields: {
+      Size: { $type: 'float3', value: size },
+    },
+  };
+}
+
 export function toTexturePlaceholder(identifier: string): string {
   return `${TEXTURE_PLACEHOLDER_PREFIX}${identifier}`;
 }

@@ -1,6 +1,10 @@
 import { GameCharacter } from '../UdonariumObject';
 import { ResoniteObject, Vector3 } from '../ResoniteObject';
-import { buildQuadMeshComponents, resolveTextureValue } from './componentBuilders';
+import {
+  buildBoxColliderComponent,
+  buildQuadMeshComponents,
+  resolveTextureValue,
+} from './componentBuilders';
 
 export function applyCharacterConversion(
   udonObj: GameCharacter,
@@ -14,6 +18,13 @@ export function applyCharacterConversion(
     x: size.x,
     y: size.y,
   });
+  resoniteObj.components.push(
+    buildBoxColliderComponent(resoniteObj.id, {
+      x: size.x,
+      y: size.y,
+      z: 0.05,
+    })
+  );
   // Udonarium positions at object bottom; Resonite positions at center
   resoniteObj.position.y += size.y / 2;
 }

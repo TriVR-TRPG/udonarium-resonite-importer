@@ -1,6 +1,10 @@
 import { GameTable, UdonariumObject } from '../UdonariumObject';
 import { ResoniteObject } from '../ResoniteObject';
-import { buildQuadMeshComponents, resolveTextureValue } from './componentBuilders';
+import {
+  buildBoxColliderComponent,
+  buildQuadMeshComponents,
+  resolveTextureValue,
+} from './componentBuilders';
 
 export function applyTableConversion(
   udonObj: GameTable,
@@ -10,7 +14,13 @@ export function applyTableConversion(
 ): void {
   // Keep table container unrotated so child object positions stay stable.
   resoniteObj.rotation = { x: 0, y: 0, z: 0 };
-  resoniteObj.components = [];
+  resoniteObj.components = [
+    buildBoxColliderComponent(resoniteObj.id, {
+      x: udonObj.width,
+      y: 0.02,
+      z: udonObj.height,
+    }),
+  ];
 
   const tableVisual: ResoniteObject = {
     id: `${resoniteObj.id}-surface`,

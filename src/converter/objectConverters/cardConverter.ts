@@ -1,6 +1,10 @@
 import { Card } from '../UdonariumObject';
 import { ResoniteObject } from '../ResoniteObject';
-import { buildQuadMeshComponents, resolveTextureValue } from './componentBuilders';
+import {
+  buildBoxColliderComponent,
+  buildQuadMeshComponents,
+  resolveTextureValue,
+} from './componentBuilders';
 
 export function applyCardConversion(
   udonObj: Card,
@@ -22,4 +26,7 @@ export function applyCardConversion(
     x: 0.6,
     y: 0.9,
   });
+  resoniteObj.components.push(
+    buildBoxColliderComponent(resoniteObj.id, { x: 0.6, y: 0.01, z: 0.9 })
+  );
 }

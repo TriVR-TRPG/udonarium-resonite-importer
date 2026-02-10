@@ -1,6 +1,10 @@
 import { Terrain } from '../UdonariumObject';
 import { ResoniteObject } from '../ResoniteObject';
-import { buildBoxMeshComponents, resolveTextureValue } from './componentBuilders';
+import {
+  buildBoxColliderComponent,
+  buildBoxMeshComponents,
+  resolveTextureValue,
+} from './componentBuilders';
 
 export function applyTerrainConversion(
   udonObj: Terrain,
@@ -16,6 +20,13 @@ export function applyTerrainConversion(
     y: udonObj.depth,
     z: udonObj.height,
   });
+  resoniteObj.components.push(
+    buildBoxColliderComponent(resoniteObj.id, {
+      x: udonObj.width,
+      y: udonObj.depth,
+      z: udonObj.height,
+    })
+  );
   // Udonarium positions at object bottom; Resonite positions at center
   resoniteObj.position.y += udonObj.depth / 2;
 }

@@ -158,6 +158,10 @@ src/
 - キャラクター画像の既知識別子を `KNOWN_IMAGE_IDENTIFIERS` に追加。
 - テーブル親スロットの回転を廃止し、見た目用 `-surface` 子スロットを回転（x=90）させる構成に変更。
   - 目的: テーブル配下の子オブジェクト（地形など）の座標ずれ防止。
+- コライダー実装を共通自動生成から各 converter 定義へ移行。
+  - `ObjectConverter` のメッシュ依存 `ensureBoxCollider` を削除。
+  - `character/card/card-stack/terrain/table/text-note` それぞれで
+    `BoxCollider` の `Size` を個別に指定。
 
 ### 2026-02-09
 - GIF画像に `StaticTexture2D.FilterMode = Point` を設定。

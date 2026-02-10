@@ -59,7 +59,15 @@ describe('applyTableConversion', () => {
 
     expect(resoniteObj.rotation).toEqual({ x: 0, y: 0, z: 0 });
     expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
-    expect(resoniteObj.components).toEqual([]);
+    expect(resoniteObj.components).toEqual([
+      {
+        id: 'slot-table-1-collider',
+        type: '[FrooxEngine]FrooxEngine.BoxCollider',
+        fields: {
+          Size: { $type: 'float3', value: { x: 20, y: 0.02, z: 10 } },
+        },
+      },
+    ]);
     expect(resoniteObj.children).toHaveLength(2);
 
     const visual = resoniteObj.children[0];
