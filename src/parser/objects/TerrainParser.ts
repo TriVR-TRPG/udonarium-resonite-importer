@@ -3,7 +3,7 @@
  */
 
 import { Terrain, ImageRef } from '../../converter/UdonariumObject';
-import { findDataByName, getTextValue, getNumberValue } from './ParserUtils';
+import { findDataByName, getTextValue, getNumberValue, parsePosition } from './ParserUtils';
 
 export function parseTerrain(data: unknown, fileName: string): Terrain {
   const root = data as Record<string, unknown>;
@@ -32,9 +32,7 @@ export function parseTerrain(data: unknown, fileName: string): Terrain {
   const depth = getNumberValue(findDataByName(commonData, 'depth')) || 1;
 
   // Parse position
-  const posX = getNumberValue(root['@_posX']) || 0;
-  const posY = getNumberValue(root['@_posY']) || 0;
-  const posZ = getNumberValue(root['@_posZ']) || 0;
+  const position = parsePosition(root);
 
   const images: ImageRef[] = [];
   if (wallImage) images.push(wallImage);
@@ -44,7 +42,7 @@ export function parseTerrain(data: unknown, fileName: string): Terrain {
     id: (root['@_identifier'] as string) || fileName,
     type: 'terrain',
     name,
-    position: { x: posX, y: posY, z: posZ },
+    position,
     width,
     height,
     depth,

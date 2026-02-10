@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parseXml, parseXmlFiles } from './XmlParser';
+import { Terrain, GameCharacter, TextNote } from '../converter/UdonariumObject';
 
 describe('XmlParser', () => {
   describe('parseXml', () => {
@@ -327,6 +328,296 @@ describe('XmlParser', () => {
 
       expect(result.objects).toHaveLength(1);
       expect(result.objects[0].name).toContain('日本語');
+    });
+  });
+
+  describe('sample data (extracted from roomdata-sample.zip)', () => {
+    // These test cases use XML fragments cut from the actual Udonarium save data.
+    // Udonarium uses location.x / location.y / posZ for coordinates (NOT posX / posY).
+
+    it('should parse terrain with location.x/location.y/posZ coordinates', () => {
+      const xml = `
+        <terrain isLocked="false" mode="3" rotate="0" location.name="table" location.x="575" location.y="175" posZ="100">
+          <data name="terrain">
+            <data name="image">
+              <data type="image" name="imageIdentifier"></data>
+              <data type="image" name="wall">./assets/images/tex.jpg</data>
+              <data type="image" name="floor">./assets/images/tex.jpg</data>
+            </data>
+            <data name="common">
+              <data name="name">地形</data>
+              <data name="width">2</data>
+              <data name="height">2</data>
+              <data name="depth">2</data>
+            </data>
+            <data name="detail"></data>
+          </data>
+        </terrain>
+      `;
+
+      const result = parseXml(xml, 'terrain.xml');
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.objects).toHaveLength(1);
+
+      const terrain = result.objects[0] as Terrain;
+      expect(terrain.type).toBe('terrain');
+      expect(terrain.name).toBe('地形');
+      expect(terrain.position).toEqual({ x: 575, y: 175, z: 100 });
+      expect(terrain.width).toBe(2);
+      expect(terrain.height).toBe(2);
+      expect(terrain.depth).toBe(2);
+      expect(terrain.wallImage?.identifier).toBe('./assets/images/tex.jpg');
+      expect(terrain.floorImage?.identifier).toBe('./assets/images/tex.jpg');
+    });
+
+    it('should parse terrain with posZ=0', () => {
+      const xml = `
+        <terrain isLocked="true" mode="3" rotate="0" location.name="table" location.x="775" location.y="450" posZ="0">
+          <data name="terrain">
+            <data name="image">
+              <data type="image" name="imageIdentifier"></data>
+              <data type="image" name="wall">./assets/images/tex.jpg</data>
+              <data type="image" name="floor">./assets/images/tex.jpg</data>
+            </data>
+            <data name="common">
+              <data name="name">地形</data>
+              <data name="width">2</data>
+              <data name="height">2</data>
+              <data name="depth">2</data>
+            </data>
+            <data name="detail"></data>
+          </data>
+        </terrain>
+      `;
+
+      const result = parseXml(xml, 'terrain.xml');
+
+      expect(result.errors).toHaveLength(0);
+      const terrain = result.objects[0] as Terrain;
+      expect(terrain.position).toEqual({ x: 775, y: 450, z: 0 });
+    });
+
+    it('should parse terrain with different dimensions', () => {
+      const xml = `
+        <terrain isLocked="false" mode="3" rotate="0" location.name="table" location.x="525" location.y="175" posZ="0">
+          <data name="terrain">
+            <data name="image">
+              <data type="image" name="imageIdentifier"></data>
+              <data type="image" name="wall">./assets/images/tex.jpg</data>
+              <data type="image" name="floor">./assets/images/tex.jpg</data>
+            </data>
+            <data name="common">
+              <data name="name">地形</data>
+              <data name="width">4</data>
+              <data name="height">2</data>
+              <data name="depth">3</data>
+            </data>
+            <data name="detail"></data>
+          </data>
+        </terrain>
+      `;
+
+      const result = parseXml(xml, 'terrain.xml');
+
+      expect(result.errors).toHaveLength(0);
+      const terrain = result.objects[0] as Terrain;
+      expect(terrain.position).toEqual({ x: 525, y: 175, z: 0 });
+      expect(terrain.width).toBe(4);
+      expect(terrain.height).toBe(2);
+      expect(terrain.depth).toBe(3);
+    });
+
+    it('should parse character with location.x/location.y coordinates', () => {
+      const xml = `
+        <character rotate="30" roll="0" location.name="table" location.x="250" location.y="450" posZ="0">
+          <data name="character">
+            <data name="image">
+              <data type="image" name="imageIdentifier">testCharacter_1_image</data>
+            </data>
+            <data name="common">
+              <data name="name">モンスターA</data>
+              <data name="size">1</data>
+            </data>
+            <data name="detail">
+              <data name="リソース">
+                <data type="numberResource" currentValue="200" name="HP">200</data>
+                <data type="numberResource" currentValue="100" name="MP">100</data>
+              </data>
+            </data>
+          </data>
+        </character>
+      `;
+
+      const result = parseXml(xml, 'character.xml');
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.objects).toHaveLength(1);
+
+      const character = result.objects[0] as GameCharacter;
+      expect(character.type).toBe('character');
+      expect(character.name).toBe('モンスターA');
+      expect(character.position).toEqual({ x: 250, y: 450, z: 0 });
+      expect(character.size).toBe(1);
+      expect(character.images[0].identifier).toBe('testCharacter_1_image');
+      expect(character.resources).toHaveLength(2);
+      expect(character.resources[0]).toEqual({ name: 'HP', currentValue: 200, maxValue: 200 });
+      expect(character.resources[1]).toEqual({ name: 'MP', currentValue: 100, maxValue: 100 });
+    });
+
+    it('should parse text-note with location.x/location.y coordinates', () => {
+      const xml = `
+        <text-note rotate="0" zindex="0" password="" location.name="table" location.x="875" location.y="200" posZ="0">
+          <data name="text-note">
+            <data name="image">
+              <data type="image" name="imageIdentifier"></data>
+            </data>
+            <data name="common">
+              <data name="width">4</data>
+              <data name="height">3</data>
+              <data name="fontsize">5</data>
+              <data name="title">共有メモ</data>
+              <data type="note" currentValue="テキストを入力してください" name="text">てすとテキスト</data>
+            </data>
+            <data name="detail"></data>
+          </data>
+        </text-note>
+      `;
+
+      const result = parseXml(xml, 'note.xml');
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.objects).toHaveLength(1);
+
+      const note = result.objects[0] as TextNote;
+      expect(note.type).toBe('text-note');
+      expect(note.name).toBe('共有メモ');
+      expect(note.position).toEqual({ x: 875, y: 200, z: 0 });
+    });
+
+    it('should parse card-stack with location.x/location.y and nested cards', () => {
+      const xml = `
+        <card-stack rotate="0" zindex="13" owner="" isShowTotal="true" location.name="table" location.x="750" location.y="625" posZ="0">
+          <data name="card-stack">
+            <data name="image">
+              <data type="image" name="imageIdentifier"></data>
+            </data>
+            <data name="common">
+              <data name="name">トランプ山札</data>
+            </data>
+            <data name="detail"></data>
+          </data>
+          <node name="cardRoot">
+            <card state="0" rotate="180" owner="" zindex="0" location.name="table" location.x="865.5179751952622" location.y="656.0392841109901" posZ="0">
+              <data name="card">
+                <data name="image">
+                  <data type="image" name="imageIdentifier"></data>
+                  <data type="image" name="front">./assets/images/trump/x01.gif</data>
+                  <data type="image" name="back">./assets/images/trump/z02.gif</data>
+                </data>
+                <data name="common">
+                  <data name="name">カード</data>
+                  <data name="size">2</data>
+                </data>
+                <data name="detail"></data>
+              </data>
+            </card>
+            <card state="0" rotate="0" owner="" zindex="0" location.name="table" location.x="865.5179751952622" location.y="656.0392841109901" posZ="0">
+              <data name="card">
+                <data name="image">
+                  <data type="image" name="imageIdentifier"></data>
+                  <data type="image" name="front">./assets/images/trump/c04.gif</data>
+                  <data type="image" name="back">./assets/images/trump/z02.gif</data>
+                </data>
+                <data name="common">
+                  <data name="name">カード</data>
+                  <data name="size">2</data>
+                </data>
+                <data name="detail"></data>
+              </data>
+            </card>
+          </node>
+        </card-stack>
+      `;
+
+      const result = parseXml(xml, 'stack.xml');
+
+      expect(result.errors).toHaveLength(0);
+      // card-stack + 2 nested cards (cards are found recursively too)
+      const stacks = result.objects.filter((o) => o.type === 'card-stack');
+      const cards = result.objects.filter((o) => o.type === 'card');
+
+      expect(stacks).toHaveLength(1);
+      const stack = stacks[0];
+      expect(stack.name).toBe('トランプ山札');
+      expect(stack.position).toEqual({ x: 750, y: 625, z: 0 });
+
+      // Cards found inside the stack via recursive search
+      expect(cards.length).toBeGreaterThanOrEqual(2);
+      const card = cards[0];
+      expect(card.position.x).toBeCloseTo(865.518, 2);
+      expect(card.position.y).toBeCloseTo(656.039, 2);
+    });
+
+    it('should parse room data with game-table containing terrains', () => {
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>
+        <room>
+          <game-table name="最初のテーブル" width="20" height="15" gridSize="50" imageIdentifier="testTableBackgroundImage_image" backgroundImageIdentifier="imageIdentifier" backgroundFilterType="" selected="false" gridType="0" gridColor="#000000e6">
+            <terrain isLocked="false" mode="3" rotate="0" location.name="table" location.x="575" location.y="175" posZ="100">
+              <data name="terrain">
+                <data name="image">
+                  <data type="image" name="imageIdentifier"></data>
+                  <data type="image" name="wall">./assets/images/tex.jpg</data>
+                  <data type="image" name="floor">./assets/images/tex.jpg</data>
+                </data>
+                <data name="common">
+                  <data name="name">地形</data>
+                  <data name="width">2</data>
+                  <data name="height">2</data>
+                  <data name="depth">2</data>
+                </data>
+                <data name="detail"></data>
+              </data>
+            </terrain>
+          </game-table>
+          <character rotate="0" roll="0" location.name="table" location.x="200" location.y="100" posZ="0">
+            <data name="character">
+              <data name="image">
+                <data type="image" name="imageIdentifier">testCharacter_3_image</data>
+              </data>
+              <data name="common">
+                <data name="name">モンスターC</data>
+                <data name="size">3</data>
+              </data>
+              <data name="detail">
+                <data name="リソース">
+                  <data type="numberResource" currentValue="200" name="HP">200</data>
+                </data>
+              </data>
+            </data>
+          </character>
+        </room>
+      `;
+
+      const result = parseXml(xml, 'data.xml');
+
+      expect(result.errors).toHaveLength(0);
+
+      const tables = result.objects.filter((o) => o.type === 'table');
+      const terrains = result.objects.filter((o) => o.type === 'terrain');
+      const characters = result.objects.filter((o) => o.type === 'character');
+
+      expect(tables).toHaveLength(1);
+      expect(terrains).toHaveLength(1);
+      expect(characters).toHaveLength(1);
+
+      const terrain = terrains[0];
+      expect(terrain.position).toEqual({ x: 575, y: 175, z: 100 });
+
+      const character = characters[0];
+      expect(character.name).toBe('モンスターC');
+      expect(character.position).toEqual({ x: 200, y: 100, z: 0 });
+      expect(character.size).toBe(3);
     });
   });
 });

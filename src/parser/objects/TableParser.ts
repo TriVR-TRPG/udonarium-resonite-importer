@@ -3,7 +3,7 @@
  */
 
 import { GameTable, TableMask, ImageRef } from '../../converter/UdonariumObject';
-import { findDataByName, getTextValue, getNumberValue } from './ParserUtils';
+import { findDataByName, getTextValue, getNumberValue, parsePosition } from './ParserUtils';
 
 /**
  * Parse game-table element with attributes (used in room save data)
@@ -90,15 +90,13 @@ export function parseTableMask(data: unknown, fileName: string): TableMask {
   const height = getNumberValue(findDataByName(commonData, 'height')) || 4;
 
   // Parse position
-  const posX = getNumberValue(root['@_posX']) || 0;
-  const posY = getNumberValue(root['@_posY']) || 0;
-  const posZ = getNumberValue(root['@_posZ']) || 0;
+  const position = parsePosition(root);
 
   return {
     id: (root['@_identifier'] as string) || fileName,
     type: 'table-mask',
     name,
-    position: { x: posX, y: posY, z: posZ },
+    position,
     width,
     height,
     images: [],

@@ -3,7 +3,7 @@
  */
 
 import { Card, CardStack, ImageRef } from '../../converter/UdonariumObject';
-import { findDataByName, getTextValue, getNumberValue, getBooleanValue } from './ParserUtils';
+import { findDataByName, getTextValue, getBooleanValue, parsePosition } from './ParserUtils';
 
 export function parseCard(data: unknown, fileName: string): Card {
   const root = data as Record<string, unknown>;
@@ -32,9 +32,7 @@ export function parseCard(data: unknown, fileName: string): Card {
   const isFaceUp = getBooleanValue(root['@_isFaceUp']) ?? true;
 
   // Parse position
-  const posX = getNumberValue(root['@_posX']) || 0;
-  const posY = getNumberValue(root['@_posY']) || 0;
-  const posZ = getNumberValue(root['@_posZ']) || 0;
+  const position = parsePosition(root);
 
   const images: ImageRef[] = [];
   if (frontImage) images.push(frontImage);
@@ -44,7 +42,7 @@ export function parseCard(data: unknown, fileName: string): Card {
     id: (root['@_identifier'] as string) || fileName,
     type: 'card',
     name,
-    position: { x: posX, y: posY, z: posZ },
+    position,
     images,
     properties: new Map(),
     isFaceUp,
@@ -62,9 +60,7 @@ export function parseCardStack(data: unknown, fileName: string): CardStack {
   const name = getTextValue(findDataByName(commonData, 'name')) || fileName;
 
   // Parse position
-  const posX = getNumberValue(root['@_posX']) || 0;
-  const posY = getNumberValue(root['@_posY']) || 0;
-  const posZ = getNumberValue(root['@_posZ']) || 0;
+  const position = parsePosition(root);
 
   // Parse cards in stack
   const cards: Card[] = [];
@@ -83,7 +79,7 @@ export function parseCardStack(data: unknown, fileName: string): CardStack {
     id: (root['@_identifier'] as string) || fileName,
     type: 'card-stack',
     name,
-    position: { x: posX, y: posY, z: posZ },
+    position,
     images: [],
     properties: new Map(),
     cards,

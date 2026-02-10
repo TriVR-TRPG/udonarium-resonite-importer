@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { findDataByName, getTextValue, getNumberValue, getBooleanValue } from './ParserUtils';
+import {
+  findDataByName,
+  getTextValue,
+  getNumberValue,
+  getBooleanValue,
+  parsePosition,
+} from './ParserUtils';
 
 describe('ParserUtils', () => {
   describe('findDataByName', () => {
@@ -236,6 +242,76 @@ describe('ParserUtils', () => {
     it('should return undefined for DataNode without text', () => {
       const node = { '@_name': 'novalue' };
       expect(getBooleanValue(node)).toBeUndefined();
+    });
+  });
+
+  describe('parsePosition', () => {
+    it('should parse position from location.x/location.y/posZ', () => {
+      const root = {
+        '@_location.x': '575',
+        '@_location.y': '175',
+        '@_posZ': '100',
+      };
+
+      const pos = parsePosition(root);
+
+      expect(pos.x).toBe(575);
+      expect(pos.y).toBe(175);
+      expect(pos.z).toBe(100);
+    });
+
+    it('should fall back to posX/posY when location.x/location.y not present', () => {
+      const root = {
+        '@_posX': '500',
+        '@_posY': '600',
+        '@_posZ': '30',
+      };
+
+      const pos = parsePosition(root);
+
+      expect(pos.x).toBe(500);
+      expect(pos.y).toBe(600);
+      expect(pos.z).toBe(30);
+    });
+
+    it('should prefer location.x/location.y over posX/posY', () => {
+      const root = {
+        '@_location.x': '575',
+        '@_location.y': '175',
+        '@_posX': '100',
+        '@_posY': '200',
+        '@_posZ': '50',
+      };
+
+      const pos = parsePosition(root);
+
+      expect(pos.x).toBe(575);
+      expect(pos.y).toBe(175);
+      expect(pos.z).toBe(50);
+    });
+
+    it('should default to (0, 0, 0) when no position attributes present', () => {
+      const root = {};
+
+      const pos = parsePosition(root);
+
+      expect(pos.x).toBe(0);
+      expect(pos.y).toBe(0);
+      expect(pos.z).toBe(0);
+    });
+
+    it('should handle floating point coordinates', () => {
+      const root = {
+        '@_location.x': '865.5179751952622',
+        '@_location.y': '656.0392841109901',
+        '@_posZ': '0',
+      };
+
+      const pos = parsePosition(root);
+
+      expect(pos.x).toBeCloseTo(865.518, 2);
+      expect(pos.y).toBeCloseTo(656.039, 2);
+      expect(pos.z).toBe(0);
     });
   });
 });

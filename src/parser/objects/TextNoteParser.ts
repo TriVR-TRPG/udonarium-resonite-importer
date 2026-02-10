@@ -3,7 +3,7 @@
  */
 
 import { TextNote } from '../../converter/UdonariumObject';
-import { findDataByName, getTextValue, getNumberValue } from './ParserUtils';
+import { findDataByName, getTextValue, getNumberValue, parsePosition } from './ParserUtils';
 
 export function parseTextNote(data: unknown, fileName: string): TextNote {
   const root = data as Record<string, unknown>;
@@ -18,15 +18,13 @@ export function parseTextNote(data: unknown, fileName: string): TextNote {
   const fontSize = getNumberValue(findDataByName(noteData, 'fontSize')) || 14;
 
   // Parse position
-  const posX = getNumberValue(root['@_posX']) || 0;
-  const posY = getNumberValue(root['@_posY']) || 0;
-  const posZ = getNumberValue(root['@_posZ']) || 0;
+  const position = parsePosition(root);
 
   return {
     id: (root['@_identifier'] as string) || fileName,
     type: 'text-note',
     name,
-    position: { x: posX, y: posY, z: posZ },
+    position,
     text,
     fontSize,
     images: [],
