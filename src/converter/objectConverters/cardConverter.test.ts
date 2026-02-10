@@ -43,7 +43,7 @@ describe('applyCardConversion', () => {
       (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
     );
     expect(colliderComponent?.fields).toEqual({
-      Size: { $type: 'float3', value: { x: 0.6, y: 0.01, z: 0.9 } },
+      Size: { $type: 'float3', value: { x: 0.6, y: 0.9, z: 0.01 } },
     });
   });
 

@@ -27,6 +27,7 @@ export function applyCardConversion(
     y: 0.9,
   });
   resoniteObj.components.push(
-    buildBoxColliderComponent(resoniteObj.id, { x: 0.6, y: 0.01, z: 0.9 })
+    // Cards are rotated (x=90), so thickness must stay on local Z.
+    buildBoxColliderComponent(resoniteObj.id, { x: 0.6, y: 0.9, z: 0.01 })
   );
 }
