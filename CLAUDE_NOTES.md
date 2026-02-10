@@ -40,15 +40,19 @@ Udonarium（Webベースのバーチャルテーブルトップ）のセーブ�
 
 ### 座標系変換
 ```
-Udonarium (2D)       Resonite (3D)
+Udonarium (2D)       Resonite (3D Y-up)
 +X → 右               +X → 右
 +Y → 下               +Y → 上
-                      +Z → 奥
+posZ → 高さ           +Z → 奥
 
-resonite.x = udonarium.x * 0.02
-resonite.y = 0
-resonite.z = -udonarium.y * 0.02
+resonite.x =  udonarium.x    * SCALE_FACTOR (0.02)
+resonite.y =  udonarium.posZ * SCALE_FACTOR (0.02)
+resonite.z = -udonarium.y    * SCALE_FACTOR (0.02)
 ```
+- Udonarium は `location.x` / `location.y` / `posZ` を座標に使用（`posX`/`posY` は存在しない）
+- Udonarium はオブジェクト底面が座標位置、Resonite は中心が座標位置
+  - terrain: `position.y += depth / 2`
+  - character: `position.y += size / 2`
 
 ## 将来の改善候補
 
@@ -300,3 +304,42 @@ resonite.z = -udonarium.y * 0.02
   - 検証:
     - `npm run test -- src/converter/ObjectConverter.test.ts src/converter/objectConverters/tableConverter.test.ts src/converter/objectConverters/terrainConverter.test.ts src/resonite/SlotBuilder.test.ts` 通過
     - `npm run check` 通過
+
+## 最近の更新 (2026-02-10)
+- XML座標パースを `location.x` / `location.y` / `posZ` に統一。
+  - **背景**: Udonarium のセーブデータは `location.x`/`location.y` を使用するが、既存パーサーは存在しない `posX`/`posY` を参照していたため座標が常に (0,0,z) になっていた。
+  - `src/parser/objects/ParserUtils.ts`
+    - `parsePosition()` ヘルパーを追加。`@_location.x`/`@_location.y`/`@_posZ` を読み取る。
+  - 全パーサーを `parsePosition()` 利用に統一:
+    - `TerrainParser.ts`, `CardParser.ts`, `TextNoteParser.ts`, `TableParser.ts`, `CharacterParser.ts`
+  - `posX`/`posY` へのフォールバックは不要なため実装しない（ユーザー指示）。
+  - テスト追加:
+    - `src/parser/XmlParser.test.ts` にサンプルZIPから切り出したXMLのテストケースを7件追加。
+    - `src/parser/objects/ParserUtils.test.ts` に `parsePosition` のユニットテストを追加。
+    - 各パーサーテストに `location.x`/`location.y` のテストケースを追加。
+- 座標系変換のメモを更新:
+  ```
+  Udonarium (2D)       Resonite (3D Y-up)
+  +X → 右               +X → 右
+  +Y → 下               +Y → 上
+  posZ → 高さ           +Z → 奥
+
+  resonite.x =  udonarium.x    * 0.02
+  resonite.y =  udonarium.posZ * 0.02
+  resonite.z = -udonarium.y    * 0.02
+  ```
+- オブジェクトの原点位置の違い（底面 vs 中心）に対応。
+  - **背景**: Udonarium はオブジェクトの底面を座標位置とするが、Resonite はオブジェクトの中心を座標位置とするため、高さの半分だけ Y 座標をオフセットする必要がある。
+  - `src/converter/objectConverters/terrainConverter.ts`
+    - ボックスメッシュの寸法マッピングを修正: `{x: width, y: height, z: depth}` → `{x: width, y: depth, z: height}`
+      - Udonarium の `depth`（垂直方向）を Resonite の Y 軸に、`height`（水平方向）を Z 軸にマッピング。
+    - Y座標オフセット追加: `position.y += depth / 2`
+  - `src/converter/objectConverters/characterConverter.ts`
+    - Y座標オフセット追加: `position.y += size.y / 2`
+  - カード・テーブルは水平配置（rotation.x=90）で厚みがないため、オフセット不要。
+  - テスト更新:
+    - `src/converter/objectConverters/terrainConverter.test.ts`
+    - `src/converter/objectConverters/characterConverter.test.ts`
+    - `src/converter/ObjectConverter.test.ts`
+- 検証:
+  - `npx vitest run` 全246テスト通過
