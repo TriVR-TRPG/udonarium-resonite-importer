@@ -152,6 +152,7 @@ udonarium-resonite-importer/
 │   │   ├── ZipExtractor.ts      # ZIP解凍処理
 │   │   ├── XmlParser.ts         # XML解析基盤
 │   │   └── objects/
+│   │       ├── ParserUtils.ts   # 共通ユーティリティ (parsePosition等)
 │   │       ├── CharacterParser.ts
 │   │       ├── CardParser.ts
 │   │       ├── TerrainParser.ts
@@ -160,13 +161,26 @@ udonarium-resonite-importer/
 │   ├── converter/
 │   │   ├── UdonariumObject.ts   # Udonariumオブジェクト型定義
 │   │   ├── ResoniteObject.ts    # Resoniteオブジェクト型定義
-│   │   └── ObjectConverter.ts   # 変換ロジック
+│   │   ├── ObjectConverter.ts   # 変換ディスパッチ + BoxCollider付与
+│   │   └── objectConverters/    # 種別ごとの変換ロジック
+│   │       ├── componentBuilders.ts  # QuadMesh/BoxMesh コンポーネント生成
+│   │       ├── characterConverter.ts
+│   │       ├── cardConverter.ts
+│   │       ├── cardStackConverter.ts
+│   │       ├── terrainConverter.ts
+│   │       ├── tableConverter.ts
+│   │       └── textNoteConverter.ts
 │   ├── resonite/
 │   │   ├── ResoniteLinkClient.ts    # WebSocketクライアント
-│   │   ├── SlotBuilder.ts           # スロット生成ヘルパー
-│   │   └── AssetImporter.ts         # アセットインポート
+│   │   ├── SlotBuilder.ts           # スロット生成 + SyncList分離
+│   │   ├── AssetImporter.ts         # アセットインポート
+│   │   └── registerExternalUrls.ts  # 外部URL画像登録
+│   ├── gui/                     # Electron GUI
+│   ├── i18n/                    # 国際化
 │   └── config/
-│       └── MappingConfig.ts     # オブジェクトマッピング設定
+│       └── MappingConfig.ts     # 定数・マッピング設定
+├── lib/
+│   └── resonitelink.js/         # ResoniteLink library (submodule)
 ├── dist/                        # ビルド出力
 ├── package.json
 └── tsconfig.json
@@ -266,24 +280,29 @@ udonarium-resonite-importer/
 Udonarium (2D, CSS座標系)     Resonite (3D, Y-up)
   +X → 右                        +X → 右
   +Y → 下                        +Y → 上
-  単位: px (1マス = 50px)         +Z → 奥
-                                  単位: メートル
+  posZ → 高さ                    +Z → 奥
+  単位: px (1マス = 50px)         単位: メートル
 
 変換式:
-  resonite.x = udonarium.x * SCALE_FACTOR
-  resonite.y = 0 (テーブル高さ)
-  resonite.z = -udonarium.y * SCALE_FACTOR
-
-  SCALE_FACTOR = 0.02  // 50px = 1m として調整
+  resonite.x =  udonarium.x    * SCALE_FACTOR (0.02)
+  resonite.y =  udonarium.posZ * SCALE_FACTOR (0.02)
+  resonite.z = -udonarium.y    * SCALE_FACTOR (0.02)
 ```
+
+- Udonarium は `location.x` / `location.y` / `posZ` を座標に使用
+- Udonarium はオブジェクト底面が座標位置、Resonite は中心が座標位置
+  - terrain: `position.y += depth / 2`
+  - character: `position.y += size.y / 2`
 
 ### 5.3 サイズ変換
 
 ```
-Udonarium size = 1 → Resonite scale = (0.1, 0.1, 0.1)
-Udonarium size = 2 → Resonite scale = (0.2, 0.2, 0.2)
+オブジェクト寸法は Udonarium の値をそのまま Mesh の Size に反映。
+  QuadMesh.Size (float2) / BoxMesh.Size (float3)
 
-基準: 1 size = 10cm
+Slot.scale は変更しない（デフォルト 1,1,1）。
+インポートルートコンテナに IMPORT_GROUP_SCALE (0.1) を適用して最終サイズを調整。
+  → 結果的に 1マス = 10cm
 ```
 
 ---

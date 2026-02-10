@@ -118,14 +118,17 @@ udonarium-resonite-importer/
 Udonariumの2D座標系からResoniteの3D座標系に変換されます：
 
 ```
-Udonarium (2D)           Resonite (3D)
+Udonarium (2D)           Resonite (3D Y-up)
   +X → 右                  +X → 右
   +Y → 下                  +Y → 上
-                           +Z → 奥
+  posZ → 高さ              +Z → 奥
 ```
 
-- `resonite.x = udonarium.x * SCALE_FACTOR`
-- `resonite.y = 0`（テーブル高さ）
-- `resonite.z = -udonarium.y * SCALE_FACTOR`
+- `resonite.x =  udonarium.x    * SCALE_FACTOR`
+- `resonite.y =  udonarium.posZ * SCALE_FACTOR`
+- `resonite.z = -udonarium.y    * SCALE_FACTOR`
 
 デフォルトの`SCALE_FACTOR`は0.02（50px = 1m）です。
+
+Udonariumは `location.x` / `location.y` / `posZ` を座標に使用します。
+Udonariumではオブジェクト底面が座標位置ですが、Resoniteでは中心が座標位置のため、terrain・character には Y 方向のオフセットが適用されます。
