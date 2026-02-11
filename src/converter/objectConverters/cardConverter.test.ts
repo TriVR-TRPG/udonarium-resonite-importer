@@ -58,6 +58,8 @@ describe('applyCardConversion', () => {
     );
     expect(textureComponent?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://front.png' },
+      WrapModeU: { $type: 'enum?', value: 'Clamp', enumType: 'TextureWrapMode' },
+      WrapModeV: { $type: 'enum?', value: 'Clamp', enumType: 'TextureWrapMode' },
     });
   });
 
@@ -73,6 +75,8 @@ describe('applyCardConversion', () => {
     );
     expect(textureComponent?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://back.png' },
+      WrapModeU: { $type: 'enum?', value: 'Clamp', enumType: 'TextureWrapMode' },
+      WrapModeV: { $type: 'enum?', value: 'Clamp', enumType: 'TextureWrapMode' },
     });
   });
 
@@ -89,6 +93,8 @@ describe('applyCardConversion', () => {
     );
     expect(textureComponent?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://front.png' },
+      WrapModeU: { $type: 'enum?', value: 'Clamp', enumType: 'TextureWrapMode' },
+      WrapModeV: { $type: 'enum?', value: 'Clamp', enumType: 'TextureWrapMode' },
     });
   });
 
@@ -107,6 +113,8 @@ describe('applyCardConversion', () => {
     );
     expect(textureComponent?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://fallback.png' },
+      WrapModeU: { $type: 'enum?', value: 'Clamp', enumType: 'TextureWrapMode' },
+      WrapModeV: { $type: 'enum?', value: 'Clamp', enumType: 'TextureWrapMode' },
     });
   });
 
@@ -124,6 +132,8 @@ describe('applyCardConversion', () => {
     );
     expect(textureComponent?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://front.gif' },
+      WrapModeU: { $type: 'enum?', value: 'Clamp', enumType: 'TextureWrapMode' },
+      WrapModeV: { $type: 'enum?', value: 'Clamp', enumType: 'TextureWrapMode' },
       FilterMode: { $type: 'enum?', value: 'Point', enumType: 'TextureFilterMode' },
     });
   });
