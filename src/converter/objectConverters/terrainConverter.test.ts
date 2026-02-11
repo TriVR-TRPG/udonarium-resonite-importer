@@ -1,10 +1,10 @@
-import { describe, expect, it } from 'vitest';
+﻿import { describe, expect, it } from 'vitest';
 import { applyTerrainConversion } from './terrainConverter';
 import { Terrain } from '../UdonariumObject';
 import { ResoniteObject } from '../ResoniteObject';
 
 describe('applyTerrainConversion', () => {
-  it('地形サイズを反映し、Box系コンポーネントを設定する', () => {
+  it('terrain container has BoxCollider and creates five QuadMesh faces', () => {
     const udonObj: Terrain = {
       id: 'terrain-1',
       type: 'terrain',
@@ -31,13 +31,8 @@ describe('applyTerrainConversion', () => {
     applyTerrainConversion(udonObj, resoniteObj);
 
     expect(resoniteObj.components.map((c) => c.type)).toEqual([
-      '[FrooxEngine]FrooxEngine.BoxMesh',
-      '[FrooxEngine]FrooxEngine.StaticTexture2D',
-      '[FrooxEngine]FrooxEngine.PBS_Metallic',
-      '[FrooxEngine]FrooxEngine.MeshRenderer',
       '[FrooxEngine]FrooxEngine.BoxCollider',
     ]);
-    // Udonarium height→Resonite Z, Udonarium depth→Resonite Y
     expect(resoniteObj.components[0].fields).toEqual({
       Size: {
         $type: 'float3',
@@ -48,25 +43,35 @@ describe('applyTerrainConversion', () => {
         },
       },
     });
-    // Bottom-origin offset: position.y += depth / 2
     expect(resoniteObj.position.y).toBe(2);
 
-    const materialComponent = resoniteObj.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.PBS_Metallic'
-    );
-    expect(materialComponent?.fields).toEqual({
-      AlbedoTexture: { $type: 'reference', targetId: 'slot-terrain-1-tex' },
-      BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' },
+    expect(resoniteObj.children).toHaveLength(5);
+    for (const child of resoniteObj.children) {
+      expect(child.components.map((c) => c.type)).toEqual([
+        '[FrooxEngine]FrooxEngine.QuadMesh',
+        '[FrooxEngine]FrooxEngine.StaticTexture2D',
+        '[FrooxEngine]FrooxEngine.UnlitMaterial',
+        '[FrooxEngine]FrooxEngine.MeshRenderer',
+      ]);
+    }
+
+    const topFace = resoniteObj.children.find((child) => child.id === 'slot-terrain-1-top');
+    expect(topFace?.position).toEqual({ x: 0, y: 2, z: 0 });
+    expect(topFace?.rotation).toEqual({ x: 90, y: 0, z: 0 });
+    expect(topFace?.components[0].fields).toEqual({
+      Size: { $type: 'float2', value: { x: 10, y: 2 } },
     });
-    expect(resoniteObj.components[4].fields).toEqual({
-      Size: {
-        $type: 'float3',
-        value: {
-          x: 10,
-          y: 4,
-          z: 2,
-        },
-      },
+
+    const frontFace = resoniteObj.children.find((child) => child.id === 'slot-terrain-1-front');
+    expect(frontFace?.position).toEqual({ x: 0, y: 0, z: -1 });
+    expect(frontFace?.components[0].fields).toEqual({
+      Size: { $type: 'float2', value: { x: 10, y: 4 } },
+    });
+
+    const leftFace = resoniteObj.children.find((child) => child.id === 'slot-terrain-1-left');
+    expect(leftFace?.position).toEqual({ x: -5, y: 0, z: 0 });
+    expect(leftFace?.components[0].fields).toEqual({
+      Size: { $type: 'float2', value: { x: 2, y: 4 } },
     });
   });
 });
