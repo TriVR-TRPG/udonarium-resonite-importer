@@ -100,7 +100,7 @@ describe('ObjectConverter', () => {
           ...basePos,
           y: basePos.y + character.size / 2,
         });
-        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
+
         expect(result.textures).toEqual(['img1']);
       });
     });
@@ -120,7 +120,6 @@ describe('ObjectConverter', () => {
         const result = convertObject(terrain);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
       });
     });
 
@@ -139,7 +138,7 @@ describe('ObjectConverter', () => {
         const result = convertObject(table);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
+
         expect(result.position.y).toBe(1);
       });
     });
@@ -157,7 +156,6 @@ describe('ObjectConverter', () => {
         const result = convertObject(card);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
       });
     });
 
@@ -172,7 +170,6 @@ describe('ObjectConverter', () => {
         const result = convertObject(cardStack);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
       });
     });
 
@@ -188,7 +185,6 @@ describe('ObjectConverter', () => {
         const result = convertObject(textNote);
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
-        expect(result.scale).toEqual({ x: 1, y: 1, z: 1 });
       });
     });
 

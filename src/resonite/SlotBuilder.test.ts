@@ -26,7 +26,6 @@ describe('SlotBuilder', () => {
     name: 'Test Object',
     position: { x: 0, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
-    scale: { x: 1, y: 1, z: 1 },
     textures: [],
     components: [],
     children: [],
@@ -76,7 +75,6 @@ describe('SlotBuilder', () => {
         id: 'char-001',
         name: 'Test Character',
         position: { x: 1, y: 2, z: 3 },
-        scale: { x: 0.5, y: 0.5, z: 0.5 },
       });
 
       const result = await slotBuilder.buildSlot(obj);
@@ -86,7 +84,6 @@ describe('SlotBuilder', () => {
         parentId: 'Root',
         name: 'Test Character',
         position: { x: 1, y: 2, z: 3 },
-        scale: { x: 0.5, y: 0.5, z: 0.5 },
       });
       expect(result.success).toBe(true);
       expect(result.slotId).toBe('created-slot-id');
@@ -171,7 +168,6 @@ describe('SlotBuilder', () => {
         parentId: 'Root',
         name: 'Parent Object',
         position: { x: 0, y: 0, z: 0 },
-        scale: { x: 1, y: 1, z: 1 },
       });
 
       // Second call for child with parent's slot ID
@@ -180,7 +176,6 @@ describe('SlotBuilder', () => {
         parentId: 'created-slot-id',
         name: 'Child Object',
         position: { x: 0, y: 0, z: 0 },
-        scale: { x: 1, y: 1, z: 1 },
       });
     });
 

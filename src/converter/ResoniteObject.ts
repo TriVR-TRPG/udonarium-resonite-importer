@@ -19,7 +19,6 @@ export interface ResoniteObject {
   name: string;
   position: Vector3;
   rotation: Vector3;
-  scale: Vector3;
   textures: string[];
   components: ResoniteComponent[];
   children: ResoniteObject[];

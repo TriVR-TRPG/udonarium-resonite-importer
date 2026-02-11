@@ -21,7 +21,6 @@ describe('applyCardConversion', () => {
     name: 'Card',
     position: { x: 0, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
-    scale: { x: 1, y: 1, z: 1 },
     textures: ['front.png', 'back.png'],
     components: [],
     children: [],
@@ -35,7 +34,7 @@ describe('applyCardConversion', () => {
 
     expect(resoniteObj.position.y).toBe(0.001);
     expect(resoniteObj.rotation).toEqual({ x: 90, y: 0, z: 0 });
-    expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
+
     expect(resoniteObj.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 0.6, y: 0.9 } },
       DualSided: { $type: 'bool', value: true },

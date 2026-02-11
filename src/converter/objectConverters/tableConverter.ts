@@ -23,7 +23,6 @@ export function applyTableConversion(
     name: `${resoniteObj.name}-surface`,
     position: { x: udonObj.width / 2, y: 0, z: -udonObj.height / 2 },
     rotation: { x: 90, y: 0, z: 0 },
-    scale: { x: 1, y: 1, z: 1 },
     textures: [],
     components: [
       ...buildQuadMeshComponents(surfaceId, textureValue, false, {

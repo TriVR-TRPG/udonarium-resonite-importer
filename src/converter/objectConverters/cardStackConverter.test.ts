@@ -35,7 +35,6 @@ describe('applyCardStackConversion', () => {
       name: 'Stack',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      scale: { x: 1, y: 1, z: 1 },
       textures: [],
       components: [{ type: 'dummy', fields: {} }],
       children: [],
@@ -46,7 +45,6 @@ describe('applyCardStackConversion', () => {
         name: obj.name,
         position: { x: 9, y: 9, z: 9 },
         rotation: { x: 0, y: 0, z: 0 },
-        scale: { x: 1, y: 1, z: 1 },
         textures: [],
         components: [],
         children: [],
@@ -56,7 +54,6 @@ describe('applyCardStackConversion', () => {
     applyCardStackConversion(udonObj, resoniteObj, convertObject);
 
     expect(convertObject).toHaveBeenCalledTimes(2);
-    expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
     expect(resoniteObj.components).toEqual([
       {
         id: 'slot-stack-1-collider',

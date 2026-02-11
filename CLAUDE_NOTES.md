@@ -77,7 +77,7 @@ resonite.z = -udonarium.y    * SCALE_FACTOR (0.02)
 
 ### サイズ変換
 - オブジェクト寸法は Udonarium の値をそのまま Mesh の `Size` に反映（`QuadMesh.Size` / `BoxMesh.Size`）。
-- `Slot.scale` は変更しない（デフォルト 1,1,1）。
+- `ResoniteObject` 型に `scale` フィールドは持たない（常にデフォルト 1,1,1）。
 - インポートルートコンテナに `IMPORT_GROUP_SCALE`（0.1）を適用して最終サイズを調整。
 - `BoxCollider.Size` はメッシュ `Size` から自動計算。`QuadMesh` は厚み `z=0.01` を付与。
 
@@ -146,6 +146,12 @@ src/
 - テストカバレッジ向上
 
 ## 更新履歴
+
+### 2026-02-12
+- `ResoniteObject` 型から `scale` フィールドを削除（常にデフォルト値のため不要）。
+  - `addSlot` の `scale` 引数を optional 化（未指定時は `{1,1,1}`）。
+- テーブル surface の位置を `(width/2, 0, -height/2)` にオフセット（QuadMesh の原点補正）。
+- カードに Y+0.001 オフセットを追加（テーブル surface との z-fighting 防止）。
 
 ### 2026-02-10
 - `game-table` の親子関係保持: 子オブジェクトを `GameTable.children` に格納。

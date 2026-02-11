@@ -20,7 +20,6 @@ describe('applyCharacterConversion', () => {
       name: 'Character',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      scale: { x: 1, y: 1, z: 1 },
       textures: ['char.png'],
       components: [],
       children: [],
@@ -31,7 +30,6 @@ describe('applyCharacterConversion', () => {
     applyCharacterConversion(udonObj, resoniteObj, convertSize);
 
     expect(convertSize).toHaveBeenCalledWith(3);
-    expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
     expect(resoniteObj.components.map((c) => c.type)).toEqual([
       '[FrooxEngine]FrooxEngine.QuadMesh',
       '[FrooxEngine]FrooxEngine.StaticTexture2D',

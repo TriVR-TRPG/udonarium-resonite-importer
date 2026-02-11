@@ -56,7 +56,6 @@ export class SlotBuilder {
         parentId: parentId || this.rootSlotId,
         name: obj.name,
         position: obj.position,
-        scale: obj.scale,
       });
 
       // Set rotation if not zero

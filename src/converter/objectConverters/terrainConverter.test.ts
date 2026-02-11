@@ -23,7 +23,6 @@ describe('applyTerrainConversion', () => {
       name: 'Terrain',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      scale: { x: 1, y: 1, z: 1 },
       textures: ['wall.png', 'floor.png'],
       components: [],
       children: [],
@@ -31,7 +30,6 @@ describe('applyTerrainConversion', () => {
 
     applyTerrainConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
     expect(resoniteObj.components.map((c) => c.type)).toEqual([
       '[FrooxEngine]FrooxEngine.BoxMesh',
       '[FrooxEngine]FrooxEngine.StaticTexture2D',

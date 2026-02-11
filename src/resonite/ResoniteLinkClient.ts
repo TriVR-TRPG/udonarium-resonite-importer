@@ -139,18 +139,19 @@ export class ResoniteLinkClient {
     parentId: string;
     name: string;
     position: Vector3;
-    scale: Vector3;
+    scale?: Vector3;
   }): Promise<string> {
     if (!this.isConnected()) {
       throw new Error('Not connected to ResoniteLink');
     }
 
+    const scale = options.scale ?? { x: 1, y: 1, z: 1 };
     const slot = await this.client.createSlot(
       {
         parent: createReference(options.parentId),
         name: createString(options.name),
         position: createFloat3(options.position),
-        scale: createFloat3(options.scale),
+        scale: createFloat3(scale),
         rotation: createFloatQ({ x: 0, y: 0, z: 0, w: 1 }),
         isActive: createBool(true),
         isPersistent: createBool(true),
