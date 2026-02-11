@@ -17,7 +17,7 @@
 | キャラクター (GameCharacter) | Quad + テクスチャ |
 | カード (Card) | 両面Quad |
 | カードの山 (CardStack) | グループ化されたカード |
-| 地形 (Terrain) | Cube + テクスチャ |
+| 地形 (Terrain) | 上面+側面のQuadMesh（壁は1スロット配下で制御） |
 | テーブル (GameTable) | Quad |
 | テキストノート (TextNote) | UIX Text |
 

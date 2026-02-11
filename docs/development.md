@@ -131,4 +131,8 @@ Udonarium (2D)           Resonite (3D, Y-up)
 The default `SCALE_FACTOR` is 0.02 (50px = 1m).
 
 Udonarium uses `location.x` / `location.y` / `posZ` for coordinates.
-Objects use bottom-origin in Udonarium but center-origin in Resonite, so a Y-offset is applied for terrain and character objects.
+Udonarium stores object positions at an edge/corner origin, while Resonite uses center-origin transforms, so each converter applies a per-object center offset.
+Examples:
+- terrain: `x += width/2`, `y += height/2`, `z -= depth/2`
+- character: `x += size/2`, `y += size/2`, `z -= size/2`
+- card/card-stack/text-note: `x += width/2`, `z -= height/2`

@@ -19,7 +19,7 @@ A tool to import [Udonarium](https://github.com/TK11235/udonarium) save data int
 | Character (GameCharacter) | Quad + Texture |
 | Card | Double-sided Quad |
 | Card Stack (CardStack) | Grouped cards |
-| Terrain | Cube + Texture |
+| Terrain | Top + side Quad meshes (walls grouped under one slot) |
 | Table (GameTable) | Quad |
 | Text Note (TextNote) | UIX Text |
 

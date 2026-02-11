@@ -161,7 +161,7 @@ udonarium-resonite-importer/
 │   ├── converter/
 │   │   ├── UdonariumObject.ts   # Udonariumオブジェクト型定義
 │   │   ├── ResoniteObject.ts    # Resoniteオブジェクト型定義
-│   │   ├── ObjectConverter.ts   # 変換ディスパッチ + BoxCollider付与
+│   │   ├── ObjectConverter.ts   # 変換ディスパッチ
 │   │   └── objectConverters/    # 種別ごとの変換ロジック
 │   │       ├── componentBuilders.ts  # QuadMesh/BoxMesh コンポーネント生成
 │   │       ├── characterConverter.ts
@@ -215,7 +215,7 @@ udonarium-resonite-importer/
 │                    ObjectConverter                               │
 │  - UdonariumObject → ResoniteObject変換                          │
 │  - 座標系変換（Y-up調整）                                          │
-│  - スケール変換                                                    │
+│  - テクスチャプレースホルダー解決                                  │
 └─────────────────────┬───────────────────────────────────────────┘
                       │
                       ▼
@@ -237,10 +237,10 @@ udonarium-resonite-importer/
 │ - id: string         │      │ - id: string         │
 │ - type: ObjectType   │─────▶│ - name: string       │
 │ - name: string       │      │ - position: Vector3  │
-│ - position: Vector2  │      │ - rotation: Vector3  │
-│ - size: number       │      │ - scale: Vector3     │
-│ - images: ImageRef[] │      │ - textures: string[] │
-│ - properties: Map    │      │ - components: []     │
+│ - position: Vector3  │      │ - rotation: Vector3  │
+│ - images: ImageRef[] │      │ - isActive?: boolean │
+│ - properties: Map    │      │ - textures: string[] │
+│ - (type別追加項目)    │      │ - components: []     │
 └──────────────────────┘      └──────────────────────┘
 
 ┌──────────────────────────────────────────────────────────┐
@@ -267,10 +267,10 @@ udonarium-resonite-importer/
 
 | Udonarium | Resoniteでの表現 | 備考 |
 |-----------|------------------|------|
-| GameCharacter | Quad/Cube + テクスチャ | 立ち絵として表示 |
+| GameCharacter | Quad + テクスチャ | 立ち絵として表示 |
 | Card | 両面Quad + 表裏テクスチャ | 裏返し対応 |
 | CardStack | 複数Card + グルーピング | スタック表現 |
-| Terrain | Cube + 6面テクスチャ | 壁・床テクスチャ |
+| Terrain | 上面+側面のQuadMesh + BoxCollider | 壁は1スロット配下で表示制御 |
 | GameTable | 大型Quad + テクスチャ | テーブル天板 |
 | TextNote | UIX Text | テキスト表示 |
 
@@ -290,9 +290,11 @@ Udonarium (2D, CSS座標系)     Resonite (3D, Y-up)
 ```
 
 - Udonarium は `location.x` / `location.y` / `posZ` を座標に使用
-- Udonarium はオブジェクト底面が座標位置、Resonite は中心が座標位置
-  - terrain: `position.y += depth / 2`
-  - character: `position.y += size.y / 2`
+- Udonarium は端基準、Resonite は中心基準のため、各converterでオフセット補正を適用
+  - terrain: `x += width/2`, `y += height/2`, `z -= depth/2`
+  - character: `x += size/2`, `y += size/2`, `z -= size/2`
+  - card/card-stack/text-note: `x += width/2`, `z -= height/2`
+- terrain の `rotate` は Resonite の `rotation.y` に適用
 
 ### 5.3 サイズ変換
 
@@ -303,6 +305,10 @@ Udonarium (2D, CSS座標系)     Resonite (3D, Y-up)
 Slot.scale は変更しない（デフォルト 1,1,1）。
 インポートルートコンテナに IMPORT_GROUP_SCALE (0.1) を適用して最終サイズを調整。
   → 結果的に 1マス = 10cm
+
+terrain の追加仕様:
+- `mode = 1` の場合、壁スロット（`-walls`）を生成したまま `isActive=false`（壁非表示）
+- `isLocked = false` の場合、`Grabbable` を付与
 ```
 
 ---
