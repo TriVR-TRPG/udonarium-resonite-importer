@@ -240,7 +240,7 @@ describe('ObjectConverter', () => {
       const expectedSizes = [
         { x: 1, y: 1, z: 0.05 }, // character -> converter-defined collider
         { x: 1, y: 1, z: 1 }, // terrain -> converter-defined collider
-        { x: 1, y: 0.02, z: 1 }, // table -> converter-defined collider
+        { x: 1, y: 1, z: 0.02 }, // table -> collider on -surface child slot
         { x: 0.6, y: 0.9, z: 0.01 }, // card -> converter-defined collider
         { x: 0.6, y: 0.05, z: 0.9 }, // card-stack -> converter-defined collider
         { x: 1, y: 0.02, z: 1 }, // text-note -> converter-defined collider
@@ -248,7 +248,10 @@ describe('ObjectConverter', () => {
 
       for (const [index, obj] of objects.entries()) {
         const result = convertObject(obj);
-        const collider = result.components.find(
+        // Table has collider on -surface child slot, others on the slot itself
+        const searchTarget =
+          obj.type === 'table' ? (result.children[0]?.components ?? []) : result.components;
+        const collider = searchTarget.find(
           (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
         );
         expect(collider).toBeDefined();

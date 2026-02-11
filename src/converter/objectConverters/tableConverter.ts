@@ -14,30 +14,30 @@ export function applyTableConversion(
 ): void {
   // Keep table container unrotated so child object positions stay stable.
   resoniteObj.rotation = { x: 0, y: 0, z: 0 };
-  resoniteObj.components = [
-    buildBoxColliderComponent(resoniteObj.id, {
-      x: udonObj.width,
-      y: 0.02,
-      z: udonObj.height,
-    }),
-  ];
+  resoniteObj.components = [];
 
+  const surfaceId = `${resoniteObj.id}-surface`;
+  const textureValue = resolveTextureValue(udonObj.images[0]?.identifier, textureMap);
   const tableVisual: ResoniteObject = {
-    id: `${resoniteObj.id}-surface`,
+    id: surfaceId,
     name: `${resoniteObj.name}-surface`,
     position: { x: 0, y: -0.1, z: 0 },
     rotation: { x: 90, y: 0, z: 0 },
     scale: { x: 1, y: 1, z: 1 },
     textures: [],
-    components: [],
+    components: [
+      ...buildQuadMeshComponents(surfaceId, textureValue, false, {
+        x: udonObj.width,
+        y: udonObj.height,
+      }),
+      buildBoxColliderComponent(surfaceId, {
+        x: udonObj.width,
+        y: udonObj.height,
+        z: 0.02,
+      }),
+    ],
     children: [],
   };
-
-  const textureValue = resolveTextureValue(udonObj.images[0]?.identifier, textureMap);
-  tableVisual.components = buildQuadMeshComponents(tableVisual.id, textureValue, false, {
-    x: udonObj.width,
-    y: udonObj.height,
-  });
 
   const convertedChildren =
     convertObject && udonObj.children.length > 0

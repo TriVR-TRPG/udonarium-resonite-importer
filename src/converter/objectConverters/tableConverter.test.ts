@@ -59,20 +59,20 @@ describe('applyTableConversion', () => {
 
     expect(resoniteObj.rotation).toEqual({ x: 0, y: 0, z: 0 });
     expect(resoniteObj.scale).toEqual({ x: 1, y: 1, z: 1 });
-    expect(resoniteObj.components).toEqual([
-      {
-        id: 'slot-table-1-collider',
-        type: '[FrooxEngine]FrooxEngine.BoxCollider',
-        fields: {
-          Size: { $type: 'float3', value: { x: 20, y: 0.02, z: 10 } },
-        },
-      },
-    ]);
+    expect(resoniteObj.components).toEqual([]);
     expect(resoniteObj.children).toHaveLength(2);
 
     const visual = resoniteObj.children[0];
     expect(visual.position).toEqual({ x: 0, y: -0.1, z: 0 });
     expect(visual.rotation).toEqual({ x: 90, y: 0, z: 0 });
+    // QuadMesh + MeshRenderer + Material + StaticTexture2D + BoxCollider
+    const collider = visual.components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
+    );
+    expect(collider).toBeDefined();
+    expect(collider!.fields).toEqual({
+      Size: { $type: 'float3', value: { x: 20, y: 10, z: 0.02 } },
+    });
     expect(visual.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 20, y: 10 } },
     });
