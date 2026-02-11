@@ -100,6 +100,20 @@ describe('SlotBuilder', () => {
       );
     });
 
+    it('should pass isActive when explicitly specified', async () => {
+      const obj = createResoniteObject({
+        isActive: false,
+      });
+
+      await slotBuilder.buildSlot(obj);
+
+      expect(mockClient.addSlot).toHaveBeenCalledWith(
+        expect.objectContaining({
+          isActive: false,
+        })
+      );
+    });
+
     it('should not call updateSlot when rotation is zero', async () => {
       const obj = createResoniteObject({
         rotation: { x: 0, y: 0, z: 0 },

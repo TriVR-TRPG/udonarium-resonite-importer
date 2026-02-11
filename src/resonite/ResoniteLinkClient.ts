@@ -140,6 +140,7 @@ export class ResoniteLinkClient {
     name: string;
     position: Vector3;
     scale?: Vector3;
+    isActive?: boolean;
   }): Promise<string> {
     if (!this.isConnected()) {
       throw new Error('Not connected to ResoniteLink');
@@ -153,7 +154,7 @@ export class ResoniteLinkClient {
         position: createFloat3(options.position),
         scale: createFloat3(scale),
         rotation: createFloatQ({ x: 0, y: 0, z: 0, w: 1 }),
-        isActive: createBool(true),
+        isActive: createBool(options.isActive ?? true),
         isPersistent: createBool(true),
         tag: createString(''),
         orderOffset: createLong(0),
