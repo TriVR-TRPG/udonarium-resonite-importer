@@ -5,8 +5,8 @@ const GIF_EXTENSION_PATTERN = /\.gif(?:$|[?#])/i;
 
 type StaticTexture2DFields = {
   URL: { $type: 'Uri'; value: string };
-  WrapModeU: { $type: 'enum?'; value: 'Clamp'; enumType: 'TextureWrapMode' };
-  WrapModeV: { $type: 'enum?'; value: 'Clamp'; enumType: 'TextureWrapMode' };
+  WrapModeU: { $type: 'enum'; value: 'Clamp'; enumType: 'TextureWrapMode' };
+  WrapModeV: { $type: 'enum'; value: 'Clamp'; enumType: 'TextureWrapMode' };
   FilterMode?: { $type: 'enum?'; value: 'Point'; enumType: 'TextureFilterMode' };
 };
 type QuadSize = { x: number; y: number };
@@ -25,8 +25,8 @@ function createCutoutBlendModeField(): BlendModeField {
 function buildStaticTexture2DFields(textureValue: string): StaticTexture2DFields {
   const fields: StaticTexture2DFields = {
     URL: { $type: 'Uri', value: textureValue },
-    WrapModeU: { $type: 'enum?', value: 'Clamp', enumType: 'TextureWrapMode' },
-    WrapModeV: { $type: 'enum?', value: 'Clamp', enumType: 'TextureWrapMode' },
+    WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
+    WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
   };
 
   if (isGifTexture(textureValue)) {
