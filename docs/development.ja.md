@@ -113,6 +113,12 @@ udonarium-resonite-importer/
     └── workflows/               # CI/CDパイプライン
 ```
 
+## 変換仕様ドキュメント
+
+オブジェクト種別ごとの変換仕様は以下を参照してください。
+
+- [docs/object-conversion/README.ja.md](object-conversion/README.ja.md)
+
 ## 座標系変換
 
 Udonariumの2D座標系からResoniteの3D座標系に変換されます：

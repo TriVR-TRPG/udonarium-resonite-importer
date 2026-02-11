@@ -113,6 +113,12 @@ udonarium-resonite-importer/
     └── workflows/               # CI/CD pipelines
 ```
 
+## Conversion Specifications
+
+Per-object conversion specs are documented here:
+
+- [docs/object-conversion/README.md](object-conversion/README.md)
+
 ## Coordinate System Conversion
 
 Converts from Udonarium's 2D coordinate system to Resonite's 3D coordinate system:
