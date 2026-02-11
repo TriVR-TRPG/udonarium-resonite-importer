@@ -63,7 +63,7 @@ describe('applyTableConversion', () => {
     expect(resoniteObj.children).toHaveLength(2);
 
     const visual = resoniteObj.children[0];
-    expect(visual.position).toEqual({ x: 0, y: -0.1, z: 0 });
+    expect(visual.position).toEqual({ x: 10, y: 0, z: -5 });
     expect(visual.rotation).toEqual({ x: 90, y: 0, z: 0 });
     // QuadMesh + MeshRenderer + Material + StaticTexture2D + BoxCollider
     const collider = visual.components.find(

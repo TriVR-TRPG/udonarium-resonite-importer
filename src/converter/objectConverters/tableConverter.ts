@@ -21,7 +21,7 @@ export function applyTableConversion(
   const tableVisual: ResoniteObject = {
     id: surfaceId,
     name: `${resoniteObj.name}-surface`,
-    position: { x: 0, y: -0.1, z: 0 },
+    position: { x: udonObj.width / 2, y: 0, z: -udonObj.height / 2 },
     rotation: { x: 90, y: 0, z: 0 },
     scale: { x: 1, y: 1, z: 1 },
     textures: [],

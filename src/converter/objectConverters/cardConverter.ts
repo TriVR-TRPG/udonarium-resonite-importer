@@ -20,6 +20,8 @@ export function applyCardConversion(
       udonObj.images[0]?.identifier);
   const textureValue = resolveTextureValue(textureIdentifier, textureMap);
 
+  // Slight Y offset so cards don't z-fight with the table surface.
+  resoniteObj.position.y += 0.001;
   // Lay cards flat on the table (horizontal quad).
   resoniteObj.rotation = { x: 90, y: 0, z: 0 };
   resoniteObj.components = buildQuadMeshComponents(resoniteObj.id, textureValue, true, {
