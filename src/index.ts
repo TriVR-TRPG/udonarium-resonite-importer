@@ -157,7 +157,7 @@ async function run(options: CLIOptions): Promise<void> {
       const replacer = (_key: string, value: unknown): unknown =>
         value instanceof Map ? Object.fromEntries(value as Map<string, unknown>) : value;
       const jsonContent = JSON.stringify(parseResult.objects, replacer, 2);
-      const parsedDir = path.resolve(process.cwd(), 'parsed');
+      const parsedDir = path.resolve(__dirname, '..', 'parsed');
       if (!fs.existsSync(parsedDir)) {
         fs.mkdirSync(parsedDir, { recursive: true });
       }
