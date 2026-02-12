@@ -2,6 +2,16 @@
 
 [English](development.md)
 
+## ResoniteLinkサブモジュールのセットアップ
+
+`build` / `check` / `test` を実行する前に、ResoniteLinkサブモジュールを初期化・ビルドしてください。
+
+```bash
+npm run setup:resonitelink
+```
+
+`npm run build` / `npm run check` / `npm run test` はこの前提条件を検証し、サブモジュールのビルド成果物が無い場合は即時に失敗します。
+
 ## ビルドコマンド
 
 ```bash

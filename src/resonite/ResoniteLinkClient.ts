@@ -47,11 +47,41 @@ export class ResoniteLinkClient {
       host: this.config.host,
       port: this.config.port,
     });
+    this.assertClientContract(this.client);
 
     // Register disconnect listener once in constructor
     this.client.on('disconnected', () => {
       this._isConnected = false;
     });
+  }
+
+  /**
+   * Runtime compatibility check against resonitelink.js API.
+   * This helps detect breaking library updates even when ambient type declarations exist.
+   */
+  private assertClientContract(value: unknown): void {
+    const requiredMethods = [
+      'on',
+      'off',
+      'connect',
+      'disconnect',
+      'send',
+      'createSlot',
+      'getSlot',
+      'createComponent',
+      'getComponent',
+    ] as const;
+
+    if (!value || typeof value !== 'object') {
+      throw new Error('Invalid resonitelink client instance');
+    }
+
+    const candidate = value as Record<string, unknown>;
+    for (const method of requiredMethods) {
+      if (typeof candidate[method] !== 'function') {
+        throw new Error(`Incompatible resonitelink client API: missing method "${method}"`);
+      }
+    }
   }
 
   /**
@@ -384,9 +414,9 @@ export class ResoniteLinkClient {
   /**
    * Get the root slot
    */
-  async getRootSlot(): Promise<ClientSlot | undefined> {
+  getRootSlot(): Promise<ClientSlot | undefined> {
     if (!this.isConnected()) {
-      throw new Error('Not connected to ResoniteLink');
+      return Promise.reject(new Error('Not connected to ResoniteLink'));
     }
 
     return this.client.getSlot('Root');

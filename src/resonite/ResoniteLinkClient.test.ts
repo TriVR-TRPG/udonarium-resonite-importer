@@ -14,6 +14,7 @@ const createMockClientInstance = () => ({
   getSlot: vi.fn(),
   send: vi.fn(),
   createComponent: vi.fn(),
+  getComponent: vi.fn(),
 });
 
 let mockClientInstance = createMockClientInstance();
@@ -32,6 +33,7 @@ vi.mock('../../lib/resonitelink.js/dist', () => {
       getSlot = vi.fn();
       send = vi.fn();
       createComponent = vi.fn();
+      getComponent = vi.fn();
 
       constructor(config: { host: string; port: number }) {
         ClientConstructorCalls.push(config);

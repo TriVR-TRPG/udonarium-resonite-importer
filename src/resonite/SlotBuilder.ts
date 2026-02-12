@@ -9,6 +9,11 @@ import { ResoniteLinkClient } from './ResoniteLinkClient';
 
 const SLOT_ID_PREFIX = 'udon-imp';
 const GIF_EXTENSION_PATTERN = /\.gif(?:$|[?#])/i;
+const EXTERNAL_URL_PATTERN = /^https?:\/\//i;
+
+function isExternalTextureUrl(textureUrl: string): boolean {
+  return EXTERNAL_URL_PATTERN.test(textureUrl);
+}
 
 function isListField(value: unknown): boolean {
   return (
@@ -150,7 +155,11 @@ export class SlotBuilder {
 
   async createTextureAssets(textureMap: Map<string, string>): Promise<Map<string, string>> {
     const textureReferenceMap = new Map<string, string>();
-    if (textureMap.size === 0) {
+    const importableTextures = Array.from(textureMap.entries()).filter(
+      ([, textureUrl]) => !isExternalTextureUrl(textureUrl)
+    );
+
+    if (importableTextures.length === 0) {
       return textureReferenceMap;
     }
 
@@ -170,7 +179,7 @@ export class SlotBuilder {
       position: { x: 0, y: 0, z: 0 },
     });
 
-    for (const [identifier, textureUrl] of textureMap) {
+    for (const [identifier, textureUrl] of importableTextures) {
       const textureSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
       await this.client.addSlot({
         id: textureSlotId,

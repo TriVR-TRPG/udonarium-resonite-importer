@@ -337,6 +337,17 @@ describe('SlotBuilder', () => {
       expect(result.get('card-front.png')).toMatch(/-static-texture$/);
     });
 
+    it('should skip creating shared texture assets for external URLs', async () => {
+      const textureMap = new Map<string, string>([
+        ['external-image', 'https://example.com/image.png'],
+      ]);
+
+      const result = await slotBuilder.createTextureAssets(textureMap);
+
+      expect(mockClient.addSlot).not.toHaveBeenCalled();
+      expect(mockClient.addComponent).not.toHaveBeenCalled();
+      expect(result.size).toBe(0);
+    });
     it('should set point filter mode for gif identifiers', async () => {
       const textureMap = new Map<string, string>([['anim.GIF', 'resdb:///anim']]);
 

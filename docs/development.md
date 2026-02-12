@@ -2,6 +2,16 @@
 
 [日本語版](development.ja.md)
 
+## ResoniteLink Submodule Setup
+
+Before running `build`, `check`, or `test`, initialize and build the ResoniteLink submodule:
+
+```bash
+npm run setup:resonitelink
+```
+
+The scripts `npm run build`, `npm run check`, and `npm run test` now validate this prerequisite and fail fast if the submodule build artifacts are missing.
+
 ## Build Commands
 
 ```bash
