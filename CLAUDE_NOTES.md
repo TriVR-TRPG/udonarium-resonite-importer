@@ -98,7 +98,7 @@ resonite.z = -udonarium.y    * SCALE_FACTOR (0.02)
 - `import-progress`: 進捗通知（メイン→レンダラー）
 
 ### デバッグツール
-- `--dump-json` オプション: パース結果を `{入力ZIP名}.parsed.json` にファイル出力
+- `npm run dev` 実行時: パース結果を `parsed/{入力ZIP名}.parsed.json` に自動出力（`__dirname`基準）
 - `--dry-run --verbose`: ResoniteLink接続なしで解析結果を表示
 
 ## モジュール構成
@@ -209,7 +209,7 @@ src/
 - テクスチャ処理フローを「先に asset import、後でオブジェクト生成」に変更。
 - MeshRenderer.Materials の SyncList 2段階プロトコルを実装。
 - 既知画像識別子（`KNOWN_IMAGE_IDENTIFIERS`）の外部URL解決を追加。
-- `--dump-json` オプションを追加（パース結果のJSON出力）。
+- dev mode（ts-node）実行時にパース結果を `parsed/` に自動出力。
 - `registerExternalUrls.ts` で外部URL画像登録処理を共通化。
 - 各converter の単体テストを追加。
 - ESLint 9 flat config 移行、依存ライブラリ更新。

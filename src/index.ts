@@ -33,7 +33,6 @@ interface CLIOptions {
   scale: number;
   dryRun: boolean;
   verbose: boolean;
-  dumpJson: boolean;
   lang?: string;
 }
 
@@ -52,7 +51,6 @@ program
   .option('-s, --scale <number>', 'Scale factor', String(SCALE_FACTOR))
   .option('-d, --dry-run', 'Analyze only, do not connect to Resonite', false)
   .option('-v, --verbose', 'Verbose output', false)
-  .option('--dump-json', 'Dump parsed UdonariumObjects to JSON file (dry-run only)', false)
   .option('-l, --lang <locale>', 'Language (en, ja)', undefined)
   .action(run);
 
@@ -140,6 +138,21 @@ async function run(options: CLIOptions): Promise<void> {
     }
   }
 
+  // In dev mode (ts-node), always dump parsed objects to JSON for debugging
+  if (__filename.endsWith('.ts')) {
+    const replacer = (_key: string, value: unknown): unknown =>
+      value instanceof Map ? Object.fromEntries(value as Map<string, unknown>) : value;
+    const jsonContent = JSON.stringify(parseResult.objects, replacer, 2);
+    const parsedDir = path.resolve(__dirname, '..', 'parsed');
+    if (!fs.existsSync(parsedDir)) {
+      fs.mkdirSync(parsedDir, { recursive: true });
+    }
+    const baseName = path.basename(inputPath).replace(/\.zip$/i, '') + '.parsed.json';
+    const jsonPath = path.join(parsedDir, baseName);
+    fs.writeFileSync(jsonPath, jsonContent, 'utf-8');
+    console.log(chalk.gray(`  [dev] Parsed JSON → ${jsonPath}`));
+  }
+
   // Dry run - stop here
   if (options.dryRun) {
     // Convert to Resonite objects (dry-run only)
@@ -152,16 +165,6 @@ async function run(options: CLIOptions): Promise<void> {
     console.log(`  ${t('cli.objectsToImport', { count: resoniteObjects.length })}`);
     console.log(`  ${t('cli.imagesToImport', { count: extractedData.imageFiles.length })}`);
     console.log();
-
-    if (options.dumpJson) {
-      const replacer = (_key: string, value: unknown): unknown =>
-        value instanceof Map ? Object.fromEntries(value as Map<string, unknown>) : value;
-      const jsonContent = JSON.stringify(parseResult.objects, replacer, 2);
-      const jsonPath = inputPath.replace(/\.zip$/i, '') + '.parsed.json';
-      fs.writeFileSync(jsonPath, jsonContent, 'utf-8');
-      console.log(chalk.bold(`Parsed Udonarium Objects → ${jsonPath}`));
-      console.log();
-    }
 
     if (options.verbose) {
       console.log(chalk.bold('Converted Resonite Objects:'));
