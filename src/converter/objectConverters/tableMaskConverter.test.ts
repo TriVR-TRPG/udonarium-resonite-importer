@@ -45,7 +45,7 @@ describe('applyTableMaskConversion', () => {
       BlendMode: { $type: 'enum', value: 'Alpha', enumType: 'BlendMode' },
       Color: {
         $type: 'colorX',
-        value: { r: 0, g: 0, b: 0, a: 0.4, profile: 'sRGB' },
+        value: { r: 0, g: 0, b: 0, a: 0.4, profile: 'Linear' },
       },
     });
 
@@ -86,7 +86,7 @@ describe('applyTableMaskConversion', () => {
     expect(material?.fields).toMatchObject({
       Color: {
         $type: 'colorX',
-        value: { r: 1, g: 1, b: 1, a: 0.7, profile: 'sRGB' },
+        value: { r: 1, g: 1, b: 1, a: 0.7, profile: 'Linear' },
       },
     });
   });

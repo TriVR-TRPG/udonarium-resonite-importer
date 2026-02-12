@@ -64,7 +64,7 @@ export function applyTableMaskConversion(
         g: colorValue,
         b: colorValue,
         a: opacity,
-        profile: 'sRGB',
+        profile: 'Linear',
       },
     },
   };

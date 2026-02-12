@@ -87,7 +87,23 @@ Terrain root:
 
 Visual slots:
 
-- QuadMesh-based rendering components (with texture/material setup from shared builders)
+- Each face uses `buildQuadMeshComponents(...)`, which creates:
+  - `QuadMesh`
+  - `XiexeToonMaterial`
+  - `MeshRenderer`
+  - Optional `StaticTexture2D` and `MainTexturePropertyBlock` when a local texture is used
+- Shared texture/material asset references are resolved later in the shared-asset phase.
+
+Texture selection order:
+
+- Top face (`-top`):
+  1. `floorImage.identifier`
+  2. `wallImage.identifier`
+  3. `images[0].identifier`
+- Wall faces (`-front/-back/-left/-right`):
+  1. `wallImage.identifier`
+  2. `floorImage.identifier`
+  3. `images[0].identifier`
 
 ## 7. Mode Behavior
 
@@ -103,3 +119,4 @@ Recommended checks:
 3. `rotate` reflected on Y-axis
 4. Wall visibility toggle by `mode`
 5. `isLocked=false` adds `Grabbable`
+6. Top/wall texture fallback order works as expected

@@ -7,6 +7,7 @@ This directory contains per-object conversion specifications from Udonarium to R
 ## Current Specs
 
 - `terrain.md`: Terrain conversion rules and component structure
+- `table-mask.md`: Table-mask conversion rules and component/material behavior
 
 ## Planned Specs
 
