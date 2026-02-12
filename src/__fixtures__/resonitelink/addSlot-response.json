@@ -1,6 +1,7 @@
 {
-  "$type": "response",
-  "sourceMessageId": "9425b435-5693-406a-bda1-9518c43b1872",
+  "$type": "newEntityId",
+  "entityId": "test_collect_1770896341703",
+  "sourceMessageId": "dcf2ba14-ba8c-46a6-89e7-360f20a417c4",
   "success": true,
   "errorInfo": null
 }

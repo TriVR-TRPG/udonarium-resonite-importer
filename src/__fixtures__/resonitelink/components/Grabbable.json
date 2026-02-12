@@ -1,8 +1,9 @@
 {
   "componentType": "[FrooxEngine]FrooxEngine.Grabbable",
   "addResponse": {
-    "$type": "response",
-    "sourceMessageId": "59e0fa3d-978a-46ac-9999-01f486e1f949",
+    "$type": "newEntityId",
+    "entityId": "test_[FrooxEngine]FrooxEngine_Grabbable_1770896341761",
+    "sourceMessageId": "c0bd1fe5-3f68-44f0-b321-966b9eabb45e",
     "success": true,
     "errorInfo": null
   },
@@ -14,117 +15,117 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_361"
+          "id": "Reso_5304"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_362"
+          "id": "Reso_5305"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_363"
+          "id": "Reso_5306"
         },
         "ReparentOnRelease": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_364"
+          "id": "Reso_5307"
         },
         "PreserveUserSpace": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_365"
+          "id": "Reso_5308"
         },
         "DestroyOnRelease": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_366"
+          "id": "Reso_5309"
         },
         "GrabPriority": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_367"
+          "id": "Reso_530A"
         },
         "GrabPriorityWhenGrabbed": {
           "$type": "int?",
           "value": null,
-          "id": "Reso_368"
+          "id": "Reso_530B"
         },
         "CustomCanGrabCheck": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.GrabCheck",
-          "id": "Reso_369"
+          "id": "Reso_530C"
         },
         "EditModeOnly": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_36A"
+          "id": "Reso_530D"
         },
         "AllowSteal": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_36B"
+          "id": "Reso_530E"
         },
         "DropOnDisable": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_36C"
+          "id": "Reso_530F"
         },
         "ActiveUserFilter": {
           "$type": "enum",
           "value": "Disabled",
           "enumType": "ActiveUserHandling",
-          "id": "Reso_36D"
+          "id": "Reso_5310"
         },
         "OnlyUsers": {
           "$type": "list",
           "elements": [],
-          "id": "Reso_36E"
+          "id": "Reso_5311"
         },
         "Scalable": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_36F"
+          "id": "Reso_5312"
         },
         "Receivable": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_370"
+          "id": "Reso_5313"
         },
         "AllowOnlyPhysicalGrab": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_371"
+          "id": "Reso_5314"
         },
         "_grabber": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.Grabber",
-          "id": "Reso_372"
+          "id": "Reso_5315"
         },
         "_lastParent": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.Slot",
-          "id": "Reso_373"
+          "id": "Reso_5316"
         },
         "_lastParentIsUserSpace": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_374"
+          "id": "Reso_5317"
         },
         "__legacyActiveUserRootOnly": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_375"
+          "id": "Reso_5318"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_Grabbable_1770376790891",
+      "id": "test_[FrooxEngine]FrooxEngine_Grabbable_1770896341761",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "35b8fd80-6b4a-4255-9da2-0d3f9fa603df",
+    "sourceMessageId": "1e873a2f-60de-4f92-8d19-85fc8ab90901",
     "success": true,
     "errorInfo": null
   }

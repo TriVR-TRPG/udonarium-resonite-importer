@@ -1,9 +1,9 @@
 {
   "$type": "sessionData",
-  "resoniteVersion": "2026.1.28.1247",
-  "resoniteLinkVersion": "0.4.0.0",
-  "uniqueSessionId": "4",
-  "sourceMessageId": "40b52a68-36d6-44df-9fa2-a9d89b9b1159",
+  "resoniteVersion": "2026.2.12.359",
+  "resoniteLinkVersion": "0.7.0.0",
+  "uniqueSessionId": "13",
+  "sourceMessageId": "2e8725c0-2fad-4ee2-81e8-c30d67068f3f",
   "success": true,
   "errorInfo": null
 }

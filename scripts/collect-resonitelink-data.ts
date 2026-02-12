@@ -47,6 +47,7 @@ const REQUIRED_COMPONENTS = {
   ],
   // Material components (FrooxEngine namespace)
   materials: [
+    '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
     '[FrooxEngine]FrooxEngine.PBS_Metallic',
     '[FrooxEngine]FrooxEngine.UnlitMaterial',
   ],
