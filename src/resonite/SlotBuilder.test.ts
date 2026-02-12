@@ -555,5 +555,21 @@ describe('SlotBuilder', () => {
         })
       );
     });
+
+    it('should apply preserved transform when provided', async () => {
+      await slotBuilder.createImportGroup('My Import', {
+        position: { x: 10, y: 20, z: 30 },
+        rotation: { x: 0, y: 0.7071, z: 0, w: 0.7071 },
+        scale: { x: 2, y: 2, z: 2 },
+      });
+
+      expect(mockClient.addSlot).toHaveBeenCalledWith(
+        expect.objectContaining({
+          position: { x: 10, y: 20, z: 30 },
+          rotation: { x: 0, y: 0.7071, z: 0, w: 0.7071 },
+          scale: { x: 2, y: 2, z: 2 },
+        })
+      );
+    });
   });
 });

@@ -146,11 +146,11 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     const assetImporter = new AssetImporter(client);
     const slotBuilder = new SlotBuilder(client);
     registerExternalUrls(parseResult.objects, assetImporter);
-    await client.removeRootChildrenByTag(IMPORT_ROOT_TAG);
+    const previousImport = await client.captureTransformAndRemoveRootChildrenByTag(IMPORT_ROOT_TAG);
 
     // Create import group
     const groupName = `Udonarium Import - ${path.basename(filePath, '.zip')}`;
-    await slotBuilder.createImportGroup(groupName);
+    await slotBuilder.createImportGroup(groupName, previousImport.transform);
 
     // Import images
     const totalImages = extractedData.imageFiles.length;

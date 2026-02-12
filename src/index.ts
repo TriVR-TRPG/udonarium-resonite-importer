@@ -218,11 +218,11 @@ async function run(options: CLIOptions): Promise<void> {
 
   try {
     const slotBuilder = new SlotBuilder(client);
-    await client.removeRootChildrenByTag(IMPORT_ROOT_TAG);
+    const previousImport = await client.captureTransformAndRemoveRootChildrenByTag(IMPORT_ROOT_TAG);
 
     // Create import group
     const groupName = `Udonarium Import - ${path.basename(inputPath, '.zip')}`;
-    const groupId = await slotBuilder.createImportGroup(groupName);
+    const groupId = await slotBuilder.createImportGroup(groupName, previousImport.transform);
 
     // Import images and move texture slots into the import group
     const rootChildIdsBefore = await client.getSlotChildIds('Root');

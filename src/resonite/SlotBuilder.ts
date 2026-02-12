@@ -7,7 +7,7 @@ import { ResoniteObject, Vector3 } from '../converter/ResoniteObject';
 import { SharedMeshDefinition } from '../converter/sharedMesh';
 import { SharedMaterialDefinition } from '../converter/sharedMaterial';
 import { IMPORT_GROUP_SCALE, IMPORT_ROOT_TAG } from '../config/MappingConfig';
-import { ResoniteLinkClient } from './ResoniteLinkClient';
+import { ResoniteLinkClient, SlotTransform } from './ResoniteLinkClient';
 
 const SLOT_ID_PREFIX = 'udon-imp';
 const GIF_EXTENSION_PATTERN = /\.gif(?:$|[?#])/i;
@@ -137,10 +137,10 @@ export class SlotBuilder {
   /**
    * Create a group slot to contain imported objects
    */
-  async createImportGroup(name: string): Promise<string> {
+  async createImportGroup(name: string, transform?: SlotTransform): Promise<string> {
     const groupId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
-    const position: Vector3 = { x: 0, y: 0, z: 0 };
-    const scale: Vector3 = {
+    const position: Vector3 = transform?.position ?? { x: 0, y: 0, z: 0 };
+    const scale: Vector3 = transform?.scale ?? {
       x: IMPORT_GROUP_SCALE,
       y: IMPORT_GROUP_SCALE,
       z: IMPORT_GROUP_SCALE,
@@ -151,6 +151,7 @@ export class SlotBuilder {
       parentId: this.rootSlotId,
       name,
       position,
+      ...(transform?.rotation ? { rotation: transform.rotation } : {}),
       scale,
       tag: IMPORT_ROOT_TAG,
     });
