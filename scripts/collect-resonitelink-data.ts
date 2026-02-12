@@ -44,6 +44,7 @@ const REQUIRED_COMPONENTS = {
   // Rendering components (FrooxEngine namespace)
   rendering: [
     '[FrooxEngine]FrooxEngine.MeshRenderer',
+    '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
   ],
   // Material components (FrooxEngine namespace)
   materials: [

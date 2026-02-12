@@ -59,6 +59,7 @@ describe('applyTerrainConversion', () => {
       '[FrooxEngine]FrooxEngine.QuadMesh',
       '[FrooxEngine]FrooxEngine.StaticTexture2D',
       '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
+      '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
       '[FrooxEngine]FrooxEngine.MeshRenderer',
     ]);
 
@@ -71,6 +72,7 @@ describe('applyTerrainConversion', () => {
         '[FrooxEngine]FrooxEngine.QuadMesh',
         '[FrooxEngine]FrooxEngine.StaticTexture2D',
         '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
+        '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
         '[FrooxEngine]FrooxEngine.MeshRenderer',
       ]);
     }
@@ -167,6 +169,7 @@ describe('applyTerrainConversion', () => {
       '[FrooxEngine]FrooxEngine.QuadMesh',
       '[FrooxEngine]FrooxEngine.StaticTexture2D',
       '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
+      '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
       '[FrooxEngine]FrooxEngine.MeshRenderer',
     ]);
     expect(resoniteObj.children[1].id).toBe('slot-terrain-3-walls');

@@ -34,6 +34,7 @@ describe('applyCharacterConversion', () => {
       '[FrooxEngine]FrooxEngine.QuadMesh',
       '[FrooxEngine]FrooxEngine.StaticTexture2D',
       '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
+      '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
       '[FrooxEngine]FrooxEngine.MeshRenderer',
       '[FrooxEngine]FrooxEngine.BoxCollider',
     ]);
@@ -49,10 +50,15 @@ describe('applyCharacterConversion', () => {
       (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
     );
     expect(materialComponent?.fields).toEqual({
-      MainTexture: { $type: 'reference', targetId: 'slot-char-1-tex' },
       BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' },
     });
-    expect(resoniteObj.components[4].fields).toEqual({
+    const textureBlockComponent = resoniteObj.components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock'
+    );
+    expect(textureBlockComponent?.fields).toEqual({
+      Texture: { $type: 'reference', targetId: 'slot-char-1-tex' },
+    });
+    expect(resoniteObj.components[5].fields).toEqual({
       Size: { $type: 'float3', value: { x: 0.3, y: 0.3, z: 0.05 } },
     });
   });

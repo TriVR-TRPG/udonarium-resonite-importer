@@ -14,6 +14,9 @@ type QuadSize = { x: number; y: number };
 type BoxSize = { x: number; y: number; z: number };
 
 type BlendModeField = { $type: 'enum'; value: 'Cutout'; enumType: 'BlendMode' };
+type MainTexturePropertyBlockFields = {
+  Texture: { $type: 'reference'; targetId: string };
+};
 
 function createCutoutBlendModeField(): BlendModeField {
   return {
@@ -66,6 +69,7 @@ export function buildQuadMeshComponents(
 ): ResoniteComponent[] {
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
+  const textureBlockId = `${slotId}-texture-block`;
   const textureId = `${slotId}-tex`;
   const sharedTextureId = parseTextureReferenceId(textureValue);
   const localTextureId = sharedTextureId ? undefined : textureId;
@@ -92,14 +96,22 @@ export function buildQuadMeshComponents(
     id: materialId,
     type: '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
     fields: {
-      ...(textureValue
-        ? {
-            MainTexture: { $type: 'reference', targetId: sharedTextureId ?? localTextureId! },
-          }
-        : {}),
       BlendMode: createCutoutBlendModeField(),
     },
   });
+
+  if (textureValue) {
+    const textureProviderId = sharedTextureId ?? localTextureId!;
+    const textureBlockFields: MainTexturePropertyBlockFields = {
+      Texture: { $type: 'reference', targetId: textureProviderId },
+    };
+    components.push({
+      id: textureBlockId,
+      type: '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
+      fields: textureBlockFields,
+    });
+  }
+
   components.push({
     id: `${slotId}-renderer`,
     type: '[FrooxEngine]FrooxEngine.MeshRenderer',
@@ -109,6 +121,14 @@ export function buildQuadMeshComponents(
         $type: 'list',
         elements: [{ $type: 'reference', targetId: materialId }],
       },
+      ...(textureValue
+        ? {
+            MaterialPropertyBlocks: {
+              $type: 'list',
+              elements: [{ $type: 'reference', targetId: textureBlockId }],
+            },
+          }
+        : {}),
     },
   });
 
@@ -122,6 +142,7 @@ export function buildBoxMeshComponents(
 ): ResoniteComponent[] {
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
+  const textureBlockId = `${slotId}-texture-block`;
   const textureId = `${slotId}-tex`;
   const sharedTextureId = parseTextureReferenceId(textureValue);
   const localTextureId = sharedTextureId ? undefined : textureId;
@@ -147,14 +168,22 @@ export function buildBoxMeshComponents(
     id: materialId,
     type: '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
     fields: {
-      ...(textureValue
-        ? {
-            MainTexture: { $type: 'reference', targetId: sharedTextureId ?? localTextureId! },
-          }
-        : {}),
       BlendMode: createCutoutBlendModeField(),
     },
   });
+
+  if (textureValue) {
+    const textureProviderId = sharedTextureId ?? localTextureId!;
+    const textureBlockFields: MainTexturePropertyBlockFields = {
+      Texture: { $type: 'reference', targetId: textureProviderId },
+    };
+    components.push({
+      id: textureBlockId,
+      type: '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
+      fields: textureBlockFields,
+    });
+  }
+
   components.push({
     id: `${slotId}-renderer`,
     type: '[FrooxEngine]FrooxEngine.MeshRenderer',
@@ -164,6 +193,14 @@ export function buildBoxMeshComponents(
         $type: 'list',
         elements: [{ $type: 'reference', targetId: materialId }],
       },
+      ...(textureValue
+        ? {
+            MaterialPropertyBlocks: {
+              $type: 'list',
+              elements: [{ $type: 'reference', targetId: textureBlockId }],
+            },
+          }
+        : {}),
     },
   });
 
