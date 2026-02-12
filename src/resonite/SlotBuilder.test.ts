@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { SlotBuilder } from './SlotBuilder';
 import { ResoniteLinkClient } from './ResoniteLinkClient';
 import { ResoniteObject } from '../converter/ResoniteObject';
-import { IMPORT_GROUP_SCALE } from '../config/MappingConfig';
+import { IMPORT_GROUP_SCALE, IMPORT_ROOT_TAG } from '../config/MappingConfig';
 
 // Mock ResoniteLinkClient
 vi.mock('./ResoniteLinkClient', () => {
@@ -334,22 +334,69 @@ describe('SlotBuilder', () => {
         URL: { $type: 'Uri', value: 'resdb:///card-front' },
       });
 
+      const secondComponentCall = mockClient.addComponent.mock.calls[1][0] as {
+        componentType: string;
+        fields: Record<string, unknown>;
+      };
+      expect(secondComponentCall.componentType).toBe(
+        '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock'
+      );
+      const textureField = secondComponentCall.fields.Texture as
+        | { $type?: string; targetId?: string }
+        | undefined;
+      expect(textureField?.$type).toBe('reference');
+      expect(textureField?.targetId).toMatch(/-static-texture$/);
+
       expect(result.get('card-front.png')).toMatch(/-static-texture$/);
     });
 
-    it('should skip creating shared texture assets for external URLs', async () => {
+    it('should create shared texture assets for external URLs', async () => {
       const textureMap = new Map<string, string>([
         ['external-image', 'https://example.com/image.png'],
       ]);
 
       const result = await slotBuilder.createTextureAssets(textureMap);
 
-      expect(mockClient.addSlot).not.toHaveBeenCalled();
-      expect(mockClient.addComponent).not.toHaveBeenCalled();
-      expect(result.size).toBe(0);
+      expect(mockClient.addSlot).toHaveBeenCalledTimes(3);
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ name: 'Assets', parentId: 'Root' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ name: 'Textures' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({ name: 'external-image' })
+      );
+
+      const firstComponentCall = mockClient.addComponent.mock.calls[0][0] as {
+        componentType: string;
+        fields: Record<string, unknown>;
+      };
+      expect(firstComponentCall.componentType).toBe('[FrooxEngine]FrooxEngine.StaticTexture2D');
+      expect(firstComponentCall.fields).toMatchObject({
+        URL: { $type: 'Uri', value: 'https://example.com/image.png' },
+      });
+
+      expect(result.get('external-image')).toMatch(/-static-texture$/);
     });
     it('should set point filter mode for gif identifiers', async () => {
       const textureMap = new Map<string, string>([['anim.GIF', 'resdb:///anim']]);
+
+      await slotBuilder.createTextureAssets(textureMap);
+
+      const addComponentCall = mockClient.addComponent.mock.calls[0][0] as {
+        fields: Record<string, unknown>;
+      };
+      expect(addComponentCall.fields).toHaveProperty('FilterMode');
+    });
+
+    it('should set point filter mode for gif external URLs', async () => {
+      const textureMap = new Map<string, string>([
+        ['external-image', 'https://example.com/anim.gif'],
+      ]);
 
       await slotBuilder.createTextureAssets(textureMap);
 
@@ -424,6 +471,46 @@ describe('SlotBuilder', () => {
     });
   });
 
+  describe('createMaterialAssets', () => {
+    it('should create shared material slots under Assets/Materials', async () => {
+      const result = await slotBuilder.createMaterialAssets([
+        {
+          key: 'xiexe-toon:cutout',
+          name: 'XiexeToon_cutout',
+          componentType: '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
+          fields: {
+            BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' },
+          },
+        },
+      ]);
+
+      expect(mockClient.addSlot).toHaveBeenCalledTimes(3);
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ name: 'Assets', parentId: 'Root' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ name: 'Materials' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({ name: 'XiexeToon_cutout' })
+      );
+
+      const firstComponentCall = mockClient.addComponent.mock.calls[0][0] as {
+        componentType: string;
+        fields: Record<string, unknown>;
+      };
+      expect(firstComponentCall.componentType).toBe('[FrooxEngine]FrooxEngine.XiexeToonMaterial');
+      expect(firstComponentCall.fields).toMatchObject({
+        BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' },
+      });
+
+      expect(result.get('xiexe-toon:cutout')).toMatch(/-material$/);
+    });
+  });
+
   describe('createImportGroup', () => {
     it('should create a group slot with UUID-based ID', async () => {
       await slotBuilder.createImportGroup('My Import');
@@ -434,6 +521,7 @@ describe('SlotBuilder', () => {
           name: 'My Import',
           position: { x: 0, y: 0, z: 0 },
           scale: { x: IMPORT_GROUP_SCALE, y: IMPORT_GROUP_SCALE, z: IMPORT_GROUP_SCALE },
+          tag: IMPORT_ROOT_TAG,
         })
       );
 
@@ -464,6 +552,22 @@ describe('SlotBuilder', () => {
       expect(mockClient.addSlot).toHaveBeenCalledWith(
         expect.objectContaining({
           parentId: groupId,
+        })
+      );
+    });
+
+    it('should apply preserved transform when provided', async () => {
+      await slotBuilder.createImportGroup('My Import', {
+        position: { x: 10, y: 20, z: 30 },
+        rotation: { x: 0, y: 0.7071, z: 0, w: 0.7071 },
+        scale: { x: 2, y: 2, z: 2 },
+      });
+
+      expect(mockClient.addSlot).toHaveBeenCalledWith(
+        expect.objectContaining({
+          position: { x: 10, y: 20, z: 30 },
+          rotation: { x: 0, y: 0.7071, z: 0, w: 0.7071 },
+          scale: { x: 2, y: 2, z: 2 },
         })
       );
     });

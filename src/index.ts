@@ -19,11 +19,20 @@ import { parseXmlFiles } from './parser/XmlParser';
 import { convertObjects, convertObjectsWithTextureMap } from './converter/ObjectConverter';
 import { toTextureReference } from './converter/objectConverters/componentBuilders';
 import { prepareSharedMeshDefinitions, resolveSharedMeshReferences } from './converter/sharedMesh';
+import {
+  prepareSharedMaterialDefinitions,
+  resolveSharedMaterialReferences,
+} from './converter/sharedMaterial';
 import { ResoniteLinkClient } from './resonite/ResoniteLinkClient';
 import { SlotBuilder } from './resonite/SlotBuilder';
 import { AssetImporter } from './resonite/AssetImporter';
 import { registerExternalUrls } from './resonite/registerExternalUrls';
-import { SCALE_FACTOR, getResoniteLinkPort, getResoniteLinkHost } from './config/MappingConfig';
+import {
+  SCALE_FACTOR,
+  IMPORT_ROOT_TAG,
+  getResoniteLinkPort,
+  getResoniteLinkHost,
+} from './config/MappingConfig';
 import { t, setLocale, Locale } from './i18n';
 
 const VERSION = '1.0.0';
@@ -39,12 +48,6 @@ interface CLIOptions {
 }
 
 const program = new Command();
-
-const EXTERNAL_URL_PATTERN = /^https?:\/\//i;
-
-function isExternalTextureUrl(textureUrl: string): boolean {
-  return EXTERNAL_URL_PATTERN.test(textureUrl);
-}
 
 program
   .name('udonarium-resonite-importer')
@@ -215,10 +218,11 @@ async function run(options: CLIOptions): Promise<void> {
 
   try {
     const slotBuilder = new SlotBuilder(client);
+    const previousImport = await client.captureTransformAndRemoveRootChildrenByTag(IMPORT_ROOT_TAG);
 
     // Create import group
     const groupName = `Udonarium Import - ${path.basename(inputPath, '.zip')}`;
-    const groupId = await slotBuilder.createImportGroup(groupName);
+    const groupId = await slotBuilder.createImportGroup(groupName, previousImport.transform);
 
     // Import images and move texture slots into the import group
     const rootChildIdsBefore = await client.getSlotChildIds('Root');
@@ -255,16 +259,12 @@ async function run(options: CLIOptions): Promise<void> {
     const textureReferenceMap = await slotBuilder.createTextureAssets(importedTextures);
     const textureComponentMap = new Map<string, string>();
 
-    for (const [identifier, textureValue] of importedTextures) {
+    for (const [identifier] of importedTextures) {
       const componentId = textureReferenceMap.get(identifier);
-      if (componentId) {
-        textureComponentMap.set(identifier, toTextureReference(componentId));
+      if (!componentId) {
         continue;
       }
-
-      if (isExternalTextureUrl(textureValue)) {
-        textureComponentMap.set(identifier, textureValue);
-      }
+      textureComponentMap.set(identifier, toTextureReference(componentId));
     }
 
     // Build objects after texture asset creation so materials reference shared StaticTexture2D components.
@@ -272,6 +272,9 @@ async function run(options: CLIOptions): Promise<void> {
     const sharedMeshDefinitions = prepareSharedMeshDefinitions(resoniteObjects);
     const meshReferenceMap = await slotBuilder.createMeshAssets(sharedMeshDefinitions);
     resolveSharedMeshReferences(resoniteObjects, meshReferenceMap);
+    const sharedMaterialDefinitions = prepareSharedMaterialDefinitions(resoniteObjects);
+    const materialReferenceMap = await slotBuilder.createMaterialAssets(sharedMaterialDefinitions);
+    resolveSharedMaterialReferences(resoniteObjects, materialReferenceMap);
 
     // Build slots
     let builtSlots = 0;

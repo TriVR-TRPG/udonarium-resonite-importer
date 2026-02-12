@@ -33,6 +33,12 @@ export interface Quaternion {
   w: number;
 }
 
+export interface SlotTransform {
+  position: Vector3;
+  rotation: Quaternion;
+  scale: Vector3;
+}
+
 export class ResoniteLinkClient {
   private client: Client;
   private config: ResoniteLinkConfig;
@@ -169,24 +175,27 @@ export class ResoniteLinkClient {
     parentId: string;
     name: string;
     position: Vector3;
+    rotation?: Quaternion;
     scale?: Vector3;
     isActive?: boolean;
+    tag?: string;
   }): Promise<string> {
     if (!this.isConnected()) {
       throw new Error('Not connected to ResoniteLink');
     }
 
     const scale = options.scale ?? { x: 1, y: 1, z: 1 };
+    const rotation = options.rotation ?? { x: 0, y: 0, z: 0, w: 1 };
     const slot = await this.client.createSlot(
       {
         parent: createReference(options.parentId),
         name: createString(options.name),
         position: createFloat3(options.position),
         scale: createFloat3(scale),
-        rotation: createFloatQ({ x: 0, y: 0, z: 0, w: 1 }),
+        rotation: createFloatQ(rotation),
         isActive: createBool(options.isActive ?? true),
         isPersistent: createBool(true),
-        tag: createString(''),
+        tag: createString(options.tag ?? ''),
         orderOffset: createLong(0),
       },
       options.id
@@ -436,6 +445,156 @@ export class ResoniteLinkClient {
     }
 
     return slot.childrens.map((child) => child.id);
+  }
+
+  /**
+   * Remove slot by ID.
+   */
+  async removeSlot(slotId: string): Promise<void> {
+    if (!this.isConnected()) {
+      throw new Error('Not connected to ResoniteLink');
+    }
+
+    const response = (await this.client.send({
+      $type: 'removeSlot' as const,
+      slotId,
+    })) as { success?: boolean; errorInfo?: string };
+
+    if (!response.success) {
+      throw new Error(response.errorInfo || `Failed to remove slot: ${slotId}`);
+    }
+  }
+
+  /**
+   * Read slot tag value.
+   */
+  async getSlotTag(slotId: string): Promise<string | undefined> {
+    const slotData = await this.getSlotData(slotId);
+    const tag = slotData?.tag?.value;
+    return typeof tag === 'string' ? tag : undefined;
+  }
+
+  /**
+   * Read position/rotation/scale from a slot.
+   */
+  async getSlotTransform(slotId: string): Promise<SlotTransform | undefined> {
+    const slotData = await this.getSlotData(slotId);
+    if (!slotData) {
+      return undefined;
+    }
+
+    const position = slotData.position?.value;
+    const rotation = slotData.rotation?.value;
+    const scale = slotData.scale?.value;
+
+    if (!this.isVector3(position) || !this.isQuaternion(rotation) || !this.isVector3(scale)) {
+      return undefined;
+    }
+
+    return { position, rotation, scale };
+  }
+
+  /**
+   * Remove all direct children under Root that match the given tag.
+   * Returns removed slot count and the transform of the first matched slot.
+   */
+  async captureTransformAndRemoveRootChildrenByTag(
+    tag: string
+  ): Promise<{ removedCount: number; transform?: SlotTransform }> {
+    if (!tag) {
+      return { removedCount: 0 };
+    }
+
+    const childIds = await this.getSlotChildIds('Root');
+    let removedCount = 0;
+    let capturedTransform: SlotTransform | undefined;
+
+    for (const childId of childIds) {
+      const childTag = await this.getSlotTag(childId);
+      if (childTag !== tag) {
+        continue;
+      }
+
+      if (!capturedTransform) {
+        capturedTransform = await this.getSlotTransform(childId);
+      }
+
+      await this.removeSlot(childId);
+      removedCount += 1;
+    }
+
+    return {
+      removedCount,
+      transform: capturedTransform,
+    };
+  }
+
+  /**
+   * Remove all direct children under Root that match the given tag.
+   * Returns removed slot count.
+   */
+  async removeRootChildrenByTag(tag: string): Promise<number> {
+    const result = await this.captureTransformAndRemoveRootChildrenByTag(tag);
+    return result.removedCount;
+  }
+
+  private async getSlotData(slotId: string): Promise<
+    | {
+        tag?: { value?: unknown };
+        position?: { value?: unknown };
+        rotation?: { value?: unknown };
+        scale?: { value?: unknown };
+      }
+    | undefined
+  > {
+    if (!this.isConnected()) {
+      throw new Error('Not connected to ResoniteLink');
+    }
+
+    const response = (await this.client.send({
+      $type: 'getSlot' as const,
+      slotId,
+      depth: 0,
+    })) as {
+      success?: boolean;
+      data?: {
+        tag?: { value?: unknown };
+        position?: { value?: unknown };
+        rotation?: { value?: unknown };
+        scale?: { value?: unknown };
+      };
+    };
+
+    if (!response.success) {
+      return undefined;
+    }
+
+    return response.data;
+  }
+
+  private isVector3(value: unknown): value is Vector3 {
+    if (!value || typeof value !== 'object') {
+      return false;
+    }
+    const candidate = value as Record<string, unknown>;
+    return (
+      typeof candidate.x === 'number' &&
+      typeof candidate.y === 'number' &&
+      typeof candidate.z === 'number'
+    );
+  }
+
+  private isQuaternion(value: unknown): value is Quaternion {
+    if (!value || typeof value !== 'object') {
+      return false;
+    }
+    const candidate = value as Record<string, unknown>;
+    return (
+      typeof candidate.x === 'number' &&
+      typeof candidate.y === 'number' &&
+      typeof candidate.z === 'number' &&
+      typeof candidate.w === 'number'
+    );
   }
 
   /**

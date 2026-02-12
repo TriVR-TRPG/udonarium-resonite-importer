@@ -1,8 +1,9 @@
 {
   "componentType": "[FrooxEngine]FrooxEngine.BoxCollider",
   "addResponse": {
-    "$type": "response",
-    "sourceMessageId": "96d45a45-c74b-44c8-b57e-775999d4643e",
+    "$type": "newEntityId",
+    "entityId": "test_[FrooxEngine]FrooxEngine_BoxCollider_1770896341765",
+    "sourceMessageId": "9b9c55bc-d3ff-47a7-b863-1a27db2fbf85",
     "success": true,
     "errorInfo": null
   },
@@ -14,17 +15,17 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_376"
+          "id": "Reso_5319"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 1000000,
-          "id": "Reso_377"
+          "id": "Reso_531A"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_378"
+          "id": "Reso_531B"
         },
         "Offset": {
           "$type": "float3",
@@ -33,28 +34,28 @@
             "y": 0,
             "z": 0
           },
-          "id": "Reso_379"
+          "id": "Reso_531C"
         },
         "Type": {
           "$type": "enum",
           "value": "Static",
           "enumType": "ColliderType",
-          "id": "Reso_37A"
+          "id": "Reso_531D"
         },
         "Mass": {
           "$type": "float",
           "value": 1,
-          "id": "Reso_37B"
+          "id": "Reso_531E"
         },
         "CharacterCollider": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_37C"
+          "id": "Reso_531F"
         },
         "IgnoreRaycasts": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_37D"
+          "id": "Reso_5320"
         },
         "Size": {
           "$type": "float3",
@@ -63,13 +64,13 @@
             "y": 1,
             "z": 1
           },
-          "id": "Reso_37E"
+          "id": "Reso_5321"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_BoxCollider_1770376790896",
+      "id": "test_[FrooxEngine]FrooxEngine_BoxCollider_1770896341765",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "a0dc1c40-cfa8-4d05-b873-cd1777859e84",
+    "sourceMessageId": "3f9ed51d-3d11-43b3-bc7c-a4bf15157408",
     "success": true,
     "errorInfo": null
   }

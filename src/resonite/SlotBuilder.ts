@@ -5,15 +5,15 @@
 import { randomUUID } from 'crypto';
 import { ResoniteObject, Vector3 } from '../converter/ResoniteObject';
 import { SharedMeshDefinition } from '../converter/sharedMesh';
-import { IMPORT_GROUP_SCALE } from '../config/MappingConfig';
-import { ResoniteLinkClient } from './ResoniteLinkClient';
+import { SharedMaterialDefinition } from '../converter/sharedMaterial';
+import { IMPORT_GROUP_SCALE, IMPORT_ROOT_TAG } from '../config/MappingConfig';
+import { ResoniteLinkClient, SlotTransform } from './ResoniteLinkClient';
 
 const SLOT_ID_PREFIX = 'udon-imp';
 const GIF_EXTENSION_PATTERN = /\.gif(?:$|[?#])/i;
-const EXTERNAL_URL_PATTERN = /^https?:\/\//i;
 
-function isExternalTextureUrl(textureUrl: string): boolean {
-  return EXTERNAL_URL_PATTERN.test(textureUrl);
+function shouldUsePointFilterMode(identifier: string, textureUrl: string): boolean {
+  return GIF_EXTENSION_PATTERN.test(identifier) || GIF_EXTENSION_PATTERN.test(textureUrl);
 }
 
 function isListField(value: unknown): boolean {
@@ -50,6 +50,7 @@ export class SlotBuilder {
   private assetsSlotId?: string;
   private texturesSlotId?: string;
   private meshesSlotId?: string;
+  private materialsSlotId?: string;
 
   constructor(client: ResoniteLinkClient, rootSlotId = 'Root') {
     this.client = client;
@@ -136,10 +137,10 @@ export class SlotBuilder {
   /**
    * Create a group slot to contain imported objects
    */
-  async createImportGroup(name: string): Promise<string> {
+  async createImportGroup(name: string, transform?: SlotTransform): Promise<string> {
     const groupId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
-    const position: Vector3 = { x: 0, y: 0, z: 0 };
-    const scale: Vector3 = {
+    const position: Vector3 = transform?.position ?? { x: 0, y: 0, z: 0 };
+    const scale: Vector3 = transform?.scale ?? {
       x: IMPORT_GROUP_SCALE,
       y: IMPORT_GROUP_SCALE,
       z: IMPORT_GROUP_SCALE,
@@ -150,7 +151,9 @@ export class SlotBuilder {
       parentId: this.rootSlotId,
       name,
       position,
+      ...(transform?.rotation ? { rotation: transform.rotation } : {}),
       scale,
+      tag: IMPORT_ROOT_TAG,
     });
 
     this.rootSlotId = groupId;
@@ -159,9 +162,7 @@ export class SlotBuilder {
 
   async createTextureAssets(textureMap: Map<string, string>): Promise<Map<string, string>> {
     const textureReferenceMap = new Map<string, string>();
-    const importableTextures = Array.from(textureMap.entries()).filter(
-      ([, textureUrl]) => !isExternalTextureUrl(textureUrl)
-    );
+    const importableTextures = Array.from(textureMap.entries());
 
     if (importableTextures.length === 0) {
       return textureReferenceMap;
@@ -187,7 +188,7 @@ export class SlotBuilder {
           URL: { $type: 'Uri', value: textureUrl },
           WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
           WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
-          ...(GIF_EXTENSION_PATTERN.test(identifier)
+          ...(shouldUsePointFilterMode(identifier, textureUrl)
             ? {
                 FilterMode: {
                   $type: 'enum?',
@@ -196,6 +197,14 @@ export class SlotBuilder {
                 },
               }
             : {}),
+        },
+      });
+      await this.client.addComponent({
+        id: `${textureSlotId}-main-texture-property-block`,
+        slotId: textureSlotId,
+        componentType: '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
+        fields: {
+          Texture: { $type: 'reference', targetId: textureComponentId },
         },
       });
 
@@ -240,6 +249,40 @@ export class SlotBuilder {
     return meshReferenceMap;
   }
 
+  async createMaterialAssets(
+    materialDefinitions: SharedMaterialDefinition[]
+  ): Promise<Map<string, string>> {
+    const materialReferenceMap = new Map<string, string>();
+
+    if (materialDefinitions.length === 0) {
+      return materialReferenceMap;
+    }
+
+    const materialsSlotId = await this.ensureMaterialsSlot();
+
+    for (const materialDefinition of materialDefinitions) {
+      const materialSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
+      await this.client.addSlot({
+        id: materialSlotId,
+        parentId: materialsSlotId,
+        name: materialDefinition.name,
+        position: { x: 0, y: 0, z: 0 },
+      });
+
+      const materialComponentId = `${materialSlotId}-material`;
+      await this.client.addComponent({
+        id: materialComponentId,
+        slotId: materialSlotId,
+        componentType: materialDefinition.componentType,
+        fields: materialDefinition.fields,
+      });
+
+      materialReferenceMap.set(materialDefinition.key, materialComponentId);
+    }
+
+    return materialReferenceMap;
+  }
+
   private async ensureAssetsSlot(): Promise<string> {
     if (this.assetsSlotId) {
       return this.assetsSlotId;
@@ -280,5 +323,19 @@ export class SlotBuilder {
       position: { x: 0, y: 0, z: 0 },
     });
     return this.meshesSlotId;
+  }
+
+  private async ensureMaterialsSlot(): Promise<string> {
+    if (this.materialsSlotId) {
+      return this.materialsSlotId;
+    }
+    this.materialsSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
+    await this.client.addSlot({
+      id: this.materialsSlotId,
+      parentId: await this.ensureAssetsSlot(),
+      name: 'Materials',
+      position: { x: 0, y: 0, z: 0 },
+    });
+    return this.materialsSlotId;
   }
 }

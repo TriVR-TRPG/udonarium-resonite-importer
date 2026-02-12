@@ -7,10 +7,17 @@ import * as path from 'path';
 import { extractZip } from '../parser/ZipExtractor';
 import { parseXmlFiles } from '../parser/XmlParser';
 import { convertObjectsWithTextureMap } from '../converter/ObjectConverter';
+import { toTextureReference } from '../converter/objectConverters/componentBuilders';
+import { prepareSharedMeshDefinitions, resolveSharedMeshReferences } from '../converter/sharedMesh';
+import {
+  prepareSharedMaterialDefinitions,
+  resolveSharedMaterialReferences,
+} from '../converter/sharedMaterial';
 import { ResoniteLinkClient } from '../resonite/ResoniteLinkClient';
 import { SlotBuilder } from '../resonite/SlotBuilder';
 import { AssetImporter } from '../resonite/AssetImporter';
 import { registerExternalUrls } from '../resonite/registerExternalUrls';
+import { IMPORT_ROOT_TAG } from '../config/MappingConfig';
 import { AnalyzeResult, ImportOptions, ImportResult } from './types';
 
 let mainWindow: BrowserWindow | null = null;
@@ -139,10 +146,11 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     const assetImporter = new AssetImporter(client);
     const slotBuilder = new SlotBuilder(client);
     registerExternalUrls(parseResult.objects, assetImporter);
+    const previousImport = await client.captureTransformAndRemoveRootChildrenByTag(IMPORT_ROOT_TAG);
 
     // Create import group
     const groupName = `Udonarium Import - ${path.basename(filePath, '.zip')}`;
-    await slotBuilder.createImportGroup(groupName);
+    await slotBuilder.createImportGroup(groupName, previousImport.transform);
 
     // Import images
     const totalImages = extractedData.imageFiles.length;
@@ -162,10 +170,24 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
       }
     );
 
-    const resoniteObjects = convertObjectsWithTextureMap(
-      parseResult.objects,
-      assetImporter.getImportedTextures()
-    );
+    const importedTextures = assetImporter.getImportedTextures();
+    const textureReferenceMap = await slotBuilder.createTextureAssets(importedTextures);
+    const textureComponentMap = new Map<string, string>();
+    for (const [identifier] of importedTextures) {
+      const componentId = textureReferenceMap.get(identifier);
+      if (!componentId) {
+        continue;
+      }
+      textureComponentMap.set(identifier, toTextureReference(componentId));
+    }
+
+    const resoniteObjects = convertObjectsWithTextureMap(parseResult.objects, textureComponentMap);
+    const sharedMeshDefinitions = prepareSharedMeshDefinitions(resoniteObjects);
+    const meshReferenceMap = await slotBuilder.createMeshAssets(sharedMeshDefinitions);
+    resolveSharedMeshReferences(resoniteObjects, meshReferenceMap);
+    const sharedMaterialDefinitions = prepareSharedMaterialDefinitions(resoniteObjects);
+    const materialReferenceMap = await slotBuilder.createMaterialAssets(sharedMaterialDefinitions);
+    resolveSharedMaterialReferences(resoniteObjects, materialReferenceMap);
 
     // Build slots
     const slotResults = await slotBuilder.buildSlots(resoniteObjects, (current, total) => {

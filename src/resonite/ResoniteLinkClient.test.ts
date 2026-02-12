@@ -126,6 +126,47 @@ describe('ResoniteLinkClient', () => {
         })
       ).rejects.toThrow('Not connected to ResoniteLink');
     });
+
+    it('should pass tag when specified', async () => {
+      (client.getClient() as unknown as { isConnected: boolean }).isConnected = true;
+      (client as unknown as { _isConnected: boolean })._isConnected = true;
+      mockClientInstance.createSlot.mockResolvedValue({ id: 'slot-id' });
+
+      await client.addSlot({
+        id: 'test-id',
+        parentId: 'Root',
+        name: 'Tagged Slot',
+        position: { x: 0, y: 0, z: 0 },
+        tag: 'test-tag',
+      });
+
+      const createSlotArgs = mockClientInstance.createSlot.mock.calls[0][0] as {
+        tag: { type: string; value: string };
+      };
+      expect(createSlotArgs.tag).toEqual({ type: 'string', value: 'test-tag' });
+    });
+
+    it('should pass rotation when specified', async () => {
+      (client.getClient() as unknown as { isConnected: boolean }).isConnected = true;
+      (client as unknown as { _isConnected: boolean })._isConnected = true;
+      mockClientInstance.createSlot.mockResolvedValue({ id: 'slot-id' });
+
+      await client.addSlot({
+        id: 'test-id',
+        parentId: 'Root',
+        name: 'Rotated Slot',
+        position: { x: 0, y: 0, z: 0 },
+        rotation: { x: 0, y: 0.7071, z: 0, w: 0.7071 },
+      });
+
+      const createSlotArgs = mockClientInstance.createSlot.mock.calls[0][0] as {
+        rotation: { type: string; value: { x: number; y: number; z: number; w: number } };
+      };
+      expect(createSlotArgs.rotation).toEqual({
+        type: 'floatQ',
+        value: { x: 0, y: 0.7071, z: 0, w: 0.7071 },
+      });
+    });
   });
 
   describe('updateSlot', () => {
@@ -162,6 +203,56 @@ describe('ResoniteLinkClient', () => {
   describe('getRootSlot', () => {
     it('should throw when not connected', async () => {
       await expect(client.getRootSlot()).rejects.toThrow('Not connected to ResoniteLink');
+    });
+  });
+
+  describe('captureTransformAndRemoveRootChildrenByTag', () => {
+    it('should capture transform then remove only matching root children', async () => {
+      (client.getClient() as unknown as { isConnected: boolean }).isConnected = true;
+      (client as unknown as { _isConnected: boolean })._isConnected = true;
+      mockClientInstance.getSlot.mockResolvedValue({
+        childrens: [{ id: 'slot-a' }, { id: 'slot-b' }],
+      });
+      mockClientInstance.send
+        .mockResolvedValueOnce({ success: true, data: { tag: { value: 'keep' } } })
+        .mockResolvedValueOnce({
+          success: true,
+          data: { tag: { value: 'delete-me' } },
+        })
+        .mockResolvedValueOnce({
+          success: true,
+          data: {
+            position: { value: { x: 1, y: 2, z: 3 } },
+            rotation: { value: { x: 0, y: 0.5, z: 0, w: 0.866 } },
+            scale: { value: { x: 4, y: 5, z: 6 } },
+          },
+        })
+        .mockResolvedValueOnce({ success: true });
+
+      const result = await client.captureTransformAndRemoveRootChildrenByTag('delete-me');
+
+      expect(result.removedCount).toBe(1);
+      expect(result.transform).toEqual({
+        position: { x: 1, y: 2, z: 3 },
+        rotation: { x: 0, y: 0.5, z: 0, w: 0.866 },
+        scale: { x: 4, y: 5, z: 6 },
+      });
+      expect(mockClientInstance.send).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ $type: 'getSlot', slotId: 'slot-a' })
+      );
+      expect(mockClientInstance.send).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ $type: 'getSlot', slotId: 'slot-b' })
+      );
+      expect(mockClientInstance.send).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({ $type: 'getSlot', slotId: 'slot-b' })
+      );
+      expect(mockClientInstance.send).toHaveBeenNthCalledWith(
+        4,
+        expect.objectContaining({ $type: 'removeSlot', slotId: 'slot-b' })
+      );
     });
   });
 });

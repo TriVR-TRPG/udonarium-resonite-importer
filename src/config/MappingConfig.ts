@@ -14,7 +14,13 @@ export const SCALE_FACTOR = 0.02;
  * Scale for the import root group slot.
  * This applies uniformly to all imported objects after conversion.
  */
-export const IMPORT_GROUP_SCALE = 0.1;
+export const IMPORT_GROUP_SCALE = 1;
+
+/**
+ * Tag applied to import root container slots.
+ * Existing roots with this tag are deleted before each new import.
+ */
+export const IMPORT_ROOT_TAG = 'udonarium-resonite-importer:root';
 
 /**
  * Retry configuration for ResoniteLink connection

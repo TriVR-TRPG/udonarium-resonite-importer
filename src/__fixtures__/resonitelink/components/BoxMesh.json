@@ -1,8 +1,9 @@
 {
   "componentType": "[FrooxEngine]FrooxEngine.BoxMesh",
   "addResponse": {
-    "$type": "response",
-    "sourceMessageId": "0c65a348-4431-44b4-adf3-8dd2eeb0635d",
+    "$type": "newEntityId",
+    "entityId": "test_[FrooxEngine]FrooxEngine_BoxMesh_1770896341737",
+    "sourceMessageId": "f283975d-add0-4337-b7d8-cc23adb49022",
     "success": true,
     "errorInfo": null
   },
@@ -14,33 +15,33 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_2F5"
+          "id": "Reso_5249"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_2F6"
+          "id": "Reso_524A"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_2F7"
+          "id": "Reso_524B"
         },
         "HighPriorityIntegration": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_2F8"
+          "id": "Reso_524C"
         },
         "OverrideBoundingBox": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_2F9"
+          "id": "Reso_524D"
         },
         "Profile": {
           "$type": "enum",
           "value": "Linear",
           "enumType": "ColorProfile",
-          "id": "Reso_2FA"
+          "id": "Reso_524E"
         },
         "Size": {
           "$type": "float3",
@@ -49,7 +50,7 @@
             "y": 1,
             "z": 1
           },
-          "id": "Reso_2FB"
+          "id": "Reso_524F"
         },
         "UVScale": {
           "$type": "float3",
@@ -58,18 +59,18 @@
             "y": 1,
             "z": 1
           },
-          "id": "Reso_2FC"
+          "id": "Reso_5250"
         },
         "ScaleUVWithSize": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_2FD"
+          "id": "Reso_5251"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_BoxMesh_1770376790863",
+      "id": "test_[FrooxEngine]FrooxEngine_BoxMesh_1770896341737",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "697d6b2a-9d46-4cb6-87df-351ff92af616",
+    "sourceMessageId": "d0cee49e-0ca6-4029-a1d9-002f82cb2bd3",
     "success": true,
     "errorInfo": null
   }

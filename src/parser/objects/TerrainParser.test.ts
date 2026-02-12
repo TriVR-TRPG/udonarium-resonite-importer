@@ -80,6 +80,87 @@ describe('TerrainParser', () => {
       expect(result.depth).toBe(1);
     });
 
+    it('should preserve depth=0 when explicitly provided', () => {
+      const data = {
+        data: [
+          {
+            '@_name': 'terrain',
+            data: [
+              {
+                '@_name': 'common',
+                data: [
+                  { '@_name': 'name', '#text': 'Flat' },
+                  { '@_name': 'width', '#text': '3' },
+                  { '@_name': 'height', '#text': '2' },
+                  { '@_name': 'depth', '#text': '0' },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+
+      const result = parseTerrain(data, 'flat.xml');
+
+      expect(result.width).toBe(3);
+      expect(result.height).toBe(2);
+      expect(result.depth).toBe(0);
+    });
+
+    it('should preserve width=0 when explicitly provided', () => {
+      const data = {
+        data: [
+          {
+            '@_name': 'terrain',
+            data: [
+              {
+                '@_name': 'common',
+                data: [
+                  { '@_name': 'name', '#text': 'Zero Width' },
+                  { '@_name': 'width', '#text': '0' },
+                  { '@_name': 'height', '#text': '2' },
+                  { '@_name': 'depth', '#text': '3' },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+
+      const result = parseTerrain(data, 'zero-width.xml');
+
+      expect(result.width).toBe(0);
+      expect(result.height).toBe(2);
+      expect(result.depth).toBe(3);
+    });
+
+    it('should preserve height=0 when explicitly provided', () => {
+      const data = {
+        data: [
+          {
+            '@_name': 'terrain',
+            data: [
+              {
+                '@_name': 'common',
+                data: [
+                  { '@_name': 'name', '#text': 'Zero Height' },
+                  { '@_name': 'width', '#text': '2' },
+                  { '@_name': 'height', '#text': '0' },
+                  { '@_name': 'depth', '#text': '3' },
+                ],
+              },
+            ],
+          },
+        ],
+      };
+
+      const result = parseTerrain(data, 'zero-height.xml');
+
+      expect(result.width).toBe(2);
+      expect(result.height).toBe(0);
+      expect(result.depth).toBe(3);
+    });
+
     it('should parse wall and floor images', () => {
       const data = {
         '@_identifier': 'terrain-002',

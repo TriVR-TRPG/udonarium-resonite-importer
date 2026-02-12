@@ -3,6 +3,8 @@ import { ResoniteComponent } from '../ResoniteObject';
 const TEXTURE_PLACEHOLDER_PREFIX = 'texture://';
 const TEXTURE_REFERENCE_PREFIX = 'texture-ref://';
 const GIF_EXTENSION_PATTERN = /\.gif(?:$|[?#])/i;
+const SHARED_TEXTURE_COMPONENT_SUFFIX = '-static-texture';
+const SHARED_TEXTURE_PROPERTY_BLOCK_SUFFIX = '-main-texture-property-block';
 
 type StaticTexture2DFields = {
   URL: { $type: 'Uri'; value: string };
@@ -14,12 +16,28 @@ type QuadSize = { x: number; y: number };
 type BoxSize = { x: number; y: number; z: number };
 
 type BlendModeField = { $type: 'enum'; value: 'Cutout'; enumType: 'BlendMode' };
+type MainTexturePropertyBlockFields = {
+  Texture: { $type: 'reference'; targetId: string };
+};
+type XiexeToonMaterialFields = {
+  BlendMode: BlendModeField;
+  ShadowRamp: { $type: 'reference'; targetId: null };
+  ShadowSharpness: { $type: 'float'; value: 0 };
+};
 
 function createCutoutBlendModeField(): BlendModeField {
   return {
     $type: 'enum',
     value: 'Cutout',
     enumType: 'BlendMode',
+  };
+}
+
+function buildXiexeToonMaterialFields(): XiexeToonMaterialFields {
+  return {
+    BlendMode: createCutoutBlendModeField(),
+    ShadowRamp: { $type: 'reference', targetId: null },
+    ShadowSharpness: { $type: 'float', value: 0 },
   };
 }
 
@@ -58,6 +76,16 @@ function parseTextureReferenceId(textureValue?: string): string | undefined {
   return textureValue.slice(TEXTURE_REFERENCE_PREFIX.length);
 }
 
+function toSharedTexturePropertyBlockId(textureComponentId: string): string {
+  if (textureComponentId.endsWith(SHARED_TEXTURE_COMPONENT_SUFFIX)) {
+    return (
+      textureComponentId.slice(0, -SHARED_TEXTURE_COMPONENT_SUFFIX.length) +
+      SHARED_TEXTURE_PROPERTY_BLOCK_SUFFIX
+    );
+  }
+  return `${textureComponentId}${SHARED_TEXTURE_PROPERTY_BLOCK_SUFFIX}`;
+}
+
 export function buildQuadMeshComponents(
   slotId: string,
   textureValue?: string,
@@ -66,9 +94,15 @@ export function buildQuadMeshComponents(
 ): ResoniteComponent[] {
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
+  const textureBlockId = `${slotId}-texture-block`;
   const textureId = `${slotId}-tex`;
   const sharedTextureId = parseTextureReferenceId(textureValue);
   const localTextureId = sharedTextureId ? undefined : textureId;
+  const texturePropertyBlockTargetId = textureValue
+    ? sharedTextureId
+      ? toSharedTexturePropertyBlockId(sharedTextureId)
+      : textureBlockId
+    : undefined;
   const components: ResoniteComponent[] = [
     {
       id: meshId,
@@ -90,16 +124,22 @@ export function buildQuadMeshComponents(
 
   components.push({
     id: materialId,
-    type: '[FrooxEngine]FrooxEngine.UnlitMaterial',
-    fields: {
-      ...(textureValue
-        ? {
-            Texture: { $type: 'reference', targetId: sharedTextureId ?? localTextureId! },
-          }
-        : {}),
-      BlendMode: createCutoutBlendModeField(),
-    },
+    type: '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
+    fields: buildXiexeToonMaterialFields(),
   });
+
+  if (textureValue && !sharedTextureId) {
+    const textureProviderId = sharedTextureId ?? localTextureId!;
+    const textureBlockFields: MainTexturePropertyBlockFields = {
+      Texture: { $type: 'reference', targetId: textureProviderId },
+    };
+    components.push({
+      id: textureBlockId,
+      type: '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
+      fields: textureBlockFields,
+    });
+  }
+
   components.push({
     id: `${slotId}-renderer`,
     type: '[FrooxEngine]FrooxEngine.MeshRenderer',
@@ -109,6 +149,14 @@ export function buildQuadMeshComponents(
         $type: 'list',
         elements: [{ $type: 'reference', targetId: materialId }],
       },
+      ...(texturePropertyBlockTargetId
+        ? {
+            MaterialPropertyBlocks: {
+              $type: 'list',
+              elements: [{ $type: 'reference', targetId: texturePropertyBlockTargetId }],
+            },
+          }
+        : {}),
     },
   });
 
@@ -122,9 +170,15 @@ export function buildBoxMeshComponents(
 ): ResoniteComponent[] {
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
+  const textureBlockId = `${slotId}-texture-block`;
   const textureId = `${slotId}-tex`;
   const sharedTextureId = parseTextureReferenceId(textureValue);
   const localTextureId = sharedTextureId ? undefined : textureId;
+  const texturePropertyBlockTargetId = textureValue
+    ? sharedTextureId
+      ? toSharedTexturePropertyBlockId(sharedTextureId)
+      : textureBlockId
+    : undefined;
   const components: ResoniteComponent[] = [
     {
       id: meshId,
@@ -145,16 +199,22 @@ export function buildBoxMeshComponents(
 
   components.push({
     id: materialId,
-    type: '[FrooxEngine]FrooxEngine.PBS_Metallic',
-    fields: {
-      ...(textureValue
-        ? {
-            AlbedoTexture: { $type: 'reference', targetId: sharedTextureId ?? localTextureId! },
-          }
-        : {}),
-      BlendMode: createCutoutBlendModeField(),
-    },
+    type: '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
+    fields: buildXiexeToonMaterialFields(),
   });
+
+  if (textureValue && !sharedTextureId) {
+    const textureProviderId = sharedTextureId ?? localTextureId!;
+    const textureBlockFields: MainTexturePropertyBlockFields = {
+      Texture: { $type: 'reference', targetId: textureProviderId },
+    };
+    components.push({
+      id: textureBlockId,
+      type: '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
+      fields: textureBlockFields,
+    });
+  }
+
   components.push({
     id: `${slotId}-renderer`,
     type: '[FrooxEngine]FrooxEngine.MeshRenderer',
@@ -164,6 +224,14 @@ export function buildBoxMeshComponents(
         $type: 'list',
         elements: [{ $type: 'reference', targetId: materialId }],
       },
+      ...(texturePropertyBlockTargetId
+        ? {
+            MaterialPropertyBlocks: {
+              $type: 'list',
+              elements: [{ $type: 'reference', targetId: texturePropertyBlockTargetId }],
+            },
+          }
+        : {}),
     },
   });
 
