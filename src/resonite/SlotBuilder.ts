@@ -8,6 +8,7 @@ import { IMPORT_GROUP_SCALE } from '../config/MappingConfig';
 import { ResoniteLinkClient } from './ResoniteLinkClient';
 
 const SLOT_ID_PREFIX = 'udon-imp';
+const GIF_EXTENSION_PATTERN = /\.gif(?:$|[?#])/i;
 
 function isListField(value: unknown): boolean {
   return (
@@ -145,5 +146,63 @@ export class SlotBuilder {
 
     this.rootSlotId = groupId;
     return groupId;
+  }
+
+  async createTextureAssets(textureMap: Map<string, string>): Promise<Map<string, string>> {
+    const textureReferenceMap = new Map<string, string>();
+    if (textureMap.size === 0) {
+      return textureReferenceMap;
+    }
+
+    const assetsSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
+    await this.client.addSlot({
+      id: assetsSlotId,
+      parentId: this.rootSlotId,
+      name: 'Assets',
+      position: { x: 0, y: 0, z: 0 },
+    });
+
+    const texturesSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
+    await this.client.addSlot({
+      id: texturesSlotId,
+      parentId: assetsSlotId,
+      name: 'Textures',
+      position: { x: 0, y: 0, z: 0 },
+    });
+
+    for (const [identifier, textureUrl] of textureMap) {
+      const textureSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
+      await this.client.addSlot({
+        id: textureSlotId,
+        parentId: texturesSlotId,
+        name: identifier,
+        position: { x: 0, y: 0, z: 0 },
+      });
+
+      const textureComponentId = `${textureSlotId}-static-texture`;
+      await this.client.addComponent({
+        id: textureComponentId,
+        slotId: textureSlotId,
+        componentType: '[FrooxEngine]FrooxEngine.StaticTexture2D',
+        fields: {
+          URL: { $type: 'Uri', value: textureUrl },
+          WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
+          WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
+          ...(GIF_EXTENSION_PATTERN.test(identifier)
+            ? {
+                FilterMode: {
+                  $type: 'enum?',
+                  value: 'Point',
+                  enumType: 'TextureFilterMode',
+                },
+              }
+            : {}),
+        },
+      });
+
+      textureReferenceMap.set(identifier, textureComponentId);
+    }
+
+    return textureReferenceMap;
   }
 }

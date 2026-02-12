@@ -41,7 +41,8 @@
     "package:gui:win": "electron-builder --win",
     "package:gui:mac": "electron-builder --mac",
     "package:gui:linux": "electron-builder --linux",
-    "prepare": "husky"
+    "prepare": "husky",
+    "setup:resonitelink": "git submodule update --init --recursive && npm --prefix lib/resonitelink.js run build"
   },
   "keywords": [
     "udonarium",

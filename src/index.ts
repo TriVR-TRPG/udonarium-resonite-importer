@@ -17,6 +17,7 @@ import * as path from 'path';
 import { extractZip } from './parser/ZipExtractor';
 import { parseXmlFiles } from './parser/XmlParser';
 import { convertObjects, convertObjectsWithTextureMap } from './converter/ObjectConverter';
+import { toTextureReference } from './converter/objectConverters/componentBuilders';
 import { ResoniteLinkClient } from './resonite/ResoniteLinkClient';
 import { SlotBuilder } from './resonite/SlotBuilder';
 import { AssetImporter } from './resonite/AssetImporter';
@@ -243,11 +244,16 @@ async function run(options: CLIOptions): Promise<void> {
       }
     }
 
-    // Build objects after texture import so StaticTexture2D.URL can be set directly from imported URLs.
-    const resoniteObjects = convertObjectsWithTextureMap(
-      parseResult.objects,
+    const textureReferenceMap = await slotBuilder.createTextureAssets(
       assetImporter.getImportedTextures()
     );
+    const textureComponentMap = new Map<string, string>();
+    for (const [identifier, componentId] of textureReferenceMap) {
+      textureComponentMap.set(identifier, toTextureReference(componentId));
+    }
+
+    // Build objects after texture asset creation so materials reference shared StaticTexture2D components.
+    const resoniteObjects = convertObjectsWithTextureMap(parseResult.objects, textureComponentMap);
 
     // Build slots
     let builtSlots = 0;

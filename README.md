@@ -35,6 +35,7 @@ git clone https://github.com/blhsrwznrghfzpr/udonarium-resonite-importer.git
 cd udonarium-resonite-importer
 git submodule update --init --recursive
 npm install
+npm run setup:resonitelink
 npm run build
 ```
 

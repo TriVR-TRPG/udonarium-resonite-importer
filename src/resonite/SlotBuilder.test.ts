@@ -10,6 +10,7 @@ vi.mock('./ResoniteLinkClient', () => {
     ResoniteLinkClient: vi.fn().mockImplementation(() => ({
       addSlot: vi.fn(),
       updateSlot: vi.fn(),
+      addComponent: vi.fn(),
     })),
   };
 });
@@ -18,6 +19,7 @@ describe('SlotBuilder', () => {
   let mockClient: {
     addSlot: Mock;
     updateSlot: Mock;
+    addComponent: Mock;
   };
   let slotBuilder: SlotBuilder;
 
@@ -37,6 +39,7 @@ describe('SlotBuilder', () => {
     mockClient = {
       addSlot: vi.fn().mockResolvedValue('created-slot-id'),
       updateSlot: vi.fn().mockResolvedValue(undefined),
+      addComponent: vi.fn().mockResolvedValue('created-component-id'),
     };
     slotBuilder = new SlotBuilder(mockClient as unknown as ResoniteLinkClient);
   });
@@ -302,6 +305,49 @@ describe('SlotBuilder', () => {
     });
   });
 
+  describe('createTextureAssets', () => {
+    it('should create shared texture slots under Assets/Textures', async () => {
+      const textureMap = new Map<string, string>([['card-front.png', 'resdb:///card-front']]);
+
+      const result = await slotBuilder.createTextureAssets(textureMap);
+
+      expect(mockClient.addSlot).toHaveBeenCalledTimes(3);
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ name: 'Assets', parentId: 'Root' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ name: 'Textures' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({ name: 'card-front.png' })
+      );
+
+      const firstComponentCall = mockClient.addComponent.mock.calls[0][0] as {
+        componentType: string;
+        fields: Record<string, unknown>;
+      };
+      expect(firstComponentCall.componentType).toBe('[FrooxEngine]FrooxEngine.StaticTexture2D');
+      expect(firstComponentCall.fields).toMatchObject({
+        URL: { $type: 'Uri', value: 'resdb:///card-front' },
+      });
+
+      expect(result.get('card-front.png')).toMatch(/-static-texture$/);
+    });
+
+    it('should set point filter mode for gif identifiers', async () => {
+      const textureMap = new Map<string, string>([['anim.GIF', 'resdb:///anim']]);
+
+      await slotBuilder.createTextureAssets(textureMap);
+
+      const addComponentCall = mockClient.addComponent.mock.calls[0][0] as {
+        fields: Record<string, unknown>;
+      };
+      expect(addComponentCall.fields).toHaveProperty('FilterMode');
+    });
+  });
   describe('createImportGroup', () => {
     it('should create a group slot with UUID-based ID', async () => {
       await slotBuilder.createImportGroup('My Import');

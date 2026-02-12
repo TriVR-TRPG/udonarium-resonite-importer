@@ -1,6 +1,7 @@
 import { ResoniteComponent } from '../ResoniteObject';
 
 const TEXTURE_PLACEHOLDER_PREFIX = 'texture://';
+const TEXTURE_REFERENCE_PREFIX = 'texture-ref://';
 const GIF_EXTENSION_PATTERN = /\.gif(?:$|[?#])/i;
 
 type StaticTexture2DFields = {
@@ -41,10 +42,20 @@ function buildStaticTexture2DFields(textureValue: string): StaticTexture2DFields
 }
 
 function isGifTexture(textureValue: string): boolean {
+  if (textureValue.startsWith(TEXTURE_REFERENCE_PREFIX)) {
+    return false;
+  }
   if (textureValue.startsWith(TEXTURE_PLACEHOLDER_PREFIX)) {
     return GIF_EXTENSION_PATTERN.test(textureValue.slice(TEXTURE_PLACEHOLDER_PREFIX.length));
   }
   return GIF_EXTENSION_PATTERN.test(textureValue);
+}
+
+function parseTextureReferenceId(textureValue?: string): string | undefined {
+  if (!textureValue || !textureValue.startsWith(TEXTURE_REFERENCE_PREFIX)) {
+    return undefined;
+  }
+  return textureValue.slice(TEXTURE_REFERENCE_PREFIX.length);
 }
 
 export function buildQuadMeshComponents(
@@ -56,6 +67,8 @@ export function buildQuadMeshComponents(
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
   const textureId = `${slotId}-tex`;
+  const sharedTextureId = parseTextureReferenceId(textureValue);
+  const localTextureId = sharedTextureId ? undefined : textureId;
   const components: ResoniteComponent[] = [
     {
       id: meshId,
@@ -67,7 +80,7 @@ export function buildQuadMeshComponents(
     },
   ];
 
-  if (textureValue) {
+  if (textureValue && !sharedTextureId) {
     components.push({
       id: textureId,
       type: '[FrooxEngine]FrooxEngine.StaticTexture2D',
@@ -81,7 +94,7 @@ export function buildQuadMeshComponents(
     fields: {
       ...(textureValue
         ? {
-            Texture: { $type: 'reference', targetId: textureId },
+            Texture: { $type: 'reference', targetId: sharedTextureId ?? localTextureId! },
           }
         : {}),
       BlendMode: createCutoutBlendModeField(),
@@ -110,6 +123,8 @@ export function buildBoxMeshComponents(
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
   const textureId = `${slotId}-tex`;
+  const sharedTextureId = parseTextureReferenceId(textureValue);
+  const localTextureId = sharedTextureId ? undefined : textureId;
   const components: ResoniteComponent[] = [
     {
       id: meshId,
@@ -120,7 +135,7 @@ export function buildBoxMeshComponents(
     },
   ];
 
-  if (textureValue) {
+  if (textureValue && !sharedTextureId) {
     components.push({
       id: textureId,
       type: '[FrooxEngine]FrooxEngine.StaticTexture2D',
@@ -134,7 +149,7 @@ export function buildBoxMeshComponents(
     fields: {
       ...(textureValue
         ? {
-            AlbedoTexture: { $type: 'reference', targetId: textureId },
+            AlbedoTexture: { $type: 'reference', targetId: sharedTextureId ?? localTextureId! },
           }
         : {}),
       BlendMode: createCutoutBlendModeField(),
@@ -167,6 +182,10 @@ export function buildBoxColliderComponent(slotId: string, size: BoxSize): Resoni
 
 export function toTexturePlaceholder(identifier: string): string {
   return `${TEXTURE_PLACEHOLDER_PREFIX}${identifier}`;
+}
+
+export function toTextureReference(componentId: string): string {
+  return `${TEXTURE_REFERENCE_PREFIX}${componentId}`;
 }
 
 export function resolveTextureValue(
