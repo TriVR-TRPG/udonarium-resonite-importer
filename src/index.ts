@@ -40,12 +40,6 @@ interface CLIOptions {
 
 const program = new Command();
 
-const EXTERNAL_URL_PATTERN = /^https?:\/\//i;
-
-function isExternalTextureUrl(textureUrl: string): boolean {
-  return EXTERNAL_URL_PATTERN.test(textureUrl);
-}
-
 program
   .name('udonarium-resonite-importer')
   .description(t('cli.description'))
@@ -255,16 +249,12 @@ async function run(options: CLIOptions): Promise<void> {
     const textureReferenceMap = await slotBuilder.createTextureAssets(importedTextures);
     const textureComponentMap = new Map<string, string>();
 
-    for (const [identifier, textureValue] of importedTextures) {
+    for (const [identifier] of importedTextures) {
       const componentId = textureReferenceMap.get(identifier);
-      if (componentId) {
-        textureComponentMap.set(identifier, toTextureReference(componentId));
+      if (!componentId) {
         continue;
       }
-
-      if (isExternalTextureUrl(textureValue)) {
-        textureComponentMap.set(identifier, textureValue);
-      }
+      textureComponentMap.set(identifier, toTextureReference(componentId));
     }
 
     // Build objects after texture asset creation so materials reference shared StaticTexture2D components.

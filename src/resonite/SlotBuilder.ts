@@ -10,10 +10,9 @@ import { ResoniteLinkClient } from './ResoniteLinkClient';
 
 const SLOT_ID_PREFIX = 'udon-imp';
 const GIF_EXTENSION_PATTERN = /\.gif(?:$|[?#])/i;
-const EXTERNAL_URL_PATTERN = /^https?:\/\//i;
 
-function isExternalTextureUrl(textureUrl: string): boolean {
-  return EXTERNAL_URL_PATTERN.test(textureUrl);
+function shouldUsePointFilterMode(identifier: string, textureUrl: string): boolean {
+  return GIF_EXTENSION_PATTERN.test(identifier) || GIF_EXTENSION_PATTERN.test(textureUrl);
 }
 
 function isListField(value: unknown): boolean {
@@ -159,9 +158,7 @@ export class SlotBuilder {
 
   async createTextureAssets(textureMap: Map<string, string>): Promise<Map<string, string>> {
     const textureReferenceMap = new Map<string, string>();
-    const importableTextures = Array.from(textureMap.entries()).filter(
-      ([, textureUrl]) => !isExternalTextureUrl(textureUrl)
-    );
+    const importableTextures = Array.from(textureMap.entries());
 
     if (importableTextures.length === 0) {
       return textureReferenceMap;
@@ -187,7 +184,7 @@ export class SlotBuilder {
           URL: { $type: 'Uri', value: textureUrl },
           WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
           WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
-          ...(GIF_EXTENSION_PATTERN.test(identifier)
+          ...(shouldUsePointFilterMode(identifier, textureUrl)
             ? {
                 FilterMode: {
                   $type: 'enum?',

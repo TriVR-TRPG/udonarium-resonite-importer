@@ -337,19 +337,53 @@ describe('SlotBuilder', () => {
       expect(result.get('card-front.png')).toMatch(/-static-texture$/);
     });
 
-    it('should skip creating shared texture assets for external URLs', async () => {
+    it('should create shared texture assets for external URLs', async () => {
       const textureMap = new Map<string, string>([
         ['external-image', 'https://example.com/image.png'],
       ]);
 
       const result = await slotBuilder.createTextureAssets(textureMap);
 
-      expect(mockClient.addSlot).not.toHaveBeenCalled();
-      expect(mockClient.addComponent).not.toHaveBeenCalled();
-      expect(result.size).toBe(0);
+      expect(mockClient.addSlot).toHaveBeenCalledTimes(3);
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ name: 'Assets', parentId: 'Root' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ name: 'Textures' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({ name: 'external-image' })
+      );
+
+      const firstComponentCall = mockClient.addComponent.mock.calls[0][0] as {
+        componentType: string;
+        fields: Record<string, unknown>;
+      };
+      expect(firstComponentCall.componentType).toBe('[FrooxEngine]FrooxEngine.StaticTexture2D');
+      expect(firstComponentCall.fields).toMatchObject({
+        URL: { $type: 'Uri', value: 'https://example.com/image.png' },
+      });
+
+      expect(result.get('external-image')).toMatch(/-static-texture$/);
     });
     it('should set point filter mode for gif identifiers', async () => {
       const textureMap = new Map<string, string>([['anim.GIF', 'resdb:///anim']]);
+
+      await slotBuilder.createTextureAssets(textureMap);
+
+      const addComponentCall = mockClient.addComponent.mock.calls[0][0] as {
+        fields: Record<string, unknown>;
+      };
+      expect(addComponentCall.fields).toHaveProperty('FilterMode');
+    });
+
+    it('should set point filter mode for gif external URLs', async () => {
+      const textureMap = new Map<string, string>([
+        ['external-image', 'https://example.com/anim.gif'],
+      ]);
 
       await slotBuilder.createTextureAssets(textureMap);
 
