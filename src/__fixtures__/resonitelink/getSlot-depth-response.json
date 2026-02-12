@@ -5,7 +5,7 @@
     "parent": {
       "targetId": "Root",
       "targetType": "[FrooxEngine]FrooxEngine.Slot",
-      "id": "Reso_522F"
+      "id": "Reso_12877"
     },
     "position": {
       "value": {
@@ -13,7 +13,7 @@
         "y": 1,
         "z": 0
       },
-      "id": "Reso_5230"
+      "id": "Reso_12878"
     },
     "rotation": {
       "value": {
@@ -22,7 +22,7 @@
         "z": 0,
         "w": 1
       },
-      "id": "Reso_5231"
+      "id": "Reso_12879"
     },
     "scale": {
       "value": {
@@ -30,34 +30,34 @@
         "y": 0.1,
         "z": 0.1
       },
-      "id": "Reso_5232"
+      "id": "Reso_1287A"
     },
     "isActive": {
       "value": true,
-      "id": "Reso_5233"
+      "id": "Reso_1287B"
     },
     "isPersistent": {
       "value": false,
-      "id": "Reso_5234"
+      "id": "Reso_1287C"
     },
     "name": {
       "value": "DataCollectionTest",
-      "id": "Reso_5235"
+      "id": "Reso_1287D"
     },
     "tag": {
       "value": "",
-      "id": "Reso_5236"
+      "id": "Reso_1287E"
     },
     "orderOffset": {
       "value": 0,
-      "id": "Reso_5237"
+      "id": "Reso_1287F"
     },
     "components": [],
     "children": null,
-    "id": "test_collect_1770896341703",
+    "id": "test_collect_1770909221597",
     "isReferenceOnly": false
   },
-  "sourceMessageId": "666488aa-f24a-4792-b658-fb3b8ce6a7bf",
+  "sourceMessageId": "1ff87be7-2870-49d0-aa21-f5b54e655f24",
   "success": true,
   "errorInfo": null
 }

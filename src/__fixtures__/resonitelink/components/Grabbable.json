@@ -2,8 +2,8 @@
   "componentType": "[FrooxEngine]FrooxEngine.Grabbable",
   "addResponse": {
     "$type": "newEntityId",
-    "entityId": "test_[FrooxEngine]FrooxEngine_Grabbable_1770896341761",
-    "sourceMessageId": "c0bd1fe5-3f68-44f0-b321-966b9eabb45e",
+    "entityId": "test_[FrooxEngine]FrooxEngine_Grabbable_1770909221652",
+    "sourceMessageId": "6162106c-6d57-42b5-9faa-ad7cf648c321",
     "success": true,
     "errorInfo": null
   },
@@ -15,117 +15,117 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_5304"
+          "id": "Reso_12951"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_5305"
+          "id": "Reso_12952"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_5306"
+          "id": "Reso_12953"
         },
         "ReparentOnRelease": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_5307"
+          "id": "Reso_12954"
         },
         "PreserveUserSpace": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_5308"
+          "id": "Reso_12955"
         },
         "DestroyOnRelease": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_5309"
+          "id": "Reso_12956"
         },
         "GrabPriority": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_530A"
+          "id": "Reso_12957"
         },
         "GrabPriorityWhenGrabbed": {
           "$type": "int?",
           "value": null,
-          "id": "Reso_530B"
+          "id": "Reso_12958"
         },
         "CustomCanGrabCheck": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.GrabCheck",
-          "id": "Reso_530C"
+          "id": "Reso_12959"
         },
         "EditModeOnly": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_530D"
+          "id": "Reso_1295A"
         },
         "AllowSteal": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_530E"
+          "id": "Reso_1295B"
         },
         "DropOnDisable": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_530F"
+          "id": "Reso_1295C"
         },
         "ActiveUserFilter": {
           "$type": "enum",
           "value": "Disabled",
           "enumType": "ActiveUserHandling",
-          "id": "Reso_5310"
+          "id": "Reso_1295D"
         },
         "OnlyUsers": {
           "$type": "list",
           "elements": [],
-          "id": "Reso_5311"
+          "id": "Reso_1295E"
         },
         "Scalable": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_5312"
+          "id": "Reso_1295F"
         },
         "Receivable": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_5313"
+          "id": "Reso_12960"
         },
         "AllowOnlyPhysicalGrab": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_5314"
+          "id": "Reso_12961"
         },
         "_grabber": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.Grabber",
-          "id": "Reso_5315"
+          "id": "Reso_12962"
         },
         "_lastParent": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.Slot",
-          "id": "Reso_5316"
+          "id": "Reso_12963"
         },
         "_lastParentIsUserSpace": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_5317"
+          "id": "Reso_12964"
         },
         "__legacyActiveUserRootOnly": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_5318"
+          "id": "Reso_12965"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_Grabbable_1770896341761",
+      "id": "test_[FrooxEngine]FrooxEngine_Grabbable_1770909221652",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "1e873a2f-60de-4f92-8d19-85fc8ab90901",
+    "sourceMessageId": "40eb47e2-d2fb-4dc1-855e-d8709d598964",
     "success": true,
     "errorInfo": null
   }

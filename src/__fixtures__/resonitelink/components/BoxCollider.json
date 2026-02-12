@@ -2,8 +2,8 @@
   "componentType": "[FrooxEngine]FrooxEngine.BoxCollider",
   "addResponse": {
     "$type": "newEntityId",
-    "entityId": "test_[FrooxEngine]FrooxEngine_BoxCollider_1770896341765",
-    "sourceMessageId": "9b9c55bc-d3ff-47a7-b863-1a27db2fbf85",
+    "entityId": "test_[FrooxEngine]FrooxEngine_BoxCollider_1770909221656",
+    "sourceMessageId": "8feb6b8c-e751-4014-8af0-6c5dc06812b1",
     "success": true,
     "errorInfo": null
   },
@@ -15,17 +15,17 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_5319"
+          "id": "Reso_12966"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 1000000,
-          "id": "Reso_531A"
+          "id": "Reso_12967"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_531B"
+          "id": "Reso_12968"
         },
         "Offset": {
           "$type": "float3",
@@ -34,28 +34,28 @@
             "y": 0,
             "z": 0
           },
-          "id": "Reso_531C"
+          "id": "Reso_12969"
         },
         "Type": {
           "$type": "enum",
           "value": "Static",
           "enumType": "ColliderType",
-          "id": "Reso_531D"
+          "id": "Reso_1296A"
         },
         "Mass": {
           "$type": "float",
           "value": 1,
-          "id": "Reso_531E"
+          "id": "Reso_1296B"
         },
         "CharacterCollider": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_531F"
+          "id": "Reso_1296C"
         },
         "IgnoreRaycasts": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_5320"
+          "id": "Reso_1296D"
         },
         "Size": {
           "$type": "float3",
@@ -64,13 +64,13 @@
             "y": 1,
             "z": 1
           },
-          "id": "Reso_5321"
+          "id": "Reso_1296E"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_BoxCollider_1770896341765",
+      "id": "test_[FrooxEngine]FrooxEngine_BoxCollider_1770909221656",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "3f9ed51d-3d11-43b3-bc7c-a4bf15157408",
+    "sourceMessageId": "52e0d26e-9e06-4c27-8749-a50ffcd2ed0e",
     "success": true,
     "errorInfo": null
   }

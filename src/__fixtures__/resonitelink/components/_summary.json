@@ -1,7 +1,7 @@
 {
-  "testedAt": "2026-02-12T11:39:01.791Z",
-  "totalComponents": 13,
-  "successful": 13,
+  "testedAt": "2026-02-12T15:13:41.674Z",
+  "totalComponents": 14,
+  "successful": 14,
   "failed": 0,
   "results": {
     "[FrooxEngine]FrooxEngine.QuadMesh": {
@@ -11,6 +11,9 @@
       "success": true
     },
     "[FrooxEngine]FrooxEngine.MeshRenderer": {
+      "success": true
+    },
+    "[FrooxEngine]FrooxEngine.MainTexturePropertyBlock": {
       "success": true
     },
     "[FrooxEngine]FrooxEngine.XiexeToonMaterial": {

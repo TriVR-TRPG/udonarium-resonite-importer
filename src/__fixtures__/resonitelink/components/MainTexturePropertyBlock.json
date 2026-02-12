@@ -1,0 +1,49 @@
+{
+  "componentType": "[FrooxEngine]FrooxEngine.MainTexturePropertyBlock",
+  "addResponse": {
+    "$type": "newEntityId",
+    "entityId": "test_[FrooxEngine]FrooxEngine_MainTexturePropertyBlock_1770909221635",
+    "sourceMessageId": "208bf29d-1372-44e4-9d23-c2503e04ff12",
+    "success": true,
+    "errorInfo": null
+  },
+  "getResponse": {
+    "$type": "componentData",
+    "data": {
+      "componentType": "[FrooxEngine]FrooxEngine.MainTexturePropertyBlock",
+      "members": {
+        "persistent": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_128A3"
+        },
+        "UpdateOrder": {
+          "$type": "int",
+          "value": 0,
+          "id": "Reso_128A4"
+        },
+        "Enabled": {
+          "$type": "bool",
+          "value": true,
+          "id": "Reso_128A5"
+        },
+        "HighPriorityIntegration": {
+          "$type": "bool",
+          "value": false,
+          "id": "Reso_128A6"
+        },
+        "Texture": {
+          "$type": "reference",
+          "targetId": null,
+          "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
+          "id": "Reso_128A7"
+        }
+      },
+      "id": "test_[FrooxEngine]FrooxEngine_MainTexturePropertyBlock_1770909221635",
+      "isReferenceOnly": false
+    },
+    "sourceMessageId": "16acd861-1ab8-4453-8e7b-2caf1abb1f72",
+    "success": true,
+    "errorInfo": null
+  }
+}
