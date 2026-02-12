@@ -20,7 +20,7 @@ jobs:
         with:
           submodules: recursive
           ref: ${{ github.head_ref }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.SUBMODULE_TOKEN != '' && secrets.SUBMODULE_TOKEN || github.token }}
 
       - name: Setup mise
         uses: jdx/mise-action@v2
