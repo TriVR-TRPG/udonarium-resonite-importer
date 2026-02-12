@@ -414,12 +414,12 @@ export class ResoniteLinkClient {
   /**
    * Get the root slot
    */
-  getRootSlot(): Promise<ClientSlot | undefined> {
+  async getRootSlot(): Promise<ClientSlot | undefined> {
     if (!this.isConnected()) {
       throw new Error('Not connected to ResoniteLink');
     }
 
-    return this.client.getSlot('Root');
+    return await this.client.getSlot('Root');
   }
 
   /**
