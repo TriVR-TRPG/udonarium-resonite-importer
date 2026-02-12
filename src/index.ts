@@ -18,6 +18,7 @@ import { extractZip } from './parser/ZipExtractor';
 import { parseXmlFiles } from './parser/XmlParser';
 import { convertObjects, convertObjectsWithTextureMap } from './converter/ObjectConverter';
 import { toTextureReference } from './converter/objectConverters/componentBuilders';
+import { prepareSharedMeshDefinitions, resolveSharedMeshReferences } from './converter/sharedMesh';
 import { ResoniteLinkClient } from './resonite/ResoniteLinkClient';
 import { SlotBuilder } from './resonite/SlotBuilder';
 import { AssetImporter } from './resonite/AssetImporter';
@@ -268,6 +269,9 @@ async function run(options: CLIOptions): Promise<void> {
 
     // Build objects after texture asset creation so materials reference shared StaticTexture2D components.
     const resoniteObjects = convertObjectsWithTextureMap(parseResult.objects, textureComponentMap);
+    const sharedMeshDefinitions = prepareSharedMeshDefinitions(resoniteObjects);
+    const meshReferenceMap = await slotBuilder.createMeshAssets(sharedMeshDefinitions);
+    resolveSharedMeshReferences(resoniteObjects, meshReferenceMap);
 
     // Build slots
     let builtSlots = 0;

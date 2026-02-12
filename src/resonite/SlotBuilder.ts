@@ -4,6 +4,7 @@
 
 import { randomUUID } from 'crypto';
 import { ResoniteObject, Vector3 } from '../converter/ResoniteObject';
+import { SharedMeshDefinition } from '../converter/sharedMesh';
 import { IMPORT_GROUP_SCALE } from '../config/MappingConfig';
 import { ResoniteLinkClient } from './ResoniteLinkClient';
 
@@ -46,6 +47,9 @@ export interface SlotBuildResult {
 export class SlotBuilder {
   private client: ResoniteLinkClient;
   private rootSlotId: string;
+  private assetsSlotId?: string;
+  private texturesSlotId?: string;
+  private meshesSlotId?: string;
 
   constructor(client: ResoniteLinkClient, rootSlotId = 'Root') {
     this.client = client;
@@ -163,21 +167,7 @@ export class SlotBuilder {
       return textureReferenceMap;
     }
 
-    const assetsSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
-    await this.client.addSlot({
-      id: assetsSlotId,
-      parentId: this.rootSlotId,
-      name: 'Assets',
-      position: { x: 0, y: 0, z: 0 },
-    });
-
-    const texturesSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
-    await this.client.addSlot({
-      id: texturesSlotId,
-      parentId: assetsSlotId,
-      name: 'Textures',
-      position: { x: 0, y: 0, z: 0 },
-    });
+    const texturesSlotId = await this.ensureTexturesSlot();
 
     for (const [identifier, textureUrl] of importableTextures) {
       const textureSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
@@ -213,5 +203,82 @@ export class SlotBuilder {
     }
 
     return textureReferenceMap;
+  }
+
+  async createMeshAssets(meshDefinitions: SharedMeshDefinition[]): Promise<Map<string, string>> {
+    const meshReferenceMap = new Map<string, string>();
+
+    if (meshDefinitions.length === 0) {
+      return meshReferenceMap;
+    }
+
+    const meshesSlotId = await this.ensureMeshesSlot();
+
+    for (const meshDefinition of meshDefinitions) {
+      const meshSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
+      await this.client.addSlot({
+        id: meshSlotId,
+        parentId: meshesSlotId,
+        name: meshDefinition.name,
+        position: { x: 0, y: 0, z: 0 },
+      });
+
+      const meshComponentId = `${meshSlotId}-mesh`;
+      await this.client.addComponent({
+        id: meshComponentId,
+        slotId: meshSlotId,
+        componentType: meshDefinition.componentType,
+        fields: {
+          Size: { $type: meshDefinition.sizeFieldType, value: meshDefinition.sizeValue },
+          ...(meshDefinition.dualSided ? { DualSided: { $type: 'bool', value: true } } : {}),
+        },
+      });
+
+      meshReferenceMap.set(meshDefinition.key, meshComponentId);
+    }
+
+    return meshReferenceMap;
+  }
+
+  private async ensureAssetsSlot(): Promise<string> {
+    if (this.assetsSlotId) {
+      return this.assetsSlotId;
+    }
+    this.assetsSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
+    await this.client.addSlot({
+      id: this.assetsSlotId,
+      parentId: this.rootSlotId,
+      name: 'Assets',
+      position: { x: 0, y: 0, z: 0 },
+    });
+    return this.assetsSlotId;
+  }
+
+  private async ensureTexturesSlot(): Promise<string> {
+    if (this.texturesSlotId) {
+      return this.texturesSlotId;
+    }
+    this.texturesSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
+    await this.client.addSlot({
+      id: this.texturesSlotId,
+      parentId: await this.ensureAssetsSlot(),
+      name: 'Textures',
+      position: { x: 0, y: 0, z: 0 },
+    });
+    return this.texturesSlotId;
+  }
+
+  private async ensureMeshesSlot(): Promise<string> {
+    if (this.meshesSlotId) {
+      return this.meshesSlotId;
+    }
+    this.meshesSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
+    await this.client.addSlot({
+      id: this.meshesSlotId,
+      parentId: await this.ensureAssetsSlot(),
+      name: 'Meshes',
+      position: { x: 0, y: 0, z: 0 },
+    });
+    return this.meshesSlotId;
   }
 }

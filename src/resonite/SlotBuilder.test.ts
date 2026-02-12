@@ -359,6 +359,71 @@ describe('SlotBuilder', () => {
       expect(addComponentCall.fields).toHaveProperty('FilterMode');
     });
   });
+
+  describe('createMeshAssets', () => {
+    it('should create shared mesh slots under Assets/Meshes', async () => {
+      const result = await slotBuilder.createMeshAssets([
+        {
+          key: 'box:1,1,1',
+          name: 'BoxMesh_1x1x1',
+          componentType: '[FrooxEngine]FrooxEngine.BoxMesh',
+          sizeFieldType: 'float3',
+          sizeValue: { x: 1, y: 1, z: 1 },
+        },
+      ]);
+
+      expect(mockClient.addSlot).toHaveBeenCalledTimes(3);
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ name: 'Assets', parentId: 'Root' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ name: 'Meshes' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({ name: 'BoxMesh_1x1x1' })
+      );
+
+      const firstComponentCall = mockClient.addComponent.mock.calls[0][0] as {
+        componentType: string;
+        fields: Record<string, unknown>;
+      };
+      expect(firstComponentCall.componentType).toBe('[FrooxEngine]FrooxEngine.BoxMesh');
+      expect(firstComponentCall.fields).toMatchObject({
+        Size: { $type: 'float3', value: { x: 1, y: 1, z: 1 } },
+      });
+
+      expect(result.get('box:1,1,1')).toMatch(/-mesh$/);
+    });
+
+    it('should reuse existing Assets slot when texture assets already exist', async () => {
+      await slotBuilder.createTextureAssets(new Map<string, string>([['a.png', 'resdb:///a']]));
+      mockClient.addSlot.mockClear();
+
+      await slotBuilder.createMeshAssets([
+        {
+          key: 'quad:2,3',
+          name: 'QuadMesh_2x3',
+          componentType: '[FrooxEngine]FrooxEngine.QuadMesh',
+          sizeFieldType: 'float2',
+          sizeValue: { x: 2, y: 3 },
+        },
+      ]);
+
+      expect(mockClient.addSlot).toHaveBeenCalledTimes(2);
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ name: 'Meshes' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ name: 'QuadMesh_2x3' })
+      );
+    });
+  });
+
   describe('createImportGroup', () => {
     it('should create a group slot with UUID-based ID', async () => {
       await slotBuilder.createImportGroup('My Import');
