@@ -7,7 +7,7 @@
     "udonarium-resonite-importer": "./dist/index.js"
   },
   "scripts": {
-    "clean": "rm -rf dist release coverage",
+    "clean": "rm -rf dist release coverage parsed",
     "build": "run-p build:*",
     "build:cli": "tsc -p tsconfig.cli.json",
     "build:gui": "tsc -p tsconfig.gui.json",

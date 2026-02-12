@@ -157,7 +157,12 @@ async function run(options: CLIOptions): Promise<void> {
       const replacer = (_key: string, value: unknown): unknown =>
         value instanceof Map ? Object.fromEntries(value as Map<string, unknown>) : value;
       const jsonContent = JSON.stringify(parseResult.objects, replacer, 2);
-      const jsonPath = inputPath.replace(/\.zip$/i, '') + '.parsed.json';
+      const parsedDir = path.resolve(__dirname, '..', 'parsed');
+      if (!fs.existsSync(parsedDir)) {
+        fs.mkdirSync(parsedDir, { recursive: true });
+      }
+      const baseName = path.basename(inputPath).replace(/\.zip$/i, '') + '.parsed.json';
+      const jsonPath = path.join(parsedDir, baseName);
       fs.writeFileSync(jsonPath, jsonContent, 'utf-8');
       console.log(chalk.bold(`Parsed Udonarium Objects → ${jsonPath}`));
       console.log();

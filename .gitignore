@@ -26,7 +26,9 @@ coverage/
 tmp/
 temp/
 *.tmp
-*.parsed.json
+
+# Parsed JSON output
+parsed/
 
 # Environment variables
 .env
