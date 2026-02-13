@@ -6,8 +6,9 @@
 
 ## 現在の仕様
 
-- `terrain.ja.md`: Terrain の変換ルールとコンポーネント構成
-- `texture-placeholders.ja.md`: `texture://` / `texture-ref://` の使い分けと導入理由
+- [Terrain](terrain.ja.md): Terrain の変換ルールとコンポーネント構成
+- [Table Mask](table-mask.ja.md): Table Mask の変換ルールとコンポーネント／マテリアル仕様
+- [テクスチャプレースホルダー](texture-placeholders.ja.md): `texture://` / `texture-ref://` の使い分けと導入理由
 
 ## 今後追加予定
 

@@ -86,6 +86,7 @@ export interface GameTable extends BaseUdonariumObject {
 
 export interface TableMask extends BaseUdonariumObject {
   type: 'table-mask';
+  isLock: boolean;
   width: number;
   height: number;
 }

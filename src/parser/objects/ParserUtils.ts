@@ -114,9 +114,9 @@ export function parsePosition(root: Record<string, unknown>): {
   y: number;
   z: number;
 } {
-  const x = getNumberValue(root['@_location.x']) || 0;
-  const y = getNumberValue(root['@_location.y']) || 0;
-  const z = getNumberValue(root['@_posZ']) || 0;
+  const x = getNumberValue(root['@_location.x']) ?? 0;
+  const y = getNumberValue(root['@_location.y']) ?? 0;
+  const z = getNumberValue(root['@_posZ']) ?? 0;
   return { x, y, z };
 }
 

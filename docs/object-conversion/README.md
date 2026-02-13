@@ -6,8 +6,9 @@ This directory contains per-object conversion specifications from Udonarium to R
 
 ## Current Specs
 
-- `terrain.md`: Terrain conversion rules and component structure
-- `table-mask.md`: Table-mask conversion rules and component/material behavior
+- [Terrain](terrain.md): Terrain conversion rules and component structure
+- [Table Mask](table-mask.md): Table-mask conversion rules and component/material behavior
+- [Texture Placeholders](texture-placeholders.ja.md): `texture://` / `texture-ref://` usage and rationale
 
 ## Planned Specs
 

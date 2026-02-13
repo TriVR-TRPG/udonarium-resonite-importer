@@ -10,6 +10,7 @@ describe('applyTableMaskConversion', () => {
       type: 'table-mask',
       name: 'Mask',
       position: { x: 0, y: 0, z: 0 },
+      isLock: false,
       width: 5,
       height: 3,
       images: [],
@@ -63,6 +64,7 @@ describe('applyTableMaskConversion', () => {
       type: 'table-mask',
       name: 'Mask With Image',
       position: { x: 0, y: 0, z: 0 },
+      isLock: false,
       width: 4,
       height: 2,
       images: [{ identifier: 'none_icon', name: 'mask' }],
@@ -89,5 +91,66 @@ describe('applyTableMaskConversion', () => {
         value: { r: 1, g: 1, b: 1, a: 0.7, profile: 'Linear' },
       },
     });
+  });
+
+  it('adds Grabbable component when isLock is false', () => {
+    const udonObj: TableMask = {
+      id: 'mask-unlocked',
+      type: 'table-mask',
+      name: 'Unlocked Mask',
+      position: { x: 0, y: 0, z: 0 },
+      isLock: false,
+      width: 4,
+      height: 4,
+      images: [],
+      properties: new Map(),
+    };
+    const resoniteObj: ResoniteObject = {
+      id: 'slot-mask-unlocked',
+      name: 'Unlocked Mask',
+      position: { x: 0, y: 0, z: 0 },
+      rotation: { x: 0, y: 0, z: 0 },
+      textures: [],
+      components: [],
+      children: [],
+    };
+
+    applyTableMaskConversion(udonObj, resoniteObj);
+
+    const grabbable = resoniteObj.components.find(
+      (component) => component.type === '[FrooxEngine]FrooxEngine.Grabbable'
+    );
+    expect(grabbable).toBeDefined();
+    expect(grabbable?.id).toBe('slot-mask-unlocked-grabbable');
+  });
+
+  it('does not add Grabbable component when isLock is true', () => {
+    const udonObj: TableMask = {
+      id: 'mask-locked',
+      type: 'table-mask',
+      name: 'Locked Mask',
+      position: { x: 0, y: 0, z: 0 },
+      isLock: true,
+      width: 4,
+      height: 4,
+      images: [],
+      properties: new Map(),
+    };
+    const resoniteObj: ResoniteObject = {
+      id: 'slot-mask-locked',
+      name: 'Locked Mask',
+      position: { x: 0, y: 0, z: 0 },
+      rotation: { x: 0, y: 0, z: 0 },
+      textures: [],
+      components: [],
+      children: [],
+    };
+
+    applyTableMaskConversion(udonObj, resoniteObj);
+
+    const grabbable = resoniteObj.components.find(
+      (component) => component.type === '[FrooxEngine]FrooxEngine.Grabbable'
+    );
+    expect(grabbable).toBeUndefined();
   });
 });

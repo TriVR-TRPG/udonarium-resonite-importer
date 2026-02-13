@@ -46,6 +46,13 @@ export function applyTableMaskConversion(
       z: TABLE_MASK_COLLIDER_THICKNESS,
     }),
   ];
+  if (!udonObj.isLock) {
+    resoniteObj.components.push({
+      id: `${resoniteObj.id}-grabbable`,
+      type: '[FrooxEngine]FrooxEngine.Grabbable',
+      fields: {},
+    });
+  }
 
   const material = resoniteObj.components.find(
     (component) => component.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'

@@ -199,6 +199,7 @@ describe('ObjectConverter', () => {
         const tableMask: TableMask = {
           ...createBaseObject(),
           type: 'table-mask',
+          isLock: false,
           width: 5,
           height: 4,
           properties: new Map([['opacity', 30]]),

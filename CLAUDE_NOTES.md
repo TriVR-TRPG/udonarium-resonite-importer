@@ -41,6 +41,7 @@ ZIP → ZipExtractor → XmlParser → UdonariumObject[]
 - `importTexture2DRawData`: 生のRGBAピクセルデータを期待（エンコード済み画像はNG）
 - AssetImporterがZIPから一時ファイルに展開し、`importTexture(filePath)`で直接インポート
 - GIF画像は `StaticTexture2D.FilterMode = Point` を設定
+- `StaticTexture2D.WrapModeU` / `WrapModeV` は `Clamp` に設定
 
 ### 既知画像識別子
 - `src/config/MappingConfig.ts` の `KNOWN_IMAGE_IDENTIFIERS` マップに定義
@@ -49,6 +50,10 @@ ZIP → ZipExtractor → XmlParser → UdonariumObject[]
 
 ### FrooxEngineコンポーネント型形式
 `[FrooxEngine]FrooxEngine.ComponentName`（例: `[FrooxEngine]FrooxEngine.QuadMesh`）
+
+### ResoniteLink の型指定に関する注意
+- enum 値は `$type: 'enum'` を使用すること。`enum?`（nullable型）だとコンポーネント作成に失敗する。
+- 例: `BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' }`
 
 ### SyncList の2段階プロトコル（重要）
 MeshRenderer.Materials 等の SyncList は `addComponent` / 単純な `updateComponent` では設定できない。
@@ -79,17 +84,27 @@ resonite.z = -udonarium.y    * SCALE_FACTOR (0.02)
 - オブジェクト寸法は Udonarium の値をそのまま Mesh の `Size` に反映（`QuadMesh.Size` / `BoxMesh.Size`）。
 - `ResoniteObject` 型に `scale` フィールドは持たない（常にデフォルト 1,1,1）。
 - インポートルートコンテナに `IMPORT_GROUP_SCALE`（0.1）を適用して最終サイズを調整。
-- `BoxCollider.Size` はメッシュ `Size` から自動計算。`QuadMesh` は厚み `z=0.01` を付与。
+- `BoxCollider.Size` は各 converter が個別に定義。`QuadMesh` は厚み `z=0.01` を付与。
 
 ### 親子関係
 - `<game-table>` 内のオブジェクト（terrain, character, card-stack 等）は `GameTable.children` に格納。
 - `<card-stack>` 内の `<card>` は `CardStack.cards` に格納（`<node name="cardRoot">` 内を探索）。
 - `XmlParser` のコンテナタグ（`game-table`, `card-stack`）は再帰探索をスキップし、重複を防止。
 - `GameTable.children` の型は `GameTableChild[]`（`GameTable` を除外して循環型参照を回避）。
-- テーブルの `position.y -= 0.1` オフセットは廃止（子要素の相対座標に影響するため）。
 
 ### マテリアル設定
-- すべてのマテリアルは `BlendMode = Cutout` に統一（`UnlitMaterial`, `PBS_Metallic` 共通）。
+- 基本は `BlendMode = Cutout`（character, card, terrain, table, text-note）。
+- table-mask は `BlendMode = Alpha`（半透明表現のため）。
+
+### スロット active 制御
+- `ResoniteObject` に `isActive?: boolean` を定義。
+- `SlotBuilder` / `ResoniteLinkClient.addSlot` で `isActive` を受け渡し可能。
+- terrain の `-walls` スロット（`mode === 1` で非表示）等に使用。
+
+### Grabbable コンポーネント
+- terrain: `isLocked === false` のとき付与。
+- table-mask: `isLock === false` のとき付与。
+- 注意: Udonarium の XML 属性名が terrain は `isLocked`、table-mask は `isLock` と異なるため、型プロパティ名もそれぞれ `isLocked` / `isLock` で定義。
 
 ### インポートの上書き動作
 - ルートコンテナに `IMPORT_ROOT_TAG`（`udonarium-resonite-importer:root`）を付与。
@@ -97,6 +112,11 @@ resonite.z = -udonarium.y    * SCALE_FACTOR (0.02)
 - CLI（`src/index.ts`）とGUI（`src/gui/main.ts`）の両方で同じクリーンアップを実施。
 - 旧インポートが存在する場合は、削除前に `position` / `rotation` / `scale` を取得し、
   新規インポートのルートコンテナに引き継ぐ。
+
+### パーサーのデフォルト値
+- 数値フィールドのデフォルト値は `??`（nullish coalescing）で設定すること。
+- `||` を使うと `0` が falsy と判定され、意図せずデフォルト値に置換される。
+- 文字列フィールド（`name || fileName` 等）は空文字列をフォールバックさせたいので `||` で正しい。
 
 ### Electron IPC通信
 - `select-file`: ファイル選択ダイアログ
@@ -107,6 +127,10 @@ resonite.z = -udonarium.y    * SCALE_FACTOR (0.02)
 ### デバッグツール
 - `npm run dev` 実行時: パース結果を `parsed/{入力ZIP名}.parsed.json` に自動出力（`__dirname`基準）
 - `--dry-run --verbose`: ResoniteLink接続なしで解析結果を表示
+
+## オブジェクト変換仕様
+
+種別ごとの詳細は [docs/object-conversion/](docs/object-conversion/README.ja.md) を参照。
 
 ## モジュール構成
 
@@ -123,12 +147,12 @@ src/
 │       ├── CharacterParser.ts
 │       ├── CardParser.ts
 │       ├── TerrainParser.ts
-│       ├── TableParser.ts
+│       ├── TableParser.ts            # GameTable + TableMask パーサー
 │       └── TextNoteParser.ts
 ├── converter/
 │   ├── UdonariumObject.ts            # Udonariumオブジェクト型定義
 │   ├── ResoniteObject.ts             # Resoniteオブジェクト型定義
-│   ├── ObjectConverter.ts            # 変換ディスパッチ + BoxCollider付与
+│   ├── ObjectConverter.ts            # 変換ディスパッチ
 │   └── objectConverters/             # 種別ごとの変換ロジック
 │       ├── componentBuilders.ts      # QuadMesh/BoxMesh コンポーネント生成
 │       ├── characterConverter.ts
@@ -136,6 +160,7 @@ src/
 │       ├── cardStackConverter.ts
 │       ├── terrainConverter.ts
 │       ├── tableConverter.ts
+│       ├── tableMaskConverter.ts
 │       └── textNoteConverter.ts
 ├── resonite/
 │   ├── ResoniteLinkClient.ts         # WebSocketクライアント
@@ -151,83 +176,3 @@ src/
 - エラーハンドリングの強化（接続リトライロジック等）
 - GUI版のUX改善（ドラッグ&ドロップ対応等）
 - テストカバレッジ向上
-
-## 更新履歴
-
-### 2026-02-11
-- `StaticTexture2D` の `WrapModeU` / `WrapModeV` を `Clamp` に設定。
-  - ResoniteLink の要求型に合わせて `$type: 'enum'` を使用（`enum?` だと作成失敗）。
-- terrain 表現を `BoxMesh` から `QuadMesh` ベースへ変更。
-  - 上面（`-top`）と壁面（`-walls` 配下の front/back/left/right）で構成。
-  - 物理判定は従来通り親スロットの `BoxCollider` を使用。
-- terrain の軸対応を修正: `width->X`, `height->Y`, `depth->Z`。
-- Udonarium の座標を「端基準」として扱い、中心基準の Resonite へオフセット補正を追加。
-  - character / card / card-stack / terrain / text-note で `+half size`（Zは符号考慮）を適用。
-- terrain の属性パースを拡張。
-  - `isLocked`, `mode`, `rotate`, `locationName` を `Terrain` 型に追加し、`TerrainParser` で取得。
-- terrain の可動化対応:
-  - `isLocked === false` のときのみ親 terrain スロットに `Grabbable` を追加。
-- terrain の壁表示制御:
-  - `mode === 1` のとき `-walls` スロットは生成したまま `isActive=false`。
-  - それ以外は `isActive=true`。
-- terrain の回転対応:
-  - Udonarium の `rotate` を Resonite の `rotation.y` に反映。
-  - fixture `sample-terrain.zip` の「地形-回転」期待値:
-    - `position = (1, 1, -1)`
-    - `rotation = (0, 30, 0)`
-- スロット active 制御基盤を追加。
-  - `ResoniteObject` に `isActive?: boolean` を追加。
-  - `SlotBuilder` / `ResoniteLinkClient.addSlot` で `isActive` を受け渡し可能にした。
-
-### 2026-02-12
-- `ResoniteObject` 型から `scale` フィールドを削除（常にデフォルト値のため不要）。
-  - `addSlot` の `scale` 引数を optional 化（未指定時は `{1,1,1}`）。
-- テーブル surface の位置を `(width/2, 0, -height/2)` にオフセット（QuadMesh の原点補正）。
-- カードに Y+0.001 オフセットを追加（テーブル surface との z-fighting 防止）。
-- インポートルートのタグ管理を追加。
-  - `SlotBuilder.createImportGroup()` で作成するルートスロットに `IMPORT_ROOT_TAG` を設定。
-  - `ResoniteLinkClient` に `removeSlot` / `getSlotTag` / `removeRootChildrenByTag` を追加。
-  - 新規インポート前に同タグの既存ルートを削除するフローを CLI/GUI に導入。
-- 再インポート時にルート変換を保持するよう改善。
-  - `ResoniteLinkClient.captureTransformAndRemoveRootChildrenByTag()` を追加し、
-    旧ルート削除前の `position` / `rotation` / `scale` を取得。
-  - `SlotBuilder.createImportGroup(name, transform?)` で取得した変換を新規ルートに適用。
-- Terrain の `width` / `height` / `depth` で `0` が `1` に上書きされる問題を修正。
-  - `TerrainParser` のデフォルト値適用を `|| 1` から `?? 1` に変更。
-  - `width=0` / `height=0` / `depth=0` の単体テストを追加。
-
-### 2026-02-10
-- `game-table` の親子関係保持: 子オブジェクトを `GameTable.children` に格納。
-- `card-stack` の重複カード問題を修正: `<node name="cardRoot">` 内のカード探索を追加。
-- コンテナタグ（`game-table`, `card-stack`）の再帰探索スキップで重複防止。
-- テーブルの Y オフセット（-0.1）を廃止。
-- XML座標パースを `location.x` / `location.y` / `posZ` に統一。
-- オブジェクトの原点位置の違い（底面 vs 中心）に対応（terrain: `+depth/2`, character: `+size.y/2`）。
-- terrain の寸法マッピングを修正: Udonarium `depth`→Resonite Y軸、`height`→Z軸。
-- キャラクター画像の既知識別子を `KNOWN_IMAGE_IDENTIFIERS` に追加。
-- テーブル親スロットの回転を廃止し、見た目用 `-surface` 子スロットを回転（x=90）させる構成に変更。
-  - 目的: テーブル配下の子オブジェクト（地形など）の座標ずれ防止。
-  - テーブルの `BoxCollider` は `-surface` 子スロット（MeshRenderer と同じスロット）に配置。
-- コライダー実装を共通自動生成から各 converter 定義へ移行。
-  - `ObjectConverter` のメッシュ依存 `ensureBoxCollider` を削除。
-  - `character/card/card-stack/terrain/table/text-note` それぞれで
-    `BoxCollider` の `Size` を個別に指定。
-
-### 2026-02-09
-- GIF画像に `StaticTexture2D.FilterMode = Point` を設定。
-- 全マテリアルを `BlendMode = Cutout` に統一。
-- サイズ基準を「1マス=1m」に統一し、`Slot.scale` ではなく Mesh `Size` で寸法を定義。
-- `SIZE_MULTIPLIER` を廃止、`IMPORT_GROUP_SCALE`（0.1）をルートコンテナに適用。
-- `BoxCollider.Size` をメッシュ `Size` から自動計算するよう変更。
-- カード・テーブルの Quad を水平配置（rotation.x=90）に変更。
-
-### 2026-02-07〜08
-- `UdonariumObject` → `ResoniteObject` 変換パイプライン実装。
-- オブジェクト種別ごとの converter を `src/converter/objectConverters/` に分離。
-- テクスチャ処理フローを「先に asset import、後でオブジェクト生成」に変更。
-- MeshRenderer.Materials の SyncList 2段階プロトコルを実装。
-- 既知画像識別子（`KNOWN_IMAGE_IDENTIFIERS`）の外部URL解決を追加。
-- dev mode（ts-node）実行時にパース結果を `parsed/` に自動出力。
-- `registerExternalUrls.ts` で外部URL画像登録処理を共通化。
-- 各converter の単体テストを追加。
-- ESLint 9 flat config 移行、依存ライブラリ更新。

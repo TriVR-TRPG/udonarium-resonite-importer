@@ -14,6 +14,7 @@ Defines conversion behavior for Udonarium `table-mask` objects into Resonite slo
 - `position.z` (`posZ`)
 - `width`
 - `height`
+- `isLock` (attribute, optional) — note: terrain uses `isLocked`, table-mask uses `isLock`
 - `image.imageIdentifier` (optional)
 - `common.opacity` (`numberResource.currentValue`, optional)
 
@@ -21,11 +22,13 @@ Defines conversion behavior for Udonarium `table-mask` objects into Resonite slo
 
 `parseTableMask(...)` stores:
 
+- `isLock` from `isLock` attribute (boolean)
 - `images[0]` from `imageIdentifier` when present
 - `properties.opacity` from `opacity.currentValue` when present
 
 Defaults:
 
+- `isLock = false` when missing
 - `width = 4` when missing
 - `height = 4` when missing
 - `opacity = 100%` equivalent at conversion time when missing
@@ -59,6 +62,7 @@ Additional placement:
   - local texture: `StaticTexture2D` + `MainTexturePropertyBlock`
   - shared texture reference: `MaterialPropertyBlocks` reference only
 - `BoxCollider` (`Size = (width, height, 0.01)`)
+- `Grabbable` only when `isLock == false`
 
 ## 6. Material Rules
 
@@ -81,3 +85,4 @@ Therefore image/no-image masks (different color settings) become different share
 3. slot orientation and center offset are correct
 4. collider exists with thickness `0.01`
 5. mask materials are not merged when their fields differ
+6. unlocked mask has `Grabbable`, locked mask does not
