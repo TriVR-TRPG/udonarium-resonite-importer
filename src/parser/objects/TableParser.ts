@@ -103,7 +103,7 @@ export function parseTableMask(data: unknown, fileName: string): TableMask {
 
   // Parse position and attributes
   const position = parsePosition(root);
-  const isLocked = getBooleanValue(root['@_isLocked']) ?? false;
+  const isLocked = getBooleanValue(root['@_isLock']) ?? false;
   const properties = new Map<string, string | number>();
   if (opacity !== undefined) {
     properties.set('opacity', opacity);

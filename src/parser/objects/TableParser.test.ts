@@ -392,7 +392,7 @@ describe('TableParser', () => {
     it('should parse isLocked as false when attribute is "false"', () => {
       const data = {
         '@_identifier': 'mask-unlocked',
-        '@_isLocked': 'false',
+        '@_isLock': 'false',
         data: [
           {
             '@_name': 'table-mask',
@@ -409,7 +409,7 @@ describe('TableParser', () => {
     it('should parse isLocked as true when attribute is "true"', () => {
       const data = {
         '@_identifier': 'mask-locked',
-        '@_isLocked': 'true',
+        '@_isLock': 'true',
         data: [
           {
             '@_name': 'table-mask',
