@@ -14,6 +14,7 @@ Udonarium の `table-mask` を Resonite の slot/component へ変換する仕様
 - `position.z` (`posZ`)
 - `width`
 - `height`
+- `isLock`（属性、任意） — 注意: terrain は `isLocked`、table-mask は `isLock` と属性名が異なる
 - `image.imageIdentifier`（任意）
 - `common.opacity`（`numberResource.currentValue`、任意）
 
@@ -21,11 +22,13 @@ Udonarium の `table-mask` を Resonite の slot/component へ変換する仕様
 
 `parseTableMask(...)` は以下を保持します。
 
+- `isLock` 属性から `isLocked`（boolean）を格納
 - `imageIdentifier` があれば `images[0]` に格納
 - `opacity.currentValue` があれば `properties.opacity` に格納
 
 デフォルト:
 
+- `isLocked` 未指定時は `false`
 - `width` 未指定時は `4`
 - `height` 未指定時は `4`
 - `opacity` 未指定時は変換時に 100% として扱う
@@ -59,6 +62,7 @@ Udonarium の `table-mask` を Resonite の slot/component へ変換する仕様
   - ローカル画像: `StaticTexture2D` + `MainTexturePropertyBlock`
   - 共有テクスチャ参照: `MaterialPropertyBlocks` の参照のみ
 - `BoxCollider`（`Size = (width, height, 0.01)`）
+- `Grabbable`（`isLocked == false` の場合のみ）
 
 ## 6. マテリアル仕様
 
@@ -81,3 +85,4 @@ Udonarium の `table-mask` を Resonite の slot/component へ変換する仕様
 3. 位置補正と回転が正しい
 4. 厚み `0.01` の `BoxCollider` が付く
 5. 異なるマスクマテリアルが同一参照に統合されない
+6. ロック解除されたマスクに `Grabbable` が付き、ロック中は付かない

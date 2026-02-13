@@ -154,6 +154,13 @@ src/
 
 ## 更新履歴
 
+### 2026-02-13
+- table-mask の `isLock` 属性パースと `Grabbable` コンポーネント付与を追加。
+  - `TableMask` 型に `isLocked: boolean` を追加。
+  - `TableParser.parseTableMask()` で XML 属性 `isLock`（`@_isLock`）を読み取り（デフォルト `false`）。
+    - 注意: terrain は `isLocked`、table-mask は `isLock` と属性名が異なる。
+  - `tableMaskConverter` で `isLocked === false` のとき `Grabbable` コンポーネントを付与（terrain と同じパターン）。
+
 ### 2026-02-11
 - `StaticTexture2D` の `WrapModeU` / `WrapModeV` を `Clamp` に設定。
   - ResoniteLink の要求型に合わせて `$type: 'enum'` を使用（`enum?` だと作成失敗）。
