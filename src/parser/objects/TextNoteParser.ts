@@ -15,7 +15,7 @@ export function parseTextNote(data: unknown, fileName: string): TextNote {
 
   // Parse text content
   const text = getTextValue(findDataByName(noteData, 'note')) || '';
-  const fontSize = getNumberValue(findDataByName(noteData, 'fontSize')) || 14;
+  const fontSize = getNumberValue(findDataByName(noteData, 'fontSize')) ?? 14;
 
   // Parse position
   const position = parsePosition(root);

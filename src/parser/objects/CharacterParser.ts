@@ -24,7 +24,7 @@ export function parseCharacter(data: unknown, fileName: string): GameCharacter {
   // Parse common data
   const commonData = findDataByName(characterData, 'common');
   const name = getTextValue(findDataByName(commonData, 'name')) || fileName;
-  const size = getNumberValue(findDataByName(commonData, 'size')) || 1;
+  const size = getNumberValue(findDataByName(commonData, 'size')) ?? 1;
 
   // Parse resources
   const resources: NumberResource[] = [];
@@ -61,9 +61,9 @@ function parseResourcesFromDetail(detailData: unknown, resources: NumberResource
       (item as Record<string, unknown>)['@_type'] === 'numberResource'
     ) {
       const name = ((item as Record<string, unknown>)['@_name'] as string) || '';
-      const maxValue = getNumberValue((item as Record<string, unknown>)['#text']) || 0;
+      const maxValue = getNumberValue((item as Record<string, unknown>)['#text']) ?? 0;
       const currentValue =
-        getNumberValue((item as Record<string, unknown>)['@_currentValue']) || maxValue;
+        getNumberValue((item as Record<string, unknown>)['@_currentValue']) ?? maxValue;
 
       resources.push({ name, currentValue, maxValue });
     }
