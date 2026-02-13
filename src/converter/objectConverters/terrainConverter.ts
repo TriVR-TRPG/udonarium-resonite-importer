@@ -1,5 +1,5 @@
-import { Terrain } from '../UdonariumObject';
-import { ResoniteObject } from '../ResoniteObject';
+import { Terrain } from '../../domain/UdonariumObject';
+import { ResoniteObject } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
   buildQuadMeshComponents,

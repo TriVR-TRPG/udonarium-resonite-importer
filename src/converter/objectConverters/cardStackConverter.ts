@@ -1,5 +1,5 @@
-import { CardStack, UdonariumObject } from '../UdonariumObject';
-import { ResoniteObject } from '../ResoniteObject';
+import { CardStack, UdonariumObject } from '../../domain/UdonariumObject';
+import { ResoniteObject } from '../../domain/ResoniteObject';
 import { buildBoxColliderComponent } from './componentBuilders';
 
 export function applyCardStackConversion(

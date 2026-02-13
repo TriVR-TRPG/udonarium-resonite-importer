@@ -9,7 +9,7 @@ import type {
   GameTable,
   TableMask,
   TextNote,
-} from './UdonariumObject';
+} from '../domain/UdonariumObject';
 
 describe('ObjectConverter', () => {
   describe('convertPosition', () => {

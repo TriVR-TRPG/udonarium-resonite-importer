@@ -1,4 +1,4 @@
-import { ResoniteComponent } from '../ResoniteObject';
+import { ResoniteComponent } from '../../domain/ResoniteObject';
 
 const TEXTURE_PLACEHOLDER_PREFIX = 'texture://';
 const TEXTURE_REFERENCE_PREFIX = 'texture-ref://';

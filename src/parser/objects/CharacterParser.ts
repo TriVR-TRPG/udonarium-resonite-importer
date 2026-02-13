@@ -2,7 +2,7 @@
  * Parser for Udonarium GameCharacter objects
  */
 
-import { GameCharacter, ImageRef, NumberResource } from '../../converter/UdonariumObject';
+import { GameCharacter, ImageRef, NumberResource } from '../../domain/UdonariumObject';
 import { findDataByName, getTextValue, getNumberValue, parsePosition } from './ParserUtils';
 
 export function parseCharacter(data: unknown, fileName: string): GameCharacter {

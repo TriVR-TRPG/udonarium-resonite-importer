@@ -1,4 +1,4 @@
-import { ResoniteComponent, ResoniteObject } from './ResoniteObject';
+import { ResoniteComponent, ResoniteObject } from '../domain/ResoniteObject';
 import { createHash } from 'crypto';
 
 const MATERIAL_REFERENCE_PREFIX = 'material-ref://';

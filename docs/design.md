@@ -158,9 +158,10 @@ udonarium-resonite-importer/
 │   │       ├── TerrainParser.ts
 │   │       ├── TableParser.ts
 │   │       └── TextNoteParser.ts
+│   ├── domain/
+│   │   ├── UdonariumObject.ts   # Udonariumオブジェクト型定義（共通）
+│   │   └── ResoniteObject.ts    # Resoniteオブジェクト型定義（共通）
 │   ├── converter/
-│   │   ├── UdonariumObject.ts   # Udonariumオブジェクト型定義
-│   │   ├── ResoniteObject.ts    # Resoniteオブジェクト型定義
 │   │   ├── ObjectConverter.ts   # 変換ディスパッチ
 │   │   └── objectConverters/    # 種別ごとの変換ロジック
 │   │       ├── componentBuilders.ts  # QuadMesh/BoxMesh コンポーネント生成
@@ -185,6 +186,8 @@ udonarium-resonite-importer/
 ├── package.json
 └── tsconfig.json
 ```
+
+> 補足: 型定義は `src/domain/UdonariumObject.ts` と `src/domain/ResoniteObject.ts` に集約。過去の互換ファイル（`src/converter/UdonariumObject.ts`, `src/converter/ResoniteObject.ts`）は廃止済み。
 
 ### 4.2 データフロー
 

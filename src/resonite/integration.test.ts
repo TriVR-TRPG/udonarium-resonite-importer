@@ -18,7 +18,7 @@ import { describe, it, expect, beforeAll, afterAll, afterEach } from 'vitest';
 import { ResoniteLinkClient } from './ResoniteLinkClient';
 import { SlotBuilder } from './SlotBuilder';
 import { AssetImporter } from './AssetImporter';
-import { ResoniteObject } from '../converter/ResoniteObject';
+import { ResoniteObject } from '../domain/ResoniteObject';
 import { ExtractedFile } from '../parser/ZipExtractor';
 import { getResoniteLinkPort, getResoniteLinkHost } from '../config/MappingConfig';
 

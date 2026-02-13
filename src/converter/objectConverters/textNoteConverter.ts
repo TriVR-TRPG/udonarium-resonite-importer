@@ -1,5 +1,5 @@
-import { TextNote } from '../UdonariumObject';
-import { ResoniteObject } from '../ResoniteObject';
+import { TextNote } from '../../domain/UdonariumObject';
+import { ResoniteObject } from '../../domain/ResoniteObject';
 import { buildBoxColliderComponent } from './componentBuilders';
 
 export function applyTextNoteConversion(udonObj: TextNote, resoniteObj: ResoniteObject): void {

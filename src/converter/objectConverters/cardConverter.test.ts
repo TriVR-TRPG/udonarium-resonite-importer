@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { applyCardConversion } from './cardConverter';
-import { Card } from '../UdonariumObject';
-import { ResoniteObject } from '../ResoniteObject';
+import { Card } from '../../domain/UdonariumObject';
+import { ResoniteObject } from '../../domain/ResoniteObject';
 
 describe('applyCardConversion', () => {
   const createBaseCard = (): Card => ({

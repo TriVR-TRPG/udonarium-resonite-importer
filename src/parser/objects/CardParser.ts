@@ -2,7 +2,7 @@
  * Parser for Udonarium Card and CardStack objects
  */
 
-import { Card, CardStack, ImageRef } from '../../converter/UdonariumObject';
+import { Card, CardStack, ImageRef } from '../../domain/UdonariumObject';
 import { findDataByName, getTextValue, getBooleanValue, parsePosition } from './ParserUtils';
 
 export function parseCard(data: unknown, fileName: string): Card {

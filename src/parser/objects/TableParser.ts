@@ -2,7 +2,7 @@
  * Parser for Udonarium GameTable and TableMask objects
  */
 
-import { GameTable, TableMask, ImageRef } from '../../converter/UdonariumObject';
+import { GameTable, TableMask, ImageRef } from '../../domain/UdonariumObject';
 import {
   findDataByName,
   getTextValue,
