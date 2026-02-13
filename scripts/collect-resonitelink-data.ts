@@ -78,7 +78,7 @@ async function ensureFixturesDir(): Promise<void> {
 function saveJson(filename: string, data: unknown): void {
   const filepath = path.join(FIXTURES_DIR, filename);
   fs.writeFileSync(filepath, JSON.stringify(data, null, 2) + '\n');
-  console.log(`  ✓ Saved: ${filename}`);
+  console.log(`  [ok] Saved: ${filename}`);
 }
 
 async function withTimeout<T>(promise: Promise<T>, ms: number, operation: string): Promise<T> {
@@ -116,7 +116,7 @@ function getConnectedLink(client: ResoniteLinkClient): {
 }
 
 async function collectSlotData(client: ResoniteLinkClient): Promise<void> {
-  console.log('\n📦 Collecting Slot Data...');
+  console.log('\nCollecting Slot Data...');
 
   const underlyingClient = getConnectedLink(client);
 
@@ -182,13 +182,13 @@ function saveComponentJson(componentType: string, data: unknown): void {
   const filename = componentType.split('.').pop() + '.json';
   const filepath = path.join(COMPONENTS_DIR, filename);
   fs.writeFileSync(filepath, JSON.stringify(data, null, 2) + '\n');
-  console.log(`    ✓ ${componentType} -> ${filename}`);
+  console.log(`    [ok] ${componentType} -> ${filename}`);
 }
 
 function saveReflectionJson(filename: string, data: unknown): void {
   const filepath = path.join(REFLECTION_DIR, filename);
   fs.writeFileSync(filepath, JSON.stringify(data, null, 2) + '\n');
-  console.log(`    ✓ reflection/${filename}`);
+  console.log(`    [ok] reflection/${filename}`);
 }
 
 /**
@@ -258,7 +258,7 @@ async function testComponent(
 }
 
 async function collectComponentData(client: ResoniteLinkClient): Promise<void> {
-  console.log('\n🔧 Collecting Component Data...');
+  console.log('\nCollecting Component Data...');
 
   const underlyingClient = getConnectedLink(client);
 
@@ -297,7 +297,7 @@ async function collectComponentData(client: ResoniteLinkClient): Promise<void> {
     saveComponentJson(componentType, result.response);
 
     if (!result.success) {
-      console.log(`    ⚠ ${componentType}: ${result.error}`);
+      console.log(`    [warn] ${componentType}: ${result.error}`);
     }
   }
 
@@ -333,7 +333,7 @@ async function collectComponentData(client: ResoniteLinkClient): Promise<void> {
 }
 
 async function collectTextureData(client: ResoniteLinkClient): Promise<void> {
-  console.log('\n🖼️  Collecting Texture Import Data...');
+  console.log('\nCollecting Texture Import Data...');
 
   const underlyingClient = getConnectedLink(client);
 
@@ -367,7 +367,7 @@ async function collectTextureData(client: ResoniteLinkClient): Promise<void> {
 }
 
 async function collectSessionData(client: ResoniteLinkClient): Promise<void> {
-  console.log('\n📋 Collecting Session Data...');
+  console.log('\nCollecting Session Data...');
 
   const underlyingClient = getConnectedLink(client);
 
@@ -378,7 +378,7 @@ async function collectSessionData(client: ResoniteLinkClient): Promise<void> {
 }
 
 async function collectErrorResponses(client: ResoniteLinkClient): Promise<void> {
-  console.log('\n❌ Collecting Error Responses...');
+  console.log('\nCollecting Error Responses...');
 
   const underlyingClient = getConnectedLink(client);
 
@@ -399,7 +399,7 @@ async function collectErrorResponses(client: ResoniteLinkClient): Promise<void> 
 }
 
 async function collectReflectionData(client: ResoniteLinkClient): Promise<void> {
-  console.log('\n🪞 Collecting Reflection Data...');
+  console.log('\nCollecting Reflection Data...');
 
   const underlyingClient = getConnectedLink(client);
   const allComponents = [
@@ -411,32 +411,55 @@ async function collectReflectionData(client: ResoniteLinkClient): Promise<void> 
     ...REQUIRED_COMPONENTS.uix,
   ];
 
-  const componentTypeListRoot = await underlyingClient.call({
+  const captureReflection = async (
+    filename: string,
+    request: Record<string, unknown>,
+    allowFailure = false
+  ): Promise<void> => {
+    try {
+      const response = await underlyingClient.call(request);
+      saveReflectionJson(filename, response);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (!allowFailure) {
+        throw error;
+      }
+
+      saveReflectionJson(filename.replace('-response.json', '-error.json'), {
+        request,
+        error: message,
+      });
+      console.log(`    [warn] reflection/${filename}: ${message}`);
+    }
+  };
+
+  await captureReflection('getComponentTypeList-root-response.json', {
     $type: 'getComponentTypeList',
     categoryPath: '',
   });
-  saveReflectionJson('getComponentTypeList-root-response.json', componentTypeListRoot);
 
-  const componentTypeListAll = await underlyingClient.call({
+  await captureReflection('getComponentTypeList-all-response.json', {
     $type: 'getComponentTypeList',
     categoryPath: '*',
   });
-  saveReflectionJson('getComponentTypeList-all-response.json', componentTypeListAll);
 
-  const typeDefinitionFloat3 = await underlyingClient.call({
+  await captureReflection('getTypeDefinition-float3-response.json', {
     $type: 'getTypeDefinition',
-    type: '[BaseX]BaseX.float3',
+    type: 'float3',
   });
-  saveReflectionJson('getTypeDefinition-float3-response.json', typeDefinitionFloat3);
 
-  const enumDefinitionTextHorizontalAlignment = await underlyingClient.call({
-    $type: 'getEnumDefinition',
-    type: '[FrooxEngine]FrooxEngine.UIX.TextHorizontalAlignment',
-  });
-  saveReflectionJson(
-    'getEnumDefinition-TextHorizontalAlignment-response.json',
-    enumDefinitionTextHorizontalAlignment
-  );
+  const enumTypes = ['[Renderite.Shared]Renderite.Shared.BillboardAlignment'] as const;
+  for (const enumType of enumTypes) {
+    const enumName = enumType.split('.').pop() ?? enumType;
+    await captureReflection(
+      `getEnumDefinition-${enumName}-response.json`,
+      {
+        $type: 'getEnumDefinition',
+        type: enumType,
+      },
+      true
+    );
+  }
 
   for (const componentType of allComponents) {
     const componentName = componentType.split('.').pop();
@@ -444,18 +467,17 @@ async function collectReflectionData(client: ResoniteLinkClient): Promise<void> 
       continue;
     }
 
-    const componentDefinition = await underlyingClient.call({
-      $type: 'getComponentDefinition',
-      componentType,
-      flattened: true,
-    });
-    saveReflectionJson(
+    await captureReflection(
       `getComponentDefinition-${componentName}-response.json`,
-      componentDefinition
+      {
+        $type: 'getComponentDefinition',
+        componentType,
+        flattened: true,
+      },
+      true
     );
   }
 }
-
 function createMinimalPNG(width: number, height: number, rgba: number[]): Uint8Array {
   // This creates a minimal valid PNG with a solid color
   // For simplicity, we just return raw RGBA data encoded in a minimal PNG structure
@@ -591,7 +613,7 @@ function adler32(data: number[]): number {
 }
 
 async function main(): Promise<void> {
-  console.log('🚀 ResoniteLink Data Collection Script');
+  console.log('ResoniteLink Data Collection Script');
   console.log('=====================================');
   console.log('');
 
@@ -599,7 +621,7 @@ async function main(): Promise<void> {
   const host = getResoniteLinkHost();
 
   if (!port) {
-    console.error('❌ RESONITELINK_PORT is required');
+    console.error('[error] RESONITELINK_PORT is required');
     console.error('');
     console.error('Set via environment variable:');
     console.error('  RESONITELINK_PORT=<port> npm run collect:resonitelink');
@@ -618,14 +640,14 @@ async function main(): Promise<void> {
 
   const client = new ResoniteLinkClient({ host, port });
 
-  console.log(`🔌 Connecting to ResoniteLink at ${host}:${port}...`);
+  console.log(`Connecting to ResoniteLink at ${host}:${port}...`);
 
   try {
     await withTimeout(client.connect(), DEFAULT_TIMEOUT, 'Connection');
-    console.log('  ✓ Connected!');
+    console.log('  [ok] Connected!');
   } catch (error) {
     console.error('');
-    console.error('❌ Failed to connect to ResoniteLink');
+    console.error('[error] Failed to connect to ResoniteLink');
     console.error('');
     console.error('Please ensure:');
     console.error('  1. Resonite is running');
@@ -658,16 +680,16 @@ async function main(): Promise<void> {
     saveJson('_metadata.json', collectedData);
 
     console.log('');
-    console.log('✅ Data collection complete!');
+    console.log('[ok] Data collection complete!');
     console.log(`   Files saved to: ${FIXTURES_DIR}`);
   } catch (error) {
     console.error('');
-    console.error('❌ Error during data collection:', error);
+    console.error('[error] Error during data collection:', error);
     process.exit(1);
   } finally {
     client.disconnect();
     console.log('');
-    console.log('🔌 Disconnected from ResoniteLink');
+    console.log('Disconnected from ResoniteLink');
   }
 }
 

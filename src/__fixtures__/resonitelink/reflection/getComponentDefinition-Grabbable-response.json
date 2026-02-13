@@ -1,0 +1,240 @@
+{
+  "$type": "componentDefinitionData",
+  "definition": {
+    "baseTypeIsComponent": true,
+    "categoryPath": "Transform/Interaction",
+    "type": {
+      "baseType": null,
+      "fullTypeName": "[FrooxEngine]FrooxEngine.Grabbable",
+      "assemblyName": "FrooxEngine",
+      "namespace": "FrooxEngine",
+      "name": "Grabbable",
+      "isAbstract": false,
+      "isInterface": false,
+      "isGenericType": false,
+      "isGenericTypeDefinition": false,
+      "directGenericParameterCount": 0,
+      "isEnginePrimitive": false,
+      "isValueType": false,
+      "isEnum": false,
+      "isComponent": true,
+      "isSyncObject": false,
+      "isWorldElement": true,
+      "isNested": false,
+      "declaringType": null,
+      "genericArguments": null,
+      "genericParameters": null,
+      "interfaces": [
+        {
+          "type": "[FrooxEngine]FrooxEngine.IGrabbable",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.IInteractionTarget",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.IObjectRoot",
+          "isGenericParameter": false,
+          "genericArguments": null
+        }
+      ]
+    },
+    "members": {
+      "persistent": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "UpdateOrder": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "Enabled": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "ReparentOnRelease": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "PreserveUserSpace": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "DestroyOnRelease": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "GrabPriority": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "GrabPriorityWhenGrabbed": {
+        "$type": "field",
+        "valueType": {
+          "type": "Nullable<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "int",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int?>"
+      },
+      "EditModeOnly": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "AllowSteal": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "DropOnDisable": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "ActiveUserFilter": {
+        "$type": "field",
+        "valueType": {
+          "type": "[FrooxEngine]FrooxEngine.ActiveUserHandling",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[FrooxEngine]FrooxEngine.ActiveUserHandling>"
+      },
+      "OnlyUsers": {
+        "$type": "list",
+        "elementDefinition": {
+          "$type": "syncObject",
+          "type": {
+            "type": "[FrooxEngine]FrooxEngine.UserRef",
+            "isGenericParameter": false,
+            "genericArguments": null
+          }
+        },
+        "type": "[FrooxEngine]FrooxEngine.SyncList<[FrooxEngine]FrooxEngine.UserRef>"
+      },
+      "Scalable": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "Receivable": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "AllowOnlyPhysicalGrab": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "_grabber": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.Grabber",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.SyncRef<[FrooxEngine]FrooxEngine.Grabber>"
+      },
+      "_lastParent": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.Slot",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.SyncRef<[FrooxEngine]FrooxEngine.Slot>"
+      },
+      "_lastParentIsUserSpace": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "__legacyActiveUserRootOnly": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      }
+    }
+  },
+  "sourceMessageId": "tsrl_bvf0av9g2ao_d",
+  "success": true,
+  "errorInfo": null
+}

@@ -1,0 +1,29 @@
+{
+  "$type": "typeDefinitionData",
+  "definition": {
+    "baseType": null,
+    "fullTypeName": "float3",
+    "assemblyName": "Elements.Core",
+    "namespace": "Elements.Core",
+    "name": "float3",
+    "isAbstract": false,
+    "isInterface": false,
+    "isGenericType": false,
+    "isGenericTypeDefinition": false,
+    "directGenericParameterCount": 0,
+    "isEnginePrimitive": true,
+    "isValueType": true,
+    "isEnum": false,
+    "isComponent": false,
+    "isSyncObject": false,
+    "isWorldElement": false,
+    "isNested": false,
+    "declaringType": null,
+    "genericArguments": null,
+    "genericParameters": null,
+    "interfaces": []
+  },
+  "sourceMessageId": "tsrl_bvf0av9g2ao_3",
+  "success": true,
+  "errorInfo": null
+}

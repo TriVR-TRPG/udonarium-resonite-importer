@@ -1,0 +1,197 @@
+{
+  "$type": "componentDefinitionData",
+  "definition": {
+    "baseTypeIsComponent": true,
+    "categoryPath": "Assets/Procedural Meshes",
+    "type": {
+      "baseType": null,
+      "fullTypeName": "[FrooxEngine]FrooxEngine.QuadMesh",
+      "assemblyName": "FrooxEngine",
+      "namespace": "FrooxEngine",
+      "name": "QuadMesh",
+      "isAbstract": false,
+      "isInterface": false,
+      "isGenericType": false,
+      "isGenericTypeDefinition": false,
+      "directGenericParameterCount": 0,
+      "isEnginePrimitive": false,
+      "isValueType": false,
+      "isEnum": false,
+      "isComponent": true,
+      "isSyncObject": false,
+      "isWorldElement": true,
+      "isNested": false,
+      "declaringType": null,
+      "genericArguments": null,
+      "genericParameters": null,
+      "interfaces": []
+    },
+    "members": {
+      "persistent": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "UpdateOrder": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "Enabled": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "HighPriorityIntegration": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "OverrideBoundingBox": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "OverridenBoundingBox": {
+        "$type": "field",
+        "valueType": {
+          "type": "BoundingBox",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<BoundingBox>"
+      },
+      "Profile": {
+        "$type": "field",
+        "valueType": {
+          "type": "[Renderite.Shared]Renderite.Shared.ColorProfile",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Renderite.Shared]Renderite.Shared.ColorProfile>"
+      },
+      "Rotation": {
+        "$type": "field",
+        "valueType": {
+          "type": "floatQ",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<floatQ>"
+      },
+      "Size": {
+        "$type": "field",
+        "valueType": {
+          "type": "float2",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float2>"
+      },
+      "UVOffset": {
+        "$type": "field",
+        "valueType": {
+          "type": "float2",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float2>"
+      },
+      "UVScale": {
+        "$type": "field",
+        "valueType": {
+          "type": "float2",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float2>"
+      },
+      "ScaleUVWithSize": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "DualSided": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "UseVertexColors": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "UpperLeftColor": {
+        "$type": "field",
+        "valueType": {
+          "type": "colorX",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<colorX>"
+      },
+      "LowerLeftColor": {
+        "$type": "field",
+        "valueType": {
+          "type": "colorX",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<colorX>"
+      },
+      "LowerRightColor": {
+        "$type": "field",
+        "valueType": {
+          "type": "colorX",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<colorX>"
+      },
+      "UpperRightColor": {
+        "$type": "field",
+        "valueType": {
+          "type": "colorX",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<colorX>"
+      }
+    }
+  },
+  "sourceMessageId": "tsrl_bvf0av9g2ao_5",
+  "success": true,
+  "errorInfo": null
+}

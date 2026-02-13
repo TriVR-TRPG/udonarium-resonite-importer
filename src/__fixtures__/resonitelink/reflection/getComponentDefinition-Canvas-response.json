@@ -1,0 +1,287 @@
+{
+  "$type": "componentDefinitionData",
+  "definition": {
+    "baseTypeIsComponent": true,
+    "categoryPath": "UIX",
+    "type": {
+      "baseType": null,
+      "fullTypeName": "[FrooxEngine]FrooxEngine.UIX.Canvas",
+      "assemblyName": "FrooxEngine",
+      "namespace": "FrooxEngine.UIX",
+      "name": "Canvas",
+      "isAbstract": false,
+      "isInterface": false,
+      "isGenericType": false,
+      "isGenericTypeDefinition": false,
+      "directGenericParameterCount": 0,
+      "isEnginePrimitive": false,
+      "isValueType": false,
+      "isEnum": false,
+      "isComponent": true,
+      "isSyncObject": false,
+      "isWorldElement": true,
+      "isNested": false,
+      "declaringType": null,
+      "genericArguments": null,
+      "genericParameters": null,
+      "interfaces": [
+        {
+          "type": "[FrooxEngine]FrooxEngine.ITouchable",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.ITouchGrabbable",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.IBounded",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.ILaserInteractionModifier",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.IInteractionTarget",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.IContextMenuActionReceiver",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.ISecondaryActionReceiver",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.IAxisActionReceiver",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.IUIInterface",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.IRenderable",
+          "isGenericParameter": false,
+          "genericArguments": null
+        }
+      ]
+    },
+    "members": {
+      "persistent": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "UpdateOrder": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "Enabled": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "Size": {
+        "$type": "field",
+        "valueType": {
+          "type": "float2",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float2>"
+      },
+      "EditModeOnly": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "AcceptRemoteTouch": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "AcceptPhysicalTouch": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "AcceptExistingTouch": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "HighPriorityIntegration": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "IgnoreTouchesFromBehind": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "BlockAllInteractions": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "LaserPassThrough": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "PixelScale": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "UnitScale": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "_rootRect": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.UIX.RectTransform",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.SyncRef<[FrooxEngine]FrooxEngine.UIX.RectTransform>"
+      },
+      "Collider": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.BoxCollider",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.SyncRef<[FrooxEngine]FrooxEngine.BoxCollider>"
+      },
+      "DefaultCulling": {
+        "$type": "field",
+        "valueType": {
+          "type": "[FrooxEngine]FrooxEngine.Culling",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[FrooxEngine]FrooxEngine.Culling>"
+      },
+      "_colliderSize": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IField<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "float3",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.FieldDrive<float3>"
+      },
+      "_colliderOffset": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IField<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "float3",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.FieldDrive<float3>"
+      },
+      "StartingOffset": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "StartingMaskDepth": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      }
+    }
+  },
+  "sourceMessageId": "tsrl_bvf0av9g2ao_f",
+  "success": true,
+  "errorInfo": null
+}

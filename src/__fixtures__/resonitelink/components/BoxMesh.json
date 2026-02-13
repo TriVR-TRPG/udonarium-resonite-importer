@@ -2,8 +2,8 @@
   "componentType": "[FrooxEngine]FrooxEngine.BoxMesh",
   "addResponse": {
     "$type": "newEntityId",
-    "entityId": "test_[FrooxEngine]FrooxEngine_BoxMesh_1770909221626",
-    "sourceMessageId": "b88603fc-33a8-433d-98f5-4a5d0225582b",
+    "entityId": "test_[FrooxEngine]FrooxEngine_BoxMesh_1770976822823",
+    "sourceMessageId": "tsrl_bvf0av9g2ao_s",
     "success": true,
     "errorInfo": null
   },
@@ -15,33 +15,33 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_12891"
+          "id": "Reso_3EC"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_12892"
+          "id": "Reso_3ED"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_12893"
+          "id": "Reso_3EE"
         },
         "HighPriorityIntegration": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_12894"
+          "id": "Reso_3EF"
         },
         "OverrideBoundingBox": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_12895"
+          "id": "Reso_3F0"
         },
         "Profile": {
           "$type": "enum",
           "value": "Linear",
           "enumType": "ColorProfile",
-          "id": "Reso_12896"
+          "id": "Reso_3F1"
         },
         "Size": {
           "$type": "float3",
@@ -50,7 +50,7 @@
             "y": 1,
             "z": 1
           },
-          "id": "Reso_12897"
+          "id": "Reso_3F2"
         },
         "UVScale": {
           "$type": "float3",
@@ -59,18 +59,18 @@
             "y": 1,
             "z": 1
           },
-          "id": "Reso_12898"
+          "id": "Reso_3F3"
         },
         "ScaleUVWithSize": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_12899"
+          "id": "Reso_3F4"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_BoxMesh_1770909221626",
+      "id": "test_[FrooxEngine]FrooxEngine_BoxMesh_1770976822823",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "2747b5be-5709-48c2-8edc-2d0fb5d63364",
+    "sourceMessageId": "tsrl_bvf0av9g2ao_t",
     "success": true,
     "errorInfo": null
   }

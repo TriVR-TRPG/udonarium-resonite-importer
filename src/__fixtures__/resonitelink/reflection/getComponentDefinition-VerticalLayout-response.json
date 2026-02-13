@@ -1,0 +1,143 @@
+{
+  "$type": "componentDefinitionData",
+  "definition": {
+    "baseTypeIsComponent": true,
+    "categoryPath": "UIX/Layout",
+    "type": {
+      "baseType": null,
+      "fullTypeName": "[FrooxEngine]FrooxEngine.UIX.VerticalLayout",
+      "assemblyName": "FrooxEngine",
+      "namespace": "FrooxEngine.UIX",
+      "name": "VerticalLayout",
+      "isAbstract": false,
+      "isInterface": false,
+      "isGenericType": false,
+      "isGenericTypeDefinition": false,
+      "directGenericParameterCount": 0,
+      "isEnginePrimitive": false,
+      "isValueType": false,
+      "isEnum": false,
+      "isComponent": true,
+      "isSyncObject": false,
+      "isWorldElement": true,
+      "isNested": false,
+      "declaringType": null,
+      "genericArguments": null,
+      "genericParameters": null,
+      "interfaces": []
+    },
+    "members": {
+      "persistent": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "UpdateOrder": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "Enabled": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "PaddingTop": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "PaddingRight": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "PaddingBottom": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "PaddingLeft": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "Spacing": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "HorizontalAlign": {
+        "$type": "field",
+        "valueType": {
+          "type": "[FrooxEngine]FrooxEngine.UIX.LayoutHorizontalAlignment",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[FrooxEngine]FrooxEngine.UIX.LayoutHorizontalAlignment>"
+      },
+      "VerticalAlign": {
+        "$type": "field",
+        "valueType": {
+          "type": "[FrooxEngine]FrooxEngine.UIX.LayoutVerticalAlignment",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[FrooxEngine]FrooxEngine.UIX.LayoutVerticalAlignment>"
+      },
+      "ForceExpandWidth": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "ForceExpandHeight": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      }
+    }
+  },
+  "sourceMessageId": "tsrl_bvf0av9g2ao_h",
+  "success": true,
+  "errorInfo": null
+}

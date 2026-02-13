@@ -58,5 +58,5 @@ Examples:
 - `getComponentTypeList-root-response.json`
 - `getComponentTypeList-all-response.json`
 - `getTypeDefinition-float3-response.json`
-- `getEnumDefinition-TextHorizontalAlignment-response.json`
+- `getEnumDefinition-BillboardAlignment-response.json`
 - `getComponentDefinition-*.json` (for required component types)

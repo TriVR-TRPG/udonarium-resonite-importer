@@ -1,0 +1,158 @@
+{
+  "$type": "componentDefinitionData",
+  "definition": {
+    "baseTypeIsComponent": true,
+    "categoryPath": "Rendering",
+    "type": {
+      "baseType": null,
+      "fullTypeName": "[FrooxEngine]FrooxEngine.MeshRenderer",
+      "assemblyName": "FrooxEngine",
+      "namespace": "FrooxEngine",
+      "name": "MeshRenderer",
+      "isAbstract": false,
+      "isInterface": false,
+      "isGenericType": false,
+      "isGenericTypeDefinition": false,
+      "directGenericParameterCount": 0,
+      "isEnginePrimitive": false,
+      "isValueType": false,
+      "isEnum": false,
+      "isComponent": true,
+      "isSyncObject": false,
+      "isWorldElement": true,
+      "isNested": false,
+      "declaringType": null,
+      "genericArguments": null,
+      "genericParameters": null,
+      "interfaces": [
+        {
+          "type": "[FrooxEngine]FrooxEngine.IBounded",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.IHighlightable",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.IRenderable",
+          "isGenericParameter": false,
+          "genericArguments": null
+        }
+      ]
+    },
+    "members": {
+      "persistent": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "UpdateOrder": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "Enabled": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "Mesh": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[FrooxEngine]FrooxEngine.Mesh",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.Mesh>"
+      },
+      "Materials": {
+        "$type": "list",
+        "elementDefinition": {
+          "$type": "reference",
+          "targetType": {
+            "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+            "isGenericParameter": false,
+            "genericArguments": [
+              {
+                "type": "[FrooxEngine]FrooxEngine.Material",
+                "isGenericParameter": false,
+                "genericArguments": null
+              }
+            ]
+          },
+          "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.Material>"
+        },
+        "type": "[FrooxEngine]FrooxEngine.SyncAssetList<[FrooxEngine]FrooxEngine.Material>"
+      },
+      "MaterialPropertyBlocks": {
+        "$type": "list",
+        "elementDefinition": {
+          "$type": "reference",
+          "targetType": {
+            "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+            "isGenericParameter": false,
+            "genericArguments": [
+              {
+                "type": "[FrooxEngine]FrooxEngine.MaterialPropertyBlock",
+                "isGenericParameter": false,
+                "genericArguments": null
+              }
+            ]
+          },
+          "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.MaterialPropertyBlock>"
+        },
+        "type": "[FrooxEngine]FrooxEngine.SyncAssetList<[FrooxEngine]FrooxEngine.MaterialPropertyBlock>"
+      },
+      "ShadowCastMode": {
+        "$type": "field",
+        "valueType": {
+          "type": "[Renderite.Shared]Renderite.Shared.ShadowCastMode",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Renderite.Shared]Renderite.Shared.ShadowCastMode>"
+      },
+      "MotionVectorMode": {
+        "$type": "field",
+        "valueType": {
+          "type": "[Renderite.Shared]Renderite.Shared.MotionVectorMode",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Renderite.Shared]Renderite.Shared.MotionVectorMode>"
+      },
+      "SortingOrder": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      }
+    }
+  },
+  "sourceMessageId": "tsrl_bvf0av9g2ao_7",
+  "success": true,
+  "errorInfo": null
+}

@@ -1,0 +1,356 @@
+{
+  "$type": "componentDefinitionData",
+  "definition": {
+    "baseTypeIsComponent": true,
+    "categoryPath": "Assets/Materials",
+    "type": {
+      "baseType": null,
+      "fullTypeName": "[FrooxEngine]FrooxEngine.PBS_Metallic",
+      "assemblyName": "FrooxEngine",
+      "namespace": "FrooxEngine",
+      "name": "PBS_Metallic",
+      "isAbstract": false,
+      "isInterface": false,
+      "isGenericType": false,
+      "isGenericTypeDefinition": false,
+      "directGenericParameterCount": 0,
+      "isEnginePrimitive": false,
+      "isValueType": false,
+      "isEnum": false,
+      "isComponent": true,
+      "isSyncObject": false,
+      "isWorldElement": true,
+      "isNested": false,
+      "declaringType": null,
+      "genericArguments": null,
+      "genericParameters": null,
+      "interfaces": [
+        {
+          "type": "[FrooxEngine]FrooxEngine.IPBS_Metallic",
+          "isGenericParameter": false,
+          "genericArguments": null
+        }
+      ]
+    },
+    "members": {
+      "persistent": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "UpdateOrder": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "Enabled": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "HighPriorityIntegration": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "_shader": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[FrooxEngine]FrooxEngine.Shader",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.Shader>"
+      },
+      "TextureScale": {
+        "$type": "field",
+        "valueType": {
+          "type": "float2",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float2>"
+      },
+      "TextureOffset": {
+        "$type": "field",
+        "valueType": {
+          "type": "float2",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float2>"
+      },
+      "DetailTextureScale": {
+        "$type": "field",
+        "valueType": {
+          "type": "float2",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float2>"
+      },
+      "DetailTextureOffset": {
+        "$type": "field",
+        "valueType": {
+          "type": "float2",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float2>"
+      },
+      "AlbedoColor": {
+        "$type": "field",
+        "valueType": {
+          "type": "colorX",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<colorX>"
+      },
+      "AlbedoTexture": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[FrooxEngine]FrooxEngine.ITexture2D",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.ITexture2D>"
+      },
+      "EmissiveColor": {
+        "$type": "field",
+        "valueType": {
+          "type": "colorX",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<colorX>"
+      },
+      "EmissiveMap": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[FrooxEngine]FrooxEngine.ITexture2D",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.ITexture2D>"
+      },
+      "NormalScale": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "NormalMap": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[FrooxEngine]FrooxEngine.ITexture2D",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.ITexture2D>"
+      },
+      "HeightMap": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[FrooxEngine]FrooxEngine.ITexture2D",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.ITexture2D>"
+      },
+      "HeightScale": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "OcclusionMap": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[FrooxEngine]FrooxEngine.ITexture2D",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.ITexture2D>"
+      },
+      "DetailAlbedoTexture": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[FrooxEngine]FrooxEngine.ITexture2D",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.ITexture2D>"
+      },
+      "DetailNormalMap": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[FrooxEngine]FrooxEngine.ITexture2D",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.ITexture2D>"
+      },
+      "DetailNormalScale": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "BlendMode": {
+        "$type": "field",
+        "valueType": {
+          "type": "[FrooxEngine]FrooxEngine.BlendMode",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[FrooxEngine]FrooxEngine.BlendMode>"
+      },
+      "AlphaCutoff": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "OffsetFactor": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "OffsetUnits": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "RenderQueue": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "Metallic": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "Smoothness": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "MetallicMap": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[FrooxEngine]FrooxEngine.ITexture2D",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.ITexture2D>"
+      }
+    }
+  },
+  "sourceMessageId": "tsrl_bvf0av9g2ao_a",
+  "success": true,
+  "errorInfo": null
+}

@@ -1,0 +1,296 @@
+{
+  "$type": "componentDefinitionData",
+  "definition": {
+    "baseTypeIsComponent": true,
+    "categoryPath": "UIX/Graphics",
+    "type": {
+      "baseType": null,
+      "fullTypeName": "[FrooxEngine]FrooxEngine.UIX.Text",
+      "assemblyName": "FrooxEngine",
+      "namespace": "FrooxEngine.UIX",
+      "name": "Text",
+      "isAbstract": false,
+      "isInterface": false,
+      "isGenericType": false,
+      "isGenericTypeDefinition": false,
+      "directGenericParameterCount": 0,
+      "isEnginePrimitive": false,
+      "isValueType": false,
+      "isEnum": false,
+      "isComponent": true,
+      "isSyncObject": false,
+      "isWorldElement": true,
+      "isNested": false,
+      "declaringType": null,
+      "genericArguments": null,
+      "genericParameters": null,
+      "interfaces": [
+        {
+          "type": "[FrooxEngine]FrooxEngine.UIX.ILayoutElement",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.IText",
+          "isGenericParameter": false,
+          "genericArguments": null
+        }
+      ]
+    },
+    "members": {
+      "persistent": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "UpdateOrder": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "Enabled": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "Font": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[FrooxEngine]FrooxEngine.FontSet",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.FontSet>"
+      },
+      "Content": {
+        "$type": "field",
+        "valueType": {
+          "type": "string",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<string>"
+      },
+      "ParseRichText": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "NullContent": {
+        "$type": "field",
+        "valueType": {
+          "type": "string",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<string>"
+      },
+      "Size": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "HorizontalAlign": {
+        "$type": "field",
+        "valueType": {
+          "type": "[Elements.Assets]Elements.Assets.TextHorizontalAlignment",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Elements.Assets]Elements.Assets.TextHorizontalAlignment>"
+      },
+      "VerticalAlign": {
+        "$type": "field",
+        "valueType": {
+          "type": "[Elements.Assets]Elements.Assets.TextVerticalAlignment",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Elements.Assets]Elements.Assets.TextVerticalAlignment>"
+      },
+      "AlignmentMode": {
+        "$type": "field",
+        "valueType": {
+          "type": "[Elements.Assets]Elements.Assets.AlignmentMode",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Elements.Assets]Elements.Assets.AlignmentMode>"
+      },
+      "Color": {
+        "$type": "field",
+        "valueType": {
+          "type": "colorX",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<colorX>"
+      },
+      "Materials": {
+        "$type": "list",
+        "elementDefinition": {
+          "$type": "reference",
+          "targetType": {
+            "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+            "isGenericParameter": false,
+            "genericArguments": [
+              {
+                "type": "[FrooxEngine]FrooxEngine.Material",
+                "isGenericParameter": false,
+                "genericArguments": null
+              }
+            ]
+          },
+          "type": "[FrooxEngine]FrooxEngine.AssetRef<[FrooxEngine]FrooxEngine.Material>"
+        },
+        "type": "[FrooxEngine]FrooxEngine.SyncAssetList<[FrooxEngine]FrooxEngine.Material>"
+      },
+      "LineHeight": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "MaskPattern": {
+        "$type": "field",
+        "valueType": {
+          "type": "string",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<string>"
+      },
+      "HorizontalAutoSize": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "VerticalAutoSize": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "AutoSizeMin": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "AutoSizeMax": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "CaretPosition": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "SelectionStart": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "CaretColor": {
+        "$type": "field",
+        "valueType": {
+          "type": "colorX",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<colorX>"
+      },
+      "SelectionColor": {
+        "$type": "field",
+        "valueType": {
+          "type": "colorX",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<colorX>"
+      },
+      "InteractionTarget": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "_legacyFontMaterial": {
+        "$type": "reference",
+        "targetType": {
+          "type": "[FrooxEngine]FrooxEngine.FontMaterial",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.SyncRef<[FrooxEngine]FrooxEngine.FontMaterial>"
+      },
+      "_legacyAlign": {
+        "$type": "field",
+        "valueType": {
+          "type": "[Elements.Core]Elements.Core.Alignment",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Elements.Core]Elements.Core.Alignment>"
+      }
+    }
+  },
+  "sourceMessageId": "tsrl_bvf0av9g2ao_g",
+  "success": true,
+  "errorInfo": null
+}

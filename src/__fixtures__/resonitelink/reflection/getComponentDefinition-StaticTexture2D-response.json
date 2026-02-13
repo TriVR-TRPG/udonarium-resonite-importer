@@ -1,0 +1,295 @@
+{
+  "$type": "componentDefinitionData",
+  "definition": {
+    "baseTypeIsComponent": true,
+    "categoryPath": "Assets",
+    "type": {
+      "baseType": null,
+      "fullTypeName": "[FrooxEngine]FrooxEngine.StaticTexture2D",
+      "assemblyName": "FrooxEngine",
+      "namespace": "FrooxEngine",
+      "name": "StaticTexture2D",
+      "isAbstract": false,
+      "isInterface": false,
+      "isGenericType": false,
+      "isGenericTypeDefinition": false,
+      "directGenericParameterCount": 0,
+      "isEnginePrimitive": false,
+      "isValueType": false,
+      "isEnum": false,
+      "isComponent": true,
+      "isSyncObject": false,
+      "isWorldElement": true,
+      "isNested": false,
+      "declaringType": null,
+      "genericArguments": null,
+      "genericParameters": null,
+      "interfaces": [
+        {
+          "type": "[FrooxEngine]FrooxEngine.ITexture2DProvider",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        {
+          "type": "[FrooxEngine]FrooxEngine.IAssetProvider<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[FrooxEngine]FrooxEngine.ITexture2D",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        }
+      ]
+    },
+    "members": {
+      "persistent": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "UpdateOrder": {
+        "$type": "field",
+        "valueType": {
+          "type": "int",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int>"
+      },
+      "Enabled": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "URL": {
+        "$type": "field",
+        "valueType": {
+          "type": "Uri",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<Uri>"
+      },
+      "FilterMode": {
+        "$type": "field",
+        "valueType": {
+          "type": "Nullable<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[Renderite.Shared]Renderite.Shared.TextureFilterMode",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Renderite.Shared]Renderite.Shared.TextureFilterMode?>"
+      },
+      "AnisotropicLevel": {
+        "$type": "field",
+        "valueType": {
+          "type": "Nullable<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "int",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int?>"
+      },
+      "Uncompressed": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "DirectLoad": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "ForceExactVariant": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "PreferredFormat": {
+        "$type": "field",
+        "valueType": {
+          "type": "Nullable<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[Elements.Assets]Elements.Assets.TextureCompression",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Elements.Assets]Elements.Assets.TextureCompression?>"
+      },
+      "PreferredProfile": {
+        "$type": "field",
+        "valueType": {
+          "type": "Nullable<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "[Renderite.Shared]Renderite.Shared.ColorProfile",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Renderite.Shared]Renderite.Shared.ColorProfile?>"
+      },
+      "MipMapBias": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "IsNormalMap": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "WrapModeU": {
+        "$type": "field",
+        "valueType": {
+          "type": "[Renderite.Shared]Renderite.Shared.TextureWrapMode",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Renderite.Shared]Renderite.Shared.TextureWrapMode>"
+      },
+      "WrapModeV": {
+        "$type": "field",
+        "valueType": {
+          "type": "[Renderite.Shared]Renderite.Shared.TextureWrapMode",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Renderite.Shared]Renderite.Shared.TextureWrapMode>"
+      },
+      "PowerOfTwoAlignThreshold": {
+        "$type": "field",
+        "valueType": {
+          "type": "float",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<float>"
+      },
+      "CrunchCompressed": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "MinSize": {
+        "$type": "field",
+        "valueType": {
+          "type": "Nullable<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "int",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int?>"
+      },
+      "MaxSize": {
+        "$type": "field",
+        "valueType": {
+          "type": "Nullable<>",
+          "isGenericParameter": false,
+          "genericArguments": [
+            {
+              "type": "int",
+              "isGenericParameter": false,
+              "genericArguments": null
+            }
+          ]
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<int?>"
+      },
+      "MipMaps": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "KeepOriginalMipMaps": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      },
+      "MipMapFilter": {
+        "$type": "field",
+        "valueType": {
+          "type": "[Elements.Assets]Elements.Assets.Filtering",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<[Elements.Assets]Elements.Assets.Filtering>"
+      },
+      "Readable": {
+        "$type": "field",
+        "valueType": {
+          "type": "bool",
+          "isGenericParameter": false,
+          "genericArguments": null
+        },
+        "type": "[FrooxEngine]FrooxEngine.Sync<bool>"
+      }
+    }
+  },
+  "sourceMessageId": "tsrl_bvf0av9g2ao_c",
+  "success": true,
+  "errorInfo": null
+}
