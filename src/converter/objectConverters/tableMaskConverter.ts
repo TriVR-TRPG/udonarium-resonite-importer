@@ -46,7 +46,7 @@ export function applyTableMaskConversion(
       z: TABLE_MASK_COLLIDER_THICKNESS,
     }),
   ];
-  if (!udonObj.isLocked) {
+  if (!udonObj.isLock) {
     resoniteObj.components.push({
       id: `${resoniteObj.id}-grabbable`,
       type: '[FrooxEngine]FrooxEngine.Grabbable',

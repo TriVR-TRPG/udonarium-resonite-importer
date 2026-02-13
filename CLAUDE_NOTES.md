@@ -156,10 +156,11 @@ src/
 
 ### 2026-02-13
 - table-mask の `isLock` 属性パースと `Grabbable` コンポーネント付与を追加。
-  - `TableMask` 型に `isLocked: boolean` を追加。
+  - `TableMask` 型に `isLock: boolean` を追加（Udonarium の XML 属性名 `isLock` にそのまま対応）。
+    - 注意: terrain は `isLocked`、table-mask は `isLock` と属性名が異なるため、型プロパティ名も異なる。
   - `TableParser.parseTableMask()` で XML 属性 `isLock`（`@_isLock`）を読み取り（デフォルト `false`）。
-    - 注意: terrain は `isLocked`、table-mask は `isLock` と属性名が異なる。
-  - `tableMaskConverter` で `isLocked === false` のとき `Grabbable` コンポーネントを付与（terrain と同じパターン）。
+  - `tableMaskConverter` で `isLock === false` のとき `Grabbable` コンポーネントを付与（terrain と同じパターン）。
+  - `parseTableMask` の `width` / `height` デフォルト値適用を `||` から `??` に修正（`0` が意図せずデフォルト値に置換される問題を防止）。
 
 ### 2026-02-11
 - `StaticTexture2D` の `WrapModeU` / `WrapModeV` を `Clamp` に設定。

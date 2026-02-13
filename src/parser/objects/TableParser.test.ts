@@ -389,7 +389,7 @@ describe('TableParser', () => {
       expect(result.height).toBe(4);
     });
 
-    it('should parse isLocked as false when attribute is "false"', () => {
+    it('should parse isLock as false when attribute is "false"', () => {
       const data = {
         '@_identifier': 'mask-unlocked',
         '@_isLock': 'false',
@@ -403,10 +403,10 @@ describe('TableParser', () => {
 
       const result = parseTableMask(data, 'test.xml');
 
-      expect(result.isLocked).toBe(false);
+      expect(result.isLock).toBe(false);
     });
 
-    it('should parse isLocked as true when attribute is "true"', () => {
+    it('should parse isLock as true when attribute is "true"', () => {
       const data = {
         '@_identifier': 'mask-locked',
         '@_isLock': 'true',
@@ -420,10 +420,10 @@ describe('TableParser', () => {
 
       const result = parseTableMask(data, 'test.xml');
 
-      expect(result.isLocked).toBe(true);
+      expect(result.isLock).toBe(true);
     });
 
-    it('should default isLocked to false when attribute is missing', () => {
+    it('should default isLock to false when attribute is missing', () => {
       const data = {
         '@_identifier': 'mask-default',
         data: [
@@ -436,7 +436,7 @@ describe('TableParser', () => {
 
       const result = parseTableMask(data, 'test.xml');
 
-      expect(result.isLocked).toBe(false);
+      expect(result.isLock).toBe(false);
     });
   });
 });

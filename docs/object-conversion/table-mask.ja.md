@@ -22,13 +22,13 @@ Udonarium の `table-mask` を Resonite の slot/component へ変換する仕様
 
 `parseTableMask(...)` は以下を保持します。
 
-- `isLock` 属性から `isLocked`（boolean）を格納
+- `isLock` 属性から `isLock`（boolean）を格納
 - `imageIdentifier` があれば `images[0]` に格納
 - `opacity.currentValue` があれば `properties.opacity` に格納
 
 デフォルト:
 
-- `isLocked` 未指定時は `false`
+- `isLock` 未指定時は `false`
 - `width` 未指定時は `4`
 - `height` 未指定時は `4`
 - `opacity` 未指定時は変換時に 100% として扱う
@@ -62,7 +62,7 @@ Udonarium の `table-mask` を Resonite の slot/component へ変換する仕様
   - ローカル画像: `StaticTexture2D` + `MainTexturePropertyBlock`
   - 共有テクスチャ参照: `MaterialPropertyBlocks` の参照のみ
 - `BoxCollider`（`Size = (width, height, 0.01)`）
-- `Grabbable`（`isLocked == false` の場合のみ）
+- `Grabbable`（`isLock == false` の場合のみ）
 
 ## 6. マテリアル仕様
 

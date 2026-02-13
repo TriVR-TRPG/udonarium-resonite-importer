@@ -10,7 +10,7 @@ describe('applyTableMaskConversion', () => {
       type: 'table-mask',
       name: 'Mask',
       position: { x: 0, y: 0, z: 0 },
-      isLocked: false,
+      isLock: false,
       width: 5,
       height: 3,
       images: [],
@@ -64,7 +64,7 @@ describe('applyTableMaskConversion', () => {
       type: 'table-mask',
       name: 'Mask With Image',
       position: { x: 0, y: 0, z: 0 },
-      isLocked: false,
+      isLock: false,
       width: 4,
       height: 2,
       images: [{ identifier: 'none_icon', name: 'mask' }],
@@ -93,13 +93,13 @@ describe('applyTableMaskConversion', () => {
     });
   });
 
-  it('adds Grabbable component when isLocked is false', () => {
+  it('adds Grabbable component when isLock is false', () => {
     const udonObj: TableMask = {
       id: 'mask-unlocked',
       type: 'table-mask',
       name: 'Unlocked Mask',
       position: { x: 0, y: 0, z: 0 },
-      isLocked: false,
+      isLock: false,
       width: 4,
       height: 4,
       images: [],
@@ -124,13 +124,13 @@ describe('applyTableMaskConversion', () => {
     expect(grabbable?.id).toBe('slot-mask-unlocked-grabbable');
   });
 
-  it('does not add Grabbable component when isLocked is true', () => {
+  it('does not add Grabbable component when isLock is true', () => {
     const udonObj: TableMask = {
       id: 'mask-locked',
       type: 'table-mask',
       name: 'Locked Mask',
       position: { x: 0, y: 0, z: 0 },
-      isLocked: true,
+      isLock: true,
       width: 4,
       height: 4,
       images: [],
