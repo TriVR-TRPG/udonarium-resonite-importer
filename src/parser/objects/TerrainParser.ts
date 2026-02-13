@@ -2,7 +2,7 @@
  * Parser for Udonarium Terrain objects
  */
 
-import { Terrain, ImageRef } from '../../converter/UdonariumObject';
+import { Terrain, ImageRef } from '../../domain/UdonariumObject';
 import {
   findDataByName,
   getTextValue,

@@ -1,5 +1,5 @@
-import { GameCharacter } from '../UdonariumObject';
-import { ResoniteObject, Vector3 } from '../ResoniteObject';
+import { GameCharacter } from '../../domain/UdonariumObject';
+import { ResoniteObject, Vector3 } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
   buildQuadMeshComponents,

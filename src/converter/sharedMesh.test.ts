@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ResoniteObject } from './ResoniteObject';
+import { ResoniteObject } from '../domain/ResoniteObject';
 import { prepareSharedMeshDefinitions, resolveSharedMeshReferences } from './sharedMesh';
 
 function createObject(

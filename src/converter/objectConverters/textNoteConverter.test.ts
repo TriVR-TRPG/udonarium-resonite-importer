@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { applyTextNoteConversion } from './textNoteConverter';
-import { TextNote } from '../UdonariumObject';
-import { ResoniteObject } from '../ResoniteObject';
+import { TextNote } from '../../domain/UdonariumObject';
+import { ResoniteObject } from '../../domain/ResoniteObject';
 
 describe('applyTextNoteConversion', () => {
   it('TextNote用のスケールとUIX.Textコンポーネントを設定する', () => {

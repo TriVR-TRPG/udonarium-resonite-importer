@@ -2,7 +2,7 @@
  * Parser for Udonarium TextNote objects
  */
 
-import { TextNote } from '../../converter/UdonariumObject';
+import { TextNote } from '../../domain/UdonariumObject';
 import { findDataByName, getTextValue, getNumberValue, parsePosition } from './ParserUtils';
 
 export function parseTextNote(data: unknown, fileName: string): TextNote {

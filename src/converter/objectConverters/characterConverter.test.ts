@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { applyCharacterConversion } from './characterConverter';
-import { GameCharacter } from '../UdonariumObject';
-import { ResoniteObject, Vector3 } from '../ResoniteObject';
+import { GameCharacter } from '../../domain/UdonariumObject';
+import { ResoniteObject, Vector3 } from '../../domain/ResoniteObject';
 
 describe('applyCharacterConversion', () => {
   it('サイズ変換とQuad系コンポーネントを設定する', () => {

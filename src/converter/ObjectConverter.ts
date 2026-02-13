@@ -3,8 +3,8 @@
  */
 
 import { randomUUID } from 'crypto';
-import { UdonariumObject } from './UdonariumObject';
-import { ResoniteObject, Vector3 } from './ResoniteObject';
+import { UdonariumObject } from '../domain/UdonariumObject';
+import { ResoniteObject, Vector3 } from '../domain/ResoniteObject';
 import { SCALE_FACTOR } from '../config/MappingConfig';
 import { applyCharacterConversion } from './objectConverters/characterConverter';
 import { applyCardConversion } from './objectConverters/cardConverter';

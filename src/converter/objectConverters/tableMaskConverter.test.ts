@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { TableMask } from '../UdonariumObject';
-import { ResoniteObject } from '../ResoniteObject';
+import { TableMask } from '../../domain/UdonariumObject';
+import { ResoniteObject } from '../../domain/ResoniteObject';
 import { applyTableMaskConversion } from './tableMaskConverter';
 
 describe('applyTableMaskConversion', () => {

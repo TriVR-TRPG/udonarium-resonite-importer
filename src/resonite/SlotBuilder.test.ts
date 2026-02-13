@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { SlotBuilder } from './SlotBuilder';
 import { ResoniteLinkClient } from './ResoniteLinkClient';
-import { ResoniteObject } from '../converter/ResoniteObject';
+import { ResoniteObject } from '../domain/ResoniteObject';
 import { IMPORT_GROUP_SCALE, IMPORT_ROOT_TAG } from '../config/MappingConfig';
 
 // Mock ResoniteLinkClient

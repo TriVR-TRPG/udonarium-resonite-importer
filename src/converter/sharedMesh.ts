@@ -1,4 +1,4 @@
-import { ResoniteComponent, ResoniteObject } from './ResoniteObject';
+import { ResoniteComponent, ResoniteObject } from '../domain/ResoniteObject';
 
 const MESH_REFERENCE_PREFIX = 'mesh-ref://';
 

@@ -149,9 +149,10 @@ src/
 │       ├── TerrainParser.ts
 │       ├── TableParser.ts            # GameTable + TableMask パーサー
 │       └── TextNoteParser.ts
+├── domain/
+│   ├── UdonariumObject.ts            # Udonariumオブジェクト型定義（共通）
+│   └── ResoniteObject.ts             # Resoniteオブジェクト型定義（共通）
 ├── converter/
-│   ├── UdonariumObject.ts            # Udonariumオブジェクト型定義
-│   ├── ResoniteObject.ts             # Resoniteオブジェクト型定義
 │   ├── ObjectConverter.ts            # 変換ディスパッチ
 │   └── objectConverters/             # 種別ごとの変換ロジック
 │       ├── componentBuilders.ts      # QuadMesh/BoxMesh コンポーネント生成
@@ -170,6 +171,8 @@ src/
 ├── gui/                              # Electron GUI
 └── i18n/                             # 国際化
 ```
+
+> 注: 互換性維持用の `src/converter/UdonariumObject.ts` / `src/converter/ResoniteObject.ts` は削除済み。型は `src/domain/*` を唯一の参照先とする。
 
 ## 将来の改善候補
 

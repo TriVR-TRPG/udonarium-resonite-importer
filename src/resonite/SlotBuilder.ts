@@ -3,7 +3,7 @@
  */
 
 import { randomUUID } from 'crypto';
-import { ResoniteObject, Vector3 } from '../converter/ResoniteObject';
+import { ResoniteObject, Vector3 } from '../domain/ResoniteObject';
 import { SharedMeshDefinition } from '../converter/sharedMesh';
 import { SharedMaterialDefinition } from '../converter/sharedMaterial';
 import { IMPORT_GROUP_SCALE, IMPORT_ROOT_TAG } from '../config/MappingConfig';

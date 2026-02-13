@@ -1,5 +1,5 @@
-import { GameTable, UdonariumObject } from '../UdonariumObject';
-import { ResoniteObject } from '../ResoniteObject';
+import { GameTable, UdonariumObject } from '../../domain/UdonariumObject';
+import { ResoniteObject } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
   buildQuadMeshComponents,

@@ -1,5 +1,5 @@
-import { Card } from '../UdonariumObject';
-import { ResoniteObject } from '../ResoniteObject';
+import { Card } from '../../domain/UdonariumObject';
+import { ResoniteObject } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
   buildQuadMeshComponents,

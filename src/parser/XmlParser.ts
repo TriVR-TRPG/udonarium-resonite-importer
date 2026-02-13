@@ -3,7 +3,7 @@
  */
 
 import { XMLParser } from 'fast-xml-parser';
-import { UdonariumObject, GameTable, GameTableChild } from '../converter/UdonariumObject';
+import { UdonariumObject, GameTable, GameTableChild } from '../domain/UdonariumObject';
 import { SUPPORTED_TAGS } from '../config/MappingConfig';
 import { parseCharacter } from './objects/CharacterParser';
 import { parseCard, parseCardStack } from './objects/CardParser';

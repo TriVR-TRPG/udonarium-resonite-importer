@@ -1,4 +1,4 @@
-import { UdonariumObject } from '../converter/UdonariumObject';
+import { UdonariumObject } from '../domain/UdonariumObject';
 import { AssetImporter } from './AssetImporter';
 import { KNOWN_IMAGE_IDENTIFIERS } from '../config/MappingConfig';
 

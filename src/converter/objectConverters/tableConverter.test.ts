@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { applyTableConversion } from './tableConverter';
-import { GameTable, Terrain } from '../UdonariumObject';
-import { ResoniteObject } from '../ResoniteObject';
+import { GameTable, Terrain } from '../../domain/UdonariumObject';
+import { ResoniteObject } from '../../domain/ResoniteObject';
 
 describe('applyTableConversion', () => {
   it('keeps the table container unrotated and builds visual quad as a child slot', () => {

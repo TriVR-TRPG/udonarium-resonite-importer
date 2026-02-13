@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parseXml, parseXmlFiles } from './XmlParser';
-import { Terrain, GameCharacter, TextNote } from '../converter/UdonariumObject';
+import { Terrain, GameCharacter, TextNote } from '../domain/UdonariumObject';
 
 describe('XmlParser', () => {
   describe('parseXml', () => {

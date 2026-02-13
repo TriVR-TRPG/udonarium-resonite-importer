@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { applyCardStackConversion } from './cardStackConverter';
-import { Card, CardStack, UdonariumObject } from '../UdonariumObject';
-import { ResoniteObject } from '../ResoniteObject';
+import { Card, CardStack, UdonariumObject } from '../../domain/UdonariumObject';
+import { ResoniteObject } from '../../domain/ResoniteObject';
 
 describe('applyCardStackConversion', () => {
   it('子カードをchildrenへ展開し、高さオフセットを設定する', () => {
