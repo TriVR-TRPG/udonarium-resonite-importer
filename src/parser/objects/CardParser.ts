@@ -3,7 +3,13 @@
  */
 
 import { Card, CardStack, ImageRef } from '../../domain/UdonariumObject';
-import { findDataByName, getTextValue, getBooleanValue, parsePosition } from './ParserUtils';
+import {
+  findDataByName,
+  getTextValue,
+  getBooleanValue,
+  getNumberValue,
+  parsePosition,
+} from './ParserUtils';
 
 export function parseCard(data: unknown, fileName: string): Card {
   const root = data as Record<string, unknown>;
@@ -27,6 +33,7 @@ export function parseCard(data: unknown, fileName: string): Card {
   // Parse common data
   const commonData = findDataByName(cardData, 'common');
   const name = getTextValue(findDataByName(commonData, 'name')) || fileName;
+  const size = getNumberValue(findDataByName(commonData, 'size')) ?? 1;
 
   // Parse state
   const isFaceUp = getBooleanValue(root['@_isFaceUp']) ?? true;
@@ -45,6 +52,7 @@ export function parseCard(data: unknown, fileName: string): Card {
     position,
     images,
     properties: new Map(),
+    size,
     isFaceUp,
     frontImage,
     backImage,

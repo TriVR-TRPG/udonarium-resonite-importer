@@ -269,8 +269,8 @@ describe('ObjectConverter', () => {
         { x: 1, y: 1, z: 0.05 }, // character -> converter-defined collider
         { x: 1, y: 1, z: 1 }, // terrain -> converter-defined collider
         { x: 1, y: 1, z: 0 }, // table -> collider on -surface child slot
-        { x: 0.6, y: 0.9, z: 0.01 }, // card -> converter-defined collider
-        { x: 0.6, y: 0.05, z: 0.9 }, // card-stack -> converter-defined collider
+        { x: 1, y: 1.5, z: 0.01 }, // card -> converter-defined collider
+        { x: 1, y: 0.05, z: 1.5 }, // card-stack -> converter-defined collider
         { x: 1, y: 0.02, z: 1 }, // text-note -> converter-defined collider
       ];
 

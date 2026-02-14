@@ -26,83 +26,86 @@ describe('applyCardConversion', () => {
     children: [],
   });
 
-  it('カードサイズと両面Quad構成を設定する', () => {
+  it('creates collider + grabbable on parent and two card faces as children', () => {
     const udonObj = createBaseCard();
     const resoniteObj = createBaseResonite();
 
     applyCardConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.position.x).toBe(0.3);
-    expect(resoniteObj.position.z).toBe(-0.45);
-    expect(resoniteObj.position.y).toBe(0.001);
+    expect(resoniteObj.position).toEqual({ x: 0.5, y: 0.001, z: -0.75 });
     expect(resoniteObj.rotation).toEqual({ x: 90, y: 0, z: 0 });
-
-    expect(resoniteObj.components[0].fields).toEqual({
-      Size: { $type: 'float2', value: { x: 0.6, y: 0.9 } },
-      DualSided: { $type: 'bool', value: true },
-    });
-    const colliderComponent = resoniteObj.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-    );
-    expect(colliderComponent?.fields).toEqual({
-      Size: { $type: 'float3', value: { x: 0.6, y: 0.9, z: 0.01 } },
-    });
+    expect(resoniteObj.components.map((c) => c.type)).toEqual([
+      '[FrooxEngine]FrooxEngine.BoxCollider',
+      '[FrooxEngine]FrooxEngine.Grabbable',
+    ]);
+    expect(resoniteObj.children).toHaveLength(2);
+    expect(resoniteObj.children.map((c) => c.id)).toEqual([
+      'slot-card-1-front',
+      'slot-card-1-back',
+    ]);
   });
 
-  it('表向きカードではfrontImageを使う', () => {
+  it('scales card width by size and keeps 1:1.5 aspect ratio', () => {
+    const udonObj = createBaseCard();
+    udonObj.size = 2;
+    const resoniteObj = createBaseResonite();
+
+    applyCardConversion(udonObj, resoniteObj);
+
+    expect(resoniteObj.position).toEqual({ x: 1, y: 0.001, z: -1.5 });
+    const collider = resoniteObj.components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
+    );
+    expect(collider?.fields).toEqual({
+      Size: { $type: 'float3', value: { x: 2, y: 3, z: 0.01 } },
+    });
+
+    const frontQuad = resoniteObj.children[0].components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
+    );
+    const backQuad = resoniteObj.children[1].components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
+    );
+    expect(frontQuad?.fields).toEqual({ Size: { $type: 'float2', value: { x: 2, y: 3 } } });
+    expect(backQuad?.fields).toEqual({ Size: { $type: 'float2', value: { x: 2, y: 3 } } });
+  });
+
+  it('uses frontImage on front face and backImage on back face', () => {
     const udonObj = createBaseCard();
     const resoniteObj = createBaseResonite();
 
     applyCardConversion(udonObj, resoniteObj);
 
-    const textureComponent = resoniteObj.components.find(
+    const frontTexture = resoniteObj.children[0].components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
     );
-    expect(textureComponent?.fields).toEqual({
+    const backTexture = resoniteObj.children[1].components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
+    );
+    expect(frontTexture?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://front.png' },
       WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
       WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
     });
-  });
-
-  it('裏向きカードではbackImageを使う', () => {
-    const udonObj = createBaseCard();
-    udonObj.isFaceUp = false;
-    const resoniteObj = createBaseResonite();
-
-    applyCardConversion(udonObj, resoniteObj);
-
-    const textureComponent = resoniteObj.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
-    );
-    expect(textureComponent?.fields).toEqual({
+    expect(backTexture?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://back.png' },
       WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
       WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
     });
   });
 
-  it('片面しかない場合は存在する側の画像を使う', () => {
+  it('flips orientation when isFaceUp is false', () => {
     const udonObj = createBaseCard();
     udonObj.isFaceUp = false;
-    udonObj.backImage = null;
     const resoniteObj = createBaseResonite();
 
     applyCardConversion(udonObj, resoniteObj);
 
-    const textureComponent = resoniteObj.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
-    );
-    expect(textureComponent?.fields).toEqual({
-      URL: { $type: 'Uri', value: 'texture://front.png' },
-      WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
-      WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
-    });
+    expect(resoniteObj.rotation).toEqual({ x: -90, y: 0, z: 0 });
   });
 
-  it('front/backともにない場合はimages配列へフォールバックする', () => {
+  it('falls back textures when one or both sides are missing', () => {
     const udonObj = createBaseCard();
-    udonObj.isFaceUp = false;
     udonObj.frontImage = null;
     udonObj.backImage = null;
     udonObj.images = [{ identifier: 'fallback.png', name: 'fallback.png' }];
@@ -110,29 +113,36 @@ describe('applyCardConversion', () => {
 
     applyCardConversion(udonObj, resoniteObj);
 
-    const textureComponent = resoniteObj.components.find(
+    const frontTexture = resoniteObj.children[0].components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
     );
-    expect(textureComponent?.fields).toEqual({
+    const backTexture = resoniteObj.children[1].components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
+    );
+    expect(frontTexture?.fields).toEqual({
+      URL: { $type: 'Uri', value: 'texture://fallback.png' },
+      WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
+      WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
+    });
+    expect(backTexture?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://fallback.png' },
       WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
       WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
     });
   });
 
-  it('GIFテクスチャではFilterModeをPointに設定する', () => {
+  it('applies point filter for GIF textures', () => {
     const udonObj = createBaseCard();
     udonObj.frontImage = { identifier: 'front.gif', name: 'front.gif' };
     udonObj.images = [{ identifier: 'front.gif', name: 'front.gif' }];
     const resoniteObj = createBaseResonite();
-    resoniteObj.textures = ['front.gif', 'back.png'];
 
     applyCardConversion(udonObj, resoniteObj);
 
-    const textureComponent = resoniteObj.components.find(
+    const frontTexture = resoniteObj.children[0].components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
     );
-    expect(textureComponent?.fields).toEqual({
+    expect(frontTexture?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://front.gif' },
       WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
       WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },

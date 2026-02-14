@@ -82,6 +82,27 @@ describe('CardParser', () => {
       expect(result.images).toHaveLength(2);
     });
 
+    it('should parse size from common data', () => {
+      const data = {
+        '@_identifier': 'card-size',
+        data: [
+          {
+            '@_name': 'card',
+            data: [
+              {
+                '@_name': 'common',
+                data: [{ '@_name': 'size', '#text': '2.5' }],
+              },
+            ],
+          },
+        ],
+      };
+
+      const result = parseCard(data, 'test.xml');
+
+      expect(result.size).toBe(2.5);
+    });
+
     it('should handle card with only front image', () => {
       const data = {
         '@_identifier': 'card-003',

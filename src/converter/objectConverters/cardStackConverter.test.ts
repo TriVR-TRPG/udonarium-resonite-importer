@@ -12,6 +12,7 @@ describe('applyCardStackConversion', () => {
       position: { x: 1, y: 2, z: 0 },
       images: [],
       properties: new Map(),
+      size: 2,
       isFaceUp: true,
       frontImage: null,
       backImage: null,
@@ -59,11 +60,11 @@ describe('applyCardStackConversion', () => {
         id: 'slot-stack-1-collider',
         type: '[FrooxEngine]FrooxEngine.BoxCollider',
         fields: {
-          Size: { $type: 'float3', value: { x: 0.6, y: 0.05, z: 0.9 } },
+          Size: { $type: 'float3', value: { x: 2, y: 0.05, z: 3 } },
         },
       },
     ]);
-    expect(resoniteObj.position).toEqual({ x: 0.3, y: 0, z: -0.45 });
+    expect(resoniteObj.position).toEqual({ x: 1, y: 0.001, z: -1.5 });
     expect(resoniteObj.children).toHaveLength(2);
     expect(resoniteObj.children[0].position).toEqual({ x: 0, y: 0, z: 0 });
     expect(resoniteObj.children[1].position).toEqual({ x: 0, y: 0.0005, z: 0 });

@@ -46,6 +46,7 @@ export interface GameCharacter extends BaseUdonariumObject {
 
 export interface Card extends BaseUdonariumObject {
   type: 'card';
+  size?: number;
   isFaceUp: boolean;
   frontImage: ImageRef | null;
   backImage: ImageRef | null;
