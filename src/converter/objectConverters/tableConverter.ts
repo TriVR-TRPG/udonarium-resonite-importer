@@ -1,4 +1,5 @@
 import { GameTable, UdonariumObject } from '../../domain/UdonariumObject';
+import { ImageBlendMode } from '../../config/MappingConfig';
 import { ResoniteObject } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
@@ -6,20 +7,16 @@ import {
   BlendModeValue,
   resolveTextureValue,
 } from './componentBuilders';
-import { lookupImageHasAlpha } from '../imageAspectRatioMap';
+import { lookupImageBlendMode } from '../imageAspectRatioMap';
 
 function resolveBlendMode(
   identifier: string | undefined,
-  imageAlphaMap?: Map<string, boolean>
+  imageBlendModeMap?: Map<string, ImageBlendMode>
 ): BlendModeValue {
-  if (!imageAlphaMap) {
-    return 'Cutout';
+  if (!imageBlendModeMap) {
+    return 'Opaque';
   }
-  const hasAlpha = lookupImageHasAlpha(imageAlphaMap, identifier);
-  if (hasAlpha === undefined) {
-    return 'Cutout';
-  }
-  return hasAlpha ? 'Alpha' : 'Opaque';
+  return lookupImageBlendMode(imageBlendModeMap, identifier) ?? 'Opaque';
 }
 
 export function applyTableConversion(
@@ -27,7 +24,7 @@ export function applyTableConversion(
   resoniteObj: ResoniteObject,
   textureMap?: Map<string, string>,
   convertObject?: (obj: UdonariumObject) => ResoniteObject,
-  imageAlphaMap?: Map<string, boolean>
+  imageBlendModeMap?: Map<string, ImageBlendMode>
 ): void {
   // Keep table container unrotated so child object positions stay stable.
   resoniteObj.rotation = { x: 0, y: 0, z: 0 };
@@ -36,7 +33,7 @@ export function applyTableConversion(
   const surfaceId = `${resoniteObj.id}-surface`;
   const textureIdentifier = udonObj.images[0]?.identifier;
   const textureValue = resolveTextureValue(textureIdentifier, textureMap);
-  const blendMode = resolveBlendMode(textureIdentifier, imageAlphaMap);
+  const blendMode = resolveBlendMode(textureIdentifier, imageBlendModeMap);
   const tableVisual: ResoniteObject = {
     id: surfaceId,
     name: `${resoniteObj.name}-surface`,

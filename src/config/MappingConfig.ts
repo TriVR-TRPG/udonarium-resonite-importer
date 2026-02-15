@@ -73,19 +73,21 @@ export const VERIFIED_RESONITE_LINK_VERSION = '0.7.0.0';
 export interface KnownImageDefinition {
   url: string;
   aspectRatio: number;
-  hasAlpha: boolean;
+  blendMode: ImageBlendMode;
 }
+
+export type ImageBlendMode = 'Cutout' | 'Opaque' | 'Alpha';
 
 interface KnownExternalImageMetadata {
   path: string;
   aspectRatio: number;
-  hasAlpha: boolean;
+  blendMode: ImageBlendMode;
 }
 
 interface KnownExternalImagePrefixMetadata {
   prefix: string;
   aspectRatio: number;
-  hasAlpha: boolean;
+  blendMode: ImageBlendMode;
 }
 
 function extractPathname(urlOrPath: string): string {
@@ -104,11 +106,11 @@ function toAspectRatioMap<T extends { aspectRatio: number }>(
   return new Map(entries.map((entry) => [keySelector(entry), entry.aspectRatio]));
 }
 
-function toAlphaMap<T extends { hasAlpha: boolean }>(
+function toBlendModeMap<T extends { blendMode: ImageBlendMode }>(
   entries: readonly T[],
   keySelector: (entry: T) => string
-): ReadonlyMap<string, boolean> {
-  return new Map(entries.map((entry) => [keySelector(entry), entry.hasAlpha]));
+): ReadonlyMap<string, ImageBlendMode> {
+  return new Map(entries.map((entry) => [keySelector(entry), entry.blendMode]));
 }
 
 /**
@@ -121,35 +123,55 @@ const KNOWN_IMAGE_ENTRIES: ReadonlyArray<readonly [string, KnownImageDefinition]
     {
       url: 'https://udonarium.app/assets/images/BG10a_80.jpg',
       aspectRatio: 0.75,
-      hasAlpha: false,
+      blendMode: 'Opaque',
     },
   ],
   [
     'testCharacter_1_image',
-    { url: 'https://udonarium.app/assets/images/mon_052.gif', aspectRatio: 1.2, hasAlpha: true },
+    {
+      url: 'https://udonarium.app/assets/images/mon_052.gif',
+      aspectRatio: 1.2,
+      blendMode: 'Cutout',
+    },
   ],
   [
     'testCharacter_3_image',
-    { url: 'https://udonarium.app/assets/images/mon_128.gif', aspectRatio: 1.1, hasAlpha: true },
+    {
+      url: 'https://udonarium.app/assets/images/mon_128.gif',
+      aspectRatio: 1.1,
+      blendMode: 'Cutout',
+    },
   ],
   [
     'testCharacter_4_image',
-    { url: 'https://udonarium.app/assets/images/mon_150.gif', aspectRatio: 1.3, hasAlpha: true },
+    {
+      url: 'https://udonarium.app/assets/images/mon_150.gif',
+      aspectRatio: 1.3,
+      blendMode: 'Cutout',
+    },
   ],
   [
     'testCharacter_5_image',
-    { url: 'https://udonarium.app/assets/images/mon_211.gif', aspectRatio: 1.2, hasAlpha: true },
+    {
+      url: 'https://udonarium.app/assets/images/mon_211.gif',
+      aspectRatio: 1.2,
+      blendMode: 'Cutout',
+    },
   ],
   [
     'testCharacter_6_image',
-    { url: 'https://udonarium.app/assets/images/mon_135.gif', aspectRatio: 1, hasAlpha: true },
+    {
+      url: 'https://udonarium.app/assets/images/mon_135.gif',
+      aspectRatio: 1,
+      blendMode: 'Cutout',
+    },
   ],
   [
     'none_icon',
     {
       url: 'https://udonarium.app/assets/images/ic_account_circle_black_24dp_2x.png',
       aspectRatio: 1,
-      hasAlpha: true,
+      blendMode: 'Alpha',
     },
   ],
 ] as const;
@@ -160,12 +182,12 @@ const KNOWN_EXTERNAL_IMAGE_METADATA: ReadonlyArray<KnownExternalImageMetadata> =
   {
     path: 'assets/images/trump/',
     aspectRatio: 1.5,
-    hasAlpha: false,
+    blendMode: 'Cutout',
   },
   ...KNOWN_IMAGE_ENTRIES.map(([, known]) => ({
     path: extractPathname(known.url),
     aspectRatio: known.aspectRatio,
-    hasAlpha: known.hasAlpha,
+    blendMode: known.blendMode,
   })),
 ];
 
@@ -173,7 +195,12 @@ const KNOWN_EXTERNAL_IMAGE_PREFIX_METADATA: ReadonlyArray<KnownExternalImagePref
   {
     prefix: 'assets/images/trump/',
     aspectRatio: 1.5,
-    hasAlpha: false,
+    blendMode: 'Cutout',
+  },
+  {
+    prefix: 'assets/images/dice/',
+    aspectRatio: 1,
+    blendMode: 'Cutout',
   },
 ];
 
@@ -187,9 +214,9 @@ export const KNOWN_EXTERNAL_IMAGE_ASPECT_RATIOS: ReadonlyMap<string, number> = t
 );
 
 /**
- * Known alpha flags for external URL/path based identifiers.
+ * Known blend modes for external URL/path based identifiers.
  */
-export const KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS: ReadonlyMap<string, boolean> = toAlphaMap(
+export const KNOWN_EXTERNAL_IMAGE_BLEND_MODES: ReadonlyMap<string, ImageBlendMode> = toBlendModeMap(
   KNOWN_EXTERNAL_IMAGE_METADATA.filter((entry) => !entry.path.endsWith('/')),
   (entry) => entry.path
 );
@@ -207,14 +234,14 @@ export const KNOWN_EXTERNAL_IMAGE_ASPECT_RATIO_PREFIXES: ReadonlyArray<{
 }));
 
 /**
- * Prefix-based alpha flags for external URL/path based identifiers.
+ * Prefix-based blend mode for external URL/path based identifiers.
  */
-export const KNOWN_EXTERNAL_IMAGE_ALPHA_PREFIXES: ReadonlyArray<{
+export const KNOWN_EXTERNAL_IMAGE_BLEND_MODE_PREFIXES: ReadonlyArray<{
   prefix: string;
-  hasAlpha: boolean;
+  blendMode: ImageBlendMode;
 }> = KNOWN_EXTERNAL_IMAGE_PREFIX_METADATA.map((entry) => ({
   prefix: entry.prefix,
-  hasAlpha: entry.hasAlpha,
+  blendMode: entry.blendMode,
 }));
 
 /**

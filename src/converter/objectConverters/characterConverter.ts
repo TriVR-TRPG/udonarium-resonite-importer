@@ -1,4 +1,5 @@
 import { GameCharacter } from '../../domain/UdonariumObject';
+import { ImageBlendMode } from '../../config/MappingConfig';
 import { ResoniteObject, Vector3 } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
@@ -6,20 +7,16 @@ import {
   BlendModeValue,
   resolveTextureValue,
 } from './componentBuilders';
-import { lookupImageHasAlpha } from '../imageAspectRatioMap';
+import { lookupImageBlendMode } from '../imageAspectRatioMap';
 
 function resolveBlendMode(
   identifier: string | undefined,
-  imageAlphaMap?: Map<string, boolean>
+  imageBlendModeMap?: Map<string, ImageBlendMode>
 ): BlendModeValue {
-  if (!imageAlphaMap) {
-    return 'Cutout';
+  if (!imageBlendModeMap) {
+    return 'Opaque';
   }
-  const hasAlpha = lookupImageHasAlpha(imageAlphaMap, identifier);
-  if (hasAlpha === undefined) {
-    return 'Cutout';
-  }
-  return hasAlpha ? 'Alpha' : 'Opaque';
+  return lookupImageBlendMode(imageBlendModeMap, identifier) ?? 'Opaque';
 }
 
 export function applyCharacterConversion(
@@ -27,12 +24,12 @@ export function applyCharacterConversion(
   resoniteObj: ResoniteObject,
   convertSize: (size: number) => Vector3,
   textureMap?: Map<string, string>,
-  imageAlphaMap?: Map<string, boolean>
+  imageBlendModeMap?: Map<string, ImageBlendMode>
 ): void {
   const size = convertSize(udonObj.size);
   const textureIdentifier = udonObj.images[0]?.identifier;
   const textureValue = resolveTextureValue(textureIdentifier, textureMap);
-  const blendMode = resolveBlendMode(textureIdentifier, imageAlphaMap);
+  const blendMode = resolveBlendMode(textureIdentifier, imageBlendModeMap);
   resoniteObj.components = buildQuadMeshComponents(
     resoniteObj.id,
     textureValue,

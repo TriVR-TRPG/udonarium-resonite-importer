@@ -4,6 +4,7 @@
 
 import { randomUUID } from 'crypto';
 import { UdonariumObject } from '../domain/UdonariumObject';
+import { ImageBlendMode } from '../config/MappingConfig';
 import { ResoniteObject, Vector3 } from '../domain/ResoniteObject';
 import { SCALE_FACTOR } from '../config/MappingConfig';
 import { applyCharacterConversion } from './objectConverters/characterConverter';
@@ -53,7 +54,7 @@ function convertObjectWithTextures(
   udonObj: UdonariumObject,
   textureMap?: Map<string, string>,
   imageAspectRatioMap?: Map<string, number>,
-  imageAlphaMap?: Map<string, boolean>
+  imageBlendModeMap?: Map<string, ImageBlendMode>
 ): ResoniteObject {
   const position = convertPosition(udonObj.position.x, udonObj.position.y, udonObj.position.z);
 
@@ -71,34 +72,34 @@ function convertObjectWithTextures(
   // Apply type-specific conversions
   switch (udonObj.type) {
     case 'character':
-      applyCharacterConversion(udonObj, resoniteObj, convertSize, textureMap, imageAlphaMap);
+      applyCharacterConversion(udonObj, resoniteObj, convertSize, textureMap, imageBlendModeMap);
       break;
     case 'dice-symbol':
-      applyDiceSymbolConversion(udonObj, resoniteObj, convertSize, textureMap, imageAlphaMap);
+      applyDiceSymbolConversion(udonObj, resoniteObj, convertSize, textureMap, imageBlendModeMap);
       break;
     case 'terrain':
-      applyTerrainConversion(udonObj, resoniteObj, textureMap, imageAlphaMap);
+      applyTerrainConversion(udonObj, resoniteObj, textureMap, imageBlendModeMap);
       break;
     case 'table':
       applyTableConversion(
         udonObj,
         resoniteObj,
         textureMap,
-        (obj) => convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageAlphaMap),
-        imageAlphaMap
+        (obj) => convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageBlendModeMap),
+        imageBlendModeMap
       );
       break;
     case 'table-mask':
       applyTableMaskConversion(udonObj, resoniteObj, textureMap);
       break;
     case 'card':
-      applyCardConversion(udonObj, resoniteObj, textureMap, imageAspectRatioMap, imageAlphaMap);
+      applyCardConversion(udonObj, resoniteObj, textureMap, imageAspectRatioMap, imageBlendModeMap);
       break;
     case 'card-stack':
       applyCardStackConversion(
         udonObj,
         resoniteObj,
-        (obj) => convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageAlphaMap),
+        (obj) => convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageBlendModeMap),
         imageAspectRatioMap
       );
       break;
@@ -126,10 +127,10 @@ export function convertObjectsWithTextureMap(
   udonObjects: UdonariumObject[],
   textureMap: Map<string, string>,
   imageAspectRatioMap?: Map<string, number>,
-  imageAlphaMap?: Map<string, boolean>
+  imageBlendModeMap?: Map<string, ImageBlendMode>
 ): ResoniteObject[] {
   return udonObjects.map((obj) =>
-    convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageAlphaMap)
+    convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageBlendModeMap)
   );
 }
 

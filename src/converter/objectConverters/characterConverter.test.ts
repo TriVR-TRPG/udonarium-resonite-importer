@@ -50,7 +50,7 @@ describe('applyCharacterConversion', () => {
       (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
     );
     expect(materialComponent?.fields).toEqual({
-      BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' },
+      BlendMode: { $type: 'enum', value: 'Opaque', enumType: 'BlendMode' },
       ShadowRamp: { $type: 'reference', targetId: null },
       ShadowSharpness: { $type: 'float', value: 0 },
     });

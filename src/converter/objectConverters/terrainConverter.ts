@@ -1,4 +1,5 @@
 import { Terrain } from '../../domain/UdonariumObject';
+import { ImageBlendMode } from '../../config/MappingConfig';
 import { ResoniteObject } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
@@ -6,27 +7,23 @@ import {
   BlendModeValue,
   resolveTextureValue,
 } from './componentBuilders';
-import { lookupImageHasAlpha } from '../imageAspectRatioMap';
+import { lookupImageBlendMode } from '../imageAspectRatioMap';
 
 function resolveBlendMode(
   identifier: string | undefined,
-  imageAlphaMap?: Map<string, boolean>
+  imageBlendModeMap?: Map<string, ImageBlendMode>
 ): BlendModeValue {
-  if (!imageAlphaMap) {
-    return 'Cutout';
+  if (!imageBlendModeMap) {
+    return 'Opaque';
   }
-  const hasAlpha = lookupImageHasAlpha(imageAlphaMap, identifier);
-  if (hasAlpha === undefined) {
-    return 'Cutout';
-  }
-  return hasAlpha ? 'Alpha' : 'Opaque';
+  return lookupImageBlendMode(imageBlendModeMap, identifier) ?? 'Opaque';
 }
 
 export function applyTerrainConversion(
   udonObj: Terrain,
   resoniteObj: ResoniteObject,
   textureMap?: Map<string, string>,
-  imageAlphaMap?: Map<string, boolean>
+  imageBlendModeMap?: Map<string, ImageBlendMode>
 ): void {
   resoniteObj.rotation = { x: 0, y: udonObj.rotate, z: 0 };
   const topTextureIdentifier =
@@ -39,8 +36,8 @@ export function applyTerrainConversion(
     udonObj.images[0]?.identifier;
   const topTextureValue = resolveTextureValue(topTextureIdentifier, textureMap);
   const sideTextureValue = resolveTextureValue(sideTextureIdentifier, textureMap);
-  const topBlendMode = resolveBlendMode(topTextureIdentifier, imageAlphaMap);
-  const sideBlendMode = resolveBlendMode(sideTextureIdentifier, imageAlphaMap);
+  const topBlendMode = resolveBlendMode(topTextureIdentifier, imageBlendModeMap);
+  const sideBlendMode = resolveBlendMode(sideTextureIdentifier, imageBlendModeMap);
   // Axis mapping: width -> X, height -> Y, depth -> Z
   resoniteObj.components = [
     buildBoxColliderComponent(resoniteObj.id, {

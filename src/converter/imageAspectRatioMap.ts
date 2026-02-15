@@ -2,10 +2,11 @@ import sharp from 'sharp';
 import { ExtractedFile } from '../parser/ZipExtractor';
 import { UdonariumObject } from '../domain/UdonariumObject';
 import {
-  KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS,
-  KNOWN_EXTERNAL_IMAGE_ALPHA_PREFIXES,
+  KNOWN_EXTERNAL_IMAGE_BLEND_MODES,
+  KNOWN_EXTERNAL_IMAGE_BLEND_MODE_PREFIXES,
   KNOWN_EXTERNAL_IMAGE_ASPECT_RATIOS,
   KNOWN_EXTERNAL_IMAGE_ASPECT_RATIO_PREFIXES,
+  ImageBlendMode,
   KNOWN_IMAGES,
 } from '../config/MappingConfig';
 
@@ -120,38 +121,38 @@ function resolveKnownRatio(identifier: string): number | undefined {
   return undefined;
 }
 
-function resolveKnownHasAlpha(identifier: string): boolean | undefined {
+function resolveKnownBlendMode(identifier: string): ImageBlendMode | undefined {
   const normalized = normalizeIdentifier(identifier);
   const knownImage = KNOWN_IMAGES.get(identifier);
   if (knownImage) {
-    return knownImage.hasAlpha;
+    return knownImage.blendMode;
   }
-  const knownPathAlpha =
-    KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS.get(identifier) ??
-    KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS.get(normalized) ??
-    KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS.get(`./${normalized}`);
-  if (typeof knownPathAlpha === 'boolean') {
-    return knownPathAlpha;
+  const knownPathBlendMode =
+    KNOWN_EXTERNAL_IMAGE_BLEND_MODES.get(identifier) ??
+    KNOWN_EXTERNAL_IMAGE_BLEND_MODES.get(normalized) ??
+    KNOWN_EXTERNAL_IMAGE_BLEND_MODES.get(`./${normalized}`);
+  if (knownPathBlendMode) {
+    return knownPathBlendMode;
   }
-  for (const entry of KNOWN_EXTERNAL_IMAGE_ALPHA_PREFIXES) {
+  for (const entry of KNOWN_EXTERNAL_IMAGE_BLEND_MODE_PREFIXES) {
     if (
       normalized.startsWith(entry.prefix) ||
       normalized.startsWith(`./${entry.prefix}`) ||
       identifier.startsWith(entry.prefix) ||
       identifier.startsWith(`./${entry.prefix}`)
     ) {
-      return entry.hasAlpha;
+      return entry.blendMode;
     }
   }
   const urlPath = extractPathFromAbsoluteUrl(identifier);
   if (urlPath) {
-    const urlPathAlpha = KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS.get(urlPath);
-    if (typeof urlPathAlpha === 'boolean') {
-      return urlPathAlpha;
+    const urlPathBlendMode = KNOWN_EXTERNAL_IMAGE_BLEND_MODES.get(urlPath);
+    if (urlPathBlendMode) {
+      return urlPathBlendMode;
     }
-    for (const entry of KNOWN_EXTERNAL_IMAGE_ALPHA_PREFIXES) {
+    for (const entry of KNOWN_EXTERNAL_IMAGE_BLEND_MODE_PREFIXES) {
       if (urlPath.startsWith(entry.prefix)) {
-        return entry.hasAlpha;
+        return entry.blendMode;
       }
     }
   }
@@ -173,17 +174,18 @@ function seedKnownAspectRatioMap(map: Map<string, number>): void {
   }
 }
 
-function seedKnownAlphaMap(map: Map<string, boolean>): void {
+function seedKnownBlendModeMap(map: Map<string, ImageBlendMode>): void {
   for (const [identifier, known] of KNOWN_IMAGES) {
-    setAlphaForIdentifier(map, identifier, known.hasAlpha);
-    setAlphaForIdentifier(map, known.url, known.hasAlpha);
+    const blendMode = known.blendMode;
+    setBlendModeForIdentifier(map, identifier, blendMode);
+    setBlendModeForIdentifier(map, known.url, blendMode);
     const knownUrlPath = extractPathFromAbsoluteUrl(known.url);
     if (knownUrlPath) {
-      setAlphaForIdentifier(map, knownUrlPath, known.hasAlpha);
+      setBlendModeForIdentifier(map, knownUrlPath, blendMode);
     }
   }
-  for (const [identifier, hasAlpha] of KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS) {
-    setAlphaForIdentifier(map, identifier, hasAlpha);
+  for (const [identifier, blendMode] of KNOWN_EXTERNAL_IMAGE_BLEND_MODES) {
+    setBlendModeForIdentifier(map, identifier, blendMode);
   }
 }
 
@@ -249,10 +251,10 @@ export function lookupImageAspectRatio(
   return undefined;
 }
 
-export function lookupImageHasAlpha(
-  imageAlphaMap: Map<string, boolean>,
+export function lookupImageBlendMode(
+  imageBlendModeMap: Map<string, ImageBlendMode>,
   identifier: string | undefined
-): boolean | undefined {
+): ImageBlendMode | undefined {
   if (!identifier) {
     return undefined;
   }
@@ -270,9 +272,9 @@ export function lookupImageHasAlpha(
   }
 
   for (const key of candidates) {
-    const hasAlpha = imageAlphaMap.get(key);
-    if (typeof hasAlpha === 'boolean') {
-      return hasAlpha;
+    const blendMode = imageBlendModeMap.get(key);
+    if (blendMode) {
+      return blendMode;
     }
   }
 
@@ -328,64 +330,126 @@ export async function buildImageAspectRatioMap(
   return map;
 }
 
-function setAlphaForIdentifier(
-  map: Map<string, boolean>,
+function setBlendModeForIdentifier(
+  map: Map<string, ImageBlendMode>,
   identifier: string,
-  hasAlpha: boolean,
+  blendMode: ImageBlendMode,
   normalizedIdentifier?: string
 ): void {
   for (const key of buildIdentifierKeys(identifier, normalizedIdentifier)) {
-    map.set(key, hasAlpha);
+    map.set(key, blendMode);
   }
 }
 
-function resolveKnownHasAlphaForFile(file: ExtractedFile): boolean | undefined {
+function resolveKnownBlendModeForFile(file: ExtractedFile): ImageBlendMode | undefined {
   const normalizedPath = normalizeIdentifier(file.path);
   const candidates = [file.name, file.path, normalizedPath, `./${normalizedPath}`];
   for (const candidate of candidates) {
-    const hasAlpha = resolveKnownHasAlpha(candidate);
-    if (typeof hasAlpha === 'boolean') {
-      return hasAlpha;
+    const blendMode = resolveKnownBlendMode(candidate);
+    if (blendMode) {
+      return blendMode;
     }
   }
   return undefined;
 }
 
-export async function buildImageAlphaMap(
+function buildExternalProbeUrl(identifier: string): string | undefined {
+  if (identifier.startsWith('http://') || identifier.startsWith('https://')) {
+    return identifier;
+  }
+  const normalized = normalizeIdentifier(identifier);
+  if (normalized.startsWith('assets/')) {
+    return `https://udonarium.app/${normalized}`;
+  }
+  return undefined;
+}
+
+async function probeBlendModeFromExternalUrl(url: string): Promise<ImageBlendMode | undefined> {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      return undefined;
+    }
+    const bytes = await response.arrayBuffer();
+    const metadata = await sharp(Buffer.from(bytes)).metadata();
+    const hasAlpha = metadata.hasAlpha ?? (metadata.channels ?? 0) >= 4;
+    return hasAlpha ? 'Alpha' : 'Opaque';
+  } catch {
+    return undefined;
+  }
+}
+
+export async function buildImageBlendModeMap(
   imageFiles: ExtractedFile[],
   objects: UdonariumObject[] = []
-): Promise<Map<string, boolean>> {
-  const map = new Map<string, boolean>();
-  seedKnownAlphaMap(map);
+): Promise<Map<string, ImageBlendMode>> {
+  const map = new Map<string, ImageBlendMode>();
+  seedKnownBlendModeMap(map);
 
   await Promise.all(
     imageFiles.map(async (file) => {
-      const knownHasAlpha = resolveKnownHasAlphaForFile(file);
-      if (typeof knownHasAlpha === 'boolean') {
+      const knownBlendMode = resolveKnownBlendModeForFile(file);
+      if (knownBlendMode) {
         const normalizedPath = normalizeIdentifier(file.path);
-        setAlphaForIdentifier(map, file.name, knownHasAlpha);
-        setAlphaForIdentifier(map, file.path, knownHasAlpha, normalizedPath);
+        setBlendModeForIdentifier(map, file.name, knownBlendMode);
+        setBlendModeForIdentifier(map, file.path, knownBlendMode, normalizedPath);
         return;
       }
 
       try {
         const metadata = await sharp(file.data).metadata();
         const hasAlpha = metadata.hasAlpha ?? (metadata.channels ?? 0) >= 4;
+        const blendMode: ImageBlendMode = hasAlpha ? 'Alpha' : 'Opaque';
         const normalizedPath = normalizeIdentifier(file.path);
-        setAlphaForIdentifier(map, file.name, hasAlpha);
-        setAlphaForIdentifier(map, file.path, hasAlpha, normalizedPath);
+        setBlendModeForIdentifier(map, file.name, blendMode);
+        setBlendModeForIdentifier(map, file.path, blendMode, normalizedPath);
       } catch {
-        // Ignore unsupported/corrupted images and keep unresolved alpha.
+        // Ignore unsupported/corrupted images and keep unresolved blend mode.
       }
     })
   );
 
+  const externalProbeTasks: Array<Promise<void>> = [];
   for (const identifier of collectImageIdentifiers(objects)) {
-    const knownHasAlpha = resolveKnownHasAlpha(identifier);
-    if (typeof knownHasAlpha === 'boolean' && lookupImageHasAlpha(map, identifier) === undefined) {
-      setAlphaForIdentifier(map, identifier, knownHasAlpha);
+    const knownBlendMode = resolveKnownBlendMode(identifier);
+    if (knownBlendMode && lookupImageBlendMode(map, identifier) === undefined) {
+      setBlendModeForIdentifier(map, identifier, knownBlendMode);
+      continue;
     }
+    if (lookupImageBlendMode(map, identifier) !== undefined) {
+      continue;
+    }
+    const probeUrl = buildExternalProbeUrl(identifier);
+    if (!probeUrl) {
+      continue;
+    }
+    externalProbeTasks.push(
+      (async () => {
+        const probed = await probeBlendModeFromExternalUrl(probeUrl);
+        if (probed) {
+          setBlendModeForIdentifier(map, identifier, probed);
+          setBlendModeForIdentifier(map, probeUrl, probed);
+        }
+      })()
+    );
   }
+  await Promise.all(externalProbeTasks);
 
   return map;
+}
+
+export async function buildImageAlphaMap(
+  imageFiles: ExtractedFile[],
+  objects: UdonariumObject[] = []
+): Promise<Map<string, boolean>> {
+  const blendModeMap = await buildImageBlendModeMap(imageFiles, objects);
+  const alphaMap = new Map<string, boolean>();
+  for (const [identifier, blendMode] of blendModeMap) {
+    if (blendMode === 'Alpha') {
+      alphaMap.set(identifier, true);
+    } else if (blendMode === 'Opaque') {
+      alphaMap.set(identifier, false);
+    }
+  }
+  return alphaMap;
 }

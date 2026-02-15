@@ -1,4 +1,5 @@
 import { DiceSymbol } from '../../domain/UdonariumObject';
+import { ImageBlendMode } from '../../config/MappingConfig';
 import { ResoniteObject, Vector3 } from '../../domain/ResoniteObject';
 import {
   BlendModeValue,
@@ -6,20 +7,16 @@ import {
   buildQuadMeshComponents,
   resolveTextureValue,
 } from './componentBuilders';
-import { lookupImageHasAlpha } from '../imageAspectRatioMap';
+import { lookupImageBlendMode } from '../imageAspectRatioMap';
 
 function resolveBlendMode(
   identifier: string | undefined,
-  imageAlphaMap?: Map<string, boolean>
+  imageBlendModeMap?: Map<string, ImageBlendMode>
 ): BlendModeValue {
-  if (!imageAlphaMap) {
-    return 'Cutout';
+  if (!imageBlendModeMap) {
+    return 'Opaque';
   }
-  const hasAlpha = lookupImageHasAlpha(imageAlphaMap, identifier);
-  if (hasAlpha === undefined) {
-    return 'Cutout';
-  }
-  return hasAlpha ? 'Alpha' : 'Opaque';
+  return lookupImageBlendMode(imageBlendModeMap, identifier) ?? 'Opaque';
 }
 
 export function applyDiceSymbolConversion(
@@ -27,7 +24,7 @@ export function applyDiceSymbolConversion(
   resoniteObj: ResoniteObject,
   convertSize: (size: number) => Vector3,
   textureMap?: Map<string, string>,
-  imageAlphaMap?: Map<string, boolean>
+  imageBlendModeMap?: Map<string, ImageBlendMode>
 ): void {
   const size = convertSize(udonObj.size);
   const activeFaceName = udonObj.face ?? udonObj.faceImages[0]?.name;
@@ -43,7 +40,7 @@ export function applyDiceSymbolConversion(
   resoniteObj.children = udonObj.faceImages.map((faceImage, index) => {
     const childId = `${resoniteObj.id}-face-${index}`;
     const childTextureValue = resolveTextureValue(faceImage.identifier, textureMap);
-    const childBlendMode = resolveBlendMode(faceImage.identifier, imageAlphaMap);
+    const childBlendMode = resolveBlendMode(faceImage.identifier, imageBlendModeMap);
     return {
       id: childId,
       name: `${resoniteObj.name}-face-${faceImage.name}`,

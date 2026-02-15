@@ -1,4 +1,5 @@
 import { Card } from '../../domain/UdonariumObject';
+import { ImageBlendMode } from '../../config/MappingConfig';
 import { ResoniteObject } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
@@ -6,7 +7,7 @@ import {
   BlendModeValue,
   resolveTextureValue,
 } from './componentBuilders';
-import { lookupImageAspectRatio, lookupImageHasAlpha } from '../imageAspectRatioMap';
+import { lookupImageAspectRatio, lookupImageBlendMode } from '../imageAspectRatioMap';
 
 const CARD_Y_OFFSET = 0.001;
 const CARD_FACE_SEPARATION = 0.0001;
@@ -14,16 +15,12 @@ const DEFAULT_CARD_ASPECT_RATIO = 1;
 
 function resolveBlendMode(
   identifier: string | undefined,
-  imageAlphaMap?: Map<string, boolean>
+  imageBlendModeMap?: Map<string, ImageBlendMode>
 ): BlendModeValue {
-  if (!imageAlphaMap) {
-    return 'Cutout';
+  if (!imageBlendModeMap) {
+    return 'Opaque';
   }
-  const hasAlpha = lookupImageHasAlpha(imageAlphaMap, identifier);
-  if (hasAlpha === undefined) {
-    return 'Cutout';
-  }
-  return hasAlpha ? 'Alpha' : 'Opaque';
+  return lookupImageBlendMode(imageBlendModeMap, identifier) ?? 'Opaque';
 }
 
 function resolveFrontTextureIdentifier(card: Card): string | undefined {
@@ -83,7 +80,7 @@ export function applyCardConversion(
   resoniteObj: ResoniteObject,
   textureMap?: Map<string, string>,
   imageAspectRatioMap?: Map<string, number>,
-  imageAlphaMap?: Map<string, boolean>
+  imageBlendModeMap?: Map<string, ImageBlendMode>
 ): void {
   const cardWidth = udonObj.size ?? 1;
   const frontAspectRatio = resolveAspectRatio(
@@ -105,8 +102,8 @@ export function applyCardConversion(
   const backTextureIdentifier = resolveBackTextureIdentifier(udonObj);
   const frontTextureValue = resolveTextureValue(frontTextureIdentifier, textureMap);
   const backTextureValue = resolveTextureValue(backTextureIdentifier, textureMap);
-  const frontBlendMode = resolveBlendMode(frontTextureIdentifier, imageAlphaMap);
-  const backBlendMode = resolveBlendMode(backTextureIdentifier, imageAlphaMap);
+  const frontBlendMode = resolveBlendMode(frontTextureIdentifier, imageBlendModeMap);
+  const backBlendMode = resolveBlendMode(backTextureIdentifier, imageBlendModeMap);
 
   // Udonarium positions are edge-based; Resonite uses center-based transforms.
   resoniteObj.position.x += cardWidth / 2;

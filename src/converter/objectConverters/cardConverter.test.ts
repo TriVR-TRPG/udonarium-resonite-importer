@@ -223,12 +223,12 @@ describe('applyCardConversion', () => {
   it('switches blend mode by image alpha presence', () => {
     const udonObj = createBaseCard();
     const resoniteObj = createBaseResonite();
-    const imageAlphaMap = new Map<string, boolean>([
-      ['front.png', false],
-      ['back.png', true],
+    const imageBlendModeMap = new Map([
+      ['front.png', 'Opaque' as const],
+      ['back.png', 'Alpha' as const],
     ]);
 
-    applyCardConversion(udonObj, resoniteObj, undefined, undefined, imageAlphaMap);
+    applyCardConversion(udonObj, resoniteObj, undefined, undefined, imageBlendModeMap);
 
     const frontMaterial = resoniteObj.children[0].components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
@@ -248,19 +248,19 @@ describe('applyCardConversion', () => {
     });
   });
 
-  it('falls back to Cutout when alpha is unresolved', () => {
+  it('falls back to Opaque when alpha is unresolved', () => {
     const udonObj = createBaseCard();
     const resoniteObj = createBaseResonite();
-    const imageAlphaMap = new Map<string, boolean>([['back.png', true]]);
+    const imageBlendModeMap = new Map([['back.png', 'Alpha' as const]]);
 
-    applyCardConversion(udonObj, resoniteObj, undefined, undefined, imageAlphaMap);
+    applyCardConversion(udonObj, resoniteObj, undefined, undefined, imageBlendModeMap);
 
     const frontMaterial = resoniteObj.children[0].components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
     );
     expect(frontMaterial?.fields.BlendMode).toEqual({
       $type: 'enum',
-      value: 'Cutout',
+      value: 'Opaque',
       enumType: 'BlendMode',
     });
   });
