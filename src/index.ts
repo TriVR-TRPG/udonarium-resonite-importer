@@ -17,7 +17,7 @@ import * as path from 'path';
 import { extractZip } from './parser/ZipExtractor';
 import { parseXmlFiles } from './parser/XmlParser';
 import { convertObjectsWithTextureMap } from './converter/ObjectConverter';
-import { buildImageAspectRatioMap } from './converter/imageAspectRatioMap';
+import { buildImageAlphaMap, buildImageAspectRatioMap } from './converter/imageAspectRatioMap';
 import { toTextureReference } from './converter/objectConverters/componentBuilders';
 import { prepareSharedMeshDefinitions, resolveSharedMeshReferences } from './converter/sharedMesh';
 import {
@@ -172,6 +172,7 @@ async function run(options: CLIOptions): Promise<void> {
     extractedData.imageFiles,
     parseResult.objects
   );
+  const imageAlphaMap = await buildImageAlphaMap(extractedData.imageFiles, parseResult.objects);
 
   if (options.verbose) {
     for (const [type, count] of typeCounts) {
@@ -201,7 +202,8 @@ async function run(options: CLIOptions): Promise<void> {
     const resoniteObjects = convertObjectsWithTextureMap(
       parseResult.objects,
       new Map<string, string>(),
-      imageAspectRatioMap
+      imageAspectRatioMap,
+      imageAlphaMap
     );
 
     console.log();
@@ -307,7 +309,8 @@ async function run(options: CLIOptions): Promise<void> {
     const resoniteObjects = convertObjectsWithTextureMap(
       parseResult.objects,
       textureComponentMap,
-      imageAspectRatioMap
+      imageAspectRatioMap,
+      imageAlphaMap
     );
     const sharedMeshDefinitions = prepareSharedMeshDefinitions(resoniteObjects);
     const meshReferenceMap = await slotBuilder.createMeshAssets(sharedMeshDefinitions);

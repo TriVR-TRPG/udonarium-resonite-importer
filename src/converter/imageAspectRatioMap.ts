@@ -2,6 +2,8 @@ import sharp from 'sharp';
 import { ExtractedFile } from '../parser/ZipExtractor';
 import { UdonariumObject } from '../domain/UdonariumObject';
 import {
+  KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS,
+  KNOWN_EXTERNAL_IMAGE_ALPHA_PREFIXES,
   KNOWN_EXTERNAL_IMAGE_ASPECT_RATIOS,
   KNOWN_EXTERNAL_IMAGE_ASPECT_RATIO_PREFIXES,
   KNOWN_IMAGES,
@@ -118,6 +120,44 @@ function resolveKnownRatio(identifier: string): number | undefined {
   return undefined;
 }
 
+function resolveKnownHasAlpha(identifier: string): boolean | undefined {
+  const normalized = normalizeIdentifier(identifier);
+  const knownImage = KNOWN_IMAGES.get(identifier);
+  if (knownImage) {
+    return knownImage.hasAlpha;
+  }
+  const knownPathAlpha =
+    KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS.get(identifier) ??
+    KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS.get(normalized) ??
+    KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS.get(`./${normalized}`);
+  if (typeof knownPathAlpha === 'boolean') {
+    return knownPathAlpha;
+  }
+  for (const entry of KNOWN_EXTERNAL_IMAGE_ALPHA_PREFIXES) {
+    if (
+      normalized.startsWith(entry.prefix) ||
+      normalized.startsWith(`./${entry.prefix}`) ||
+      identifier.startsWith(entry.prefix) ||
+      identifier.startsWith(`./${entry.prefix}`)
+    ) {
+      return entry.hasAlpha;
+    }
+  }
+  const urlPath = extractPathFromAbsoluteUrl(identifier);
+  if (urlPath) {
+    const urlPathAlpha = KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS.get(urlPath);
+    if (typeof urlPathAlpha === 'boolean') {
+      return urlPathAlpha;
+    }
+    for (const entry of KNOWN_EXTERNAL_IMAGE_ALPHA_PREFIXES) {
+      if (urlPath.startsWith(entry.prefix)) {
+        return entry.hasAlpha;
+      }
+    }
+  }
+  return undefined;
+}
+
 function seedKnownAspectRatioMap(map: Map<string, number>): void {
   for (const [identifier, known] of KNOWN_IMAGES) {
     const ratio = known.aspectRatio;
@@ -130,6 +170,20 @@ function seedKnownAspectRatioMap(map: Map<string, number>): void {
   }
   for (const [identifier, ratio] of KNOWN_EXTERNAL_IMAGE_ASPECT_RATIOS) {
     setRatioForIdentifier(map, identifier, ratio);
+  }
+}
+
+function seedKnownAlphaMap(map: Map<string, boolean>): void {
+  for (const [identifier, known] of KNOWN_IMAGES) {
+    setAlphaForIdentifier(map, identifier, known.hasAlpha);
+    setAlphaForIdentifier(map, known.url, known.hasAlpha);
+    const knownUrlPath = extractPathFromAbsoluteUrl(known.url);
+    if (knownUrlPath) {
+      setAlphaForIdentifier(map, knownUrlPath, known.hasAlpha);
+    }
+  }
+  for (const [identifier, hasAlpha] of KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS) {
+    setAlphaForIdentifier(map, identifier, hasAlpha);
   }
 }
 
@@ -195,6 +249,36 @@ export function lookupImageAspectRatio(
   return undefined;
 }
 
+export function lookupImageHasAlpha(
+  imageAlphaMap: Map<string, boolean>,
+  identifier: string | undefined
+): boolean | undefined {
+  if (!identifier) {
+    return undefined;
+  }
+
+  const normalized = normalizeIdentifier(identifier);
+  const candidates = [identifier, normalized, `./${normalized}`];
+  const normalizedSegments = normalized.split('/');
+  const basenameWithExt = normalizedSegments[normalizedSegments.length - 1];
+  if (basenameWithExt) {
+    candidates.push(basenameWithExt);
+    const basenameWithoutExt = basenameWithExt.replace(/\.[^.]+$/, '');
+    if (basenameWithoutExt) {
+      candidates.push(basenameWithoutExt);
+    }
+  }
+
+  for (const key of candidates) {
+    const hasAlpha = imageAlphaMap.get(key);
+    if (typeof hasAlpha === 'boolean') {
+      return hasAlpha;
+    }
+  }
+
+  return undefined;
+}
+
 /**
  * Build image aspect ratio map keyed by Udonarium image identifier.
  * ratio = height / width
@@ -238,6 +322,68 @@ export async function buildImageAspectRatioMap(
     const knownRatio = resolveKnownRatio(identifier);
     if (knownRatio && !lookupImageAspectRatio(map, identifier)) {
       setRatioForIdentifier(map, identifier, knownRatio);
+    }
+  }
+
+  return map;
+}
+
+function setAlphaForIdentifier(
+  map: Map<string, boolean>,
+  identifier: string,
+  hasAlpha: boolean,
+  normalizedIdentifier?: string
+): void {
+  for (const key of buildIdentifierKeys(identifier, normalizedIdentifier)) {
+    map.set(key, hasAlpha);
+  }
+}
+
+function resolveKnownHasAlphaForFile(file: ExtractedFile): boolean | undefined {
+  const normalizedPath = normalizeIdentifier(file.path);
+  const candidates = [file.name, file.path, normalizedPath, `./${normalizedPath}`];
+  for (const candidate of candidates) {
+    const hasAlpha = resolveKnownHasAlpha(candidate);
+    if (typeof hasAlpha === 'boolean') {
+      return hasAlpha;
+    }
+  }
+  return undefined;
+}
+
+export async function buildImageAlphaMap(
+  imageFiles: ExtractedFile[],
+  objects: UdonariumObject[] = []
+): Promise<Map<string, boolean>> {
+  const map = new Map<string, boolean>();
+  seedKnownAlphaMap(map);
+
+  await Promise.all(
+    imageFiles.map(async (file) => {
+      const knownHasAlpha = resolveKnownHasAlphaForFile(file);
+      if (typeof knownHasAlpha === 'boolean') {
+        const normalizedPath = normalizeIdentifier(file.path);
+        setAlphaForIdentifier(map, file.name, knownHasAlpha);
+        setAlphaForIdentifier(map, file.path, knownHasAlpha, normalizedPath);
+        return;
+      }
+
+      try {
+        const metadata = await sharp(file.data).metadata();
+        const hasAlpha = metadata.hasAlpha ?? (metadata.channels ?? 0) >= 4;
+        const normalizedPath = normalizeIdentifier(file.path);
+        setAlphaForIdentifier(map, file.name, hasAlpha);
+        setAlphaForIdentifier(map, file.path, hasAlpha, normalizedPath);
+      } catch {
+        // Ignore unsupported/corrupted images and keep unresolved alpha.
+      }
+    })
+  );
+
+  for (const identifier of collectImageIdentifiers(objects)) {
+    const knownHasAlpha = resolveKnownHasAlpha(identifier);
+    if (typeof knownHasAlpha === 'boolean' && lookupImageHasAlpha(map, identifier) === undefined) {
+      setAlphaForIdentifier(map, identifier, knownHasAlpha);
     }
   }
 

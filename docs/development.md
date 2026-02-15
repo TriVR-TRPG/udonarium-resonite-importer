@@ -90,7 +90,10 @@ To update or validate aspect ratios for `KNOWN_IMAGES` entries:
 npm run measure:known-image-ratios
 ```
 
-This script downloads each known image URL, measures width/height, and prints the computed ratio (`height / width`).
+This script downloads each known image URL, measures width/height, and prints:
+
+- ratio (`height / width`)
+- `hasAlpha` (whether the image contains an alpha channel)
 
 ## Packaging
 

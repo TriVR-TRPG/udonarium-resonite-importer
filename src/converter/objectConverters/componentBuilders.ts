@@ -15,7 +15,8 @@ type StaticTexture2DFields = {
 type QuadSize = { x: number; y: number };
 type BoxSize = { x: number; y: number; z: number };
 
-type BlendModeField = { $type: 'enum'; value: 'Cutout'; enumType: 'BlendMode' };
+export type BlendModeValue = 'Cutout' | 'Opaque' | 'Alpha';
+type BlendModeField = { $type: 'enum'; value: BlendModeValue; enumType: 'BlendMode' };
 type MainTexturePropertyBlockFields = {
   Texture: { $type: 'reference'; targetId: string };
 };
@@ -25,17 +26,19 @@ type XiexeToonMaterialFields = {
   ShadowSharpness: { $type: 'float'; value: 0 };
 };
 
-function createCutoutBlendModeField(): BlendModeField {
+function createBlendModeField(blendMode: BlendModeValue): BlendModeField {
   return {
     $type: 'enum',
-    value: 'Cutout',
+    value: blendMode,
     enumType: 'BlendMode',
   };
 }
 
-function buildXiexeToonMaterialFields(): XiexeToonMaterialFields {
+function buildXiexeToonMaterialFields(
+  blendMode: BlendModeValue = 'Cutout'
+): XiexeToonMaterialFields {
   return {
-    BlendMode: createCutoutBlendModeField(),
+    BlendMode: createBlendModeField(blendMode),
     ShadowRamp: { $type: 'reference', targetId: null },
     ShadowSharpness: { $type: 'float', value: 0 },
   };
@@ -90,7 +93,8 @@ export function buildQuadMeshComponents(
   slotId: string,
   textureValue?: string,
   dualSided: boolean = false,
-  size: QuadSize = { x: 1, y: 1 }
+  size: QuadSize = { x: 1, y: 1 },
+  blendMode: BlendModeValue = 'Cutout'
 ): ResoniteComponent[] {
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
@@ -125,7 +129,7 @@ export function buildQuadMeshComponents(
   components.push({
     id: materialId,
     type: '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
-    fields: buildXiexeToonMaterialFields(),
+    fields: buildXiexeToonMaterialFields(blendMode),
   });
 
   if (textureValue && !sharedTextureId) {
@@ -166,7 +170,8 @@ export function buildQuadMeshComponents(
 export function buildBoxMeshComponents(
   slotId: string,
   textureValue?: string,
-  size: BoxSize = { x: 1, y: 1, z: 1 }
+  size: BoxSize = { x: 1, y: 1, z: 1 },
+  blendMode: BlendModeValue = 'Cutout'
 ): ResoniteComponent[] {
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
@@ -200,7 +205,7 @@ export function buildBoxMeshComponents(
   components.push({
     id: materialId,
     type: '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
-    fields: buildXiexeToonMaterialFields(),
+    fields: buildXiexeToonMaterialFields(blendMode),
   });
 
   if (textureValue && !sharedTextureId) {

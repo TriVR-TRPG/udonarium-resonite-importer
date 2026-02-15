@@ -3,13 +3,24 @@ import { ResoniteObject } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
   buildQuadMeshComponents,
+  BlendModeValue,
   resolveTextureValue,
 } from './componentBuilders';
-import { lookupImageAspectRatio } from '../imageAspectRatioMap';
+import { lookupImageAspectRatio, lookupImageHasAlpha } from '../imageAspectRatioMap';
 
 const CARD_Y_OFFSET = 0.001;
 const CARD_FACE_SEPARATION = 0.0001;
 const DEFAULT_CARD_ASPECT_RATIO = 1;
+
+function resolveBlendMode(
+  identifier: string | undefined,
+  imageAlphaMap?: Map<string, boolean>
+): BlendModeValue {
+  if (!imageAlphaMap) {
+    return 'Cutout';
+  }
+  return lookupImageHasAlpha(imageAlphaMap, identifier) ? 'Alpha' : 'Opaque';
+}
 
 function resolveFrontTextureIdentifier(card: Card): string | undefined {
   return card.frontImage?.identifier ?? card.backImage?.identifier ?? card.images[0]?.identifier;
@@ -67,7 +78,8 @@ export function applyCardConversion(
   udonObj: Card,
   resoniteObj: ResoniteObject,
   textureMap?: Map<string, string>,
-  imageAspectRatioMap?: Map<string, number>
+  imageAspectRatioMap?: Map<string, number>,
+  imageAlphaMap?: Map<string, boolean>
 ): void {
   const cardWidth = udonObj.size ?? 1;
   const frontAspectRatio = resolveAspectRatio(
@@ -85,8 +97,12 @@ export function applyCardConversion(
   const parentHeight = Math.max(frontHeight, backHeight);
   const frontZOffset = (parentHeight - frontHeight) / 2;
   const backZOffset = (parentHeight - backHeight) / 2;
-  const frontTextureValue = resolveTextureValue(resolveFrontTextureIdentifier(udonObj), textureMap);
-  const backTextureValue = resolveTextureValue(resolveBackTextureIdentifier(udonObj), textureMap);
+  const frontTextureIdentifier = resolveFrontTextureIdentifier(udonObj);
+  const backTextureIdentifier = resolveBackTextureIdentifier(udonObj);
+  const frontTextureValue = resolveTextureValue(frontTextureIdentifier, textureMap);
+  const backTextureValue = resolveTextureValue(backTextureIdentifier, textureMap);
+  const frontBlendMode = resolveBlendMode(frontTextureIdentifier, imageAlphaMap);
+  const backBlendMode = resolveBlendMode(backTextureIdentifier, imageAlphaMap);
 
   // Udonarium positions are edge-based; Resonite uses center-based transforms.
   resoniteObj.position.x += cardWidth / 2;
@@ -116,10 +132,16 @@ export function applyCardConversion(
       position: { x: 0, y: CARD_FACE_SEPARATION, z: frontZOffset },
       rotation: { x: 90, y: 0, z: 0 },
       textures: [],
-      components: buildQuadMeshComponents(`${resoniteObj.id}-front`, frontTextureValue, false, {
-        x: cardWidth,
-        y: frontHeight,
-      }),
+      components: buildQuadMeshComponents(
+        `${resoniteObj.id}-front`,
+        frontTextureValue,
+        false,
+        {
+          x: cardWidth,
+          y: frontHeight,
+        },
+        frontBlendMode
+      ),
       children: [],
     },
     {
@@ -129,10 +151,16 @@ export function applyCardConversion(
       position: { x: 0, y: -CARD_FACE_SEPARATION, z: backZOffset },
       rotation: { x: -90, y: 180, z: 0 },
       textures: [],
-      components: buildQuadMeshComponents(`${resoniteObj.id}-back`, backTextureValue, false, {
-        x: cardWidth,
-        y: backHeight,
-      }),
+      components: buildQuadMeshComponents(
+        `${resoniteObj.id}-back`,
+        backTextureValue,
+        false,
+        {
+          x: cardWidth,
+          y: backHeight,
+        },
+        backBlendMode
+      ),
       children: [],
     },
   ];

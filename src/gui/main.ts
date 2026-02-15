@@ -7,7 +7,7 @@ import * as path from 'path';
 import { extractZip } from '../parser/ZipExtractor';
 import { parseXmlFiles } from '../parser/XmlParser';
 import { convertObjectsWithTextureMap } from '../converter/ObjectConverter';
-import { buildImageAspectRatioMap } from '../converter/imageAspectRatioMap';
+import { buildImageAlphaMap, buildImageAspectRatioMap } from '../converter/imageAspectRatioMap';
 import { toTextureReference } from '../converter/objectConverters/componentBuilders';
 import { prepareSharedMeshDefinitions, resolveSharedMeshReferences } from '../converter/sharedMesh';
 import {
@@ -161,6 +161,7 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
       extractedData.imageFiles,
       parseResult.objects
     );
+    const imageAlphaMap = await buildImageAlphaMap(extractedData.imageFiles, parseResult.objects);
     sendProgress('parse', 100);
 
     // Step 3: Connect to ResoniteLink
@@ -215,7 +216,8 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     const resoniteObjects = convertObjectsWithTextureMap(
       parseResult.objects,
       textureComponentMap,
-      imageAspectRatioMap
+      imageAspectRatioMap,
+      imageAlphaMap
     );
     const sharedMeshDefinitions = prepareSharedMeshDefinitions(resoniteObjects);
     const meshReferenceMap = await slotBuilder.createMeshAssets(sharedMeshDefinitions);

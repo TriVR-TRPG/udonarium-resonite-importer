@@ -51,7 +51,8 @@ export function convertObject(udonObj: UdonariumObject): ResoniteObject {
 function convertObjectWithTextures(
   udonObj: UdonariumObject,
   textureMap?: Map<string, string>,
-  imageAspectRatioMap?: Map<string, number>
+  imageAspectRatioMap?: Map<string, number>,
+  imageAlphaMap?: Map<string, boolean>
 ): ResoniteObject {
   const position = convertPosition(udonObj.position.x, udonObj.position.y, udonObj.position.z);
 
@@ -69,27 +70,31 @@ function convertObjectWithTextures(
   // Apply type-specific conversions
   switch (udonObj.type) {
     case 'character':
-      applyCharacterConversion(udonObj, resoniteObj, convertSize, textureMap);
+      applyCharacterConversion(udonObj, resoniteObj, convertSize, textureMap, imageAlphaMap);
       break;
     case 'terrain':
-      applyTerrainConversion(udonObj, resoniteObj, textureMap);
+      applyTerrainConversion(udonObj, resoniteObj, textureMap, imageAlphaMap);
       break;
     case 'table':
-      applyTableConversion(udonObj, resoniteObj, textureMap, (obj) =>
-        convertObjectWithTextures(obj, textureMap, imageAspectRatioMap)
+      applyTableConversion(
+        udonObj,
+        resoniteObj,
+        textureMap,
+        (obj) => convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageAlphaMap),
+        imageAlphaMap
       );
       break;
     case 'table-mask':
       applyTableMaskConversion(udonObj, resoniteObj, textureMap);
       break;
     case 'card':
-      applyCardConversion(udonObj, resoniteObj, textureMap, imageAspectRatioMap);
+      applyCardConversion(udonObj, resoniteObj, textureMap, imageAspectRatioMap, imageAlphaMap);
       break;
     case 'card-stack':
       applyCardStackConversion(
         udonObj,
         resoniteObj,
-        (obj) => convertObjectWithTextures(obj, textureMap, imageAspectRatioMap),
+        (obj) => convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageAlphaMap),
         imageAspectRatioMap
       );
       break;
@@ -116,9 +121,12 @@ export function convertObjects(udonObjects: UdonariumObject[]): ResoniteObject[]
 export function convertObjectsWithTextureMap(
   udonObjects: UdonariumObject[],
   textureMap: Map<string, string>,
-  imageAspectRatioMap?: Map<string, number>
+  imageAspectRatioMap?: Map<string, number>,
+  imageAlphaMap?: Map<string, boolean>
 ): ResoniteObject[] {
-  return udonObjects.map((obj) => convertObjectWithTextures(obj, textureMap, imageAspectRatioMap));
+  return udonObjects.map((obj) =>
+    convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageAlphaMap)
+  );
 }
 
 /**

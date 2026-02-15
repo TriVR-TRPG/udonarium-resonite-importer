@@ -98,3 +98,6 @@ Back:
 2. Parent position and collider match the larger face height
 3. Smaller face is top-aligned when front/back heights differ
 4. `isFaceUp=false` results in parent `rotation.z=180`
+5. Material `BlendMode` is selected from image alpha metadata:
+   - `hasAlpha=true` -> `Alpha`
+   - `hasAlpha=false` -> `Opaque`

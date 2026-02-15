@@ -3,21 +3,36 @@ import { ResoniteObject } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
   buildQuadMeshComponents,
+  BlendModeValue,
   resolveTextureValue,
 } from './componentBuilders';
+import { lookupImageHasAlpha } from '../imageAspectRatioMap';
+
+function resolveBlendMode(
+  identifier: string | undefined,
+  imageAlphaMap?: Map<string, boolean>
+): BlendModeValue {
+  if (!imageAlphaMap) {
+    return 'Cutout';
+  }
+  return lookupImageHasAlpha(imageAlphaMap, identifier) ? 'Alpha' : 'Opaque';
+}
 
 export function applyTableConversion(
   udonObj: GameTable,
   resoniteObj: ResoniteObject,
   textureMap?: Map<string, string>,
-  convertObject?: (obj: UdonariumObject) => ResoniteObject
+  convertObject?: (obj: UdonariumObject) => ResoniteObject,
+  imageAlphaMap?: Map<string, boolean>
 ): void {
   // Keep table container unrotated so child object positions stay stable.
   resoniteObj.rotation = { x: 0, y: 0, z: 0 };
   resoniteObj.components = [];
 
   const surfaceId = `${resoniteObj.id}-surface`;
-  const textureValue = resolveTextureValue(udonObj.images[0]?.identifier, textureMap);
+  const textureIdentifier = udonObj.images[0]?.identifier;
+  const textureValue = resolveTextureValue(textureIdentifier, textureMap);
+  const blendMode = resolveBlendMode(textureIdentifier, imageAlphaMap);
   const tableVisual: ResoniteObject = {
     id: surfaceId,
     name: `${resoniteObj.name}-surface`,
@@ -25,10 +40,16 @@ export function applyTableConversion(
     rotation: { x: 90, y: 0, z: 0 },
     textures: [],
     components: [
-      ...buildQuadMeshComponents(surfaceId, textureValue, false, {
-        x: udonObj.width,
-        y: udonObj.height,
-      }),
+      ...buildQuadMeshComponents(
+        surfaceId,
+        textureValue,
+        false,
+        {
+          x: udonObj.width,
+          y: udonObj.height,
+        },
+        blendMode
+      ),
       buildBoxColliderComponent(surfaceId, {
         x: udonObj.width,
         y: udonObj.height,

@@ -90,7 +90,10 @@ npm run collect:resonitelink
 npm run measure:known-image-ratios
 ```
 
-各既知URLの画像を取得し、幅・高さ・比率（`height / width`）を出力します。
+各既知URLの画像を取得し、以下を出力します。
+
+- 比率（`height / width`）
+- `hasAlpha`（画像にアルファチャンネルが含まれるか）
 
 ## パッケージング
 

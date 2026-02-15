@@ -3,13 +3,26 @@ import { ResoniteObject } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
   buildQuadMeshComponents,
+  BlendModeValue,
   resolveTextureValue,
 } from './componentBuilders';
+import { lookupImageHasAlpha } from '../imageAspectRatioMap';
+
+function resolveBlendMode(
+  identifier: string | undefined,
+  imageAlphaMap?: Map<string, boolean>
+): BlendModeValue {
+  if (!imageAlphaMap) {
+    return 'Cutout';
+  }
+  return lookupImageHasAlpha(imageAlphaMap, identifier) ? 'Alpha' : 'Opaque';
+}
 
 export function applyTerrainConversion(
   udonObj: Terrain,
   resoniteObj: ResoniteObject,
-  textureMap?: Map<string, string>
+  textureMap?: Map<string, string>,
+  imageAlphaMap?: Map<string, boolean>
 ): void {
   resoniteObj.rotation = { x: 0, y: udonObj.rotate, z: 0 };
   const topTextureIdentifier =
@@ -22,6 +35,8 @@ export function applyTerrainConversion(
     udonObj.images[0]?.identifier;
   const topTextureValue = resolveTextureValue(topTextureIdentifier, textureMap);
   const sideTextureValue = resolveTextureValue(sideTextureIdentifier, textureMap);
+  const topBlendMode = resolveBlendMode(topTextureIdentifier, imageAlphaMap);
+  const sideBlendMode = resolveBlendMode(sideTextureIdentifier, imageAlphaMap);
   // Axis mapping: width -> X, height -> Y, depth -> Z
   resoniteObj.components = [
     buildBoxColliderComponent(resoniteObj.id, {
@@ -52,10 +67,16 @@ export function applyTerrainConversion(
     position: { x: 0, y: udonObj.height / 2, z: 0 },
     rotation: { x: 90, y: 0, z: 0 },
     textures: [],
-    components: buildQuadMeshComponents(topId, topTextureValue, false, {
-      x: udonObj.width,
-      y: udonObj.depth,
-    }),
+    components: buildQuadMeshComponents(
+      topId,
+      topTextureValue,
+      false,
+      {
+        x: udonObj.width,
+        y: udonObj.depth,
+      },
+      topBlendMode
+    ),
     children: [],
   };
   const wallsContainer: ResoniteObject = {
@@ -73,10 +94,16 @@ export function applyTerrainConversion(
         position: { x: 0, y: 0, z: -udonObj.depth / 2 },
         rotation: { x: 0, y: 0, z: 0 },
         textures: [],
-        components: buildQuadMeshComponents(frontId, sideTextureValue, false, {
-          x: udonObj.width,
-          y: udonObj.height,
-        }),
+        components: buildQuadMeshComponents(
+          frontId,
+          sideTextureValue,
+          false,
+          {
+            x: udonObj.width,
+            y: udonObj.height,
+          },
+          sideBlendMode
+        ),
         children: [],
       },
       {
@@ -85,10 +112,16 @@ export function applyTerrainConversion(
         position: { x: 0, y: 0, z: udonObj.depth / 2 },
         rotation: { x: 0, y: 180, z: 0 },
         textures: [],
-        components: buildQuadMeshComponents(backId, sideTextureValue, false, {
-          x: udonObj.width,
-          y: udonObj.height,
-        }),
+        components: buildQuadMeshComponents(
+          backId,
+          sideTextureValue,
+          false,
+          {
+            x: udonObj.width,
+            y: udonObj.height,
+          },
+          sideBlendMode
+        ),
         children: [],
       },
       {
@@ -97,10 +130,16 @@ export function applyTerrainConversion(
         position: { x: -udonObj.width / 2, y: 0, z: 0 },
         rotation: { x: 0, y: 90, z: 0 },
         textures: [],
-        components: buildQuadMeshComponents(leftId, sideTextureValue, false, {
-          x: udonObj.depth,
-          y: udonObj.height,
-        }),
+        components: buildQuadMeshComponents(
+          leftId,
+          sideTextureValue,
+          false,
+          {
+            x: udonObj.depth,
+            y: udonObj.height,
+          },
+          sideBlendMode
+        ),
         children: [],
       },
       {
@@ -109,10 +148,16 @@ export function applyTerrainConversion(
         position: { x: udonObj.width / 2, y: 0, z: 0 },
         rotation: { x: 0, y: -90, z: 0 },
         textures: [],
-        components: buildQuadMeshComponents(rightId, sideTextureValue, false, {
-          x: udonObj.depth,
-          y: udonObj.height,
-        }),
+        components: buildQuadMeshComponents(
+          rightId,
+          sideTextureValue,
+          false,
+          {
+            x: udonObj.depth,
+            y: udonObj.height,
+          },
+          sideBlendMode
+        ),
         children: [],
       },
     ],

@@ -73,6 +73,7 @@ export const VERIFIED_RESONITE_LINK_VERSION = '0.7.0.0';
 export interface KnownImageDefinition {
   url: string;
   aspectRatio: number;
+  hasAlpha: boolean;
 }
 
 /**
@@ -82,33 +83,34 @@ export interface KnownImageDefinition {
 export const KNOWN_IMAGES: ReadonlyMap<string, KnownImageDefinition> = new Map([
   [
     'testTableBackgroundImage_image',
-    { url: 'https://udonarium.app/assets/images/BG10a_80.jpg', aspectRatio: 0.75 },
+    { url: 'https://udonarium.app/assets/images/BG10a_80.jpg', aspectRatio: 0.75, hasAlpha: false },
   ],
   [
     'testCharacter_1_image',
-    { url: 'https://udonarium.app/assets/images/mon_052.gif', aspectRatio: 1.2 },
+    { url: 'https://udonarium.app/assets/images/mon_052.gif', aspectRatio: 1.2, hasAlpha: true },
   ],
   [
     'testCharacter_3_image',
-    { url: 'https://udonarium.app/assets/images/mon_128.gif', aspectRatio: 1.1 },
+    { url: 'https://udonarium.app/assets/images/mon_128.gif', aspectRatio: 1.1, hasAlpha: true },
   ],
   [
     'testCharacter_4_image',
-    { url: 'https://udonarium.app/assets/images/mon_150.gif', aspectRatio: 1.3 },
+    { url: 'https://udonarium.app/assets/images/mon_150.gif', aspectRatio: 1.3, hasAlpha: true },
   ],
   [
     'testCharacter_5_image',
-    { url: 'https://udonarium.app/assets/images/mon_211.gif', aspectRatio: 1.2 },
+    { url: 'https://udonarium.app/assets/images/mon_211.gif', aspectRatio: 1.2, hasAlpha: true },
   ],
   [
     'testCharacter_6_image',
-    { url: 'https://udonarium.app/assets/images/mon_135.gif', aspectRatio: 1 },
+    { url: 'https://udonarium.app/assets/images/mon_135.gif', aspectRatio: 1, hasAlpha: true },
   ],
   [
     'none_icon',
     {
       url: 'https://udonarium.app/assets/images/ic_account_circle_black_24dp_2x.png',
       aspectRatio: 1,
+      hasAlpha: true,
     },
   ],
 ]);
@@ -123,6 +125,14 @@ export const KNOWN_EXTERNAL_IMAGE_ASPECT_RATIOS: ReadonlyMap<string, number> = n
 ]);
 
 /**
+ * Known alpha flags for external URL/path based identifiers.
+ */
+export const KNOWN_EXTERNAL_IMAGE_ALPHA_FLAGS: ReadonlyMap<string, boolean> = new Map([
+  ['assets/images/ic_account_circle_black_24dp_2x.png', true],
+  ['assets/images/BG10a_80.jpg', false],
+]);
+
+/**
  * Prefix-based known aspect ratios for external URL/path based identifiers.
  * ratio = height / width
  */
@@ -130,6 +140,14 @@ export const KNOWN_EXTERNAL_IMAGE_ASPECT_RATIO_PREFIXES: ReadonlyArray<{
   prefix: string;
   ratio: number;
 }> = [{ prefix: 'assets/images/trump/', ratio: 1.5 }];
+
+/**
+ * Prefix-based alpha flags for external URL/path based identifiers.
+ */
+export const KNOWN_EXTERNAL_IMAGE_ALPHA_PREFIXES: ReadonlyArray<{
+  prefix: string;
+  hasAlpha: boolean;
+}> = [{ prefix: 'assets/images/trump/', hasAlpha: false }];
 
 /**
  * Supported object type tags in Udonarium XML

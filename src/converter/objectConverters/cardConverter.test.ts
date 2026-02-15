@@ -219,4 +219,32 @@ describe('applyCardConversion', () => {
     expect(frontQuad?.fields).toEqual({ Size: { $type: 'float2', value: { x: 2, y: 2.2 } } });
     expect(backQuad?.fields).toEqual({ Size: { $type: 'float2', value: { x: 2, y: 2.4 } } });
   });
+
+  it('switches blend mode by image alpha presence', () => {
+    const udonObj = createBaseCard();
+    const resoniteObj = createBaseResonite();
+    const imageAlphaMap = new Map<string, boolean>([
+      ['front.png', false],
+      ['back.png', true],
+    ]);
+
+    applyCardConversion(udonObj, resoniteObj, undefined, undefined, imageAlphaMap);
+
+    const frontMaterial = resoniteObj.children[0].components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
+    );
+    const backMaterial = resoniteObj.children[1].components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
+    );
+    expect(frontMaterial?.fields.BlendMode).toEqual({
+      $type: 'enum',
+      value: 'Opaque',
+      enumType: 'BlendMode',
+    });
+    expect(backMaterial?.fields.BlendMode).toEqual({
+      $type: 'enum',
+      value: 'Alpha',
+      enumType: 'BlendMode',
+    });
+  });
 });
