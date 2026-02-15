@@ -1,9 +1,10 @@
 import { CardStack, UdonariumObject } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
 import { buildBoxColliderComponent } from './componentBuilders';
+import { lookupImageAspectRatio } from '../imageAspectRatioMap';
 
 const CARD_STACK_Y_OFFSET = 0.001;
-const DEFAULT_CARD_ASPECT_RATIO = 1.5;
+const DEFAULT_CARD_ASPECT_RATIO = 1;
 
 function resolveCardAspectRatio(
   stack: CardStack,
@@ -28,14 +29,16 @@ function resolveCardAspectRatio(
     sampleCard.images[1]?.identifier ??
     sampleCard.images[0]?.identifier;
 
-  const frontAspect = frontIdentifier ? imageAspectRatioMap.get(frontIdentifier) : undefined;
-  const backAspect = backIdentifier ? imageAspectRatioMap.get(backIdentifier) : undefined;
+  const primaryIdentifier = sampleCard.isFaceUp ? frontIdentifier : backIdentifier;
+  const secondaryIdentifier = sampleCard.isFaceUp ? backIdentifier : frontIdentifier;
+  const primaryAspect = lookupImageAspectRatio(imageAspectRatioMap, primaryIdentifier);
+  const secondaryAspect = lookupImageAspectRatio(imageAspectRatioMap, secondaryIdentifier);
 
-  if (frontAspect && Number.isFinite(frontAspect) && frontAspect > 0) {
-    return frontAspect;
+  if (primaryAspect && Number.isFinite(primaryAspect) && primaryAspect > 0) {
+    return primaryAspect;
   }
-  if (backAspect && Number.isFinite(backAspect) && backAspect > 0) {
-    return backAspect;
+  if (secondaryAspect && Number.isFinite(secondaryAspect) && secondaryAspect > 0) {
+    return secondaryAspect;
   }
   return DEFAULT_CARD_ASPECT_RATIO;
 }

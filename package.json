@@ -30,7 +30,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:integration": "powershell -NoProfile -Command \"$env:RESONITE_LINK_AVAILABLE='true'; vitest run --testNamePattern='Integration'\"",
+    "test:integration": "vitest run --testNamePattern='Integration'",
     "collect:resonitelink": "ts-node scripts/collect-resonitelink-data.ts",
     "package": "run-s package:cli package:gui",
     "package:cli": "run-p package:cli:*",

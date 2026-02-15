@@ -8,9 +8,9 @@
  *   RESONITE_LINK_AVAILABLE=true RESONITELINK_PORT=<port> npm run test -- --testNamePattern="Integration"
  *
  * Or:
- *   RESONITELINK_PORT=<port> npm run test:integration
+ *   RESONITE_LINK_AVAILABLE=true RESONITELINK_PORT=<port> npm run test:integration
  *
- * You can also set RESONITELINK_PORT in a .env file.
+ * You can also set RESONITE_LINK_AVAILABLE and RESONITELINK_PORT in a .env file.
  */
 
 import * as dotenv from 'dotenv';
@@ -199,7 +199,7 @@ describe.skipIf(SKIP_INTEGRATION)('ResoniteLink Integration Tests', () => {
     if (!RESONITELINK_PORT) {
       throw new Error(
         'RESONITELINK_PORT environment variable is required for integration tests.\n' +
-          'Set it via: RESONITELINK_PORT=<port> npm run test:integration\n' +
+          'Set it via: RESONITE_LINK_AVAILABLE=true RESONITELINK_PORT=<port> npm run test:integration\n' +
           'Or add RESONITELINK_PORT=<port> to your .env file.'
       );
     }

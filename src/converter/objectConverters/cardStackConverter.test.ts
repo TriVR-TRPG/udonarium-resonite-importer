@@ -63,7 +63,7 @@ describe('applyCardStackConversion', () => {
         id: 'slot-stack-1-collider',
         type: '[FrooxEngine]FrooxEngine.BoxCollider',
         fields: {
-          Size: { $type: 'float3', value: { x: 2, y: 0.05, z: 3 } },
+          Size: { $type: 'float3', value: { x: 2, y: 0.05, z: 2 } },
         },
       },
       {
@@ -72,7 +72,7 @@ describe('applyCardStackConversion', () => {
         fields: {},
       },
     ]);
-    expect(resoniteObj.position).toEqual({ x: 1, y: 0.001, z: -1.5 });
+    expect(resoniteObj.position).toEqual({ x: 1, y: 0.001, z: -1 });
     expect(resoniteObj.rotation).toEqual({ x: 0, y: 45, z: 0 });
     expect(resoniteObj.children).toHaveLength(2);
     expect(resoniteObj.children[0].name).toBe('B');
@@ -137,6 +137,72 @@ describe('applyCardStackConversion', () => {
       type: '[FrooxEngine]FrooxEngine.BoxCollider',
       fields: {
         Size: { $type: 'float3', value: { x: 2, y: 0.05, z: 4 } },
+      },
+    });
+  });
+
+  it('uses back image aspect ratio for face-down top card', () => {
+    const card: Card = {
+      id: 'card-a',
+      type: 'card',
+      name: 'A',
+      position: { x: 0, y: 0, z: 0 },
+      images: [
+        { identifier: './assets/images/trump/c01.gif', name: 'front' },
+        { identifier: 'testCharacter_1_image', name: 'back' },
+      ],
+      properties: new Map(),
+      size: 2,
+      isFaceUp: false,
+      frontImage: { identifier: './assets/images/trump/c01.gif', name: 'front' },
+      backImage: { identifier: 'testCharacter_1_image', name: 'back' },
+    };
+    const udonObj: CardStack = {
+      id: 'stack-3',
+      type: 'card-stack',
+      name: 'Stack',
+      position: { x: 0, y: 0, z: 0 },
+      images: [],
+      properties: new Map(),
+      cards: [card],
+    };
+    const resoniteObj: ResoniteObject = {
+      id: 'slot-stack-3',
+      name: 'Stack',
+      position: { x: 0, y: 0, z: 0 },
+      rotation: { x: 0, y: 0, z: 0 },
+      textures: [],
+      components: [],
+      children: [],
+    };
+    const convertObject = vi.fn(
+      (obj: UdonariumObject): ResoniteObject => ({
+        id: `slot-${obj.id}`,
+        name: obj.name,
+        position: { x: 0, y: 0, z: 0 },
+        rotation: { x: 0, y: 0, z: 0 },
+        textures: [],
+        components: [],
+        children: [],
+      })
+    );
+
+    applyCardStackConversion(
+      udonObj,
+      resoniteObj,
+      convertObject,
+      new Map<string, number>([
+        ['./assets/images/trump/c01.gif', 1.5],
+        ['testCharacter_1_image', 1.2],
+      ])
+    );
+
+    expect(resoniteObj.position).toEqual({ x: 1, y: 0.001, z: -1.2 });
+    expect(resoniteObj.components[0]).toEqual({
+      id: 'slot-stack-3-collider',
+      type: '[FrooxEngine]FrooxEngine.BoxCollider',
+      fields: {
+        Size: { $type: 'float3', value: { x: 2, y: 0.05, z: 2.4 } },
       },
     });
   });

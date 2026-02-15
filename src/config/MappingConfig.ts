@@ -70,19 +70,66 @@ export const DEFAULT_RESONITE_LINK = {
  */
 export const VERIFIED_RESONITE_LINK_VERSION = '0.7.0.0';
 
+export interface KnownImageDefinition {
+  url: string;
+  aspectRatio: number;
+}
+
 /**
- * Known Udonarium image identifiers mapped to their asset URLs.
- * These are built-in images used by default Udonarium save data.
+ * Known Udonarium image identifiers with external URL and aspect ratio metadata.
+ * ratio = height / width
  */
-export const KNOWN_IMAGE_IDENTIFIERS: ReadonlyMap<string, string> = new Map([
-  ['testTableBackgroundImage_image', 'https://udonarium.app/assets/images/BG10a_80.jpg'],
-  ['testCharacter_1_image', 'https://udonarium.app/assets/images/mon_052.gif'],
-  ['testCharacter_3_image', 'https://udonarium.app/assets/images/mon_128.gif'],
-  ['testCharacter_4_image', 'https://udonarium.app/assets/images/mon_150.gif'],
-  ['testCharacter_5_image', 'https://udonarium.app/assets/images/mon_211.gif'],
-  ['testCharacter_6_image', 'https://udonarium.app/assets/images/mon_135.gif'],
-  ['none_icon', 'https://udonarium.app/assets/images/ic_account_circle_black_24dp_2x.png'],
+export const KNOWN_IMAGES: ReadonlyMap<string, KnownImageDefinition> = new Map([
+  [
+    'testTableBackgroundImage_image',
+    { url: 'https://udonarium.app/assets/images/BG10a_80.jpg', aspectRatio: 0.75 },
+  ],
+  [
+    'testCharacter_1_image',
+    { url: 'https://udonarium.app/assets/images/mon_052.gif', aspectRatio: 1.2 },
+  ],
+  [
+    'testCharacter_3_image',
+    { url: 'https://udonarium.app/assets/images/mon_128.gif', aspectRatio: 1.1 },
+  ],
+  [
+    'testCharacter_4_image',
+    { url: 'https://udonarium.app/assets/images/mon_150.gif', aspectRatio: 1.3 },
+  ],
+  [
+    'testCharacter_5_image',
+    { url: 'https://udonarium.app/assets/images/mon_211.gif', aspectRatio: 1.2 },
+  ],
+  [
+    'testCharacter_6_image',
+    { url: 'https://udonarium.app/assets/images/mon_135.gif', aspectRatio: 1 },
+  ],
+  [
+    'none_icon',
+    {
+      url: 'https://udonarium.app/assets/images/ic_account_circle_black_24dp_2x.png',
+      aspectRatio: 1,
+    },
+  ],
 ]);
+
+/**
+ * Known aspect ratios for external URL/path based identifiers.
+ * ratio = height / width
+ */
+export const KNOWN_EXTERNAL_IMAGE_ASPECT_RATIOS: ReadonlyMap<string, number> = new Map([
+  ['assets/images/ic_account_circle_black_24dp_2x.png', 1],
+  ['assets/images/BG10a_80.jpg', 0.75],
+]);
+
+/**
+ * Prefix-based known aspect ratios for external URL/path based identifiers.
+ * ratio = height / width
+ */
+export const KNOWN_EXTERNAL_IMAGE_ASPECT_RATIO_PREFIXES: ReadonlyArray<{
+  prefix: string;
+  ratio: number;
+}> = [{ prefix: 'assets/images/trump/', ratio: 1.5 }];
 
 /**
  * Supported object type tags in Udonarium XML

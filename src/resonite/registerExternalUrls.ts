@@ -1,6 +1,6 @@
 import { UdonariumObject } from '../domain/UdonariumObject';
 import { AssetImporter } from './AssetImporter';
-import { KNOWN_IMAGE_IDENTIFIERS } from '../config/MappingConfig';
+import { KNOWN_IMAGES } from '../config/MappingConfig';
 
 const UDONARIUM_BASE_URL = 'https://udonarium.app/';
 
@@ -8,8 +8,8 @@ function tryRegister(identifier: string, assetImporter: AssetImporter): void {
   if (identifier.startsWith('./')) {
     const url = UDONARIUM_BASE_URL + identifier.slice(2);
     assetImporter.registerExternalUrl(identifier, url);
-  } else if (KNOWN_IMAGE_IDENTIFIERS.has(identifier)) {
-    assetImporter.registerExternalUrl(identifier, KNOWN_IMAGE_IDENTIFIERS.get(identifier)!);
+  } else if (KNOWN_IMAGES.has(identifier)) {
+    assetImporter.registerExternalUrl(identifier, KNOWN_IMAGES.get(identifier)!.url);
   }
 }
 

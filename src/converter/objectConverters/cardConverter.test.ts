@@ -32,7 +32,7 @@ describe('applyCardConversion', () => {
 
     applyCardConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.position).toEqual({ x: 0.5, y: 0.001, z: -0.75 });
+    expect(resoniteObj.position).toEqual({ x: 0.5, y: 0.001, z: -0.5 });
     expect(resoniteObj.rotation).toEqual({ x: 0, y: 0, z: 0 });
     expect(resoniteObj.components.map((c) => c.type)).toEqual([
       '[FrooxEngine]FrooxEngine.BoxCollider',
@@ -47,19 +47,19 @@ describe('applyCardConversion', () => {
     expect(resoniteObj.children[1].rotation).toEqual({ x: -90, y: 180, z: 0 });
   });
 
-  it('scales card width by size and keeps 1:1.5 aspect ratio', () => {
+  it('scales card width by size and keeps 1:1 fallback aspect ratio', () => {
     const udonObj = createBaseCard();
     udonObj.size = 2;
     const resoniteObj = createBaseResonite();
 
     applyCardConversion(udonObj, resoniteObj);
 
-    expect(resoniteObj.position).toEqual({ x: 1, y: 0.001, z: -1.5 });
+    expect(resoniteObj.position).toEqual({ x: 1, y: 0.001, z: -1 });
     const collider = resoniteObj.components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
     );
     expect(collider?.fields).toEqual({
-      Size: { $type: 'float3', value: { x: 2, y: 0.01, z: 3 } },
+      Size: { $type: 'float3', value: { x: 2, y: 0.01, z: 2 } },
     });
 
     const frontQuad = resoniteObj.children[0].components.find(
@@ -68,8 +68,8 @@ describe('applyCardConversion', () => {
     const backQuad = resoniteObj.children[1].components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
     );
-    expect(frontQuad?.fields).toEqual({ Size: { $type: 'float2', value: { x: 2, y: 3 } } });
-    expect(backQuad?.fields).toEqual({ Size: { $type: 'float2', value: { x: 2, y: 3 } } });
+    expect(frontQuad?.fields).toEqual({ Size: { $type: 'float2', value: { x: 2, y: 2 } } });
+    expect(backQuad?.fields).toEqual({ Size: { $type: 'float2', value: { x: 2, y: 2 } } });
   });
 
   it('uses frontImage on front face and backImage on back face', () => {
@@ -168,5 +168,55 @@ describe('applyCardConversion', () => {
     expect(collider?.fields).toEqual({
       Size: { $type: 'float3', value: { x: 2, y: 0.01, z: 4 } },
     });
+  });
+
+  it('falls back to back image aspect ratio when front is none_icon', () => {
+    const udonObj = createBaseCard();
+    udonObj.size = 2;
+    udonObj.frontImage = { identifier: 'none_icon', name: 'front' };
+    udonObj.backImage = { identifier: './assets/images/trump/z02.gif', name: 'back' };
+    udonObj.images = [udonObj.frontImage, udonObj.backImage];
+    const resoniteObj = createBaseResonite();
+    const imageAspectRatioMap = new Map<string, number>([['assets/images/trump/z02.gif', 2]]);
+
+    applyCardConversion(udonObj, resoniteObj, undefined, imageAspectRatioMap);
+
+    expect(resoniteObj.position).toEqual({ x: 1, y: 0.001, z: -2 });
+  });
+
+  it('uses per-face aspect ratios and parent uses larger height', () => {
+    const udonObj = createBaseCard();
+    udonObj.size = 2;
+    udonObj.isFaceUp = false;
+    udonObj.frontImage = { identifier: './assets/images/trump/c01.gif', name: 'front' };
+    udonObj.backImage = { identifier: 'testCharacter_1_image', name: 'back' };
+    udonObj.images = [udonObj.frontImage, udonObj.backImage];
+    const resoniteObj = createBaseResonite();
+    const imageAspectRatioMap = new Map<string, number>([
+      ['./assets/images/trump/c01.gif', 1.1],
+      ['testCharacter_1_image', 1.2],
+    ]);
+
+    applyCardConversion(udonObj, resoniteObj, undefined, imageAspectRatioMap);
+
+    expect(resoniteObj.position).toEqual({ x: 1, y: 0.001, z: -1.2 });
+    const collider = resoniteObj.components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
+    );
+    expect(collider?.fields).toEqual({
+      Size: { $type: 'float3', value: { x: 2, y: 0.01, z: 2.4 } },
+    });
+    const frontQuad = resoniteObj.children[0].components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
+    );
+    const backQuad = resoniteObj.children[1].components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
+    );
+    expect(resoniteObj.children[0].position.x).toBe(0);
+    expect(resoniteObj.children[0].position.y).toBe(0.0001);
+    expect(resoniteObj.children[0].position.z).toBeCloseTo(0.1);
+    expect(resoniteObj.children[1].position).toEqual({ x: 0, y: -0.0001, z: 0 });
+    expect(frontQuad?.fields).toEqual({ Size: { $type: 'float2', value: { x: 2, y: 2.2 } } });
+    expect(backQuad?.fields).toEqual({ Size: { $type: 'float2', value: { x: 2, y: 2.4 } } });
   });
 });

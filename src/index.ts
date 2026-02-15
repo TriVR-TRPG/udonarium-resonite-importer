@@ -168,7 +168,10 @@ async function run(options: CLIOptions): Promise<void> {
   }
 
   parseSpinner.succeed(`[2/4] ${t('cli.parsed', { count: parseResult.objects.length })}`);
-  const imageAspectRatioMap = await buildImageAspectRatioMap(extractedData.imageFiles);
+  const imageAspectRatioMap = await buildImageAspectRatioMap(
+    extractedData.imageFiles,
+    parseResult.objects
+  );
 
   if (options.verbose) {
     for (const [type, count] of typeCounts) {

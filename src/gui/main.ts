@@ -157,7 +157,10 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     // Step 2: Parse objects
     sendProgress('parse', 0, 'オブジェクトを解析中...');
     const parseResult = parseXmlFiles(extractedData.xmlFiles);
-    const imageAspectRatioMap = await buildImageAspectRatioMap(extractedData.imageFiles);
+    const imageAspectRatioMap = await buildImageAspectRatioMap(
+      extractedData.imageFiles,
+      parseResult.objects
+    );
     sendProgress('parse', 100);
 
     // Step 3: Connect to ResoniteLink

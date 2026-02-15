@@ -2,18 +2,18 @@
 
 This directory contains per-object conversion specifications from Udonarium to Resonite.
 
-[日本語版](README.ja.md)
+[Japanese](README.ja.md)
 
 ## Current Specs
 
 - [Terrain](terrain.md): Terrain conversion rules and component structure
+- [Card](card.md): Card conversion rules including per-face aspect ratio behavior
 - [Table Mask](table-mask.md): Table-mask conversion rules and component/material behavior
 - [Texture Placeholders](texture-placeholders.ja.md): `texture://` / `texture-ref://` usage and rationale
 
 ## Planned Specs
 
 - `character.md`
-- `card.md`
 - `card-stack.md`
 - `table.md`
 - `text-note.md`

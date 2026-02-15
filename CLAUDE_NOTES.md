@@ -21,7 +21,7 @@ Udonarium（Webベースのバーチャルテーブルトップ）のセーブ�
 - 環境変数: `RESONITELINK_PORT=12345`
 - `.env`ファイル（`.env.example`をコピー）
 
-統合テスト実行例: `RESONITELINK_PORT=12345 npm run test:integration`
+統合テスト実行例: `RESONITE_LINK_AVAILABLE=true RESONITELINK_PORT=12345 npm run test:integration`
 
 ## 技術的なメモ
 
@@ -44,9 +44,10 @@ ZIP → ZipExtractor → XmlParser → UdonariumObject[]
 - `StaticTexture2D.WrapModeU` / `WrapModeV` は `Clamp` に設定
 
 ### 既知画像識別子
-- `src/config/MappingConfig.ts` の `KNOWN_IMAGE_IDENTIFIERS` マップに定義
+- `src/config/MappingConfig.ts` の `KNOWN_IMAGES`（`id -> { url, aspectRatio }`）に定義
 - Udonarium組み込みアセット（`testTableBackgroundImage_image` 等）を外部URLに解決
 - `src/resonite/registerExternalUrls.ts` が `./` 相対パスと既知識別子の両方を処理
+- 既知IDのアスペクト比は `src/converter/imageAspectRatioMap.ts` の比率マップに投入される
 
 ### FrooxEngineコンポーネント型形式
 `[FrooxEngine]FrooxEngine.ComponentName`（例: `[FrooxEngine]FrooxEngine.QuadMesh`）
