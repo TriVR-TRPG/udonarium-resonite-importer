@@ -20,6 +20,7 @@ function createBaseDice(): DiceSymbol {
     properties: new Map(),
     size: 2,
     face: '2',
+    rotate: 0,
   };
 }
 
@@ -88,5 +89,15 @@ describe('applyDiceSymbolConversion', () => {
     const secondBottom = resoniteObj.children[1].position.y - 2;
     expect(firstBottom).toBeCloseTo(-2);
     expect(secondBottom).toBeCloseTo(-2);
+  });
+
+  it('maps dice rotate to parent Y rotation', () => {
+    const udonObj = createBaseDice();
+    udonObj.rotate = -30;
+    const resoniteObj = createBaseResonite();
+
+    applyDiceSymbolConversion(udonObj, resoniteObj, (size) => ({ x: size, y: size, z: size }));
+
+    expect(resoniteObj.rotation).toEqual({ x: 0, y: -30, z: 0 });
   });
 });

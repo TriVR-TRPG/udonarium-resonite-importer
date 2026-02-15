@@ -45,6 +45,7 @@ export function applyDiceSymbolConversion(
     faceWidth * DEFAULT_DICE_ASPECT_RATIO
   );
   const activeFaceName = udonObj.face ?? udonObj.faceImages[0]?.name;
+  resoniteObj.rotation = { x: 0, y: udonObj.rotate ?? 0, z: 0 };
 
   // Keep only collider on parent; visual renderers live on face child slots.
   resoniteObj.components = [
