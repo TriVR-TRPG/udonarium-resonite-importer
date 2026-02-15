@@ -248,7 +248,7 @@ describe('applyCardConversion', () => {
     });
   });
 
-  it('falls back to Opaque when alpha is unresolved', () => {
+  it('falls back to Cutout when blend mode is unresolved', () => {
     const udonObj = createBaseCard();
     const resoniteObj = createBaseResonite();
     const imageBlendModeMap = new Map([['back.png', 'Alpha' as const]]);
@@ -260,7 +260,7 @@ describe('applyCardConversion', () => {
     );
     expect(frontMaterial?.fields.BlendMode).toEqual({
       $type: 'enum',
-      value: 'Opaque',
+      value: 'Cutout',
       enumType: 'BlendMode',
     });
   });
