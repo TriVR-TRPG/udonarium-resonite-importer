@@ -19,7 +19,11 @@ function resolveBlendMode(
   if (!imageAlphaMap) {
     return 'Cutout';
   }
-  return lookupImageHasAlpha(imageAlphaMap, identifier) ? 'Alpha' : 'Opaque';
+  const hasAlpha = lookupImageHasAlpha(imageAlphaMap, identifier);
+  if (hasAlpha === undefined) {
+    return 'Cutout';
+  }
+  return hasAlpha ? 'Alpha' : 'Opaque';
 }
 
 function resolveFrontTextureIdentifier(card: Card): string | undefined {

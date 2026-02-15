@@ -247,4 +247,21 @@ describe('applyCardConversion', () => {
       enumType: 'BlendMode',
     });
   });
+
+  it('falls back to Cutout when alpha is unresolved', () => {
+    const udonObj = createBaseCard();
+    const resoniteObj = createBaseResonite();
+    const imageAlphaMap = new Map<string, boolean>([['back.png', true]]);
+
+    applyCardConversion(udonObj, resoniteObj, undefined, undefined, imageAlphaMap);
+
+    const frontMaterial = resoniteObj.children[0].components.find(
+      (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
+    );
+    expect(frontMaterial?.fields.BlendMode).toEqual({
+      $type: 'enum',
+      value: 'Cutout',
+      enumType: 'BlendMode',
+    });
+  });
 });
