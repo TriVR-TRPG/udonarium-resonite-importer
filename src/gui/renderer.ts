@@ -59,6 +59,14 @@ function saveLastPort(port: number): void {
   }
 }
 
+function canImport(): boolean {
+  return !!currentFilePath && parsePortOrNull(portInput.value) !== null;
+}
+
+function updateImportButtonState(): void {
+  importBtn.disabled = !canImport();
+}
+
 // Apply translations to UI
 function applyTranslations(): void {
   // Update static text elements
@@ -86,6 +94,11 @@ applyTranslations();
 
 const lastPort = loadLastPort();
 portInput.value = lastPort ? String(lastPort) : '';
+updateImportButtonState();
+
+portInput.addEventListener('input', () => {
+  updateImportButtonState();
+});
 
 // Load default config and set initial values
 void window.electronAPI.getDefaultConfig().then((config) => {
@@ -106,7 +119,7 @@ selectFileBtn.addEventListener('click', () => {
     if (filePath) {
       currentFilePath = filePath;
       filePathInput.value = filePath;
-      importBtn.disabled = false;
+      updateImportButtonState();
     }
   })();
 });
@@ -153,8 +166,8 @@ importBtn.addEventListener('click', () => {
       `;
     }
 
-    // Always re-enable the import button so the same file can be re-imported
-    importBtn.disabled = false;
+    // Re-evaluate button state after completion
+    updateImportButtonState();
   })();
 });
 
