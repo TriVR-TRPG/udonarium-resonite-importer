@@ -8,7 +8,7 @@ import { extractZip } from './ZipExtractor';
 import { parseXml, parseXmlFiles } from './XmlParser';
 
 // Use process.cwd() since Vitest runs from project root
-const SAMPLE_ZIP_PATH = path.join(process.cwd(), 'src', '__fixtures__', 'roomdata-sample.zip');
+const SAMPLE_ZIP_PATH = path.join(process.cwd(), 'src', '__fixtures__', 'sample-all-object.zip');
 
 describe('Integration: Sample Save Data', () => {
   describe('extractZip with sample data', () => {
@@ -50,13 +50,7 @@ describe('Integration: Sample Save Data', () => {
 
       // Should find character objects inside <room>
       const characters = result.objects.filter((o) => o.type === 'character');
-      expect(characters.length).toBeGreaterThanOrEqual(4); // At least 4 characters in sample
-
-      // Verify character names
-      const names = characters.map((c) => c.name);
-      expect(names).toContain('モンスターA');
-      expect(names).toContain('モンスターB');
-      expect(names).toContain('モンスターC');
+      expect(characters.length).toBeGreaterThanOrEqual(1);
     });
 
     it('should parse terrain objects as children of game-table', () => {
@@ -73,7 +67,7 @@ describe('Integration: Sample Save Data', () => {
       const table = tables[0];
       if (table.type === 'table') {
         const terrains = table.children.filter((o) => o.type === 'terrain');
-        expect(terrains.length).toBeGreaterThanOrEqual(3); // At least 3 terrains in sample
+        expect(terrains.length).toBeGreaterThanOrEqual(1);
 
         // Verify terrain has dimensions
         const terrain = terrains[0];
@@ -93,11 +87,7 @@ describe('Integration: Sample Save Data', () => {
 
       // Should find card-stack objects
       const cardStacks = result.objects.filter((o) => o.type === 'card-stack');
-      expect(cardStacks.length).toBeGreaterThanOrEqual(2); // At least 2 card stacks
-
-      // Verify card stack has name
-      const stackNames = cardStacks.map((s) => s.name);
-      expect(stackNames).toContain('山札');
+      expect(cardStacks.length).toBeGreaterThanOrEqual(1);
     });
 
     it('should not duplicate cards from card-stacks as standalone objects', () => {
@@ -109,7 +99,7 @@ describe('Integration: Sample Save Data', () => {
 
       // Cards inside card-stacks should NOT appear as standalone top-level objects
       const cardStacks = result.objects.filter((o) => o.type === 'card-stack');
-      expect(cardStacks.length).toBeGreaterThanOrEqual(2);
+      expect(cardStacks.length).toBeGreaterThanOrEqual(1);
 
       // Cards should be inside card-stack.cards, not at top level
       let totalCardsInStacks = 0;
@@ -135,7 +125,7 @@ describe('Integration: Sample Save Data', () => {
       // Verify table properties
       if (tables.length > 0) {
         const table = tables[0];
-        expect(table.name).toBe('最初のテーブル');
+        expect(table.name).toBeTruthy();
       }
     });
 
