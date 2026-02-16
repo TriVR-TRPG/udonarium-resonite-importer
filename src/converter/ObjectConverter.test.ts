@@ -112,6 +112,27 @@ describe('ObjectConverter', () => {
 
         expect(result.textures).toEqual(['img1']);
       });
+
+      it('should apply image aspect ratio to character mesh while keeping width equal to size', () => {
+        const character: GameCharacter = {
+          ...createBaseObject(),
+          type: 'character',
+          size: 2,
+          images: [{ identifier: 'char-aspect', name: 'char-aspect.png' }],
+          resources: [],
+        };
+        const imageAspectRatioMap = new Map<string, number>([['char-aspect', 1.5]]);
+
+        const [result] = convertObjectsWithTextureMap([character], new Map(), imageAspectRatioMap);
+
+        const quad = result.components.find((c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh');
+        expect(quad?.fields.Size).toEqual({ $type: 'float2', value: { x: 2, y: 3 } });
+        expect(result.position).toEqual({
+          x: 3,
+          y: 2.5,
+          z: -5,
+        });
+      });
     });
 
     describe('dice-symbol conversion', () => {

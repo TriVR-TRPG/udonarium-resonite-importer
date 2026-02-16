@@ -7,7 +7,9 @@ import {
   BlendModeValue,
   resolveTextureValue,
 } from './componentBuilders';
-import { lookupImageBlendMode } from '../imageAspectRatioMap';
+import { lookupImageAspectRatio, lookupImageBlendMode } from '../imageAspectRatioMap';
+
+const DEFAULT_CHARACTER_ASPECT_RATIO = 1;
 
 function resolveBlendMode(
   identifier: string | undefined,
@@ -24,33 +26,51 @@ export function applyCharacterConversion(
   resoniteObj: ResoniteObject,
   convertSize: (size: number) => Vector3,
   textureMap?: Map<string, string>,
+  imageAspectRatioMap?: Map<string, number>,
   imageBlendModeMap?: Map<string, ImageBlendMode>
 ): void {
   const size = convertSize(udonObj.size);
+  const meshWidth = size.x;
   const textureIdentifier = udonObj.images[0]?.identifier;
-  const textureValue = resolveTextureValue(textureIdentifier, textureMap);
-  const blendMode = resolveBlendMode(textureIdentifier, imageBlendModeMap);
-  resoniteObj.components = buildQuadMeshComponents(
-    resoniteObj.id,
-    textureValue,
-    true,
-    {
-      x: size.x,
-      y: size.y,
-    },
-    blendMode
-  );
-  resoniteObj.components.push(
-    buildBoxColliderComponent(resoniteObj.id, {
-      x: size.x,
-      y: size.y,
-      z: 0.05,
-    })
-  );
+  const meshAspectRatio = imageAspectRatioMap
+    ? (lookupImageAspectRatio(imageAspectRatioMap, textureIdentifier) ??
+      DEFAULT_CHARACTER_ASPECT_RATIO)
+    : DEFAULT_CHARACTER_ASPECT_RATIO;
+  const meshHeight = meshWidth * meshAspectRatio;
+  const hasCharacterImage = !!textureIdentifier;
+  resoniteObj.components = hasCharacterImage
+    ? (() => {
+        const textureValue = resolveTextureValue(textureIdentifier, textureMap);
+        const blendMode = resolveBlendMode(textureIdentifier, imageBlendModeMap);
+        return [
+          ...buildQuadMeshComponents(
+            resoniteObj.id,
+            textureValue,
+            true,
+            {
+              x: meshWidth,
+              y: meshHeight,
+            },
+            blendMode
+          ),
+          buildBoxColliderComponent(resoniteObj.id, {
+            x: meshWidth,
+            y: meshHeight,
+            z: 0.05,
+          }),
+        ];
+      })()
+    : [
+        buildBoxColliderComponent(resoniteObj.id, {
+          x: meshWidth,
+          y: size.y,
+          z: 0.05,
+        }),
+      ];
   // Udonarium positions are edge-based; Resonite uses center-based transforms.
-  resoniteObj.position.x += size.x / 2;
-  resoniteObj.position.z -= size.x / 2;
-  resoniteObj.position.y += size.y / 2;
+  resoniteObj.position.x += meshWidth / 2;
+  resoniteObj.position.z -= meshWidth / 2;
+  resoniteObj.position.y += (hasCharacterImage ? meshHeight : size.y) / 2;
   resoniteObj.rotation = {
     x: 0,
     y: udonObj.rotate ?? 0,

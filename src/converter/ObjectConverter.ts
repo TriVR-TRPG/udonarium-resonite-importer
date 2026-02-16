@@ -72,7 +72,14 @@ function convertObjectWithTextures(
   // Apply type-specific conversions
   switch (udonObj.type) {
     case 'character':
-      applyCharacterConversion(udonObj, resoniteObj, convertSize, textureMap, imageBlendModeMap);
+      applyCharacterConversion(
+        udonObj,
+        resoniteObj,
+        convertSize,
+        textureMap,
+        imageAspectRatioMap,
+        imageBlendModeMap
+      );
       break;
     case 'dice-symbol':
       applyDiceSymbolConversion(
