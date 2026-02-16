@@ -7,6 +7,7 @@ This directory contains per-object conversion specifications from Udonarium to R
 ## Current Specs
 
 - [Terrain](terrain.md): Terrain conversion rules and component structure
+- [Character](character.md): Character conversion rules, aspect-ratio mesh behavior, and inventory routing
 - [Card](card.md): Card conversion rules including per-face aspect ratio behavior
 - [Card Stack](card-stack.md): Card-stack conversion rules and child stacking behavior
 - [Dice Symbol](dice-symbol.md): Dice-symbol conversion rules, face sizing, and activation behavior
@@ -16,7 +17,6 @@ This directory contains per-object conversion specifications from Udonarium to R
 
 ## Planned Specs
 
-- `character.md`
 - `text-note.md`
 
 Each spec should document:
