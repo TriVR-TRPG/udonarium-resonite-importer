@@ -352,8 +352,16 @@ describe.skipIf(SKIP_INTEGRATION)('ResoniteLink Integration Tests', () => {
   describe('SlotBuilder Integration', () => {
     let slotBuilder: SlotBuilder;
 
-    beforeAll(() => {
-      slotBuilder = new SlotBuilder(client);
+    beforeAll(async () => {
+      const slotBuilderRootId = `slotbuilder_root_${Date.now()}`;
+      await client.addSlot({
+        id: slotBuilderRootId,
+        parentId: 'Root',
+        name: 'SlotBuilder Integration Root',
+        position: { x: 0, y: 0, z: 0 },
+      });
+      createdSlotIds.push(slotBuilderRootId);
+      slotBuilder = new SlotBuilder(client, slotBuilderRootId);
     });
 
     it(
