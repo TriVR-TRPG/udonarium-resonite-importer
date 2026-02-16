@@ -50,6 +50,45 @@ header .subtitle {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Main Controls Grid */
+.main-controls-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.control-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.file-control {
+  min-width: 0;
+}
+
+.port-control {
+  width: 120px;
+}
+
+.port-control input {
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-size: 0.9rem;
+}
+
+.port-control input:focus {
+  outline: none;
+  border-color: #00d4ff;
+}
+
 /* File Selection */
 .file-select {
   display: flex;
@@ -64,6 +103,7 @@ header .subtitle {
   border-radius: 8px;
   color: #e0e0e0;
   font-size: 0.9rem;
+  min-width: 0;
 }
 
 .file-select input::placeholder {
@@ -166,12 +206,12 @@ header .subtitle {
   font-weight: bold;
 }
 
-/* Settings Grid */
+/* Settings Grid (Advanced Options) */
 .settings-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-bottom: 12px;
+  margin-top: 12px;
 }
 
 .setting-item label {
@@ -194,6 +234,32 @@ header .subtitle {
 .setting-item input:focus {
   outline: none;
   border-color: #00d4ff;
+}
+
+/* Advanced Options Toggle */
+.advanced-toggle {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.advanced-toggle:hover {
+  color: #00d4ff;
+}
+
+.toggle-icon {
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.toggle-icon.open {
+  transform: rotate(90deg);
 }
 
 .hint {
@@ -243,7 +309,7 @@ header .subtitle {
 
 /* Result */
 #import-result {
-  margin-top: 16px;
+  margin-bottom: 16px;
   padding: 16px;
   border-radius: 8px;
   text-align: center;

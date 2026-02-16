@@ -18,8 +18,12 @@ import { ResoniteLinkClient } from '../resonite/ResoniteLinkClient';
 import { SlotBuilder } from '../resonite/SlotBuilder';
 import { AssetImporter } from '../resonite/AssetImporter';
 import { registerExternalUrls } from '../resonite/registerExternalUrls';
-import { IMPORT_ROOT_TAG, VERIFIED_RESONITE_LINK_VERSION } from '../config/MappingConfig';
-import { AnalyzeResult, ImportOptions, ImportResult } from './types';
+import {
+  IMPORT_GROUP_SCALE,
+  IMPORT_ROOT_TAG,
+  VERIFIED_RESONITE_LINK_VERSION,
+} from '../config/MappingConfig';
+import { AnalyzeResult, DefaultConfig, ImportOptions, ImportResult } from './types';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -33,6 +37,7 @@ function createWindow(): void {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
+      sandbox: false,
     },
     title: 'Udonarium Resonite Importer',
   });
@@ -84,6 +89,10 @@ async function warnVersionIfChangedForGui(
 }
 
 // IPC Handlers
+
+ipcMain.handle('get-default-config', (): DefaultConfig => {
+  return { importGroupScale: IMPORT_GROUP_SCALE };
+});
 
 ipcMain.handle('select-file', async (): Promise<string | null> => {
   if (!mainWindow) return null;
@@ -138,7 +147,7 @@ ipcMain.handle('analyze-zip', (_event: IpcMainInvokeEvent, ...args: unknown[]): 
 });
 
 async function handleImportToResonite(options: ImportOptions): Promise<ImportResult> {
-  const { filePath, host, port } = options;
+  const { filePath, host, port, rootScale } = options;
 
   const sendProgress = (step: string, progress: number, detail?: string) => {
     mainWindow?.webContents.send('import-progress', {
@@ -184,8 +193,15 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     const previousImport = await client.captureTransformAndRemoveRootChildrenByTag(IMPORT_ROOT_TAG);
 
     // Create import group
+    // When a previous import root exists, preserve its captured transform (including scale).
+    // rootScale from the UI is only used as the default for fresh imports.
     const groupName = `Udonarium Import - ${path.basename(filePath, '.zip')}`;
-    await slotBuilder.createImportGroup(groupName, previousImport.transform);
+    const defaultScale = { x: rootScale, y: rootScale, z: rootScale };
+    await slotBuilder.createImportGroup(
+      groupName,
+      previousImport.transform ?? undefined,
+      defaultScale
+    );
 
     // Import images
     const totalImages = extractedData.imageFiles.length;

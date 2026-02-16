@@ -137,14 +137,19 @@ export class SlotBuilder {
   /**
    * Create a group slot to contain imported objects
    */
-  async createImportGroup(name: string, transform?: SlotTransform): Promise<string> {
+  async createImportGroup(
+    name: string,
+    transform?: SlotTransform,
+    defaultScale?: Vector3
+  ): Promise<string> {
     const groupId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
     const position: Vector3 = transform?.position ?? { x: 0, y: 0, z: 0 };
-    const scale: Vector3 = transform?.scale ?? {
+    const fallbackScale: Vector3 = defaultScale ?? {
       x: IMPORT_GROUP_SCALE,
       y: IMPORT_GROUP_SCALE,
       z: IMPORT_GROUP_SCALE,
     };
+    const scale: Vector3 = transform?.scale ?? fallbackScale;
 
     await this.client.addSlot({
       id: groupId,

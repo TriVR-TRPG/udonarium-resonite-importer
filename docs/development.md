@@ -72,6 +72,11 @@ npm run test:integration
 
 Only live ResoniteLink integration tests are **skipped by default** and run when `RESONITE_LINK_AVAILABLE=true` is set. Fixture-based integration tests run in normal `npm run test`.
 
+`npm run test` also includes bootstrap smoke tests that guard GUI and ResoniteLink startup wiring:
+
+- `src/gui/bootstrap.smoke.test.ts`
+- `src/resonite/bootstrap.smoke.test.ts`
+
 Fixture-based converter integration currently covers:
 - `sample-dice.zip` (`dice-symbol`)
 - `sample-card.zip` (`card`, `card-stack`)

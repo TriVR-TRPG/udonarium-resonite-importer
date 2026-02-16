@@ -72,6 +72,11 @@ npm run test:integration
 
 デフォルトでスキップされるのは **ResoniteLink実接続の統合テストのみ** です。fixtureベース統合テストは `npm run test` で通常実行されます。
 
+`npm run test` には、GUI と ResoniteLink の起動配線を保護するスモークテストも含まれます。
+
+- `src/gui/bootstrap.smoke.test.ts`
+- `src/resonite/bootstrap.smoke.test.ts`
+
 converter の fixture ベース統合テストは現在以下を対象にしています。
 - `sample-dice.zip`（`dice-symbol`）
 - `sample-card.zip`（`card`, `card-stack`）

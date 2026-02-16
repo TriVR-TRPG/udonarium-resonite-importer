@@ -15,18 +15,63 @@
     </header>
 
     <main>
-      <!-- Step 1: File Selection -->
-      <section class="card">
-        <h2>1. ZIPファイルを選択</h2>
-        <div class="file-select">
-          <input type="text" id="file-path" readonly placeholder="ファイルを選択してください...">
-          <button id="select-file-btn" class="btn btn-primary">参照...</button>
+      <!-- Main Controls: File Selection + Port + Import (always visible) -->
+      <section class="card" id="main-controls">
+        <div class="main-controls-grid">
+          <div class="control-group file-control">
+            <label for="file-path" data-i18n="gui.selectFile">ZIPファイルを選択</label>
+            <div class="file-select">
+              <input type="text" id="file-path" readonly placeholder="ファイルを選択してください...">
+              <button id="select-file-btn" class="btn btn-primary">参照...</button>
+            </div>
+          </div>
+          <div class="control-group port-control">
+            <label for="port" data-i18n="gui.port">ポート:</label>
+            <input type="number" id="port" value="7869" min="1" max="65535">
+          </div>
+        </div>
+        <div id="import-controls">
+          <button id="import-btn" class="btn btn-success btn-large" disabled>Resoniteにインポート</button>
+        </div>
+        <p class="hint" data-i18n="gui.settingsHint">Resoniteを起動し、ResoniteLinkを有効にしてください。</p>
+      </section>
+
+      <!-- Progress -->
+      <div id="progress-area" style="display: none;">
+        <section class="card">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <p id="progress-text">準備中...</p>
+        </section>
+      </div>
+
+      <!-- Import Result -->
+      <div id="import-result" style="display: none;"></div>
+
+      <!-- Advanced Options (collapsible) -->
+      <section class="card" id="advanced-section">
+        <div class="advanced-toggle" id="advanced-toggle">
+          <span class="toggle-icon" id="toggle-icon">&#9654;</span>
+          <span data-i18n="gui.advancedOptions">高度なオプション</span>
+        </div>
+        <div class="advanced-content" id="advanced-content" style="display: none;">
+          <div class="settings-grid">
+            <div class="setting-item">
+              <label for="host" data-i18n="gui.host">ホスト:</label>
+              <input type="text" id="host" value="localhost">
+            </div>
+            <div class="setting-item">
+              <label for="root-scale" data-i18n="gui.rootScale">ルートスケール:</label>
+              <input type="number" id="root-scale" min="0.01" max="100" step="0.1">
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- Step 2: Analysis Result -->
+      <!-- Analysis Result & Errors (bottom) -->
       <section class="card" id="analysis-section" style="display: none;">
-        <h2>2. 解析結果</h2>
+        <h2 data-i18n="gui.analysisResult">解析結果</h2>
         <div id="analysis-result">
           <div class="stats-grid">
             <div class="stat-item">
@@ -46,37 +91,6 @@
           <div id="analysis-errors" class="errors"></div>
         </div>
       </section>
-
-      <!-- Step 3: ResoniteLink Settings -->
-      <section class="card" id="settings-section" style="display: none;">
-        <h2>3. ResoniteLink設定</h2>
-        <div class="settings-grid">
-          <div class="setting-item">
-            <label for="host">ホスト:</label>
-            <input type="text" id="host" value="localhost">
-          </div>
-          <div class="setting-item">
-            <label for="port">ポート:</label>
-            <input type="number" id="port" value="7869" min="1" max="65535">
-          </div>
-        </div>
-        <p class="hint">Resoniteを起動し、ResoniteLinkを有効にしてください。</p>
-      </section>
-
-      <!-- Step 4: Import -->
-      <section class="card" id="import-section" style="display: none;">
-        <h2>4. インポート</h2>
-        <div id="import-controls">
-          <button id="import-btn" class="btn btn-success btn-large">Resoniteにインポート</button>
-        </div>
-        <div id="progress-area" style="display: none;">
-          <div class="progress-bar">
-            <div class="progress-fill" id="progress-fill"></div>
-          </div>
-          <p id="progress-text">準備中...</p>
-        </div>
-        <div id="import-result" style="display: none;"></div>
-      </section>
     </main>
 
     <footer>
@@ -84,6 +98,5 @@
     </footer>
   </div>
 
-  <script src="renderer.js"></script>
 </body>
 </html>

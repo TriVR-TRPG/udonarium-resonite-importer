@@ -121,7 +121,7 @@ describe('buildImageBlendModeMap', () => {
         .toBuffer();
       const fetchSpy = vi
         .spyOn(globalThis, 'fetch')
-        .mockResolvedValue(new Response(new Uint8Array(withAlpha), { status: 200 }) as Response);
+        .mockResolvedValue(new Response(new Uint8Array(withAlpha), { status: 200 }));
 
       const objects: UdonariumObject[] = [
         {

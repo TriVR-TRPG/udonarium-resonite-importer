@@ -18,8 +18,6 @@ initI18n();
 const filePathInput = document.getElementById('file-path') as HTMLInputElement;
 const selectFileBtn = document.getElementById('select-file-btn') as HTMLButtonElement;
 const analysisSection = document.getElementById('analysis-section') as HTMLElement;
-const settingsSection = document.getElementById('settings-section') as HTMLElement;
-const importSection = document.getElementById('import-section') as HTMLElement;
 const xmlCountEl = document.getElementById('xml-count') as HTMLElement;
 const imageCountEl = document.getElementById('image-count') as HTMLElement;
 const objectCountEl = document.getElementById('object-count') as HTMLElement;
@@ -27,12 +25,15 @@ const typeBreakdownEl = document.getElementById('type-breakdown') as HTMLElement
 const analysisErrorsEl = document.getElementById('analysis-errors') as HTMLElement;
 const hostInput = document.getElementById('host') as HTMLInputElement;
 const portInput = document.getElementById('port') as HTMLInputElement;
+const rootScaleInput = document.getElementById('root-scale') as HTMLInputElement;
 const importBtn = document.getElementById('import-btn') as HTMLButtonElement;
 const progressArea = document.getElementById('progress-area') as HTMLElement;
 const progressFill = document.getElementById('progress-fill') as HTMLElement;
 const progressText = document.getElementById('progress-text') as HTMLElement;
 const importResult = document.getElementById('import-result') as HTMLElement;
-const importControls = document.getElementById('import-controls') as HTMLElement;
+const advancedToggle = document.getElementById('advanced-toggle') as HTMLElement;
+const advancedContent = document.getElementById('advanced-content') as HTMLElement;
+const toggleIcon = document.getElementById('toggle-icon') as HTMLElement;
 
 let currentFilePath: string | null = null;
 
@@ -49,32 +50,35 @@ function applyTranslations(): void {
   selectFileBtn.textContent = t('gui.browse');
   importBtn.textContent = t('gui.importToResonite');
 
-  // Section headers
-  const headers = document.querySelectorAll('.card h2');
-  if (headers[0]) headers[0].textContent = `1. ${t('gui.selectFile')}`;
-  if (headers[1]) headers[1].textContent = `2. ${t('gui.analysisResult')}`;
-  if (headers[2]) headers[2].textContent = `3. ${t('gui.settings')}`;
-  if (headers[3]) headers[3].textContent = `4. ${t('gui.import')}`;
+  // Labels via data-i18n attributes
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const key = el.getAttribute('data-i18n');
+    if (key) {
+      el.textContent = t(key);
+    }
+  });
 
   // Stat labels
   const statLabels = document.querySelectorAll('.stat-label');
   if (statLabels[0]) statLabels[0].textContent = t('gui.xmlFiles');
   if (statLabels[1]) statLabels[1].textContent = t('gui.imageFiles');
   if (statLabels[2]) statLabels[2].textContent = t('gui.objects');
-
-  // Settings labels
-  const hostLabel = document.querySelector('label[for="host"]');
-  if (hostLabel) hostLabel.textContent = t('gui.host');
-
-  const portLabel = document.querySelector('label[for="port"]');
-  if (portLabel) portLabel.textContent = t('gui.port');
-
-  const hint = document.querySelector('.hint');
-  if (hint) hint.textContent = t('gui.settingsHint');
 }
 
 // Initialize translations on load
 applyTranslations();
+
+// Load default config and set initial values
+void window.electronAPI.getDefaultConfig().then((config) => {
+  rootScaleInput.value = String(config.importGroupScale);
+});
+
+// Advanced options toggle
+advancedToggle.addEventListener('click', () => {
+  const isHidden = advancedContent.style.display === 'none';
+  advancedContent.style.display = isHidden ? 'block' : 'none';
+  toggleIcon.classList.toggle('open', isHidden);
+});
 
 // File selection
 selectFileBtn.addEventListener('click', () => {
@@ -83,6 +87,7 @@ selectFileBtn.addEventListener('click', () => {
     if (filePath) {
       currentFilePath = filePath;
       filePathInput.value = filePath;
+      importBtn.disabled = false;
       await analyzeFile(filePath);
     }
   })();
@@ -90,15 +95,15 @@ selectFileBtn.addEventListener('click', () => {
 
 // Analyze file
 async function analyzeFile(filePath: string): Promise<void> {
-  analysisSection.style.display = 'none';
-  settingsSection.style.display = 'none';
-  importSection.style.display = 'none';
-
   const result: AnalyzeResult = await window.electronAPI.analyzeZip(filePath);
 
   if (!result.success) {
     analysisSection.style.display = 'block';
     analysisErrorsEl.textContent = `${t('gui.error')}: ${result.error ?? 'Unknown error'}`;
+    xmlCountEl.textContent = '0';
+    imageCountEl.textContent = '0';
+    objectCountEl.textContent = '0';
+    typeBreakdownEl.innerHTML = '';
     return;
   }
 
@@ -124,16 +129,8 @@ async function analyzeFile(filePath: string): Promise<void> {
     analysisErrorsEl.innerHTML = '';
   }
 
-  // Show sections
+  // Show analysis section
   analysisSection.style.display = 'block';
-  settingsSection.style.display = 'block';
-  importSection.style.display = 'block';
-
-  // Reset import state
-  importControls.style.display = 'block';
-  progressArea.style.display = 'none';
-  importResult.style.display = 'none';
-  importBtn.disabled = false;
 }
 
 // Import to Resonite
@@ -142,14 +139,16 @@ importBtn.addEventListener('click', () => {
     if (!currentFilePath) return;
 
     importBtn.disabled = true;
-    importControls.style.display = 'none';
     progressArea.style.display = 'block';
     importResult.style.display = 'none';
+    progressFill.style.width = '0%';
+    progressText.textContent = t('gui.preparing');
 
     const options: ImportOptions = {
       filePath: currentFilePath,
       host: hostInput.value || 'localhost',
       port: parseInt(portInput.value, 10) || 7869,
+      rootScale: parseFloat(rootScaleInput.value) || 1,
     };
 
     const result: ImportResult = await window.electronAPI.importToResonite(options);
@@ -172,9 +171,10 @@ importBtn.addEventListener('click', () => {
         ${result.error ?? 'Unknown error'}<br>
         <small>${t('gui.ensureResonite')}</small>
       `;
-      importControls.style.display = 'block';
-      importBtn.disabled = false;
     }
+
+    // Always re-enable the import button so the same file can be re-imported
+    importBtn.disabled = false;
   })();
 });
 
