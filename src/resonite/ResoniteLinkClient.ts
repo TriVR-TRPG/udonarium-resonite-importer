@@ -10,7 +10,7 @@ import type {
   ClientMessage,
   ResoniteLink,
 } from '@eth0fox/tsrl';
-import WebSocket from 'ws';
+import { WebSocket as NodeWebSocket } from 'ws';
 import { RETRY_CONFIG, getResoniteLinkHost } from '../config/MappingConfig';
 
 export interface ResoniteLinkConfig {
@@ -79,11 +79,42 @@ interface RawAddComponentMessage {
 }
 
 type RawClientMessage = RawAddSlotMessage | RawAddComponentMessage;
+type TsrlRuntimeModule = {
+  ResoniteLink: { connect: (url: string, webSocketCtor: unknown) => Promise<ResoniteLink> };
+};
 
 const createReference = (targetId: string) => ({ $type: 'reference' as const, targetId });
 const createField = <T>(value: T) => ({ value });
 const toTsrlMembers = (members: Record<string, unknown>): Record<string, AnyFieldValue> =>
   members as Record<string, AnyFieldValue>;
+
+// Keep native dynamic import at runtime even when this file is compiled to CommonJS.
+// TypeScript rewrites `import()` to `require()` under `module: commonjs`, which breaks ESM-only packages.
+// eslint-disable-next-line @typescript-eslint/no-implied-eval
+const importModule = new Function('specifier', 'return import(specifier);') as (
+  specifier: string
+) => Promise<unknown>;
+
+async function loadTsrlRuntimeModule(): Promise<TsrlRuntimeModule> {
+  try {
+    const module = await importModule('@eth0fox/tsrl');
+    return module as TsrlRuntimeModule;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (message.includes('A dynamic import callback was not specified')) {
+      const module = await import('@eth0fox/tsrl');
+      return module as TsrlRuntimeModule;
+    }
+    throw error;
+  }
+}
+
+function ensureGlobalWebSocket(): void {
+  const globalWithWebSocket = globalThis as Record<string, unknown>;
+  if (!globalWithWebSocket.WebSocket) {
+    globalWithWebSocket.WebSocket = NodeWebSocket as unknown;
+  }
+}
 
 function toTsrlClientMessage(message: RawClientMessage): ClientMessage {
   switch (message.$type) {
@@ -121,6 +152,7 @@ function toTsrlClientMessage(message: RawClientMessage): ClientMessage {
 }
 
 export class ResoniteLinkClient {
+  private static runtimeModuleLoader?: () => Promise<TsrlRuntimeModule>;
   private link?: ResoniteLink;
   private config: ResoniteLinkConfig;
   private _isConnected = false;
@@ -158,10 +190,24 @@ export class ResoniteLinkClient {
     );
   }
 
+  static setRuntimeModuleLoaderForTests(
+    loader: (() => Promise<TsrlRuntimeModule>) | undefined
+  ): void {
+    this.runtimeModuleLoader = loader;
+  }
+
+  private static async resolveRuntimeModule(): Promise<TsrlRuntimeModule> {
+    if (this.runtimeModuleLoader) {
+      return this.runtimeModuleLoader();
+    }
+    return loadTsrlRuntimeModule();
+  }
+
   private async tryConnect(): Promise<void> {
-    const { ResoniteLink } = await import('@eth0fox/tsrl');
+    ensureGlobalWebSocket();
+    const { ResoniteLink } = await ResoniteLinkClient.resolveRuntimeModule();
     const url = `ws://${this.config.host}:${this.config.port}`;
-    this.link = await ResoniteLink.connect(url, WebSocket as never);
+    this.link = await ResoniteLink.connect(url, NodeWebSocket as never);
     this._isConnected = true;
   }
 

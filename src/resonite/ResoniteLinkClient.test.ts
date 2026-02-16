@@ -1,4 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import type { ResoniteLink } from '@eth0fox/tsrl';
+import { WebSocket as NodeWebSocket } from 'ws';
 
 const TEST_PORT = 12345;
 
@@ -18,13 +20,7 @@ const createMockLink = () => ({
 
 let mockLink = createMockLink();
 const connectMock = vi.fn();
-
-vi.mock('@eth0fox/tsrl', () => {
-  class MockResoniteLink {
-    static connect = connectMock;
-  }
-  return { ResoniteLink: MockResoniteLink };
-});
+let originalGlobalWebSocket: unknown;
 
 import { ResoniteLinkClient } from './ResoniteLinkClient';
 
@@ -32,10 +28,31 @@ describe('ResoniteLinkClient', () => {
   let client: ResoniteLinkClient;
 
   beforeEach(() => {
+    originalGlobalWebSocket = (globalThis as Record<string, unknown>).WebSocket;
     vi.clearAllMocks();
     mockLink = createMockLink();
     connectMock.mockResolvedValue(mockLink);
+    ResoniteLinkClient.setRuntimeModuleLoaderForTests(
+      () =>
+        ({
+          ResoniteLink: { connect: connectMock },
+        }) as unknown as {
+          ResoniteLink: {
+            connect: (url: string, webSocketCtor: unknown) => Promise<ResoniteLink>;
+          };
+        }
+    );
     client = new ResoniteLinkClient({ port: TEST_PORT });
+  });
+
+  afterEach(() => {
+    const globalWithWebSocket = globalThis as Record<string, unknown>;
+    if (originalGlobalWebSocket === undefined) {
+      delete globalWithWebSocket.WebSocket;
+    } else {
+      globalWithWebSocket.WebSocket = originalGlobalWebSocket;
+    }
+    ResoniteLinkClient.setRuntimeModuleLoaderForTests(undefined);
   });
 
   it('connect/disconnect works', async () => {
@@ -122,5 +139,19 @@ describe('ResoniteLinkClient', () => {
     expect(payload.rotation?.value.y).toBeCloseTo(0, 5);
     expect(payload.rotation?.value.z).toBeCloseTo(0.965926, 5);
     expect(payload.rotation?.value.w).toBeCloseTo(0, 5);
+  });
+
+  it('passes ws.WebSocket constructor to tsrl connect', async () => {
+    await client.connect();
+    expect(connectMock).toHaveBeenCalledTimes(1);
+    const [, wsCtor] = connectMock.mock.calls[0] as [string, unknown];
+    expect(wsCtor).toBe(NodeWebSocket);
+  });
+
+  it('ensures global WebSocket before connecting', async () => {
+    const globalWithWebSocket = globalThis as Record<string, unknown>;
+    delete globalWithWebSocket.WebSocket;
+    await client.connect();
+    expect(globalWithWebSocket.WebSocket).toBe(NodeWebSocket);
   });
 });
