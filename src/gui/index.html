@@ -19,10 +19,11 @@
         <div class="main-controls-grid">
           <div class="control-group file-control">
             <label for="file-path" data-i18n="gui.selectFile">ZIPファイルを選択</label>
-            <div class="file-select">
+            <div class="file-select" id="file-drop-area">
               <input type="text" id="file-path" readonly placeholder="ファイルを選択してください...">
               <button id="select-file-btn" class="btn btn-primary">参照...</button>
             </div>
+            <p class="drop-hint">ここにZIPファイルをドラッグ&ドロップ可能</p>
           </div>
           <div class="control-group port-control">
             <label for="port" data-i18n="gui.port">ポート</label>

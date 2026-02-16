@@ -17,6 +17,7 @@ initI18n();
 // Elements
 const filePathInput = document.getElementById('file-path') as HTMLInputElement;
 const selectFileBtn = document.getElementById('select-file-btn') as HTMLButtonElement;
+const fileDropArea = document.getElementById('file-drop-area') as HTMLElement;
 const hostInput = document.getElementById('host') as HTMLInputElement;
 const portInput = document.getElementById('port') as HTMLInputElement;
 const rootScaleInput = document.getElementById('root-scale') as HTMLInputElement;
@@ -65,6 +66,12 @@ function canImport(): boolean {
 
 function updateImportButtonState(): void {
   importBtn.disabled = !canImport();
+}
+
+function setSelectedFilePath(filePath: string): void {
+  currentFilePath = filePath;
+  filePathInput.value = filePath;
+  updateImportButtonState();
 }
 
 // Apply translations to UI
@@ -117,11 +124,42 @@ selectFileBtn.addEventListener('click', () => {
   void (async () => {
     const filePath = await window.electronAPI.selectFile();
     if (filePath) {
-      currentFilePath = filePath;
-      filePathInput.value = filePath;
-      updateImportButtonState();
+      setSelectedFilePath(filePath);
     }
   })();
+});
+
+for (const eventName of ['dragenter', 'dragover']) {
+  fileDropArea.addEventListener(eventName, (event) => {
+    event.preventDefault();
+    fileDropArea.classList.add('drag-over');
+  });
+}
+
+for (const eventName of ['dragleave', 'drop']) {
+  fileDropArea.addEventListener(eventName, (event) => {
+    event.preventDefault();
+    fileDropArea.classList.remove('drag-over');
+  });
+}
+
+fileDropArea.addEventListener('drop', (event) => {
+  const droppedFiles = event.dataTransfer?.files;
+  if (!droppedFiles || droppedFiles.length === 0) {
+    return;
+  }
+
+  const droppedFile = droppedFiles[0] as File & { path?: string };
+  const droppedPath = droppedFile.path;
+  if (!droppedPath || !droppedPath.toLowerCase().endsWith('.zip')) {
+    importLog.style.display = 'block';
+    importResult.style.display = 'block';
+    importResult.className = 'error';
+    importResult.innerHTML = `<strong>${t('gui.errorOccurred')}</strong><br>ZIPファイルをドロップしてください`;
+    return;
+  }
+
+  setSelectedFilePath(droppedPath);
 });
 
 // Import to Resonite

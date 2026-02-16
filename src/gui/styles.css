@@ -93,6 +93,12 @@ header .subtitle {
 .file-select {
   display: flex;
   gap: 10px;
+  border: 1px dashed transparent;
+  border-radius: 10px;
+  padding: 6px;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .file-select input {
@@ -107,6 +113,17 @@ header .subtitle {
 }
 
 .file-select input::placeholder {
+  color: #666;
+}
+
+.file-select.drag-over {
+  border-color: #00d4ff;
+  background: rgba(0, 212, 255, 0.08);
+}
+
+.drop-hint {
+  margin-top: 6px;
+  font-size: 0.8rem;
   color: #666;
 }
 
