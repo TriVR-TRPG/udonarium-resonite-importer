@@ -4,9 +4,17 @@
  */
 
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import { AnalyzeResult, ImportOptions, ImportResult, ProgressInfo, ElectronAPI } from './types';
+import {
+  AnalyzeResult,
+  DefaultConfig,
+  ImportOptions,
+  ImportResult,
+  ProgressInfo,
+  ElectronAPI,
+} from './types';
 
 const api: ElectronAPI = {
+  getDefaultConfig: () => ipcRenderer.invoke('get-default-config') as Promise<DefaultConfig>,
   selectFile: () => ipcRenderer.invoke('select-file') as Promise<string | null>,
   analyzeZip: (filePath: string) =>
     ipcRenderer.invoke('analyze-zip', filePath) as Promise<AnalyzeResult>,

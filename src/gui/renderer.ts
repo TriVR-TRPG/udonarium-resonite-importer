@@ -68,6 +68,11 @@ function applyTranslations(): void {
 // Initialize translations on load
 applyTranslations();
 
+// Load default config and set initial values
+void window.electronAPI.getDefaultConfig().then((config) => {
+  rootScaleInput.value = String(config.importGroupScale);
+});
+
 // Advanced options toggle
 advancedToggle.addEventListener('click', () => {
   const isHidden = advancedContent.style.display === 'none';

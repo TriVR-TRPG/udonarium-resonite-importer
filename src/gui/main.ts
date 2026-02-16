@@ -18,8 +18,12 @@ import { ResoniteLinkClient } from '../resonite/ResoniteLinkClient';
 import { SlotBuilder } from '../resonite/SlotBuilder';
 import { AssetImporter } from '../resonite/AssetImporter';
 import { registerExternalUrls } from '../resonite/registerExternalUrls';
-import { IMPORT_ROOT_TAG, VERIFIED_RESONITE_LINK_VERSION } from '../config/MappingConfig';
-import { AnalyzeResult, ImportOptions, ImportResult } from './types';
+import {
+  IMPORT_GROUP_SCALE,
+  IMPORT_ROOT_TAG,
+  VERIFIED_RESONITE_LINK_VERSION,
+} from '../config/MappingConfig';
+import { AnalyzeResult, DefaultConfig, ImportOptions, ImportResult } from './types';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -84,6 +88,10 @@ async function warnVersionIfChangedForGui(
 }
 
 // IPC Handlers
+
+ipcMain.handle('get-default-config', (): DefaultConfig => {
+  return { importGroupScale: IMPORT_GROUP_SCALE };
+});
 
 ipcMain.handle('select-file', async (): Promise<string | null> => {
   if (!mainWindow) return null;

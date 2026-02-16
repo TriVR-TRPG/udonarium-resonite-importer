@@ -34,7 +34,12 @@ export interface ProgressInfo {
   detail?: string;
 }
 
+export interface DefaultConfig {
+  importGroupScale: number;
+}
+
 export interface ElectronAPI {
+  getDefaultConfig: () => Promise<DefaultConfig>;
   selectFile: () => Promise<string | null>;
   analyzeZip: (filePath: string) => Promise<AnalyzeResult>;
   importToResonite: (options: ImportOptions) => Promise<ImportResult>;
