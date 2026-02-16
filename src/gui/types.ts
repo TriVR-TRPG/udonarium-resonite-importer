@@ -33,9 +33,12 @@ export interface ProgressInfo {
   detail?: string;
 }
 
-export interface ElectronAPI {
-  selectFile: () => Promise<string | null>;
-  analyzeZip: (filePath: string) => Promise<AnalyzeResult>;
-  importToResonite: (options: ImportOptions) => Promise<ImportResult>;
-  onImportProgress: (callback: (info: ProgressInfo) => void) => void;
+export interface ExtensionRequest {
+  requestId: string;
+  [key: string]: unknown;
+}
+
+export interface ExtensionResponse {
+  requestId: string;
+  result: unknown;
 }

@@ -3,6 +3,12 @@ node_modules/
 
 # Build output
 dist/
+resources/js/neutralino.js
+resources/js/renderer.js
+extensions/backend/main.js
+
+# Neutralinojs binary
+bin/
 
 # IDE
 .idea/

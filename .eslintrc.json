@@ -4,7 +4,7 @@
   "parserOptions": {
     "ecmaVersion": 2022,
     "sourceType": "module",
-    "project": ["./tsconfig.cli.json", "./tsconfig.gui.json"]
+    "project": ["./tsconfig.cli.json", "./tsconfig.gui.json", "./tsconfig.ext.json"]
   },
   "plugins": ["@typescript-eslint"],
   "extends": [

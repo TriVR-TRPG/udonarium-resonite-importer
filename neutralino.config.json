@@ -1,0 +1,48 @@
+{
+  "applicationId": "com.udonarium-resonite-importer",
+  "version": "1.0.0",
+  "defaultMode": "window",
+  "port": 0,
+  "documentRoot": "/resources/",
+  "url": "/",
+  "enableServer": true,
+  "enableNativeAPI": true,
+  "tokenSecurity": "one-time",
+  "logging": {
+    "enabled": true,
+    "writeToLogFile": true
+  },
+  "nativeAllowList": [
+    "app.*",
+    "os.*",
+    "events.*",
+    "extensions.*",
+    "window.*",
+    "debug.log"
+  ],
+  "modes": {
+    "window": {
+      "title": "Udonarium Resonite Importer",
+      "width": 800,
+      "height": 600,
+      "minWidth": 600,
+      "minHeight": 500,
+      "center": true
+    }
+  },
+  "cli": {
+    "binaryName": "udonarium-resonite-importer",
+    "resourcesPath": "/resources/",
+    "extensionsPath": "/extensions/",
+    "clientLibrary": "/resources/js/neutralino.js",
+    "binaryVersion": "nightly"
+  },
+  "extensions": [
+    {
+      "id": "js.neutralino.backend",
+      "commandLinux": "node ${NL_PATH}/extensions/backend/main.js",
+      "commandDarwin": "node ${NL_PATH}/extensions/backend/main.js",
+      "commandWindows": "node ${NL_PATH}/extensions/backend/main.js"
+    }
+  ]
+}

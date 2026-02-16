@@ -1,15 +1,34 @@
 /**
- * Renderer Process Script
+ * Renderer Process Script (Neutralinojs)
  */
 
-import { AnalyzeResult, ImportOptions, ImportResult, ProgressInfo, ElectronAPI } from './types';
+import { AnalyzeResult, ImportOptions, ImportResult, ProgressInfo } from './types';
 import { t, initI18n } from './i18n';
 
-declare global {
-  interface Window {
-    electronAPI: ElectronAPI;
-  }
-}
+declare const Neutralino: {
+  init: () => void;
+  os: {
+    showOpenDialog: (
+      title: string,
+      options?: { filters?: { name: string; extensions: string[] }[] }
+    ) => Promise<string[]>;
+  };
+  extensions: {
+    dispatch: (extensionId: string, event: string, data?: unknown) => Promise<void>;
+  };
+  events: {
+    on: (event: string, handler: (ev: CustomEvent) => void) => Promise<void>;
+    off: (event: string, handler: (ev: CustomEvent) => void) => Promise<void>;
+  };
+  app: {
+    exit: (code?: number) => Promise<void>;
+  };
+};
+
+const EXTENSION_ID = 'js.neutralino.backend';
+
+// Initialize Neutralinojs
+Neutralino.init();
 
 // Initialize i18n
 initI18n();
@@ -35,6 +54,30 @@ const importResult = document.getElementById('import-result') as HTMLElement;
 const importControls = document.getElementById('import-controls') as HTMLElement;
 
 let currentFilePath: string | null = null;
+
+/**
+ * Send a request to the backend extension and wait for a response.
+ */
+function sendRequest<T>(event: string, data: Record<string, unknown> = {}): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const requestId = crypto.randomUUID();
+    const responseEvent = `${event}Result`;
+
+    const handler = (ev: CustomEvent) => {
+      const detail = ev.detail as { requestId: string; result: T; error?: string };
+      if (detail.requestId !== requestId) return;
+      void Neutralino.events.off(responseEvent, handler);
+      if (detail.error) {
+        reject(new Error(detail.error));
+      } else {
+        resolve(detail.result);
+      }
+    };
+
+    void Neutralino.events.on(responseEvent, handler);
+    void Neutralino.extensions.dispatch(EXTENSION_ID, event, { requestId, ...data });
+  });
+}
 
 // Apply translations to UI
 function applyTranslations(): void {
@@ -76,14 +119,17 @@ function applyTranslations(): void {
 // Initialize translations on load
 applyTranslations();
 
-// File selection
+// File selection using Neutralinojs native dialog
 selectFileBtn.addEventListener('click', () => {
   void (async () => {
-    const filePath = await window.electronAPI.selectFile();
-    if (filePath) {
-      currentFilePath = filePath;
-      filePathInput.value = filePath;
-      await analyzeFile(filePath);
+    const entries = await Neutralino.os.showOpenDialog(t('gui.selectFile'), {
+      filters: [{ name: 'ZIP Files', extensions: ['zip'] }],
+    });
+
+    if (entries.length > 0) {
+      currentFilePath = entries[0];
+      filePathInput.value = entries[0];
+      await analyzeFile(entries[0]);
     }
   })();
 });
@@ -94,7 +140,7 @@ async function analyzeFile(filePath: string): Promise<void> {
   settingsSection.style.display = 'none';
   importSection.style.display = 'none';
 
-  const result: AnalyzeResult = await window.electronAPI.analyzeZip(filePath);
+  const result = await sendRequest<AnalyzeResult>('analyzeZip', { filePath });
 
   if (!result.success) {
     analysisSection.style.display = 'block';
@@ -152,7 +198,7 @@ importBtn.addEventListener('click', () => {
       port: parseInt(portInput.value, 10) || 7869,
     };
 
-    const result: ImportResult = await window.electronAPI.importToResonite(options);
+    const result = await sendRequest<ImportResult>('importToResonite', { options });
 
     progressArea.style.display = 'none';
     importResult.style.display = 'block';
@@ -178,8 +224,14 @@ importBtn.addEventListener('click', () => {
   })();
 });
 
-// Progress updates
-window.electronAPI.onImportProgress((info: ProgressInfo) => {
+// Progress updates from the backend extension
+void Neutralino.events.on('importProgress', (ev: CustomEvent) => {
+  const info = ev.detail as ProgressInfo;
   progressFill.style.width = `${String(info.progress)}%`;
   progressText.textContent = info.detail ?? `${info.step}: ${String(info.progress)}%`;
+});
+
+// Handle window close
+void Neutralino.events.on('windowClose', () => {
+  void Neutralino.app.exit();
 });

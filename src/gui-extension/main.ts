@@ -1,8 +1,12 @@
 /**
- * Electron Main Process
+ * Neutralinojs Backend Extension
+ *
+ * Runs as a separate Node.js process and communicates with the
+ * Neutralinojs app via WebSocket. Handles all Node.js-dependent
+ * operations (ZIP extraction, image processing, ResoniteLink).
  */
 
-import { app, BrowserWindow, ipcMain, dialog, IpcMainInvokeEvent } from 'electron';
+import WebSocket from 'ws';
 import * as path from 'path';
 import { extractZip } from '../parser/ZipExtractor';
 import { parseXmlFiles } from '../parser/XmlParser';
@@ -19,93 +23,127 @@ import { SlotBuilder } from '../resonite/SlotBuilder';
 import { AssetImporter } from '../resonite/AssetImporter';
 import { registerExternalUrls } from '../resonite/registerExternalUrls';
 import { IMPORT_ROOT_TAG, VERIFIED_RESONITE_LINK_VERSION } from '../config/MappingConfig';
-import { AnalyzeResult, ImportOptions, ImportResult } from './types';
+import { AnalyzeResult, ImportOptions, ImportResult } from '../gui/types';
 
-let mainWindow: BrowserWindow | null = null;
+// Parse command-line arguments from Neutralinojs
+// Format: --nl-port=PORT --nl-token=TOKEN --nl-extension-id=ID
+function parseArgs(): { port: string; token: string; extensionId: string } {
+  const args = process.argv.slice(2);
+  const parsed: Record<string, string> = {};
 
-function createWindow(): void {
-  mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    minWidth: 600,
-    minHeight: 500,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      contextIsolation: true,
-      nodeIntegration: false,
-    },
-    title: 'Udonarium Resonite Importer',
+  for (const arg of args) {
+    const match = arg.match(/^--nl-(\w+(?:-\w+)*)=(.+)$/);
+    if (match) {
+      const key = match[1].replace(/-/g, '_');
+      parsed[key] = match[2];
+    }
+  }
+
+  return {
+    port: parsed['port'] || '0',
+    token: parsed['token'] || '',
+    extensionId: parsed['extension_id'] || '',
+  };
+}
+
+const config = parseArgs();
+let ws: WebSocket | null = null;
+let messageId = 0;
+
+/**
+ * Connect to the Neutralinojs WebSocket server.
+ */
+function connect(): void {
+  const url = `ws://localhost:${config.port}?extensionId=${config.extensionId}&connectToken=${config.token}`;
+
+  ws = new WebSocket(url);
+
+  ws.on('open', () => {
+    console.log(`[backend] Connected to Neutralinojs on port ${config.port}`);
   });
 
-  void mainWindow.loadFile(path.join(__dirname, '../../src/gui/index.html'));
+  ws.on('message', (rawData: WebSocket.RawData) => {
+    try {
+      const text = Buffer.isBuffer(rawData)
+        ? rawData.toString('utf-8')
+        : ArrayBuffer.isView(rawData)
+          ? Buffer.from(rawData.buffer, rawData.byteOffset, rawData.byteLength).toString('utf-8')
+          : new TextDecoder().decode(rawData as ArrayBuffer);
+      const message = JSON.parse(text) as {
+        event: string;
+        data?: Record<string, unknown>;
+      };
+      void handleMessage(message);
+    } catch (err) {
+      console.error('[backend] Failed to parse message:', err);
+    }
+  });
 
-  mainWindow.on('closed', () => {
-    mainWindow = null;
+  ws.on('close', () => {
+    console.log('[backend] WebSocket closed, exiting');
+    process.exit(0);
+  });
+
+  ws.on('error', (err: Error) => {
+    console.error('[backend] WebSocket error:', err.message);
+    process.exit(1);
   });
 }
 
-void app.whenReady().then(() => {
-  createWindow();
+/**
+ * Send an event back to the Neutralinojs app via broadcast.
+ */
+function sendEvent(event: string, data: unknown): void {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
+  const message = {
+    id: String(++messageId),
+    method: 'app.broadcast',
+    accessToken: config.token,
+    data: { event, data },
+  };
+
+  ws.send(JSON.stringify(message));
+}
+
+/**
+ * Handle incoming messages from the frontend.
+ */
+async function handleMessage(message: {
+  event: string;
+  data?: Record<string, unknown>;
+}): Promise<void> {
+  const { event, data } = message;
+
+  switch (event) {
+    case 'analyzeZip': {
+      const requestId = data?.requestId as string;
+      const filePath = data?.filePath as string;
+      const result = handleAnalyzeZip(filePath);
+      sendEvent('analyzeZipResult', { requestId, result });
+      break;
     }
-  });
-});
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
-
-async function warnVersionIfChangedForGui(
-  client: ResoniteLinkClient,
-  onWarning: (message: string) => void
-): Promise<void> {
-  try {
-    const sessionData = await client.getSessionData();
-    const runtimeVersion = sessionData.resoniteLinkVersion;
-    if (!runtimeVersion) {
-      return;
+    case 'importToResonite': {
+      const requestId = data?.requestId as string;
+      const options = data?.options as ImportOptions;
+      const result = await handleImportToResonite(options);
+      sendEvent('importToResoniteResult', { requestId, result });
+      break;
     }
-
-    if (runtimeVersion !== VERIFIED_RESONITE_LINK_VERSION) {
-      onWarning(
-        `ResoniteLink version changed: expected ${VERIFIED_RESONITE_LINK_VERSION}, connected ${runtimeVersion}. Please validate compatibility.`
-      );
-    }
-  } catch (error) {
-    onWarning(
-      `Warning: Failed to check ResoniteLink version: ${error instanceof Error ? error.message : String(error)}`
-    );
+    default:
+      // Ignore unknown events
+      break;
   }
 }
 
-// IPC Handlers
-
-ipcMain.handle('select-file', async (): Promise<string | null> => {
-  if (!mainWindow) return null;
-
-  const result = await dialog.showOpenDialog(mainWindow, {
-    properties: ['openFile'],
-    filters: [{ name: 'ZIP Files', extensions: ['zip'] }],
-  });
-
-  if (result.canceled || result.filePaths.length === 0) {
-    return null;
-  }
-
-  return result.filePaths[0];
-});
-
+/**
+ * Analyze a ZIP file and return statistics.
+ */
 function handleAnalyzeZip(filePath: string): AnalyzeResult {
   try {
     const extractedData = extractZip(filePath);
     const parseResult = parseXmlFiles(extractedData.xmlFiles);
 
-    // Count by type
     const typeCounts: Record<string, number> = {};
     for (const obj of parseResult.objects) {
       typeCounts[obj.type] = (typeCounts[obj.type] || 0) + 1;
@@ -132,20 +170,37 @@ function handleAnalyzeZip(filePath: string): AnalyzeResult {
   }
 }
 
-ipcMain.handle('analyze-zip', (_event: IpcMainInvokeEvent, ...args: unknown[]): AnalyzeResult => {
-  const filePath = args[0] as string;
-  return handleAnalyzeZip(filePath);
-});
+async function warnVersionIfChangedForGui(
+  client: ResoniteLinkClient,
+  onWarning: (message: string) => void
+): Promise<void> {
+  try {
+    const sessionData = await client.getSessionData();
+    const runtimeVersion = sessionData.resoniteLinkVersion;
+    if (!runtimeVersion) {
+      return;
+    }
 
+    if (runtimeVersion !== VERIFIED_RESONITE_LINK_VERSION) {
+      onWarning(
+        `ResoniteLink version changed: expected ${VERIFIED_RESONITE_LINK_VERSION}, connected ${runtimeVersion}. Please validate compatibility.`
+      );
+    }
+  } catch (error) {
+    onWarning(
+      `Warning: Failed to check ResoniteLink version: ${error instanceof Error ? error.message : String(error)}`
+    );
+  }
+}
+
+/**
+ * Import objects into Resonite via ResoniteLink.
+ */
 async function handleImportToResonite(options: ImportOptions): Promise<ImportResult> {
   const { filePath, host, port } = options;
 
   const sendProgress = (step: string, progress: number, detail?: string) => {
-    mainWindow?.webContents.send('import-progress', {
-      step,
-      progress,
-      detail,
-    });
+    sendEvent('importProgress', { step, progress, detail });
   };
 
   try {
@@ -264,10 +319,5 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
   }
 }
 
-ipcMain.handle(
-  'import-to-resonite',
-  async (_event: IpcMainInvokeEvent, ...args: unknown[]): Promise<ImportResult> => {
-    const options = args[0] as ImportOptions;
-    return handleImportToResonite(options);
-  }
-);
+// Start the extension
+connect();

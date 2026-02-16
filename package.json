@@ -2,19 +2,22 @@
   "name": "udonarium-resonite-importer",
   "version": "1.0.0",
   "description": "Import Udonarium save data into Resonite via ResoniteLink",
-  "main": "dist/gui/main.js",
+  "main": "resources/js/renderer.js",
   "bin": {
     "udonarium-resonite-importer": "./dist/index.js"
   },
   "scripts": {
-    "clean": "rm -rf dist release coverage parsed",
+    "clean": "rm -rf dist release coverage parsed resources/js/renderer.js extensions/backend/main.js",
     "build": "run-p build:*",
     "build:cli": "tsc -p tsconfig.cli.json",
-    "build:gui": "tsc -p tsconfig.gui.json",
+    "build:gui": "run-s build:gui:renderer build:gui:extension build:gui:assets",
+    "build:gui:renderer": "esbuild src/gui/renderer.ts --bundle --outfile=resources/js/renderer.js --format=iife --platform=browser --target=es2022",
+    "build:gui:extension": "esbuild src/gui-extension/main.ts --bundle --outfile=extensions/backend/main.js --platform=node --target=node18 --external:sharp",
+    "build:gui:assets": "cp node_modules/@neutralinojs/lib/dist/neutralino.js resources/js/neutralino.js",
     "prestart": "npm run build:cli",
     "start": "node dist/index.js",
     "prestart:gui": "npm run build:gui",
-    "start:gui": "electron .",
+    "start:gui": "neu run",
     "dev": "ts-node src/index.ts",
     "dev:gui": "run-s build:gui start:gui",
     "check": "run-s check:fix check:validate",
@@ -27,6 +30,7 @@
     "check:validate:types": "run-p check:validate:types:*",
     "check:validate:types:cli": "tsc -p tsconfig.cli.json --noEmit",
     "check:validate:types:gui": "tsc -p tsconfig.gui.json --noEmit",
+    "check:validate:types:ext": "tsc -p tsconfig.ext.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
@@ -38,10 +42,8 @@
     "package:cli:win": "pkg . --targets node18-win-x64 --output dist/udonarium-resonite-importer.exe",
     "package:cli:mac": "pkg . --targets node18-macos-x64 --output dist/udonarium-resonite-importer-macos",
     "package:cli:linux": "pkg . --targets node18-linux-x64 --output dist/udonarium-resonite-importer-linux",
-    "package:gui": "electron-builder --win --mac --linux",
-    "package:gui:win": "electron-builder --win",
-    "package:gui:mac": "electron-builder --mac",
-    "package:gui:linux": "electron-builder --linux",
+    "package:gui": "run-s build:gui package:gui:neu",
+    "package:gui:neu": "neu build",
     "prepare": "husky"
   },
   "keywords": [
@@ -55,6 +57,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@eth0fox/tsrl": "^2.0.0",
+    "@neutralinojs/lib": "^6.5.0",
     "adm-zip": "^0.5.10",
     "chalk": "^4.1.2",
     "commander": "^11.1.0",
@@ -62,18 +66,17 @@
     "fast-xml-parser": "^5.3.4",
     "ora": "^5.4.1",
     "sharp": "^0.34.5",
-    "ws": "^8.14.2",
-    "@eth0fox/tsrl": "^2.0.0"
+    "ws": "^8.14.2"
   },
   "devDependencies": {
+    "@neutralinojs/neu": "^11.7.0",
     "@types/adm-zip": "^0.5.5",
     "@types/node": "^20.19.31",
     "@types/ws": "^8.5.10",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
     "@vitest/coverage-v8": "^4.0.18",
-    "electron": "^28.0.0",
-    "electron-builder": "^26.7.0",
+    "esbuild": "^0.27.3",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
@@ -84,9 +87,6 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
-  },
-  "optionalDependencies": {
-    "electron": "^28.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -99,27 +99,6 @@
       "node18-macos-x64",
       "node18-linux-x64"
     ]
-  },
-  "build": {
-    "appId": "com.udonarium-resonite-importer",
-    "productName": "Udonarium Resonite Importer",
-    "directories": {
-      "output": "release"
-    },
-    "files": [
-      "dist/**/*",
-      "src/gui/**/*.html",
-      "src/gui/**/*.css"
-    ],
-    "win": {
-      "target": "zip"
-    },
-    "mac": {
-      "target": "zip"
-    },
-    "linux": {
-      "target": "AppImage"
-    }
   },
   "lint-staged": {
     "src/**/*.ts": [
