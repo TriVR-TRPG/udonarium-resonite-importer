@@ -251,7 +251,65 @@ describe('SlotBuilder', () => {
 
       expect(results).toHaveLength(3);
       expect(results.every((r) => r.success)).toBe(true);
-      expect(mockClient.addSlot).toHaveBeenCalledTimes(3);
+      expect(mockClient.addSlot).toHaveBeenCalledTimes(5);
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          parentId: 'Root',
+          name: 'Tables',
+        })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({
+          parentId: 'Root',
+          name: 'Objects',
+        })
+      );
+      const objectsCallArgs = mockClient.addSlot.mock.calls[1][0] as { id: string };
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({
+          parentId: objectsCallArgs.id,
+          id: 'obj-1',
+        })
+      );
+    });
+
+    it('should place tables under Tables and non-table objects under Objects', async () => {
+      const table = createResoniteObject({
+        id: 'table-1',
+        name: 'Table 1',
+        children: [
+          createResoniteObject({
+            id: 'table-1-surface',
+            name: 'Table 1-surface',
+          }),
+        ],
+      });
+      const character = createResoniteObject({
+        id: 'char-1',
+        name: 'Character 1',
+      });
+
+      await slotBuilder.buildSlots([table, character]);
+
+      const tablesSlotCall = mockClient.addSlot.mock.calls[0][0] as { id: string };
+      const objectsSlotCall = mockClient.addSlot.mock.calls[1][0] as { id: string };
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({
+          id: 'table-1',
+          parentId: tablesSlotCall.id,
+        })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        5,
+        expect.objectContaining({
+          id: 'char-1',
+          parentId: objectsSlotCall.id,
+        })
+      );
     });
 
     it('should call progress callback for each object', async () => {
@@ -269,10 +327,14 @@ describe('SlotBuilder', () => {
     });
 
     it('should continue building even if one slot fails', async () => {
-      mockClient.addSlot
-        .mockResolvedValueOnce('slot-1')
-        .mockRejectedValueOnce(new Error('Failed'))
-        .mockResolvedValueOnce('slot-3');
+      let callCount = 0;
+      mockClient.addSlot.mockImplementation(() => {
+        callCount += 1;
+        if (callCount === 4) {
+          return Promise.reject(new Error('Failed'));
+        }
+        return Promise.resolve('created-slot-id');
+      });
 
       const objects = [
         createResoniteObject({ id: 'obj-1' }),
@@ -302,6 +364,14 @@ describe('SlotBuilder', () => {
 
       expect(results).toHaveLength(1);
       expect(results[0].success).toBe(true);
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ name: 'Tables', parentId: 'Root' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ name: 'Objects', parentId: 'Root' })
+      );
     });
   });
 

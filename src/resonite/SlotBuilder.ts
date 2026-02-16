@@ -38,6 +38,10 @@ function splitListFields(fields: Record<string, unknown>): {
   return { creationFields, listFields };
 }
 
+function isTableRootObject(obj: ResoniteObject): boolean {
+  return obj.children.some((child) => child.id.endsWith('-surface'));
+}
+
 export interface SlotBuildResult {
   slotId: string;
   success: boolean;
@@ -47,6 +51,8 @@ export interface SlotBuildResult {
 export class SlotBuilder {
   private client: ResoniteLinkClient;
   private rootSlotId: string;
+  private tablesSlotId?: string;
+  private objectsSlotId?: string;
   private assetsSlotId?: string;
   private texturesSlotId?: string;
   private meshesSlotId?: string;
@@ -119,11 +125,17 @@ export class SlotBuilder {
     objects: ResoniteObject[],
     onProgress?: (current: number, total: number) => void
   ): Promise<SlotBuildResult[]> {
+    if (objects.length === 0) {
+      return [];
+    }
+
     const results: SlotBuildResult[] = [];
     const total = objects.length;
+    const { tablesSlotId, objectsSlotId } = await this.ensureTopLevelObjectSlots();
 
     for (let i = 0; i < objects.length; i++) {
-      const result = await this.buildSlot(objects[i]);
+      const parentId = isTableRootObject(objects[i]) ? tablesSlotId : objectsSlotId;
+      const result = await this.buildSlot(objects[i], parentId);
       results.push(result);
 
       if (onProgress) {
@@ -162,6 +174,12 @@ export class SlotBuilder {
     });
 
     this.rootSlotId = groupId;
+    this.tablesSlotId = undefined;
+    this.objectsSlotId = undefined;
+    this.assetsSlotId = undefined;
+    this.texturesSlotId = undefined;
+    this.meshesSlotId = undefined;
+    this.materialsSlotId = undefined;
     return groupId;
   }
 
@@ -300,6 +318,36 @@ export class SlotBuilder {
       position: { x: 0, y: 0, z: 0 },
     });
     return this.assetsSlotId;
+  }
+
+  private async ensureTopLevelObjectSlots(): Promise<{
+    tablesSlotId: string;
+    objectsSlotId: string;
+  }> {
+    if (!this.tablesSlotId) {
+      this.tablesSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
+      await this.client.addSlot({
+        id: this.tablesSlotId,
+        parentId: this.rootSlotId,
+        name: 'Tables',
+        position: { x: 0, y: 0, z: 0 },
+      });
+    }
+
+    if (!this.objectsSlotId) {
+      this.objectsSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
+      await this.client.addSlot({
+        id: this.objectsSlotId,
+        parentId: this.rootSlotId,
+        name: 'Objects',
+        position: { x: 0, y: 0, z: 0 },
+      });
+    }
+
+    return {
+      tablesSlotId: this.tablesSlotId,
+      objectsSlotId: this.objectsSlotId,
+    };
   }
 
   private async ensureTexturesSlot(): Promise<string> {
