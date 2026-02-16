@@ -1,4 +1,4 @@
-/**
+﻿/**
  * i18n module for GUI (renderer process)
  * Browser-compatible version with embedded translations
  */
@@ -95,6 +95,14 @@ const enTranslations: Translations = {
     settings: 'ResoniteLink Settings',
     host: 'Host:',
     port: 'Port:',
+    resoniteLinkPort: 'ResoniteLink Port',
+    portHelpAriaLabel: 'ResoniteLink port help',
+    portHelpTooltip: 'Click to view how to configure ResoniteLink',
+    portHelpTitle: 'How to configure ResoniteLink',
+    portHelpStep1: 'Open a world where you are the host',
+    portHelpStep2: 'In the Session tab, enable "ResoniteLink"',
+    portHelpStep3: 'Enter the ResoniteLink port number',
+    dropZipOnly: 'Please drop a ZIP file',
     rootScale: 'Root Scale:',
     settingsHint: 'Start Resonite and enable ResoniteLink.',
     advancedOptions: 'Advanced Options',
@@ -143,6 +151,14 @@ const jaTranslations: Translations = {
     settings: 'ResoniteLink設定',
     host: 'ホスト:',
     port: 'ポート:',
+    resoniteLinkPort: 'ResoniteLinkポート',
+    portHelpAriaLabel: 'ResoniteLinkポートのヘルプ',
+    portHelpTooltip: 'ResoniteLinkの設定方法を表示',
+    portHelpTitle: 'ResoniteLinkの設定方法',
+    portHelpStep1: '自分がホストのワールドを開く',
+    portHelpStep2: 'セッションタブで「ResoniteLinkを有効化」',
+    portHelpStep3: 'ResoniteLinkのポート番号を入力',
+    dropZipOnly: 'ZIPファイルをドロップしてください',
     rootScale: 'ルートスケール:',
     settingsHint: 'Resoniteを起動し、ResoniteLinkを有効にしてください。',
     advancedOptions: '高度なオプション',
@@ -156,7 +172,7 @@ const jaTranslations: Translations = {
     error: 'エラー',
     errorOccurred: 'エラーが発生しました',
     ensureResonite: 'Resoniteが起動しているか確認してください。',
-    extracting: 'ZIPファイルを解凍中...',
+    extracting: 'ZIPファイルを展開中...',
     parsingObjects: 'オブジェクトを解析中...',
     connectingResonite: 'ResoniteLinkに接続中...',
     importingData: 'インポート中...',

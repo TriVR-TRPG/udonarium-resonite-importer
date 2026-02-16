@@ -37,6 +37,7 @@ const LAST_PORT_STORAGE_KEY = 'udonarium_resonite_importer_last_port';
 const DEFAULT_PORT = 7869;
 
 let currentFilePath: string | null = null;
+let isImporting = false;
 
 function parsePortOrNull(value: string): number | null {
   const parsed = Number.parseInt(value, 10);
@@ -63,7 +64,7 @@ function saveLastPort(port: number): void {
 }
 
 function canImport(): boolean {
-  return !!currentFilePath && parsePortOrNull(portInput.value) !== null;
+  return !isImporting && !!currentFilePath && parsePortOrNull(portInput.value) !== null;
 }
 
 function updateImportButtonState(): void {
@@ -93,6 +94,8 @@ function applyTranslations(): void {
   filePathInput.placeholder = t('gui.selectFilePlaceholder');
   selectFileBtn.textContent = t('gui.browse');
   importBtn.textContent = t('gui.importToResonite');
+  portHelpBtn.title = t('gui.portHelpTooltip');
+  portHelpBtn.setAttribute('aria-label', t('gui.portHelpAriaLabel'));
 
   // Labels via data-i18n attributes
   document.querySelectorAll('[data-i18n]').forEach((el) => {
@@ -162,7 +165,7 @@ fileDropArea.addEventListener('drop', (event) => {
     importLog.style.display = 'block';
     importResult.style.display = 'block';
     importResult.className = 'error';
-    importResult.innerHTML = `<strong>${t('gui.errorOccurred')}</strong><br>ZIPファイルをドロップしてください`;
+    importResult.innerHTML = `<strong>${t('gui.errorOccurred')}</strong><br>${t('gui.dropZipOnly')}`;
     return;
   }
 
@@ -190,7 +193,8 @@ importBtn.addEventListener('click', () => {
   void (async () => {
     if (!currentFilePath) return;
 
-    importBtn.disabled = true;
+    isImporting = true;
+    updateImportButtonState();
     importLog.style.display = 'block';
     progressArea.style.display = 'block';
     importResult.style.display = 'none';
@@ -205,30 +209,32 @@ importBtn.addEventListener('click', () => {
     };
     saveLastPort(options.port);
 
-    const result: ImportResult = await window.electronAPI.importToResonite(options);
+    try {
+      const result: ImportResult = await window.electronAPI.importToResonite(options);
 
-    progressArea.style.display = 'none';
-    importResult.style.display = 'block';
+      progressArea.style.display = 'none';
+      importResult.style.display = 'block';
 
-    if (result.success) {
-      importResult.className = 'success';
-      importResult.innerHTML = `
-        <strong>${t('gui.importComplete')}</strong><br>
-        ${t('gui.images', { imported: result.importedImages, total: result.totalImages })}<br>
-        ${t('gui.objectsResult', { imported: result.importedObjects, total: result.totalObjects })}<br>
-        <small>${t('gui.checkResonite')}</small>
-      `;
-    } else {
-      importResult.className = 'error';
-      importResult.innerHTML = `
-        <strong>${t('gui.errorOccurred')}</strong><br>
-        ${result.error ?? 'Unknown error'}<br>
-        <small>${t('gui.ensureResonite')}</small>
-      `;
+      if (result.success) {
+        importResult.className = 'success';
+        importResult.innerHTML = `
+          <strong>${t('gui.importComplete')}</strong><br>
+          ${t('gui.images', { imported: result.importedImages, total: result.totalImages })}<br>
+          ${t('gui.objectsResult', { imported: result.importedObjects, total: result.totalObjects })}<br>
+          <small>${t('gui.checkResonite')}</small>
+        `;
+      } else {
+        importResult.className = 'error';
+        importResult.innerHTML = `
+          <strong>${t('gui.errorOccurred')}</strong><br>
+          ${result.error ?? 'Unknown error'}<br>
+          <small>${t('gui.ensureResonite')}</small>
+        `;
+      }
+    } finally {
+      isImporting = false;
+      updateImportButtonState();
     }
-
-    // Re-evaluate button state after completion
-    updateImportButtonState();
   })();
 });
 
