@@ -7,6 +7,7 @@ const platformArgs = {
 };
 
 const args = platformArgs[process.platform];
+const extraArgs = process.argv.slice(2);
 if (!args) {
   console.error(`Unsupported platform: ${process.platform}`);
   process.exit(1);
@@ -14,7 +15,7 @@ if (!args) {
 
 const executable = process.execPath;
 const electronBuilderCli = require.resolve('electron-builder/out/cli/cli.js');
-const commandArgs = [electronBuilderCli, ...args];
+const commandArgs = [electronBuilderCli, ...args, ...extraArgs];
 
 const result = spawnSync(executable, commandArgs, {
   stdio: 'inherit',
