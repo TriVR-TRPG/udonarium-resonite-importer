@@ -127,6 +127,7 @@ const enTranslations: Translations = {
     importingImages: 'Importing images... {current}/{total}',
     creatingObjects: 'Creating objects... {current}/{total}',
     complete: 'Complete',
+    language: 'Language',
   },
   objectTypes: {
     character: 'Character',
@@ -187,6 +188,7 @@ const jaTranslations: Translations = {
     importingImages: '画像をインポート中... {current}/{total}',
     creatingObjects: 'オブジェクトを作成中... {current}/{total}',
     complete: '完了',
+    language: '言語',
   },
   objectTypes: {
     character: 'キャラクター',
