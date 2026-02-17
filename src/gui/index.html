@@ -47,18 +47,24 @@
         <div class="control-group" id="import-controls">
           <button id="import-btn" class="btn btn-success btn-large" disabled>Resoniteにインポート</button>
         </div>
+        <div class="control-group" id="advanced-controls">
+          <button
+            type="button"
+            id="advanced-open-btn"
+            class="btn"
+            data-i18n="gui.advancedOptions"
+            aria-controls="advanced-section"
+            aria-expanded="false"
+            >高度なオプション</button
+          >
+        </div>
         <p class="hint" data-i18n="gui.settingsHint">Resoniteを起動し、ResoniteLinkを有効にしてください。</p>
         </div>
       </section>
 
-      <section class="card" id="advanced-section">
+      <section class="card" id="advanced-section" style="display: none;">
         <h2 data-i18n="gui.advancedOptionsTitle">高度なオプション</h2>
         <div class="card-body">
-        <div class="advanced-toggle" id="advanced-toggle">
-          <span class="toggle-icon" id="toggle-icon">&#9654;</span>
-          <span data-i18n="gui.showDetails">詳細を表示</span>
-        </div>
-        <div class="advanced-content" id="advanced-content" style="display: none;">
           <div class="settings-grid">
             <div class="setting-item">
               <label for="host" data-i18n="gui.host">ホスト</label>
@@ -69,7 +75,6 @@
               <input type="number" id="root-scale" min="0.01" max="100" step="0.1">
             </div>
           </div>
-        </div>
         </div>
       </section>
 

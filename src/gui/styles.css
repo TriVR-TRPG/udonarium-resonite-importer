@@ -330,32 +330,6 @@ header .subtitle {
   outline: none;
 }
 
-/* Advanced Options Toggle */
-.advanced-toggle {
-  cursor: pointer;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.95rem;
-  color: #444;
-  transition: color 0.2s ease;
-}
-
-.advanced-toggle:hover {
-  color: #888;
-}
-
-.toggle-icon {
-  font-size: 0.7rem;
-  transition: transform 0.2s ease;
-  display: inline-block;
-}
-
-.toggle-icon.open {
-  transform: rotate(90deg);
-}
-
 .hint {
   font-size: 0.85rem;
   color: #888;

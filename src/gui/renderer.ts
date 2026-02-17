@@ -29,9 +29,8 @@ const progressArea = document.getElementById('progress-area') as HTMLElement;
 const progressFill = document.getElementById('progress-fill') as HTMLElement;
 const progressText = document.getElementById('progress-text') as HTMLElement;
 const importResult = document.getElementById('import-result') as HTMLElement;
-const advancedToggle = document.getElementById('advanced-toggle') as HTMLElement;
-const advancedContent = document.getElementById('advanced-content') as HTMLElement;
-const toggleIcon = document.getElementById('toggle-icon') as HTMLElement;
+const advancedSection = document.getElementById('advanced-section') as HTMLElement;
+const advancedOpenBtn = document.getElementById('advanced-open-btn') as HTMLButtonElement;
 
 const LAST_PORT_STORAGE_KEY = 'udonarium_resonite_importer_last_port';
 const DEFAULT_PORT = 7869;
@@ -123,10 +122,10 @@ void window.electronAPI.getDefaultConfig().then((config) => {
 });
 
 // Advanced options toggle
-advancedToggle.addEventListener('click', () => {
-  const isHidden = advancedContent.style.display === 'none';
-  advancedContent.style.display = isHidden ? 'block' : 'none';
-  toggleIcon.classList.toggle('open', isHidden);
+advancedOpenBtn.addEventListener('click', () => {
+  const isHidden = advancedSection.style.display === 'none';
+  advancedSection.style.display = isHidden ? 'block' : 'none';
+  advancedOpenBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
 });
 
 // File selection
