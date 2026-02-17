@@ -3,7 +3,7 @@
  */
 
 import { ImportOptions, ImportResult, ProgressInfo, ElectronAPI } from './types';
-import { t, initI18n } from './i18n';
+import { Locale, t, initI18n, getLocale, setLocale } from './i18n';
 
 declare global {
   interface Window {
@@ -11,8 +11,30 @@ declare global {
   }
 }
 
+const LOCALE_STORAGE_KEY = 'udonarium_resonite_importer_locale';
+
+function parseLocaleOrNull(value: string | null): Locale | null {
+  return value === 'ja' || value === 'en' ? value : null;
+}
+
+function loadSavedLocale(): Locale | null {
+  try {
+    return parseLocaleOrNull(localStorage.getItem(LOCALE_STORAGE_KEY));
+  } catch {
+    return null;
+  }
+}
+
+function saveLocale(locale: Locale): void {
+  try {
+    localStorage.setItem(LOCALE_STORAGE_KEY, locale);
+  } catch {
+    // Ignore storage failures and continue import flow.
+  }
+}
+
 // Initialize i18n
-initI18n();
+initI18n(loadSavedLocale() ?? undefined);
 
 // Elements
 const filePathInput = document.getElementById('file-path') as HTMLInputElement;
@@ -31,6 +53,7 @@ const progressText = document.getElementById('progress-text') as HTMLElement;
 const importResult = document.getElementById('import-result') as HTMLElement;
 const advancedSection = document.getElementById('advanced-section') as HTMLElement;
 const advancedOpenBtn = document.getElementById('advanced-open-btn') as HTMLButtonElement;
+const localeSelect = document.getElementById('locale-select') as HTMLSelectElement;
 
 const LAST_PORT_STORAGE_KEY = 'udonarium_resonite_importer_last_port';
 const DEFAULT_PORT = 7869;
@@ -83,6 +106,9 @@ function setPortHelpPanelVisible(visible: boolean): void {
 
 // Apply translations to UI
 function applyTranslations(): void {
+  document.documentElement.lang = getLocale();
+  localeSelect.value = getLocale();
+
   // Update static text elements
   const titleEl = document.querySelector('h1');
   if (titleEl) titleEl.textContent = t('gui.title');
@@ -114,6 +140,16 @@ updateImportButtonState();
 
 portInput.addEventListener('input', () => {
   updateImportButtonState();
+});
+
+localeSelect.addEventListener('change', () => {
+  const nextLocale = parseLocaleOrNull(localeSelect.value);
+  if (!nextLocale) {
+    return;
+  }
+  setLocale(nextLocale);
+  saveLocale(nextLocale);
+  applyTranslations();
 });
 
 // Load default config and set initial values
@@ -246,5 +282,19 @@ importBtn.addEventListener('click', () => {
 // Progress updates
 window.electronAPI.onImportProgress((info: ProgressInfo) => {
   progressFill.style.width = `${String(info.progress)}%`;
-  progressText.textContent = info.detail ?? `${info.step}: ${String(info.progress)}%`;
+  if (info.detail) {
+    progressText.textContent = info.detail;
+    return;
+  }
+
+  const localizedStepText: Partial<Record<string, string>> = {
+    extract: t('gui.extracting'),
+    parse: t('gui.parsingObjects'),
+    connect: t('gui.connectingResonite'),
+    import: t('gui.importingData'),
+    complete: t('gui.complete'),
+  };
+
+  progressText.textContent =
+    localizedStepText[info.step] ?? `${info.step}: ${String(info.progress)}%`;
 });

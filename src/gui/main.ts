@@ -177,7 +177,7 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     sendProgress('parse', 100);
 
     // Step 3: Connect to ResoniteLink
-    sendProgress('connect', 0, 'ResoniteLinkに接続中...');
+    sendProgress('connect', 0);
     const client = new ResoniteLinkClient({ host, port });
     await client.connect();
     await warnVersionIfChangedForGui(client, (message) => {
