@@ -107,7 +107,7 @@ header .subtitle {
 .port-control input {
   width: min(220px, 100%);
   padding: 8px 10px;
-  background: none;
+  background: #FFF;
   border: none;
   border-radius: 2px;
   color: #444;
@@ -115,12 +115,7 @@ header .subtitle {
   font-family: inherit;
 }
 
-.port-control input:hover {
-  background: #EEE;
-}
-
 .port-control input:focus {
-  background: #FFF;
   outline: none;
 }
 
@@ -132,17 +127,16 @@ header .subtitle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid #999;
-  color: #555;
+  padding: 0.35em 0.7em;
+  border-radius: 4px;
+  border: solid 1px #CCC;
+  color: #444;
   font-size: 0.75rem;
   line-height: 1;
   cursor: help;
   user-select: none;
   margin-left: 2px;
-  background: rgba(255, 244, 232, 0.9);
+  background: #eee;
 }
 
 .help-panel {
@@ -182,7 +176,7 @@ header .subtitle {
 .file-select input {
   flex: 1;
   padding: 8px 10px;
-  background: none;
+  background: #FFF;
   border: none;
   border-radius: 2px;
   color: #444;
@@ -191,12 +185,7 @@ header .subtitle {
   min-width: 0;
 }
 
-.file-select input:hover {
-  background: #EEE;
-}
-
 .file-select input:focus {
-  background: #FFF;
   outline: none;
 }
 
@@ -238,25 +227,23 @@ header .subtitle {
 }
 
 .btn-primary {
-  background: #555;
-  color: #CCC;
-  border-color: #444;
+  background: #eee;
+  color: #444;
+  border-color: #CCC;
 }
 
 .btn-primary:hover {
-  background: #888;
-  color: #eee;
+  background: #cfd8dc;
 }
 
 .btn-success {
-  background: #555;
-  color: #CCC;
-  border-color: #444;
+  background: #eee;
+  color: #444;
+  border-color: #CCC;
 }
 
 .btn-success:hover {
-  background: #888;
-  color: #eee;
+  background: #cfd8dc;
 }
 
 .btn-large {
@@ -332,7 +319,7 @@ header .subtitle {
 .setting-item input {
   width: 100%;
   padding: 8px 10px;
-  background: none;
+  background: #FFF;
   border: none;
   border-radius: 2px;
   color: #444;
@@ -340,12 +327,7 @@ header .subtitle {
   font-family: inherit;
 }
 
-.setting-item input:hover {
-  background: #EEE;
-}
-
 .setting-item input:focus {
-  background: #FFF;
   outline: none;
 }
 
@@ -409,9 +391,6 @@ header .subtitle {
 .errors {
   margin-top: 12px;
   padding: 12px;
-  background: rgba(207, 82, 82, 0.08);
-  border: 1px solid rgba(207, 82, 82, 0.3);
-  border-radius: 4px;
   font-size: 0.85rem;
   color: rgb(207, 82, 82);
 }
@@ -429,14 +408,10 @@ header .subtitle {
 }
 
 #import-result.success {
-  background: rgba(76, 175, 80, 0.08);
-  border: 1px solid rgba(76, 175, 80, 0.3);
   color: #2e7d32;
 }
 
 #import-result.error {
-  background: rgba(207, 82, 82, 0.08);
-  border: 1px solid rgba(207, 82, 82, 0.3);
   color: rgb(207, 82, 82);
 }
 
