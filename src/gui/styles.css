@@ -90,6 +90,10 @@ header .subtitle {
   overflow: hidden;
 }
 
+#advanced-section {
+  position: relative;
+}
+
 .card h2 {
   font-size: 0.9rem;
   font-weight: normal;
@@ -98,6 +102,23 @@ header .subtitle {
   margin: 0;
   padding: 4px 10px;
   border-bottom: none;
+}
+
+.card-close-btn {
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  border: none;
+  background: transparent;
+  color: #CCC;
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.card-close-btn:hover {
+  color: #FFF;
 }
 
 .card-body {
@@ -371,6 +392,22 @@ header .subtitle {
   margin-top: 8px;
 }
 
+.hint-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hint-row .hint {
+  flex: 1;
+  margin-top: 0;
+}
+
+.hint-row #advanced-open-btn {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
 /* Progress Bar */
 .progress-bar {
   width: 100%;
@@ -436,5 +473,14 @@ footer {
     position: static;
     justify-content: center;
     margin-bottom: 10px;
+  }
+
+  .hint-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hint-row #advanced-open-btn {
+    margin-left: 0;
   }
 }

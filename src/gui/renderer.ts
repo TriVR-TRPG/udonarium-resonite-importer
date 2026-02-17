@@ -53,6 +53,7 @@ const progressText = document.getElementById('progress-text') as HTMLElement;
 const importResult = document.getElementById('import-result') as HTMLElement;
 const advancedSection = document.getElementById('advanced-section') as HTMLElement;
 const advancedOpenBtn = document.getElementById('advanced-open-btn') as HTMLButtonElement;
+const advancedCloseBtn = document.getElementById('advanced-close-btn') as HTMLButtonElement;
 const localeSelect = document.getElementById('locale-select') as HTMLSelectElement;
 
 const LAST_PORT_STORAGE_KEY = 'udonarium_resonite_importer_last_port';
@@ -162,6 +163,11 @@ advancedOpenBtn.addEventListener('click', () => {
   const isHidden = advancedSection.style.display === 'none';
   advancedSection.style.display = isHidden ? 'block' : 'none';
   advancedOpenBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+});
+
+advancedCloseBtn.addEventListener('click', () => {
+  advancedSection.style.display = 'none';
+  advancedOpenBtn.setAttribute('aria-expanded', 'false');
 });
 
 // File selection
