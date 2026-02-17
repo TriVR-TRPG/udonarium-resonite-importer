@@ -22,6 +22,12 @@ body {
   color: #444;
   min-height: 100vh;
   line-height: 1.6;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 .container {

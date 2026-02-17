@@ -33,6 +33,7 @@ function createWindow(): void {
     height: 600,
     minWidth: 600,
     minHeight: 500,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -43,6 +44,7 @@ function createWindow(): void {
   });
 
   void mainWindow.loadFile(path.join(__dirname, '../../src/gui/index.html'));
+  mainWindow.setMenuBarVisibility(false);
 
   mainWindow.on('closed', () => {
     mainWindow = null;
