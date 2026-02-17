@@ -38,8 +38,8 @@
     "package:cli:win": "pkg . --targets node18-win-x64 --output dist/udonarium-resonite-importer.exe",
     "package:cli:mac": "pkg . --targets node18-macos-x64 --output dist/udonarium-resonite-importer-macos",
     "package:cli:linux": "pkg . --targets node18-linux-x64 --output dist/udonarium-resonite-importer-linux",
-    "package:gui": "electron-builder --win --mac --linux",
-    "package:gui:win": "electron-builder --win",
+    "package:gui": "node scripts/package-gui.cjs",
+    "package:gui:win": "electron-builder --win --config.win.signAndEditExecutable=false",
     "package:gui:mac": "electron-builder --mac",
     "package:gui:linux": "electron-builder --linux",
     "prepare": "husky"
