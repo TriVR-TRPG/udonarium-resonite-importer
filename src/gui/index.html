@@ -16,6 +16,8 @@
 
     <main>
       <section class="card" id="main-controls">
+        <h2 data-i18n="gui.mainControlsTitle">インポート設定</h2>
+        <div class="card-body">
         <div class="main-controls-grid">
           <div class="control-group file-control">
             <label for="file-path" data-i18n="gui.selectFile">ZIPファイルを選択</label>
@@ -49,12 +51,15 @@
           <button id="import-btn" class="btn btn-success btn-large" disabled>Resoniteにインポート</button>
         </div>
         <p class="hint" data-i18n="gui.settingsHint">Resoniteを起動し、ResoniteLinkを有効にしてください。</p>
+        </div>
       </section>
 
       <section class="card" id="advanced-section">
+        <h2 data-i18n="gui.advancedOptionsTitle">高度なオプション</h2>
+        <div class="card-body">
         <div class="advanced-toggle" id="advanced-toggle">
           <span class="toggle-icon" id="toggle-icon">&#9654;</span>
-          <span data-i18n="gui.advancedOptions">高度なオプション</span>
+          <span data-i18n="gui.showDetails">詳細を表示</span>
         </div>
         <div class="advanced-content" id="advanced-content" style="display: none;">
           <div class="settings-grid">
@@ -68,10 +73,12 @@
             </div>
           </div>
         </div>
+        </div>
       </section>
 
       <section class="card" id="import-log" style="display: none;">
-        <h2>インポート実行ログ</h2>
+        <h2 data-i18n="gui.importLogTitle">インポート実行ログ</h2>
+        <div class="card-body">
         <div id="progress-area" style="display: none;">
           <div class="progress-bar">
             <div class="progress-fill" id="progress-fill"></div>
@@ -79,6 +86,7 @@
           <p id="progress-text">準備中...</p>
         </div>
         <div id="import-result" style="display: none;"></div>
+        </div>
       </section>
     </main>
 
