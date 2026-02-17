@@ -16,16 +16,15 @@
 
     <main>
       <section class="card" id="main-controls">
-        <div class="main-controls-grid">
-          <div class="control-group file-control">
-            <label for="file-path" data-i18n="gui.selectFile">ZIPファイルを選択</label>
-            <div class="file-select" id="file-drop-area">
-              <input type="text" id="file-path" readonly placeholder="ファイルを選択してください...">
-              <button id="select-file-btn" class="btn btn-primary">参照...</button>
-            </div>
+        <h2 data-i18n="gui.mainControlsTitle">インポート設定</h2>
+        <div class="card-body">
+        <div class="control-group file-control">
+          <div class="file-select" id="file-drop-area">
+            <input type="text" id="file-path" placeholder="ファイルを選択してください...">
+            <button id="select-file-btn" class="btn btn-primary">参照...</button>
           </div>
         </div>
-        <div class="control-group port-control port-inline">
+        <div class="control-group port-inline">
           <label for="port" data-i18n="gui.resoniteLinkPort">ResoniteLinkポート</label>
           <input type="number" id="port" min="1" max="65535">
           <button
@@ -45,18 +44,27 @@
             <li data-i18n="gui.portHelpStep3">ResoniteLinkのポート番号を入力</li>
           </ol>
         </div>
-        <div id="import-controls">
+        <div class="control-group" id="import-controls">
           <button id="import-btn" class="btn btn-success btn-large" disabled>Resoniteにインポート</button>
         </div>
+        <div class="control-group" id="advanced-controls">
+          <button
+            type="button"
+            id="advanced-open-btn"
+            class="btn"
+            data-i18n="gui.advancedOptions"
+            aria-controls="advanced-section"
+            aria-expanded="false"
+            >高度なオプション</button
+          >
+        </div>
         <p class="hint" data-i18n="gui.settingsHint">Resoniteを起動し、ResoniteLinkを有効にしてください。</p>
+        </div>
       </section>
 
-      <section class="card" id="advanced-section">
-        <div class="advanced-toggle" id="advanced-toggle">
-          <span class="toggle-icon" id="toggle-icon">&#9654;</span>
-          <span data-i18n="gui.advancedOptions">高度なオプション</span>
-        </div>
-        <div class="advanced-content" id="advanced-content" style="display: none;">
+      <section class="card" id="advanced-section" style="display: none;">
+        <h2 data-i18n="gui.advancedOptionsTitle">高度なオプション</h2>
+        <div class="card-body">
           <div class="settings-grid">
             <div class="setting-item">
               <label for="host" data-i18n="gui.host">ホスト</label>
@@ -71,7 +79,8 @@
       </section>
 
       <section class="card" id="import-log" style="display: none;">
-        <h2>インポート実行ログ</h2>
+        <h2 data-i18n="gui.importLogTitle">インポート実行ログ</h2>
+        <div class="card-body">
         <div id="progress-area" style="display: none;">
           <div class="progress-bar">
             <div class="progress-fill" id="progress-fill"></div>
@@ -79,6 +88,7 @@
           <p id="progress-text">準備中...</p>
         </div>
         <div id="import-result" style="display: none;"></div>
+        </div>
       </section>
     </main>
 
