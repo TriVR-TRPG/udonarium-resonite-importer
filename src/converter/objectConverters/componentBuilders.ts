@@ -172,12 +172,17 @@ export function buildQuadMeshComponents(
   return components;
 }
 
-export function buildBoxColliderComponent(slotId: string, size: BoxSize): ResoniteComponent {
+export function buildBoxColliderComponent(
+  slotId: string,
+  size: BoxSize,
+  options?: { characterCollider?: boolean }
+): ResoniteComponent {
   return {
     id: `${slotId}-collider`,
     type: '[FrooxEngine]FrooxEngine.BoxCollider',
     fields: {
       Size: { $type: 'float3', value: size },
+      ...(options?.characterCollider ? { CharacterCollider: { $type: 'bool', value: true } } : {}),
     },
   };
 }

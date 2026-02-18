@@ -43,11 +43,7 @@ export class ResoniteObjectBuilder {
   }
 
   addBoxCollider(size: BoxSize, options?: { characterCollider?: boolean }): this {
-    const collider = buildBoxColliderComponent(this.obj.id, size);
-    if (options?.characterCollider) {
-      collider.fields.CharacterCollider = { $type: 'bool', value: true };
-    }
-    this.obj.components.push(collider);
+    this.obj.components.push(buildBoxColliderComponent(this.obj.id, size, options));
     return this;
   }
 
