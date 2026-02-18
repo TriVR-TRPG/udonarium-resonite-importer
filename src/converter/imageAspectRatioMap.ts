@@ -10,6 +10,10 @@ import {
   KNOWN_IMAGES,
 } from '../config/MappingConfig';
 
+export interface BlendModeMapOptions {
+  semiTransparentMode?: 'Cutout' | 'Alpha';
+}
+
 function normalizeIdentifier(identifier: string): string {
   return identifier.replace(/\\/g, '/').replace(/^\.\/+/, '');
 }
@@ -364,7 +368,10 @@ function buildExternalProbeUrl(identifier: string): string | undefined {
   return undefined;
 }
 
-async function probeBlendModeFromExternalUrl(url: string): Promise<ImageBlendMode | undefined> {
+async function probeBlendModeFromExternalUrl(
+  url: string,
+  options?: BlendModeMapOptions
+): Promise<ImageBlendMode | undefined> {
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -373,7 +380,7 @@ async function probeBlendModeFromExternalUrl(url: string): Promise<ImageBlendMod
     const bytes = await response.arrayBuffer();
     const metadata = await sharp(Buffer.from(bytes)).metadata();
     const hasAlpha = metadata.hasAlpha ?? (metadata.channels ?? 0) >= 4;
-    return hasAlpha ? 'Alpha' : 'Opaque';
+    return hasAlpha ? (options?.semiTransparentMode ?? 'Alpha') : 'Opaque';
   } catch {
     return undefined;
   }
@@ -381,7 +388,8 @@ async function probeBlendModeFromExternalUrl(url: string): Promise<ImageBlendMod
 
 export async function buildImageBlendModeMap(
   imageFiles: ExtractedFile[],
-  objects: UdonariumObject[] = []
+  objects: UdonariumObject[] = [],
+  options?: BlendModeMapOptions
 ): Promise<Map<string, ImageBlendMode>> {
   const map = new Map<string, ImageBlendMode>();
   seedKnownBlendModeMap(map);
@@ -399,7 +407,9 @@ export async function buildImageBlendModeMap(
       try {
         const metadata = await sharp(file.data).metadata();
         const hasAlpha = metadata.hasAlpha ?? (metadata.channels ?? 0) >= 4;
-        const blendMode: ImageBlendMode = hasAlpha ? 'Alpha' : 'Opaque';
+        const blendMode: ImageBlendMode = hasAlpha
+          ? (options?.semiTransparentMode ?? 'Alpha')
+          : 'Opaque';
         const normalizedPath = normalizeIdentifier(file.path);
         setBlendModeForIdentifier(map, file.name, blendMode);
         setBlendModeForIdentifier(map, file.path, blendMode, normalizedPath);
@@ -425,7 +435,7 @@ export async function buildImageBlendModeMap(
     }
     externalProbeTasks.push(
       (async () => {
-        const probed = await probeBlendModeFromExternalUrl(probeUrl);
+        const probed = await probeBlendModeFromExternalUrl(probeUrl, options);
         if (probed) {
           setBlendModeForIdentifier(map, identifier, probed);
           setBlendModeForIdentifier(map, probeUrl, probed);

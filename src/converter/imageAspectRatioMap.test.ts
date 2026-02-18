@@ -143,4 +143,26 @@ describe('buildImageBlendModeMap', () => {
       fetchSpy.mockRestore();
     }
   );
+
+  it('maps semi-transparent local image to Cutout when option is set', async () => {
+    const withAlpha = await sharp({
+      create: {
+        width: 8,
+        height: 8,
+        channels: 4,
+        background: { r: 255, g: 255, b: 255, alpha: 0.5 },
+      },
+    })
+      .png()
+      .toBuffer();
+
+    const result = await buildImageBlendModeMap(
+      [{ path: 'images/alpha.png', name: 'alpha', data: withAlpha }],
+      [],
+      { semiTransparentMode: 'Cutout' }
+    );
+
+    expect(result.get('alpha')).toBe('Cutout');
+    expect(result.get('images/alpha.png')).toBe('Cutout');
+  });
 });

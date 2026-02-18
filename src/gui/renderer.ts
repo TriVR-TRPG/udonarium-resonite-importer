@@ -48,6 +48,9 @@ const rootScaleInput = document.getElementById('root-scale') as HTMLInputElement
 const lockedTerrainCharacterColliderInput = document.getElementById(
   'locked-terrain-character-collider'
 ) as HTMLInputElement;
+const semiTransparentImageBlendModeInput = document.getElementById(
+  'semi-transparent-image-blend-mode'
+) as HTMLSelectElement;
 const importBtn = document.getElementById('import-btn') as HTMLButtonElement;
 const importLog = document.getElementById('import-log') as HTMLElement;
 const progressArea = document.getElementById('progress-area') as HTMLElement;
@@ -160,6 +163,7 @@ localeSelect.addEventListener('change', () => {
 void window.electronAPI.getDefaultConfig().then((config) => {
   rootScaleInput.value = String(config.importGroupScale);
 });
+semiTransparentImageBlendModeInput.value = 'Cutout';
 
 // Advanced options toggle
 advancedOpenBtn.addEventListener('click', () => {
@@ -257,6 +261,8 @@ importBtn.addEventListener('click', () => {
       port: parsePortOrNull(portInput.value) ?? DEFAULT_PORT,
       rootScale: parseFloat(rootScaleInput.value) || 1,
       enableCharacterColliderOnLockedTerrain: lockedTerrainCharacterColliderInput.checked,
+      semiTransparentImageBlendMode:
+        semiTransparentImageBlendModeInput.value === 'Alpha' ? 'Alpha' : 'Cutout',
     };
     saveLastPort(options.port);
 

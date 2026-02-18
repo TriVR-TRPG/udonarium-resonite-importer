@@ -18,6 +18,7 @@ export interface ImportOptions {
   port: number;
   rootScale: number;
   enableCharacterColliderOnLockedTerrain: boolean;
+  semiTransparentImageBlendMode: 'Cutout' | 'Alpha';
 }
 
 export interface ImportResult {

@@ -180,7 +180,8 @@ async function run(options: CLIOptions): Promise<void> {
   );
   const imageBlendModeMap = await buildImageBlendModeMap(
     extractedData.imageFiles,
-    parseResult.objects
+    parseResult.objects,
+    { semiTransparentMode: 'Cutout' }
   );
 
   if (options.verbose) {
