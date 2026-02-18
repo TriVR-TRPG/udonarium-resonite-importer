@@ -7,14 +7,14 @@ import { GameTable, UdonariumObject } from '../domain/UdonariumObject';
 import { ImageBlendMode } from '../config/MappingConfig';
 import { ResoniteObject, Vector3 } from '../domain/ResoniteObject';
 import { SCALE_FACTOR } from '../config/MappingConfig';
-import { applyCharacterConversion } from './objectConverters/characterConverter';
-import { applyDiceSymbolConversion } from './objectConverters/diceSymbolConverter';
-import { applyCardConversion } from './objectConverters/cardConverter';
-import { applyCardStackConversion } from './objectConverters/cardStackConverter';
-import { applyTerrainConversion } from './objectConverters/terrainConverter';
-import { applyTableConversion } from './objectConverters/tableConverter';
-import { applyTableMaskConversion } from './objectConverters/tableMaskConverter';
-import { applyTextNoteConversion } from './objectConverters/textNoteConverter';
+import { convertCharacter } from './objectConverters/characterConverter';
+import { convertDiceSymbol } from './objectConverters/diceSymbolConverter';
+import { convertCard } from './objectConverters/cardConverter';
+import { convertCardStack } from './objectConverters/cardStackConverter';
+import { convertTerrain } from './objectConverters/terrainConverter';
+import { convertTable } from './objectConverters/tableConverter';
+import { convertTableMask } from './objectConverters/tableMaskConverter';
+import { convertTextNote } from './objectConverters/textNoteConverter';
 import { replaceTexturesInValue } from './objectConverters/componentBuilders';
 
 const SLOT_ID_PREFIX = 'udon-imp';
@@ -59,7 +59,7 @@ function convertObjectWithTextures(
   const position = convertPosition(udonObj.position.x, udonObj.position.y, udonObj.position.z);
 
   const slotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
-  const resoniteObj: ResoniteObject = {
+  const baseObj: ResoniteObject = {
     id: slotId,
     name: udonObj.name,
     position,
@@ -76,59 +76,49 @@ function convertObjectWithTextures(
   // Apply type-specific conversions
   switch (udonObj.type) {
     case 'character':
-      applyCharacterConversion(
+      return convertCharacter(
         udonObj,
-        resoniteObj,
+        baseObj,
         convertSize,
         textureMap,
         imageAspectRatioMap,
         imageBlendModeMap
       );
-      break;
     case 'dice-symbol':
-      applyDiceSymbolConversion(
+      return convertDiceSymbol(
         udonObj,
-        resoniteObj,
+        baseObj,
         convertSize,
         textureMap,
         imageAspectRatioMap,
         imageBlendModeMap
       );
-      break;
     case 'terrain':
-      applyTerrainConversion(udonObj, resoniteObj, textureMap, imageBlendModeMap);
-      break;
+      return convertTerrain(udonObj, baseObj, textureMap, imageBlendModeMap);
     case 'table':
-      applyTableConversion(
+      return convertTable(
         udonObj,
-        resoniteObj,
+        baseObj,
         textureMap,
         (obj) => convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageBlendModeMap),
         imageBlendModeMap
       );
-      break;
     case 'table-mask':
-      applyTableMaskConversion(udonObj, resoniteObj, textureMap);
-      break;
+      return convertTableMask(udonObj, baseObj, textureMap);
     case 'card':
-      applyCardConversion(udonObj, resoniteObj, textureMap, imageAspectRatioMap, imageBlendModeMap);
-      break;
+      return convertCard(udonObj, baseObj, textureMap, imageAspectRatioMap, imageBlendModeMap);
     case 'card-stack':
-      applyCardStackConversion(
+      return convertCardStack(
         udonObj,
-        resoniteObj,
+        baseObj,
         (obj) => convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageBlendModeMap),
         imageAspectRatioMap
       );
-      break;
     case 'text-note':
-      applyTextNoteConversion(udonObj, resoniteObj);
-      break;
+      return convertTextNote(udonObj, baseObj);
     default:
-      break;
+      return baseObj;
   }
-
-  return resoniteObj;
 }
 
 function applyGameTableVisibility(

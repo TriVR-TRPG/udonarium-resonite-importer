@@ -22,54 +22,57 @@ function resolveMaskOpacity(mask: TableMask): number {
   return clamp01(opacityRaw / 100);
 }
 
-export function applyTableMaskConversion(
+export function convertTableMask(
   udonObj: TableMask,
-  resoniteObj: ResoniteObject,
+  baseObj: ResoniteObject,
   textureMap?: Map<string, string>
-): void {
-  resoniteObj.rotation = { x: 90, y: 0, z: 0 };
-  resoniteObj.position.x += udonObj.width / 2;
-  resoniteObj.position.z -= udonObj.height / 2;
-  resoniteObj.position.y += TABLE_MASK_Y_OFFSET;
-
+): ResoniteObject {
   const hasMaskImage = !!udonObj.images[0]?.identifier;
   const textureValue = resolveTextureValue(udonObj.images[0]?.identifier, textureMap);
   const opacity = resolveMaskOpacity(udonObj);
   const colorValue = hasMaskImage ? 1 : 0;
-  resoniteObj.components = [
-    ...buildQuadMeshComponents(resoniteObj.id, textureValue, true, {
+  const components = [
+    ...buildQuadMeshComponents(baseObj.id, textureValue, true, {
       x: udonObj.width,
       y: udonObj.height,
     }),
-    buildBoxColliderComponent(resoniteObj.id, {
+    buildBoxColliderComponent(baseObj.id, {
       x: udonObj.width,
       y: udonObj.height,
       z: TABLE_MASK_COLLIDER_THICKNESS,
     }),
+    ...(udonObj.isLock ? [] : [buildGrabbableComponent(baseObj.id)]),
   ];
-  if (!udonObj.isLock) {
-    resoniteObj.components.push(buildGrabbableComponent(resoniteObj.id));
-  }
 
-  const material = resoniteObj.components.find(
+  const material = components.find(
     (component) => component.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
   );
-  if (!material) {
-    return;
+  if (material) {
+    material.fields = {
+      ...material.fields,
+      BlendMode: { $type: 'enum', value: 'Alpha', enumType: 'BlendMode' },
+      Color: {
+        $type: 'colorX',
+        value: {
+          r: colorValue,
+          g: colorValue,
+          b: colorValue,
+          a: opacity,
+          profile: 'Linear',
+        },
+      },
+    };
   }
 
-  material.fields = {
-    ...material.fields,
-    BlendMode: { $type: 'enum', value: 'Alpha', enumType: 'BlendMode' },
-    Color: {
-      $type: 'colorX',
-      value: {
-        r: colorValue,
-        g: colorValue,
-        b: colorValue,
-        a: opacity,
-        profile: 'Linear',
-      },
+  // Udonarium positions are edge-based; Resonite uses center-based transforms.
+  return {
+    ...baseObj,
+    rotation: { x: 90, y: 0, z: 0 },
+    position: {
+      x: baseObj.position.x + udonObj.width / 2,
+      y: baseObj.position.y + TABLE_MASK_Y_OFFSET,
+      z: baseObj.position.z - udonObj.height / 2,
     },
+    components,
   };
 }

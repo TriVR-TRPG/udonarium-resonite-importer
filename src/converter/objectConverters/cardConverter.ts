@@ -76,13 +76,13 @@ function resolveAspectRatio(
   return DEFAULT_CARD_ASPECT_RATIO;
 }
 
-export function applyCardConversion(
+export function convertCard(
   udonObj: Card,
-  resoniteObj: ResoniteObject,
+  baseObj: ResoniteObject,
   textureMap?: Map<string, string>,
   imageAspectRatioMap?: Map<string, number>,
   imageBlendModeMap?: Map<string, ImageBlendMode>
-): void {
+): ResoniteObject {
   const cardWidth = udonObj.size ?? 1;
   const frontAspectRatio = resolveAspectRatio(
     resolveFrontAspectIdentifier(udonObj),
@@ -107,59 +107,64 @@ export function applyCardConversion(
   const backBlendMode = resolveBlendMode(backTextureIdentifier, imageBlendModeMap);
 
   // Udonarium positions are edge-based; Resonite uses center-based transforms.
-  resoniteObj.position.x += cardWidth / 2;
-  resoniteObj.position.z -= parentHeight / 2;
   // Slight Y offset so cards don't z-fight with the table surface.
-  resoniteObj.position.y += CARD_Y_OFFSET;
   // Keep parent slot rotation on table plane; lay-flat rotation is applied on child faces.
-  resoniteObj.rotation = {
-    x: 0,
-    y: udonObj.rotate ?? 0,
-    z: udonObj.isFaceUp ? 0 : 180,
+  return {
+    ...baseObj,
+    position: {
+      x: baseObj.position.x + cardWidth / 2,
+      y: baseObj.position.y + CARD_Y_OFFSET,
+      z: baseObj.position.z - parentHeight / 2,
+    },
+    rotation: {
+      x: 0,
+      y: udonObj.rotate ?? 0,
+      z: udonObj.isFaceUp ? 0 : 180,
+    },
+    components: [
+      // Parent slot rotates only on Y, so make collider thin on local Y.
+      buildBoxColliderComponent(baseObj.id, { x: cardWidth, y: 0.01, z: parentHeight }),
+      buildGrabbableComponent(baseObj.id),
+    ],
+    children: [
+      {
+        id: `${baseObj.id}-front`,
+        name: `${baseObj.name}-front`,
+        // Align top edges when front/back heights differ.
+        position: { x: 0, y: CARD_FACE_SEPARATION, z: frontZOffset },
+        rotation: { x: 90, y: 0, z: 0 },
+        textures: [],
+        components: buildQuadMeshComponents(
+          `${baseObj.id}-front`,
+          frontTextureValue,
+          false,
+          {
+            x: cardWidth,
+            y: frontHeight,
+          },
+          frontBlendMode
+        ),
+        children: [],
+      },
+      {
+        id: `${baseObj.id}-back`,
+        name: `${baseObj.name}-back`,
+        // Align top edges when front/back heights differ.
+        position: { x: 0, y: -CARD_FACE_SEPARATION, z: backZOffset },
+        rotation: { x: -90, y: 180, z: 0 },
+        textures: [],
+        components: buildQuadMeshComponents(
+          `${baseObj.id}-back`,
+          backTextureValue,
+          false,
+          {
+            x: cardWidth,
+            y: backHeight,
+          },
+          backBlendMode
+        ),
+        children: [],
+      },
+    ],
   };
-  resoniteObj.components = [
-    // Parent slot rotates only on Y, so make collider thin on local Y.
-    buildBoxColliderComponent(resoniteObj.id, { x: cardWidth, y: 0.01, z: parentHeight }),
-    buildGrabbableComponent(resoniteObj.id),
-  ];
-  resoniteObj.children = [
-    {
-      id: `${resoniteObj.id}-front`,
-      name: `${resoniteObj.name}-front`,
-      // Align top edges when front/back heights differ.
-      position: { x: 0, y: CARD_FACE_SEPARATION, z: frontZOffset },
-      rotation: { x: 90, y: 0, z: 0 },
-      textures: [],
-      components: buildQuadMeshComponents(
-        `${resoniteObj.id}-front`,
-        frontTextureValue,
-        false,
-        {
-          x: cardWidth,
-          y: frontHeight,
-        },
-        frontBlendMode
-      ),
-      children: [],
-    },
-    {
-      id: `${resoniteObj.id}-back`,
-      name: `${resoniteObj.name}-back`,
-      // Align top edges when front/back heights differ.
-      position: { x: 0, y: -CARD_FACE_SEPARATION, z: backZOffset },
-      rotation: { x: -90, y: 180, z: 0 },
-      textures: [],
-      components: buildQuadMeshComponents(
-        `${resoniteObj.id}-back`,
-        backTextureValue,
-        false,
-        {
-          x: cardWidth,
-          y: backHeight,
-        },
-        backBlendMode
-      ),
-      children: [],
-    },
-  ];
 }

@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { applyTextNoteConversion } from './textNoteConverter';
+import { convertTextNote } from './textNoteConverter';
 import { TextNote } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
 
-describe('applyTextNoteConversion', () => {
+describe('convertTextNote', () => {
   it('TextNote用のスケールとUIX.Textコンポーネントを設定する', () => {
     const udonObj: TextNote = {
       id: 'note-1',
@@ -25,10 +25,10 @@ describe('applyTextNoteConversion', () => {
       children: [],
     };
 
-    applyTextNoteConversion(udonObj, resoniteObj);
+    const result = convertTextNote(udonObj, resoniteObj);
 
-    expect(resoniteObj.position).toEqual({ x: 0.5, y: 0, z: -0.5 });
-    expect(resoniteObj.components).toEqual([
+    expect(result.position).toEqual({ x: 0.5, y: 0, z: -0.5 });
+    expect(result.components).toEqual([
       {
         id: 'slot-note-1-text',
         type: '[FrooxEngine]FrooxEngine.UIX.Text',
@@ -68,14 +68,14 @@ describe('applyTextNoteConversion', () => {
       children: [],
     };
 
-    applyTextNoteConversion(udonObj, resoniteObj);
+    const result = convertTextNote(udonObj, resoniteObj);
 
-    expect(resoniteObj.position).toEqual({ x: 0.5, y: 0, z: -0.5 });
-    expect(resoniteObj.components[0].fields).toEqual({
+    expect(result.position).toEqual({ x: 0.5, y: 0, z: -0.5 });
+    expect(result.components[0].fields).toEqual({
       Content: { $type: 'string', value: 'tiny' },
       Size: { $type: 'float', value: 8 },
     });
-    expect(resoniteObj.components[1].fields).toEqual({
+    expect(result.components[1].fields).toEqual({
       Size: { $type: 'float3', value: { x: 1, y: 0.02, z: 1 } },
     });
   });

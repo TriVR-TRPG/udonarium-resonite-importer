@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { applyTableConversion } from './tableConverter';
+import { convertTable } from './tableConverter';
 import { GameTable, Terrain } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
 
-describe('applyTableConversion', () => {
+describe('convertTable', () => {
   it('keeps the table container unrotated and builds visual quad as a child slot', () => {
     const childTerrain: Terrain = {
       id: 'terrain-1',
@@ -57,13 +57,13 @@ describe('applyTableConversion', () => {
       children: [],
     };
 
-    applyTableConversion(udonObj, resoniteObj, undefined, () => convertedTerrain);
+    const result = convertTable(udonObj, resoniteObj, undefined, () => convertedTerrain);
 
-    expect(resoniteObj.rotation).toEqual({ x: 0, y: 0, z: 0 });
-    expect(resoniteObj.components).toEqual([]);
-    expect(resoniteObj.children).toHaveLength(2);
+    expect(result.rotation).toEqual({ x: 0, y: 0, z: 0 });
+    expect(result.components).toEqual([]);
+    expect(result.children).toHaveLength(2);
 
-    const visual = resoniteObj.children[0];
+    const visual = result.children[0];
     expect(visual.position).toEqual({ x: 10, y: 0, z: -5 });
     expect(visual.rotation).toEqual({ x: 90, y: 0, z: 0 });
     // QuadMesh + MeshRenderer + Material + StaticTexture2D + BoxCollider
@@ -78,6 +78,6 @@ describe('applyTableConversion', () => {
       Size: { $type: 'float2', value: { x: 20, y: 10 } },
     });
 
-    expect(resoniteObj.children[1]).toBe(convertedTerrain);
+    expect(result.children[1]).toBe(convertedTerrain);
   });
 });

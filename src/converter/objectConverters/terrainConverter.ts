@@ -20,13 +20,12 @@ function resolveBlendMode(
   return lookupImageBlendMode(imageBlendModeMap, identifier) ?? 'Opaque';
 }
 
-export function applyTerrainConversion(
+export function convertTerrain(
   udonObj: Terrain,
-  resoniteObj: ResoniteObject,
+  baseObj: ResoniteObject,
   textureMap?: Map<string, string>,
   imageBlendModeMap?: Map<string, ImageBlendMode>
-): void {
-  resoniteObj.rotation = { x: 0, y: udonObj.rotate, z: 0 };
+): ResoniteObject {
   const topTextureIdentifier =
     udonObj.floorImage?.identifier ??
     udonObj.wallImage?.identifier ??
@@ -40,7 +39,7 @@ export function applyTerrainConversion(
   const topBlendMode = resolveBlendMode(topTextureIdentifier, imageBlendModeMap);
   const sideBlendMode = resolveBlendMode(sideTextureIdentifier, imageBlendModeMap);
   // Axis mapping: width -> X, height -> Y, depth -> Z
-  const colliderComponent = buildBoxColliderComponent(resoniteObj.id, {
+  const colliderComponent = buildBoxColliderComponent(baseObj.id, {
     x: udonObj.width,
     y: udonObj.height,
     z: udonObj.depth,
@@ -48,13 +47,13 @@ export function applyTerrainConversion(
   if (udonObj.isLocked) {
     colliderComponent.fields.CharacterCollider = { $type: 'bool', value: true };
   }
-  resoniteObj.components = [colliderComponent];
-  if (!udonObj.isLocked) {
-    resoniteObj.components.push(buildGrabbableComponent(resoniteObj.id));
-  }
+  const components = [
+    colliderComponent,
+    ...(udonObj.isLocked ? [] : [buildGrabbableComponent(baseObj.id)]),
+  ];
 
-  const topId = `${resoniteObj.id}-top`;
-  const wallsId = `${resoniteObj.id}-walls`;
+  const topId = `${baseObj.id}-top`;
+  const wallsId = `${baseObj.id}-walls`;
   const frontId = `${wallsId}-front`;
   const backId = `${wallsId}-back`;
   const leftId = `${wallsId}-left`;
@@ -63,7 +62,7 @@ export function applyTerrainConversion(
 
   const topSurface: ResoniteObject = {
     id: topId,
-    name: `${resoniteObj.name}-top`,
+    name: `${baseObj.name}-top`,
     position: { x: 0, y: udonObj.height / 2, z: 0 },
     rotation: { x: 90, y: 0, z: 0 },
     textures: [],
@@ -81,7 +80,7 @@ export function applyTerrainConversion(
   };
   const wallsContainer: ResoniteObject = {
     id: wallsId,
-    name: `${resoniteObj.name}-walls`,
+    name: `${baseObj.name}-walls`,
     position: { x: 0, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
     isActive: !hideWalls,
@@ -90,7 +89,7 @@ export function applyTerrainConversion(
     children: [
       {
         id: frontId,
-        name: `${resoniteObj.name}-front`,
+        name: `${baseObj.name}-front`,
         position: { x: 0, y: 0, z: -udonObj.depth / 2 },
         rotation: { x: 0, y: 0, z: 0 },
         textures: [],
@@ -108,7 +107,7 @@ export function applyTerrainConversion(
       },
       {
         id: backId,
-        name: `${resoniteObj.name}-back`,
+        name: `${baseObj.name}-back`,
         position: { x: 0, y: 0, z: udonObj.depth / 2 },
         rotation: { x: 0, y: 180, z: 0 },
         textures: [],
@@ -126,7 +125,7 @@ export function applyTerrainConversion(
       },
       {
         id: leftId,
-        name: `${resoniteObj.name}-left`,
+        name: `${baseObj.name}-left`,
         position: { x: -udonObj.width / 2, y: 0, z: 0 },
         rotation: { x: 0, y: 90, z: 0 },
         textures: [],
@@ -144,7 +143,7 @@ export function applyTerrainConversion(
       },
       {
         id: rightId,
-        name: `${resoniteObj.name}-right`,
+        name: `${baseObj.name}-right`,
         position: { x: udonObj.width / 2, y: 0, z: 0 },
         rotation: { x: 0, y: -90, z: 0 },
         textures: [],
@@ -163,16 +162,16 @@ export function applyTerrainConversion(
     ],
   };
 
-  const children: ResoniteObject[] = [
-    {
-      ...topSurface,
-    },
-    wallsContainer,
-  ];
-  resoniteObj.children = children;
-
   // Udonarium positions are edge-based; Resonite uses center-based transforms.
-  resoniteObj.position.x += udonObj.width / 2;
-  resoniteObj.position.y += udonObj.height / 2;
-  resoniteObj.position.z -= udonObj.depth / 2;
+  return {
+    ...baseObj,
+    rotation: { x: 0, y: udonObj.rotate, z: 0 },
+    position: {
+      x: baseObj.position.x + udonObj.width / 2,
+      y: baseObj.position.y + udonObj.height / 2,
+      z: baseObj.position.z - udonObj.depth / 2,
+    },
+    components,
+    children: [{ ...topSurface }, wallsContainer],
+  };
 }

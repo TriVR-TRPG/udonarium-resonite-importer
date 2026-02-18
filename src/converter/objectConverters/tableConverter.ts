@@ -19,24 +19,20 @@ function resolveBlendMode(
   return lookupImageBlendMode(imageBlendModeMap, identifier) ?? 'Opaque';
 }
 
-export function applyTableConversion(
+export function convertTable(
   udonObj: GameTable,
-  resoniteObj: ResoniteObject,
+  baseObj: ResoniteObject,
   textureMap?: Map<string, string>,
   convertObject?: (obj: UdonariumObject) => ResoniteObject,
   imageBlendModeMap?: Map<string, ImageBlendMode>
-): void {
-  // Keep table container unrotated so child object positions stay stable.
-  resoniteObj.rotation = { x: 0, y: 0, z: 0 };
-  resoniteObj.components = [];
-
-  const surfaceId = `${resoniteObj.id}-surface`;
+): ResoniteObject {
+  const surfaceId = `${baseObj.id}-surface`;
   const textureIdentifier = udonObj.images[0]?.identifier;
   const textureValue = resolveTextureValue(textureIdentifier, textureMap);
   const blendMode = resolveBlendMode(textureIdentifier, imageBlendModeMap);
   const tableVisual: ResoniteObject = {
     id: surfaceId,
-    name: `${resoniteObj.name}-surface`,
+    name: `${baseObj.name}-surface`,
     position: { x: udonObj.width / 2, y: 0, z: -udonObj.height / 2 },
     rotation: { x: 90, y: 0, z: 0 },
     textures: [],
@@ -64,5 +60,12 @@ export function applyTableConversion(
     convertObject && udonObj.children.length > 0
       ? udonObj.children.map((child) => convertObject(child))
       : [];
-  resoniteObj.children = [tableVisual, ...convertedChildren];
+
+  // Keep table container unrotated so child object positions stay stable.
+  return {
+    ...baseObj,
+    rotation: { x: 0, y: 0, z: 0 },
+    components: [],
+    children: [tableVisual, ...convertedChildren],
+  };
 }

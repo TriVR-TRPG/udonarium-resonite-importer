@@ -22,14 +22,14 @@ function resolveBlendMode(
   return lookupImageBlendMode(imageBlendModeMap, identifier) ?? 'Opaque';
 }
 
-export function applyCharacterConversion(
+export function convertCharacter(
   udonObj: GameCharacter,
-  resoniteObj: ResoniteObject,
+  baseObj: ResoniteObject,
   convertSize: (size: number) => Vector3,
   textureMap?: Map<string, string>,
   imageAspectRatioMap?: Map<string, number>,
   imageBlendModeMap?: Map<string, ImageBlendMode>
-): void {
+): ResoniteObject {
   const size = convertSize(udonObj.size);
   const meshWidth = size.x;
   const textureIdentifier = udonObj.images[0]?.identifier;
@@ -39,13 +39,13 @@ export function applyCharacterConversion(
     : DEFAULT_CHARACTER_ASPECT_RATIO;
   const meshHeight = meshWidth * meshAspectRatio;
   const hasCharacterImage = !!textureIdentifier;
-  resoniteObj.components = hasCharacterImage
+  const components = hasCharacterImage
     ? (() => {
         const textureValue = resolveTextureValue(textureIdentifier, textureMap);
         const blendMode = resolveBlendMode(textureIdentifier, imageBlendModeMap);
         return [
           ...buildQuadMeshComponents(
-            resoniteObj.id,
+            baseObj.id,
             textureValue,
             true,
             {
@@ -54,29 +54,31 @@ export function applyCharacterConversion(
             },
             blendMode
           ),
-          buildBoxColliderComponent(resoniteObj.id, {
+          buildBoxColliderComponent(baseObj.id, {
             x: meshWidth,
             y: meshHeight,
             z: 0.05,
           }),
-          buildGrabbableComponent(resoniteObj.id),
+          buildGrabbableComponent(baseObj.id),
         ];
       })()
     : [
-        buildBoxColliderComponent(resoniteObj.id, {
+        buildBoxColliderComponent(baseObj.id, {
           x: meshWidth,
           y: size.y,
           z: 0.05,
         }),
-        buildGrabbableComponent(resoniteObj.id),
+        buildGrabbableComponent(baseObj.id),
       ];
   // Udonarium positions are edge-based; Resonite uses center-based transforms.
-  resoniteObj.position.x += meshWidth / 2;
-  resoniteObj.position.z -= meshWidth / 2;
-  resoniteObj.position.y += (hasCharacterImage ? meshHeight : size.y) / 2;
-  resoniteObj.rotation = {
-    x: 0,
-    y: udonObj.rotate ?? 0,
-    z: udonObj.roll ?? 0,
+  return {
+    ...baseObj,
+    components,
+    position: {
+      x: baseObj.position.x + meshWidth / 2,
+      y: baseObj.position.y + (hasCharacterImage ? meshHeight : size.y) / 2,
+      z: baseObj.position.z - meshWidth / 2,
+    },
+    rotation: { x: 0, y: udonObj.rotate ?? 0, z: udonObj.roll ?? 0 },
   };
 }

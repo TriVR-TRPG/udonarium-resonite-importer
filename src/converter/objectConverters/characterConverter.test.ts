@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { applyCharacterConversion } from './characterConverter';
+import { convertCharacter } from './characterConverter';
 import { GameCharacter } from '../../domain/UdonariumObject';
 import { ResoniteObject, Vector3 } from '../../domain/ResoniteObject';
 
-describe('applyCharacterConversion', () => {
+describe('convertCharacter', () => {
   it('サイズ変換とQuad系コンポーネントを設定する', () => {
     const udonObj: GameCharacter = {
       id: 'char-1',
@@ -29,10 +29,10 @@ describe('applyCharacterConversion', () => {
     const converted: Vector3 = { x: 0.3, y: 0.3, z: 0.3 };
     const convertSize = vi.fn().mockReturnValue(converted);
 
-    applyCharacterConversion(udonObj, resoniteObj, convertSize);
+    const result = convertCharacter(udonObj, resoniteObj, convertSize);
 
     expect(convertSize).toHaveBeenCalledWith(3);
-    expect(resoniteObj.components.map((c) => c.type)).toEqual([
+    expect(result.components.map((c) => c.type)).toEqual([
       '[FrooxEngine]FrooxEngine.QuadMesh',
       '[FrooxEngine]FrooxEngine.StaticTexture2D',
       '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
@@ -41,16 +41,16 @@ describe('applyCharacterConversion', () => {
       '[FrooxEngine]FrooxEngine.BoxCollider',
       '[FrooxEngine]FrooxEngine.Grabbable',
     ]);
-    expect(resoniteObj.components[0].fields).toEqual({
+    expect(result.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 0.3, y: 0.3 } },
       DualSided: { $type: 'bool', value: true },
     });
-    expect(resoniteObj.position.x).toBe(0.15);
-    expect(resoniteObj.position.z).toBe(-0.15);
-    expect(resoniteObj.position.y).toBe(0.15);
-    expect(resoniteObj.rotation).toEqual({ x: 0, y: 30, z: 15 });
+    expect(result.position.x).toBe(0.15);
+    expect(result.position.z).toBe(-0.15);
+    expect(result.position.y).toBe(0.15);
+    expect(result.rotation).toEqual({ x: 0, y: 30, z: 15 });
 
-    const materialComponent = resoniteObj.components.find(
+    const materialComponent = result.components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
     );
     expect(materialComponent?.fields).toEqual({
@@ -58,16 +58,16 @@ describe('applyCharacterConversion', () => {
       ShadowRamp: { $type: 'reference', targetId: null },
       ShadowSharpness: { $type: 'float', value: 0 },
     });
-    const textureBlockComponent = resoniteObj.components.find(
+    const textureBlockComponent = result.components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock'
     );
     expect(textureBlockComponent?.fields).toEqual({
       Texture: { $type: 'reference', targetId: 'slot-char-1-tex' },
     });
-    expect(resoniteObj.components[5].fields).toEqual({
+    expect(result.components[5].fields).toEqual({
       Size: { $type: 'float3', value: { x: 0.3, y: 0.3, z: 0.05 } },
     });
-    expect(resoniteObj.components[6].fields).toEqual({
+    expect(result.components[6].fields).toEqual({
       Scalable: { $type: 'bool', value: true },
     });
   });
@@ -94,9 +94,9 @@ describe('applyCharacterConversion', () => {
     };
     const convertSize = vi.fn().mockReturnValue({ x: 1, y: 1, z: 1 });
 
-    applyCharacterConversion(udonObj, resoniteObj, convertSize);
+    const result = convertCharacter(udonObj, resoniteObj, convertSize);
 
-    expect(resoniteObj.components.map((c) => c.type)).toEqual([
+    expect(result.components.map((c) => c.type)).toEqual([
       '[FrooxEngine]FrooxEngine.BoxCollider',
       '[FrooxEngine]FrooxEngine.Grabbable',
     ]);
@@ -125,14 +125,20 @@ describe('applyCharacterConversion', () => {
     const convertSize = vi.fn().mockReturnValue({ x: 1, y: 1, z: 1 });
     const imageAspectRatioMap = new Map<string, number>([['char-ratio.png', 2]]);
 
-    applyCharacterConversion(udonObj, resoniteObj, convertSize, undefined, imageAspectRatioMap);
+    const result = convertCharacter(
+      udonObj,
+      resoniteObj,
+      convertSize,
+      undefined,
+      imageAspectRatioMap
+    );
 
-    const quad = resoniteObj.components.find((c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh');
+    const quad = result.components.find((c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh');
     expect(quad?.fields.Size).toEqual({ $type: 'float2', value: { x: 1, y: 2 } });
-    const collider = resoniteObj.components.find(
+    const collider = result.components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
     );
     expect(collider?.fields.Size).toEqual({ $type: 'float3', value: { x: 1, y: 2, z: 0.05 } });
-    expect(resoniteObj.position).toEqual({ x: 0.5, y: 1, z: -0.5 });
+    expect(result.position).toEqual({ x: 0.5, y: 1, z: -0.5 });
   });
 });
