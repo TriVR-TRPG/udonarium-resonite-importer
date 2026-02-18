@@ -17,7 +17,8 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Verdana, Meiryo, 'M+ 1p', sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Verdana, Meiryo, 'M+ 1p', sans-serif;
   background: hsl(0, 0%, 97%);
   color: #444;
   min-height: 100vh;
@@ -69,9 +70,9 @@ header .subtitle {
 
 .locale-switcher select {
   padding: 4px 8px;
-  border: 1px solid #CCC;
+  border: 1px solid #ccc;
   border-radius: 4px;
-  background: #FFF;
+  background: #fff;
   color: #444;
   font-size: 0.85rem;
   font-family: inherit;
@@ -97,7 +98,7 @@ header .subtitle {
 .card h2 {
   font-size: 0.9rem;
   font-weight: normal;
-  color: #CCC;
+  color: #ccc;
   background: #555;
   margin: 0;
   padding: 4px 10px;
@@ -110,7 +111,7 @@ header .subtitle {
   right: 8px;
   border: none;
   background: transparent;
-  color: #CCC;
+  color: #ccc;
   font-size: 0.9rem;
   line-height: 1;
   cursor: pointer;
@@ -118,7 +119,7 @@ header .subtitle {
 }
 
 .card-close-btn:hover {
-  color: #FFF;
+  color: #fff;
 }
 
 .card-body {
@@ -159,8 +160,8 @@ header .subtitle {
   width: 10ch;
   flex: 0 0 auto;
   padding: 8px 10px;
-  background: #FFF;
-  border: solid 1px #CCC;
+  background: #fff;
+  border: solid 1px #ccc;
   border-radius: 2px;
   color: #444;
   font-size: 0.9rem;
@@ -177,7 +178,7 @@ header .subtitle {
   justify-content: center;
   padding: 8px 12px;
   border-radius: 4px;
-  border: solid 1px #CCC;
+  border: solid 1px #ccc;
   color: #444;
   font-size: 0.75rem;
   line-height: 1;
@@ -224,8 +225,8 @@ header .subtitle {
 .file-select input {
   flex: 1;
   padding: 8px 10px;
-  background: #FFF;
-  border: solid 1px #CCC;
+  background: #fff;
+  border: solid 1px #ccc;
   border-radius: 2px;
   color: #444;
   font-size: 0.9rem;
@@ -254,7 +255,7 @@ header .subtitle {
 /* Buttons */
 .btn {
   padding: 8px 12px;
-  border: solid 1px #CCC;
+  border: solid 1px #ccc;
   border-radius: 4px;
   font-size: 0.9rem;
   font-family: inherit;
@@ -284,7 +285,7 @@ header .subtitle {
 .btn-primary {
   background: #eee;
   color: #444;
-  border-color: #CCC;
+  border-color: #ccc;
 }
 
 .btn-primary:hover {
@@ -294,7 +295,7 @@ header .subtitle {
 .btn-success {
   background: #eee;
   color: #444;
-  border-color: #CCC;
+  border-color: #ccc;
 }
 
 .btn-success:hover {
@@ -320,7 +321,7 @@ header .subtitle {
   padding: 16px;
   background: rgba(240, 218, 189, 0.4);
   border-radius: 4px;
-  border: 1px solid #CCC;
+  border: 1px solid #ccc;
 }
 
 .stat-value {
@@ -359,23 +360,33 @@ header .subtitle {
 /* Settings Grid (Advanced Options) */
 .settings-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-top: 12px;
+  grid-template-columns: 1fr;
+  gap: 6px;
 }
 
 .setting-item label {
-  display: block;
-  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  margin-bottom: 0;
   font-size: 0.9rem;
   color: #444;
 }
 
-.setting-item input {
+.setting-item {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  align-items: center;
+  column-gap: 12px;
+  min-height: 36px;
+}
+
+.setting-item input:not([type='checkbox']):not([type='range']) {
   width: 100%;
+  min-height: 36px;
   padding: 8px 10px;
-  background: #FFF;
-  border: solid 1px #CCC;
+  background: #fff;
+  border: solid 1px #ccc;
   border-radius: 2px;
   color: #444;
   font-size: 0.9rem;
@@ -384,16 +395,17 @@ header .subtitle {
 
 .setting-item select {
   width: 100%;
+  min-height: 36px;
   padding: 8px 10px;
-  background: #FFF;
-  border: solid 1px #CCC;
+  background: #fff;
+  border: solid 1px #ccc;
   border-radius: 2px;
   color: #444;
   font-size: 0.9rem;
   font-family: inherit;
 }
 
-.setting-item input:focus {
+.setting-item input:not([type='checkbox']):not([type='range']):focus {
   outline: none;
 }
 
@@ -401,10 +413,36 @@ header .subtitle {
   outline: none;
 }
 
-.setting-item-checkbox {
-  display: flex;
+.root-scale-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 80px;
   align-items: center;
-  gap: 8px;
+  column-gap: 8px;
+  min-height: 36px;
+}
+
+.root-scale-control input[type='range'] {
+  width: 100%;
+  min-height: 0;
+  height: auto;
+  margin: 0;
+  padding: 0;
+}
+
+.root-scale-control #root-scale-direct {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 10px;
+  background: #fff;
+  border: solid 1px #ccc;
+  border-radius: 2px;
+  color: #444;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.setting-item-checkbox {
+  grid-template-columns: 3fr 2fr;
 }
 
 .setting-item-checkbox label {
@@ -412,8 +450,34 @@ header .subtitle {
 }
 
 .setting-item-checkbox input[type='checkbox'] {
-  width: auto;
+  justify-self: start;
+  width: 36px;
+  min-height: 36px;
+  height: 36px;
+  display: inline-grid;
+  place-content: center;
+  margin: 0;
   padding: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: solid 1px #ccc;
+  border-radius: 2px;
+  background: #fff;
+}
+
+.setting-item-checkbox input[type='checkbox']::after {
+  content: '';
+  width: 8px;
+  height: 14px;
+  border: solid #444;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transform-origin: center;
+  transition: transform 0.1s ease-in-out;
+}
+
+.setting-item-checkbox input[type='checkbox']:checked::after {
+  transform: rotate(45deg) scale(1);
 }
 
 .hint {
@@ -442,7 +506,7 @@ header .subtitle {
 .progress-bar {
   width: 100%;
   height: 8px;
-  background: #CCC;
+  background: #ccc;
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 12px;
