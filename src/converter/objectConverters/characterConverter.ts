@@ -3,6 +3,7 @@ import { ImageBlendMode } from '../../config/MappingConfig';
 import { ResoniteObject, Vector3 } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
+  buildGrabbableComponent,
   buildQuadMeshComponents,
   BlendModeValue,
   resolveTextureValue,
@@ -58,13 +59,7 @@ export function applyCharacterConversion(
             y: meshHeight,
             z: 0.05,
           }),
-          {
-            id: `${resoniteObj.id}-grabbable`,
-            type: '[FrooxEngine]FrooxEngine.Grabbable',
-            fields: {
-              Scalable: { $type: 'bool', value: true },
-            },
-          },
+          buildGrabbableComponent(resoniteObj.id),
         ];
       })()
     : [
@@ -73,13 +68,7 @@ export function applyCharacterConversion(
           y: size.y,
           z: 0.05,
         }),
-        {
-          id: `${resoniteObj.id}-grabbable`,
-          type: '[FrooxEngine]FrooxEngine.Grabbable',
-          fields: {
-            Scalable: { $type: 'bool', value: true },
-          },
-        },
+        buildGrabbableComponent(resoniteObj.id),
       ];
   // Udonarium positions are edge-based; Resonite uses center-based transforms.
   resoniteObj.position.x += meshWidth / 2;

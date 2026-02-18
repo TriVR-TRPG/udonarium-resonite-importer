@@ -2,6 +2,7 @@ import { TableMask } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
+  buildGrabbableComponent,
   buildQuadMeshComponents,
   resolveTextureValue,
 } from './componentBuilders';
@@ -47,13 +48,7 @@ export function applyTableMaskConversion(
     }),
   ];
   if (!udonObj.isLock) {
-    resoniteObj.components.push({
-      id: `${resoniteObj.id}-grabbable`,
-      type: '[FrooxEngine]FrooxEngine.Grabbable',
-      fields: {
-        Scalable: { $type: 'bool', value: true },
-      },
-    });
+    resoniteObj.components.push(buildGrabbableComponent(resoniteObj.id));
   }
 
   const material = resoniteObj.components.find(

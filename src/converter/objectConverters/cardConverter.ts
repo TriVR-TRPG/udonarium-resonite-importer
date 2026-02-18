@@ -3,6 +3,7 @@ import { ImageBlendMode } from '../../config/MappingConfig';
 import { ResoniteObject } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
+  buildGrabbableComponent,
   buildQuadMeshComponents,
   BlendModeValue,
   resolveTextureValue,
@@ -119,13 +120,7 @@ export function applyCardConversion(
   resoniteObj.components = [
     // Parent slot rotates only on Y, so make collider thin on local Y.
     buildBoxColliderComponent(resoniteObj.id, { x: cardWidth, y: 0.01, z: parentHeight }),
-    {
-      id: `${resoniteObj.id}-grabbable`,
-      type: '[FrooxEngine]FrooxEngine.Grabbable',
-      fields: {
-        Scalable: { $type: 'bool', value: true },
-      },
-    },
+    buildGrabbableComponent(resoniteObj.id),
   ];
   resoniteObj.children = [
     {

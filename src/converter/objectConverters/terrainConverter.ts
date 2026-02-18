@@ -3,6 +3,7 @@ import { ImageBlendMode } from '../../config/MappingConfig';
 import { ResoniteObject } from '../../domain/ResoniteObject';
 import {
   buildBoxColliderComponent,
+  buildGrabbableComponent,
   buildQuadMeshComponents,
   BlendModeValue,
   resolveTextureValue,
@@ -49,13 +50,7 @@ export function applyTerrainConversion(
   }
   resoniteObj.components = [colliderComponent];
   if (!udonObj.isLocked) {
-    resoniteObj.components.push({
-      id: `${resoniteObj.id}-grabbable`,
-      type: '[FrooxEngine]FrooxEngine.Grabbable',
-      fields: {
-        Scalable: { $type: 'bool', value: true },
-      },
-    });
+    resoniteObj.components.push(buildGrabbableComponent(resoniteObj.id));
   }
 
   const topId = `${resoniteObj.id}-top`;

@@ -1,6 +1,6 @@
 import { CardStack, UdonariumObject } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
-import { buildBoxColliderComponent } from './componentBuilders';
+import { buildBoxColliderComponent, buildGrabbableComponent } from './componentBuilders';
 import { lookupImageAspectRatio } from '../imageAspectRatioMap';
 
 const CARD_STACK_Y_OFFSET = 0.001;
@@ -58,13 +58,7 @@ export function applyCardStackConversion(
   resoniteObj.rotation = { x: 0, y: udonObj.rotate ?? 0, z: 0 };
   resoniteObj.components = [
     buildBoxColliderComponent(resoniteObj.id, { x: cardWidth, y: 0.05, z: cardHeight }),
-    {
-      id: `${resoniteObj.id}-grabbable`,
-      type: '[FrooxEngine]FrooxEngine.Grabbable',
-      fields: {
-        Scalable: { $type: 'bool', value: true },
-      },
-    },
+    buildGrabbableComponent(resoniteObj.id),
   ];
   resoniteObj.children = [...udonObj.cards].reverse().map((card, i) => {
     const child = convertObject(card);

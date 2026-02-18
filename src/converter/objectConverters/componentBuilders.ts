@@ -253,6 +253,16 @@ export function buildBoxColliderComponent(slotId: string, size: BoxSize): Resoni
   };
 }
 
+export function buildGrabbableComponent(slotId: string): ResoniteComponent {
+  return {
+    id: `${slotId}-grabbable`,
+    type: '[FrooxEngine]FrooxEngine.Grabbable',
+    fields: {
+      Scalable: { $type: 'bool', value: true },
+    },
+  };
+}
+
 export function toTexturePlaceholder(identifier: string): string {
   return `${TEXTURE_PLACEHOLDER_PREFIX}${identifier}`;
 }

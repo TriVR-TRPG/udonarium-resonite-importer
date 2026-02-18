@@ -4,6 +4,7 @@ import { ResoniteObject, Vector3 } from '../../domain/ResoniteObject';
 import {
   BlendModeValue,
   buildBoxColliderComponent,
+  buildGrabbableComponent,
   buildQuadMeshComponents,
   resolveTextureValue,
 } from './componentBuilders';
@@ -54,13 +55,7 @@ export function applyDiceSymbolConversion(
       y: maxFaceHeight,
       z: 0.05,
     }),
-    {
-      id: `${resoniteObj.id}-grabbable`,
-      type: '[FrooxEngine]FrooxEngine.Grabbable',
-      fields: {
-        Scalable: { $type: 'bool', value: true },
-      },
-    },
+    buildGrabbableComponent(resoniteObj.id),
   ];
   resoniteObj.children = udonObj.faceImages.map((faceImage, index) => {
     const childId = `${resoniteObj.id}-face-${index}`;
