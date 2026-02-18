@@ -1,4 +1,4 @@
-﻿import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { convertTextNote } from './textNoteConverter';
 import { TextNote } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
@@ -22,6 +22,7 @@ describe('convertTextNote', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
 
     const result = convertTextNote(udonObj, resoniteObj.position, resoniteObj.id);
@@ -64,6 +65,7 @@ describe('convertTextNote', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
 
     const result = convertTextNote(udonObj, resoniteObj.position, resoniteObj.id);

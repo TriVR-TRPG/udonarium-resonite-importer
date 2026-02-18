@@ -23,6 +23,7 @@ describe('convertCard', () => {
     rotation: { x: 0, y: 0, z: 0 },
     components: [],
     children: [],
+    isActive: true,
   });
 
   it('creates collider + grabbable on parent and two card faces as children', () => {

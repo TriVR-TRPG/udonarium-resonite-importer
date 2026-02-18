@@ -32,6 +32,7 @@ function createObject(id: string): ResoniteObject {
       },
     ],
     children: [],
+    isActive: true,
   };
 }
 

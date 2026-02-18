@@ -252,6 +252,7 @@ describe('ResoniteObjectBuilder', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
     const childB = { ...childA, id: 'child-b', name: 'B' };
 

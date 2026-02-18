@@ -43,6 +43,7 @@ describe('convertTable', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
 
     const convertedTerrain: ResoniteObject = {
@@ -52,6 +53,7 @@ describe('convertTable', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
 
     const result = convertTable(

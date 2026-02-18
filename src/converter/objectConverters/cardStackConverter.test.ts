@@ -39,6 +39,7 @@ describe('convertCardStack', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [{ type: 'dummy', fields: {} }],
       children: [],
+      isActive: true,
     };
     const convertObject = vi.fn(
       (obj: UdonariumObject): ResoniteObject => ({
@@ -48,6 +49,7 @@ describe('convertCardStack', () => {
         rotation: { x: 0, y: 0, z: 0 },
         components: [],
         children: [],
+        isActive: true,
       })
     );
 
@@ -116,6 +118,7 @@ describe('convertCardStack', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
     const convertObject = vi.fn(
       (obj: UdonariumObject): ResoniteObject => ({
@@ -125,6 +128,7 @@ describe('convertCardStack', () => {
         rotation: { x: 0, y: 0, z: 0 },
         components: [],
         children: [],
+        isActive: true,
       })
     );
 
@@ -178,6 +182,7 @@ describe('convertCardStack', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
     const convertObject = vi.fn(
       (obj: UdonariumObject): ResoniteObject => ({
@@ -187,6 +192,7 @@ describe('convertCardStack', () => {
         rotation: { x: 0, y: 0, z: 0 },
         components: [],
         children: [],
+        isActive: true,
       })
     );
 

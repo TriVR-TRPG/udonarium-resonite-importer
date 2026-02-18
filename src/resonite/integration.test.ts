@@ -61,6 +61,7 @@ const createTestResoniteObject = (id: string, name: string): ResoniteObject => (
   rotation: { x: 0, y: 0, z: 0 },
   components: [],
   children: [],
+  isActive: true,
 });
 
 // Helper to create a minimal PNG image

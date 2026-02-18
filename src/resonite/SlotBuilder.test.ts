@@ -35,6 +35,7 @@ describe('SlotBuilder', () => {
     components: [],
     children: [],
     ...overrides,
+    isActive: overrides.isActive ?? true,
   });
 
   beforeEach(() => {

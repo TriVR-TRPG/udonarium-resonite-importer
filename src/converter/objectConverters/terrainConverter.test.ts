@@ -28,6 +28,7 @@ describe('convertTerrain', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
 
     const result = convertTerrain(
@@ -126,6 +127,7 @@ describe('convertTerrain', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
 
     const result = convertTerrain(
@@ -217,6 +219,7 @@ describe('convertTerrain', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
 
     const result = convertTerrain(
@@ -265,6 +268,7 @@ describe('convertTerrain', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
 
     const result = convertTerrain(

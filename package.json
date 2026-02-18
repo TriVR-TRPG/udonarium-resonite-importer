@@ -27,6 +27,7 @@
     "check:validate:types": "run-p check:validate:types:*",
     "check:validate:types:cli": "tsc -p tsconfig.cli.json --noEmit",
     "check:validate:types:gui": "tsc -p tsconfig.gui.json --noEmit",
+    "check:validate:types:test": "tsc -p tsconfig.test.json --noEmit",
     "check:validate:types:scripts": "tsc -p tsconfig.scripts.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

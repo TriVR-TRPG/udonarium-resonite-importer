@@ -1,10 +1,10 @@
-import { describe, expect, it, vi } from 'vitest';
+﻿import { describe, expect, it, vi } from 'vitest';
 import { convertCharacter } from './characterConverter';
 import { GameCharacter } from '../../domain/UdonariumObject';
 import { ResoniteObject, Vector3 } from '../../domain/ResoniteObject';
 
 describe('convertCharacter', () => {
-  it('サイズ変換とQuad系コンポーネントを設定する', () => {
+  it('converts character and generates quad mesh, material, and collider', () => {
     const udonObj: GameCharacter = {
       id: 'char-1',
       type: 'character',
@@ -25,6 +25,7 @@ describe('convertCharacter', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
     const converted: Vector3 = { x: 0.3, y: 0.3, z: 0.3 };
     const convertSize = vi.fn().mockReturnValue(converted);
@@ -57,7 +58,7 @@ describe('convertCharacter', () => {
     expect(result.position.y).toBe(0.15);
     expect(result.rotation).toEqual({ x: 0, y: 30, z: 15 });
     expect(result.sourceType).toBe('character');
-    expect(result.locationName).toBe('graveyard');
+    expect((result as { locationName?: string }).locationName).toBe('graveyard');
 
     const materialComponent = result.components.find(
       (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
@@ -100,6 +101,7 @@ describe('convertCharacter', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
     const convertSize = vi.fn().mockReturnValue({ x: 1, y: 1, z: 1 });
 
@@ -137,6 +139,7 @@ describe('convertCharacter', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
     const convertSize = vi.fn().mockReturnValue({ x: 1, y: 1, z: 1 });
     const imageAspectRatioMap = new Map<string, number>([['char-ratio.png', 2]]);

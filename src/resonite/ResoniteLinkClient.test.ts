@@ -33,10 +33,10 @@ describe('ResoniteLinkClient', () => {
     mockLink = createMockLink();
     connectMock.mockResolvedValue(mockLink);
     ResoniteLinkClient.setRuntimeModuleLoaderForTests(
-      () =>
-        ({
+      async () =>
+        (await Promise.resolve({
           ResoniteLink: { connect: connectMock },
-        }) as unknown as {
+        })) as unknown as {
           ResoniteLink: {
             connect: (url: string, webSocketCtor: unknown) => Promise<ResoniteLink>;
           };

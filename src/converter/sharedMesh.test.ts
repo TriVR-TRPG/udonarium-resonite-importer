@@ -33,6 +33,7 @@ function createObject(
       },
     ],
     children: [],
+    isActive: true,
   };
 }
 

@@ -23,6 +23,7 @@ describe('convertTableMask', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
 
     const result = convertTableMask(udonObj, resoniteObj.position, undefined, resoniteObj.id);
@@ -76,6 +77,7 @@ describe('convertTableMask', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
 
     const result = convertTableMask(udonObj, resoniteObj.position, undefined, resoniteObj.id);
@@ -110,6 +112,7 @@ describe('convertTableMask', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
 
     const result = convertTableMask(udonObj, resoniteObj.position, undefined, resoniteObj.id);
@@ -143,6 +146,7 @@ describe('convertTableMask', () => {
       rotation: { x: 0, y: 0, z: 0 },
       components: [],
       children: [],
+      isActive: true,
     };
 
     const result = convertTableMask(udonObj, resoniteObj.position, undefined, resoniteObj.id);
