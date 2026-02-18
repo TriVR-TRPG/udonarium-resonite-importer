@@ -91,6 +91,7 @@ describe('SlotBuilder', () => {
         parentId: 'Root',
         name: 'Test Character',
         position: { x: 1, y: 2, z: 3 },
+        isActive: true,
       });
       expect(result.success).toBe(true);
       expect(result.slotId).toBe('created-slot-id');
@@ -189,6 +190,7 @@ describe('SlotBuilder', () => {
         parentId: 'Root',
         name: 'Parent Object',
         position: { x: 0, y: 0, z: 0 },
+        isActive: true,
       });
 
       // Second call for child with parent's slot ID
@@ -197,6 +199,7 @@ describe('SlotBuilder', () => {
         parentId: 'created-slot-id',
         name: 'Child Object',
         position: { x: 0, y: 0, z: 0 },
+        isActive: true,
       });
     });
 

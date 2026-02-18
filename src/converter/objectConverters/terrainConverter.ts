@@ -57,27 +57,37 @@ export function convertTerrain(
     name: udonObj.name,
   })
     .setRotation({ x: 0, y: udonObj.rotate, z: 0 })
-    .setPosition({
-      x: basePosition.x + udonObj.width / 2,
-      y: basePosition.y + udonObj.height / 2,
-      z: basePosition.z - udonObj.depth / 2,
-    })
     .setSourceType(udonObj.type);
 
   const topId = `${mainBuilder.getId()}-top`;
+  const bottomId = `${mainBuilder.getId()}-bottom`;
+  const topBackId = `${mainBuilder.getId()}-top-back`;
   const wallsId = `${mainBuilder.getId()}-walls`;
   const frontId = `${wallsId}-front`;
   const backId = `${wallsId}-back`;
   const leftId = `${wallsId}-left`;
   const rightId = `${wallsId}-right`;
   const hideWalls = udonObj.mode === 1;
+  mainBuilder.setPosition({
+    x: basePosition.x + udonObj.width / 2,
+    y: basePosition.y + (hideWalls ? udonObj.height : udonObj.height / 2),
+    z: basePosition.z - udonObj.depth / 2,
+  });
 
   const topSurface = ResoniteObjectBuilder.create({
     id: topId,
     name: `${udonObj.name}-top`,
   })
-    .setPosition({ x: 0, y: udonObj.height / 2, z: 0 })
+    .setPosition({ x: 0, y: hideWalls ? 0 : udonObj.height / 2, z: 0 })
     .setRotation({ x: 90, y: 0, z: 0 })
+    .addQuadMesh(topTextureValue, false, { x: udonObj.width, y: udonObj.depth }, topBlendMode)
+    .build();
+  const bottomLikeSurface = ResoniteObjectBuilder.create({
+    id: hideWalls ? topBackId : bottomId,
+    name: hideWalls ? `${udonObj.name}-top-back` : `${udonObj.name}-bottom`,
+  })
+    .setPosition({ x: 0, y: hideWalls ? 0 : -udonObj.height / 2, z: 0 })
+    .setRotation({ x: -90, y: 0, z: 0 })
     .addQuadMesh(topTextureValue, false, { x: udonObj.width, y: udonObj.depth }, topBlendMode)
     .build();
 
@@ -137,7 +147,7 @@ export function convertTerrain(
   // Axis mapping: width -> X, height -> Y, depth -> Z
   // Udonarium positions are edge-based; Resonite uses center-based transforms.
   mainBuilder.addBoxCollider(
-    { x: udonObj.width, y: udonObj.height, z: udonObj.depth },
+    { x: udonObj.width, y: hideWalls ? 0 : udonObj.height, z: udonObj.depth },
     {
       characterCollider:
         udonObj.isLocked && (options?.enableCharacterColliderOnLockedTerrain ?? true),
@@ -148,5 +158,11 @@ export function convertTerrain(
     mainBuilder.addGrabbable();
   }
 
-  return mainBuilder.addChild(topSurface).addChild(wallsContainer).build();
+  mainBuilder.addChild(topSurface);
+  mainBuilder.addChild(bottomLikeSurface);
+  if (!hideWalls) {
+    mainBuilder.addChild(wallsContainer);
+  }
+
+  return mainBuilder.build();
 }
