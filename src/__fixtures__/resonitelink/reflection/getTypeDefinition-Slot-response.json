@@ -1,0 +1,60 @@
+{
+  "$type": "typeDefinitionData",
+  "definition": {
+    "baseType": {
+      "type": "[FrooxEngine]FrooxEngine.ContainerWorker<>",
+      "isGenericParameter": false,
+      "genericArguments": [
+        {
+          "type": "[FrooxEngine]FrooxEngine.Component",
+          "isGenericParameter": false,
+          "genericArguments": null
+        }
+      ]
+    },
+    "fullTypeName": "[FrooxEngine]FrooxEngine.Slot",
+    "assemblyName": "FrooxEngine",
+    "namespace": "FrooxEngine",
+    "name": "Slot",
+    "isAbstract": false,
+    "isInterface": false,
+    "isGenericType": false,
+    "isGenericTypeDefinition": false,
+    "directGenericParameterCount": 0,
+    "isEnginePrimitive": false,
+    "isValueType": false,
+    "isEnum": false,
+    "isComponent": false,
+    "isSyncObject": false,
+    "isWorldElement": true,
+    "isNested": false,
+    "declaringType": null,
+    "genericArguments": null,
+    "genericParameters": null,
+    "interfaces": [
+      {
+        "type": "[FrooxEngine]FrooxEngine.IUpdatable",
+        "isGenericParameter": false,
+        "genericArguments": null
+      },
+      {
+        "type": "[FrooxEngine]FrooxEngine.IChangeable",
+        "isGenericParameter": false,
+        "genericArguments": null
+      },
+      {
+        "type": "[FrooxEngine]FrooxEngine.IDestroyable",
+        "isGenericParameter": false,
+        "genericArguments": null
+      },
+      {
+        "type": "[FrooxEngine]FrooxEngine.ICustomInspector",
+        "isGenericParameter": false,
+        "genericArguments": null
+      }
+    ]
+  },
+  "sourceMessageId": "tsrl_j9d7co6flo_4",
+  "success": true,
+  "errorInfo": null
+}

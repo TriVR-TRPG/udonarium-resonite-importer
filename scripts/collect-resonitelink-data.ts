@@ -31,6 +31,13 @@ interface CollectedData {
   responses: Record<string, unknown>;
 }
 
+type SavedFileInfo = {
+  path: string;
+  bytes: number;
+};
+
+const savedFiles: SavedFileInfo[] = [];
+
 /**
  * Component types needed for Udonarium object representation in Resonite
  * Format: [Assembly]Namespace.ClassName
@@ -63,7 +70,7 @@ const REQUIRED_COMPONENTS = {
   ],
 } as const;
 
-async function ensureFixturesDir(): Promise<void> {
+function ensureFixturesDir(): void {
   if (!fs.existsSync(FIXTURES_DIR)) {
     fs.mkdirSync(FIXTURES_DIR, { recursive: true });
   }
@@ -78,6 +85,12 @@ async function ensureFixturesDir(): Promise<void> {
 function saveJson(filename: string, data: unknown): void {
   const filepath = path.join(FIXTURES_DIR, filename);
   fs.writeFileSync(filepath, JSON.stringify(data, null, 2) + '\n');
+  if (filename !== '_metadata.json') {
+    savedFiles.push({
+      path: filename.replace(/\\/g, '/'),
+      bytes: fs.statSync(filepath).size,
+    });
+  }
   console.log(`  [ok] Saved: ${filename}`);
 }
 
@@ -182,13 +195,42 @@ function saveComponentJson(componentType: string, data: unknown): void {
   const filename = componentType.split('.').pop() + '.json';
   const filepath = path.join(COMPONENTS_DIR, filename);
   fs.writeFileSync(filepath, JSON.stringify(data, null, 2) + '\n');
+  savedFiles.push({
+    path: `components/${filename}`.replace(/\\/g, '/'),
+    bytes: fs.statSync(filepath).size,
+  });
   console.log(`    [ok] ${componentType} -> ${filename}`);
 }
 
 function saveReflectionJson(filename: string, data: unknown): void {
   const filepath = path.join(REFLECTION_DIR, filename);
   fs.writeFileSync(filepath, JSON.stringify(data, null, 2) + '\n');
+  savedFiles.push({
+    path: `reflection/${filename}`.replace(/\\/g, '/'),
+    bytes: fs.statSync(filepath).size,
+  });
   console.log(`    [ok] reflection/${filename}`);
+}
+
+function extractResoniteLinkVersion(sessionResponse: unknown): string | undefined {
+  if (!sessionResponse || typeof sessionResponse !== 'object') {
+    return undefined;
+  }
+  const version = (sessionResponse as { resoniteLinkVersion?: unknown }).resoniteLinkVersion;
+  return typeof version === 'string' && version.length > 0 ? version : undefined;
+}
+
+function buildResponseSummary(): Record<string, unknown> {
+  const categories = {
+    root: savedFiles.filter((f) => !f.path.includes('/')).length,
+    components: savedFiles.filter((f) => f.path.startsWith('components/')).length,
+    reflection: savedFiles.filter((f) => f.path.startsWith('reflection/')).length,
+  };
+  return {
+    totalFiles: savedFiles.length,
+    categories,
+    files: savedFiles.map((f) => ({ path: f.path, bytes: f.bytes })),
+  };
 }
 
 /**
@@ -366,7 +408,7 @@ async function collectTextureData(client: ResoniteLinkClient): Promise<void> {
   saveJson('importTexture2DRawData-response.json', importResponse);
 }
 
-async function collectSessionData(client: ResoniteLinkClient): Promise<void> {
+async function collectSessionData(client: ResoniteLinkClient): Promise<unknown> {
   console.log('\nCollecting Session Data...');
 
   const underlyingClient = getConnectedLink(client);
@@ -375,6 +417,7 @@ async function collectSessionData(client: ResoniteLinkClient): Promise<void> {
     $type: 'requestSessionData',
   });
   saveJson('requestSessionData-response.json', sessionResponse);
+  return sessionResponse;
 }
 
 async function collectErrorResponses(client: ResoniteLinkClient): Promise<void> {
@@ -443,10 +486,19 @@ async function collectReflectionData(client: ResoniteLinkClient): Promise<void> 
     categoryPath: '*',
   });
 
-  await captureReflection('getTypeDefinition-float3-response.json', {
-    $type: 'getTypeDefinition',
-    type: 'float3',
-  });
+  const typeDefinitions = [
+    { type: 'float3', filename: 'getTypeDefinition-float3-response.json' },
+    {
+      type: '[FrooxEngine]FrooxEngine.Slot',
+      filename: 'getTypeDefinition-Slot-response.json',
+    },
+  ] as const;
+  for (const typeDefinition of typeDefinitions) {
+    await captureReflection(typeDefinition.filename, {
+      $type: 'getTypeDefinition',
+      type: typeDefinition.type,
+    });
+  }
 
   const enumTypes = ['[Renderite.Shared]Renderite.Shared.BillboardAlignment'] as const;
   for (const enumType of enumTypes) {
@@ -478,139 +530,6 @@ async function collectReflectionData(client: ResoniteLinkClient): Promise<void> 
     );
   }
 }
-function createMinimalPNG(width: number, height: number, rgba: number[]): Uint8Array {
-  // This creates a minimal valid PNG with a solid color
-  // For simplicity, we just return raw RGBA data encoded in a minimal PNG structure
-
-  const signature = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
-
-  // IHDR chunk
-  const ihdr = createPNGChunk('IHDR', [
-    (width >> 24) & 0xff,
-    (width >> 16) & 0xff,
-    (width >> 8) & 0xff,
-    width & 0xff,
-    (height >> 24) & 0xff,
-    (height >> 16) & 0xff,
-    (height >> 8) & 0xff,
-    height & 0xff,
-    8, // bit depth
-    6, // color type (RGBA)
-    0, // compression
-    0, // filter
-    0, // interlace
-  ]);
-
-  // IDAT chunk (uncompressed for simplicity - actually need zlib compression)
-  // For a real PNG, we'd need proper zlib compression
-  // This is a minimal approach using raw deflate
-
-  const rawData: number[] = [];
-  for (let y = 0; y < height; y++) {
-    rawData.push(0); // filter byte
-    for (let x = 0; x < width; x++) {
-      rawData.push(...rgba);
-    }
-  }
-
-  // Simple zlib wrapper (no compression)
-  const zlibData = [
-    0x78,
-    0x01, // zlib header (no compression)
-    ...deflateNoCompression(rawData),
-  ];
-
-  const idat = createPNGChunk('IDAT', zlibData);
-
-  // IEND chunk
-  const iend = createPNGChunk('IEND', []);
-
-  return new Uint8Array([...signature, ...ihdr, ...idat, ...iend]);
-}
-
-function createPNGChunk(type: string, data: number[]): number[] {
-  const length = data.length;
-  const typeBytes = type.split('').map((c) => c.charCodeAt(0));
-  const chunk = [...typeBytes, ...data];
-
-  // CRC32 of type + data
-  const crc = crc32(chunk);
-
-  return [
-    (length >> 24) & 0xff,
-    (length >> 16) & 0xff,
-    (length >> 8) & 0xff,
-    length & 0xff,
-    ...chunk,
-    (crc >> 24) & 0xff,
-    (crc >> 16) & 0xff,
-    (crc >> 8) & 0xff,
-    crc & 0xff,
-  ];
-}
-
-function deflateNoCompression(data: number[]): number[] {
-  // Deflate with no compression (stored blocks)
-  const result: number[] = [];
-  const blockSize = 65535;
-
-  for (let i = 0; i < data.length; i += blockSize) {
-    const block = data.slice(i, i + blockSize);
-    const isLast = i + blockSize >= data.length;
-    const len = block.length;
-    const nlen = ~len & 0xffff;
-
-    result.push(isLast ? 0x01 : 0x00); // BFINAL + BTYPE
-    result.push(len & 0xff, (len >> 8) & 0xff);
-    result.push(nlen & 0xff, (nlen >> 8) & 0xff);
-    result.push(...block);
-  }
-
-  // Adler-32 checksum
-  const adler = adler32(data);
-  result.push((adler >> 24) & 0xff, (adler >> 16) & 0xff, (adler >> 8) & 0xff, adler & 0xff);
-
-  return result;
-}
-
-function crc32(data: number[]): number {
-  let crc = 0xffffffff;
-  const table = getCRC32Table();
-
-  for (const byte of data) {
-    crc = table[(crc ^ byte) & 0xff] ^ (crc >>> 8);
-  }
-
-  return (crc ^ 0xffffffff) >>> 0;
-}
-
-let crc32Table: number[] | null = null;
-function getCRC32Table(): number[] {
-  if (crc32Table) return crc32Table;
-
-  crc32Table = [];
-  for (let i = 0; i < 256; i++) {
-    let c = i;
-    for (let j = 0; j < 8; j++) {
-      c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
-    }
-    crc32Table.push(c >>> 0);
-  }
-  return crc32Table;
-}
-
-function adler32(data: number[]): number {
-  let a = 1;
-  let b = 0;
-  const MOD = 65521;
-
-  for (const byte of data) {
-    a = (a + byte) % MOD;
-    b = (b + a) % MOD;
-  }
-
-  return ((b << 16) | a) >>> 0;
-}
 
 async function main(): Promise<void> {
   console.log('ResoniteLink Data Collection Script');
@@ -636,7 +555,7 @@ async function main(): Promise<void> {
   console.log(`  - ResoniteLink is enabled (port ${port})`);
   console.log('');
 
-  await ensureFixturesDir();
+  ensureFixturesDir();
 
   const client = new ResoniteLinkClient({ host, port });
 
@@ -666,7 +585,9 @@ async function main(): Promise<void> {
 
   try {
     // Collect session data first to get version info
-    await collectSessionData(client);
+    const sessionResponse = await collectSessionData(client);
+    collectedData.resoniteLinkVersion =
+      extractResoniteLinkVersion(sessionResponse) ?? collectedData.resoniteLinkVersion;
     await collectReflectionData(client);
 
     // Collect various response types
@@ -677,6 +598,7 @@ async function main(): Promise<void> {
 
     // Save metadata
     collectedData.collectedAt = new Date().toISOString();
+    collectedData.responses = buildResponseSummary();
     saveJson('_metadata.json', collectedData);
 
     console.log('');

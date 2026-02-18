@@ -1,5 +1,182 @@
 {
-  "collectedAt": "2026-02-13T10:00:22.997Z",
-  "resoniteLinkVersion": "unknown",
-  "responses": {}
+  "collectedAt": "2026-02-18T11:43:31.231Z",
+  "resoniteLinkVersion": "0.7.0.0",
+  "responses": {
+    "totalFiles": 42,
+    "categories": {
+      "root": 8,
+      "components": 15,
+      "reflection": 19
+    },
+    "files": [
+      {
+        "path": "requestSessionData-response.json",
+        "bytes": 212
+      },
+      {
+        "path": "reflection/getComponentTypeList-root-response.json",
+        "bytes": 680
+      },
+      {
+        "path": "reflection/getComponentTypeList-all-response.json",
+        "bytes": 192
+      },
+      {
+        "path": "reflection/getTypeDefinition-float3-response.json",
+        "bytes": 732
+      },
+      {
+        "path": "reflection/getTypeDefinition-Slot-response.json",
+        "bytes": 1615
+      },
+      {
+        "path": "reflection/getEnumDefinition-BillboardAlignment-response.json",
+        "bytes": 1024
+      },
+      {
+        "path": "reflection/getComponentDefinition-QuadMesh-response.json",
+        "bytes": 5509
+      },
+      {
+        "path": "reflection/getComponentDefinition-BoxMesh-response.json",
+        "bytes": 3505
+      },
+      {
+        "path": "reflection/getComponentDefinition-MeshRenderer-response.json",
+        "bytes": 4946
+      },
+      {
+        "path": "reflection/getComponentDefinition-MainTexturePropertyBlock-response.json",
+        "bytes": 2455
+      },
+      {
+        "path": "reflection/getComponentDefinition-XiexeToonMaterial-response.json",
+        "bytes": 24461
+      },
+      {
+        "path": "reflection/getComponentDefinition-PBS_Metallic-response.json",
+        "bytes": 10659
+      },
+      {
+        "path": "reflection/getComponentDefinition-UnlitMaterial-response.json",
+        "bytes": 12839
+      },
+      {
+        "path": "reflection/getComponentDefinition-StaticTexture2D-response.json",
+        "bytes": 8565
+      },
+      {
+        "path": "reflection/getComponentDefinition-Grabbable-response.json",
+        "bytes": 6865
+      },
+      {
+        "path": "reflection/getComponentDefinition-BoxCollider-response.json",
+        "bytes": 3355
+      },
+      {
+        "path": "reflection/getComponentDefinition-Canvas-response.json",
+        "bytes": 8330
+      },
+      {
+        "path": "reflection/getComponentDefinition-Text-response.json",
+        "bytes": 8782
+      },
+      {
+        "path": "reflection/getComponentDefinition-VerticalLayout-response.json",
+        "bytes": 4100
+      },
+      {
+        "path": "reflection/getComponentDefinition-Image-response.json",
+        "bytes": 4701
+      },
+      {
+        "path": "addSlot-response.json",
+        "bytes": 155
+      },
+      {
+        "path": "getSlot-response.json",
+        "bytes": 1123
+      },
+      {
+        "path": "getSlot-depth-response.json",
+        "bytes": 1123
+      },
+      {
+        "path": "updateSlot-response.json",
+        "bytes": 108
+      },
+      {
+        "path": "removeSlot-response.json",
+        "bytes": 108
+      },
+      {
+        "path": "components/QuadMesh.json",
+        "bytes": 3370
+      },
+      {
+        "path": "components/BoxMesh.json",
+        "bytes": 1843
+      },
+      {
+        "path": "components/MeshRenderer.json",
+        "bytes": 1870
+      },
+      {
+        "path": "components/MainTexturePropertyBlock.json",
+        "bytes": 1375
+      },
+      {
+        "path": "components/XiexeToonMaterial.json",
+        "bytes": 13160
+      },
+      {
+        "path": "components/PBS_Metallic.json",
+        "bytes": 5506
+      },
+      {
+        "path": "components/UnlitMaterial.json",
+        "bytes": 6536
+      },
+      {
+        "path": "components/StaticTexture2D.json",
+        "bytes": 3583
+      },
+      {
+        "path": "components/Grabbable.json",
+        "bytes": 3379
+      },
+      {
+        "path": "components/BoxCollider.json",
+        "bytes": 1838
+      },
+      {
+        "path": "components/Canvas.json",
+        "bytes": 3541
+      },
+      {
+        "path": "components/Text.json",
+        "bytes": 4633
+      },
+      {
+        "path": "components/VerticalLayout.json",
+        "bytes": 2156
+      },
+      {
+        "path": "components/Image.json",
+        "bytes": 2693
+      },
+      {
+        "path": "components/_summary.json",
+        "bytes": 1193
+      },
+      {
+        "path": "importTexture2DRawData-response.json",
+        "bytes": 216
+      },
+      {
+        "path": "getSlot-notFound-error.json",
+        "bytes": 70
+      }
+    ]
+  }
 }

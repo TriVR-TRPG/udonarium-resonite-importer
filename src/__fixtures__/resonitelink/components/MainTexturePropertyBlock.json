@@ -2,8 +2,8 @@
   "componentType": "[FrooxEngine]FrooxEngine.MainTexturePropertyBlock",
   "addResponse": {
     "$type": "newEntityId",
-    "entityId": "test_[FrooxEngine]FrooxEngine_MainTexturePropertyBlock_1770976822844",
-    "sourceMessageId": "tsrl_bvf0av9g2ao_y",
+    "entityId": "test_[FrooxEngine]FrooxEngine_MainTexturePropertyBlock_1771415011171",
+    "sourceMessageId": "tsrl_j9d7co6flo_z",
     "success": true,
     "errorInfo": null
   },
@@ -15,34 +15,34 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_3FE"
+          "id": "Reso_760C"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_3FF"
+          "id": "Reso_760D"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_400"
+          "id": "Reso_760E"
         },
         "HighPriorityIntegration": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_401"
+          "id": "Reso_760F"
         },
         "Texture": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.IAssetProvider<[FrooxEngine]FrooxEngine.ITexture2D>",
-          "id": "Reso_402"
+          "id": "Reso_7610"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_MainTexturePropertyBlock_1770976822844",
+      "id": "test_[FrooxEngine]FrooxEngine_MainTexturePropertyBlock_1771415011171",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "tsrl_bvf0av9g2ao_z",
+    "sourceMessageId": "tsrl_j9d7co6flo_10",
     "success": true,
     "errorInfo": null
   }

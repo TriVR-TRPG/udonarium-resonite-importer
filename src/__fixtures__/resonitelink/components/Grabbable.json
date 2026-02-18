@@ -2,8 +2,8 @@
   "componentType": "[FrooxEngine]FrooxEngine.Grabbable",
   "addResponse": {
     "$type": "newEntityId",
-    "entityId": "test_[FrooxEngine]FrooxEngine_Grabbable_1770976822905",
-    "sourceMessageId": "tsrl_bvf0av9g2ao_1d",
+    "entityId": "test_[FrooxEngine]FrooxEngine_Grabbable_1771415011192",
+    "sourceMessageId": "tsrl_j9d7co6flo_1e",
     "success": true,
     "errorInfo": null
   },
@@ -15,117 +15,117 @@
         "persistent": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_4AC"
+          "id": "Reso_76BA"
         },
         "UpdateOrder": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_4AD"
+          "id": "Reso_76BB"
         },
         "Enabled": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_4AE"
+          "id": "Reso_76BC"
         },
         "ReparentOnRelease": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_4AF"
+          "id": "Reso_76BD"
         },
         "PreserveUserSpace": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_4B0"
+          "id": "Reso_76BE"
         },
         "DestroyOnRelease": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_4B1"
+          "id": "Reso_76BF"
         },
         "GrabPriority": {
           "$type": "int",
           "value": 0,
-          "id": "Reso_4B2"
+          "id": "Reso_76C0"
         },
         "GrabPriorityWhenGrabbed": {
           "$type": "int?",
           "value": null,
-          "id": "Reso_4B3"
+          "id": "Reso_76C1"
         },
         "CustomCanGrabCheck": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.GrabCheck",
-          "id": "Reso_4B4"
+          "id": "Reso_76C2"
         },
         "EditModeOnly": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_4B5"
+          "id": "Reso_76C3"
         },
         "AllowSteal": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_4B6"
+          "id": "Reso_76C4"
         },
         "DropOnDisable": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_4B7"
+          "id": "Reso_76C5"
         },
         "ActiveUserFilter": {
           "$type": "enum",
           "value": "Disabled",
           "enumType": "ActiveUserHandling",
-          "id": "Reso_4B8"
+          "id": "Reso_76C6"
         },
         "OnlyUsers": {
           "$type": "list",
           "elements": [],
-          "id": "Reso_4B9"
+          "id": "Reso_76C7"
         },
         "Scalable": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_4BA"
+          "id": "Reso_76C8"
         },
         "Receivable": {
           "$type": "bool",
           "value": true,
-          "id": "Reso_4BB"
+          "id": "Reso_76C9"
         },
         "AllowOnlyPhysicalGrab": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_4BC"
+          "id": "Reso_76CA"
         },
         "_grabber": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.Grabber",
-          "id": "Reso_4BD"
+          "id": "Reso_76CB"
         },
         "_lastParent": {
           "$type": "reference",
           "targetId": null,
           "targetType": "[FrooxEngine]FrooxEngine.Slot",
-          "id": "Reso_4BE"
+          "id": "Reso_76CC"
         },
         "_lastParentIsUserSpace": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_4BF"
+          "id": "Reso_76CD"
         },
         "__legacyActiveUserRootOnly": {
           "$type": "bool",
           "value": false,
-          "id": "Reso_4C0"
+          "id": "Reso_76CE"
         }
       },
-      "id": "test_[FrooxEngine]FrooxEngine_Grabbable_1770976822905",
+      "id": "test_[FrooxEngine]FrooxEngine_Grabbable_1771415011192",
       "isReferenceOnly": false
     },
-    "sourceMessageId": "tsrl_bvf0av9g2ao_1e",
+    "sourceMessageId": "tsrl_j9d7co6flo_1f",
     "success": true,
     "errorInfo": null
   }
