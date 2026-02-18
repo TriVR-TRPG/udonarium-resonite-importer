@@ -22,7 +22,6 @@ describe('convertCharacter', () => {
       name: 'Character',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: ['char.png'],
       components: [],
       children: [],
     };
@@ -88,7 +87,6 @@ describe('convertCharacter', () => {
       name: 'No Image Character',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: [],
       components: [],
       children: [],
     };
@@ -118,7 +116,6 @@ describe('convertCharacter', () => {
       name: 'Ratio Character',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: ['char-ratio.png'],
       components: [],
       children: [],
     };

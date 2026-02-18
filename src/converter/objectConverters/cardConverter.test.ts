@@ -21,7 +21,6 @@ describe('convertCard', () => {
     name: 'Card',
     position: { x: 0, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
-    textures: ['front.png', 'back.png'],
     components: [],
     children: [],
   });

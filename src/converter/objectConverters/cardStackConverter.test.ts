@@ -37,7 +37,6 @@ describe('convertCardStack', () => {
       name: 'Stack',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: [],
       components: [{ type: 'dummy', fields: {} }],
       children: [],
     };
@@ -47,7 +46,6 @@ describe('convertCardStack', () => {
         name: obj.name,
         position: { x: 9, y: 9, z: 9 },
         rotation: { x: 0, y: 0, z: 0 },
-        textures: [],
         components: [],
         children: [],
       })
@@ -110,7 +108,6 @@ describe('convertCardStack', () => {
       name: 'Stack',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: [],
       components: [],
       children: [],
     };
@@ -120,7 +117,6 @@ describe('convertCardStack', () => {
         name: obj.name,
         position: { x: 0, y: 0, z: 0 },
         rotation: { x: 0, y: 0, z: 0 },
-        textures: [],
         components: [],
         children: [],
       })
@@ -173,7 +169,6 @@ describe('convertCardStack', () => {
       name: 'Stack',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: [],
       components: [],
       children: [],
     };
@@ -183,7 +178,6 @@ describe('convertCardStack', () => {
         name: obj.name,
         position: { x: 0, y: 0, z: 0 },
         rotation: { x: 0, y: 0, z: 0 },
-        textures: [],
         components: [],
         children: [],
       })

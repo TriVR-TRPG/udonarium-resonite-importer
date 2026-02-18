@@ -35,7 +35,6 @@ export function convertTable(
     name: `${baseObj.name}-surface`,
     position: { x: udonObj.width / 2, y: 0, z: -udonObj.height / 2 },
     rotation: { x: 90, y: 0, z: 0 },
-    textures: [],
     components: [
       ...buildQuadMeshComponents(
         surfaceId,

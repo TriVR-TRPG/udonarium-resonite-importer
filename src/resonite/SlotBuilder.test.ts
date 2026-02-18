@@ -32,7 +32,6 @@ describe('SlotBuilder', () => {
     name: 'Test Object',
     position: { x: 0, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
-    textures: [],
     components: [],
     children: [],
     ...overrides,

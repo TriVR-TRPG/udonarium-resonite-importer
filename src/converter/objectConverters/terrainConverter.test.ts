@@ -27,7 +27,6 @@ describe('convertTerrain', () => {
       name: 'Terrain',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: ['wall.png', 'floor.png'],
       components: [],
       children: [],
     };
@@ -121,7 +120,6 @@ describe('convertTerrain', () => {
       name: 'Locked Terrain',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: [],
       components: [],
       children: [],
     };
@@ -168,7 +166,6 @@ describe('convertTerrain', () => {
       name: 'No Walls Terrain',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: ['wall.png', 'floor.png'],
       components: [],
       children: [],
     };
@@ -212,7 +209,6 @@ describe('convertTerrain', () => {
       name: 'Terrain Rotate',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: [],
       components: [],
       children: [],
     };

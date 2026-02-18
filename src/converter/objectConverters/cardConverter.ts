@@ -133,7 +133,6 @@ export function convertCard(
         // Align top edges when front/back heights differ.
         position: { x: 0, y: CARD_FACE_SEPARATION, z: frontZOffset },
         rotation: { x: 90, y: 0, z: 0 },
-        textures: [],
         components: buildQuadMeshComponents(
           `${baseObj.id}-front`,
           frontTextureValue,
@@ -152,7 +151,6 @@ export function convertCard(
         // Align top edges when front/back heights differ.
         position: { x: 0, y: -CARD_FACE_SEPARATION, z: backZOffset },
         rotation: { x: -90, y: 180, z: 0 },
-        textures: [],
         components: buildQuadMeshComponents(
           `${baseObj.id}-back`,
           backTextureValue,

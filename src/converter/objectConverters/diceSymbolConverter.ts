@@ -72,7 +72,6 @@ export function convertDiceSymbol(
         position: { x: 0, y: -(maxFaceHeight - childHeight) / 2, z: 0 },
         rotation: { x: 0, y: 0, z: 0 },
         isActive: faceImage.name === activeFaceName,
-        textures: [faceImage.identifier],
         components: buildQuadMeshComponents(
           childId,
           childTextureValue,

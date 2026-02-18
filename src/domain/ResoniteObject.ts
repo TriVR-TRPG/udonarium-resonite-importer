@@ -22,7 +22,6 @@ export interface ResoniteObject {
   sourceType?: string;
   locationName?: string;
   isActive?: boolean;
-  textures: string[];
   components: ResoniteComponent[];
   children: ResoniteObject[];
 }

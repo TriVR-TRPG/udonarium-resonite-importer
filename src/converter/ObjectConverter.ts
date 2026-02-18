@@ -68,7 +68,6 @@ function convertObjectWithTextures(
     ...(udonObj.type === 'character' && udonObj.locationName
       ? { locationName: udonObj.locationName }
       : {}),
-    textures: udonObj.images.map((img) => img.identifier),
     components: [],
     children: [],
   };

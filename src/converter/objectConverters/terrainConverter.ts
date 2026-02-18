@@ -65,7 +65,6 @@ export function convertTerrain(
     name: `${baseObj.name}-top`,
     position: { x: 0, y: udonObj.height / 2, z: 0 },
     rotation: { x: 90, y: 0, z: 0 },
-    textures: [],
     components: buildQuadMeshComponents(
       topId,
       topTextureValue,
@@ -84,7 +83,6 @@ export function convertTerrain(
     position: { x: 0, y: 0, z: 0 },
     rotation: { x: 0, y: 0, z: 0 },
     isActive: !hideWalls,
-    textures: [],
     components: [],
     children: [
       {

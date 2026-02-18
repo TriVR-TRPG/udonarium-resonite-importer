@@ -21,7 +21,6 @@ describe('convertTableMask', () => {
       name: 'Mask',
       position: { x: 1, y: 2, z: 3 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: [],
       components: [],
       children: [],
     };
@@ -75,7 +74,6 @@ describe('convertTableMask', () => {
       name: 'Mask With Image',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: ['none_icon'],
       components: [],
       children: [],
     };
@@ -110,7 +108,6 @@ describe('convertTableMask', () => {
       name: 'Unlocked Mask',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: [],
       components: [],
       children: [],
     };
@@ -144,7 +141,6 @@ describe('convertTableMask', () => {
       name: 'Locked Mask',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: [],
       components: [],
       children: [],
     };

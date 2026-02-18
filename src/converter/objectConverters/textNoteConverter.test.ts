@@ -20,7 +20,6 @@ describe('convertTextNote', () => {
       name: 'Note',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: [],
       components: [],
       children: [],
     };
@@ -63,7 +62,6 @@ describe('convertTextNote', () => {
       name: 'Note',
       position: { x: 0, y: 0, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
-      textures: [],
       components: [],
       children: [],
     };

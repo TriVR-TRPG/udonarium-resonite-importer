@@ -109,8 +109,6 @@ describe('ObjectConverter', () => {
           y: basePos.y + character.size / 2,
           z: basePos.z - character.size / 2,
         });
-
-        expect(result.textures).toEqual(['img1']);
       });
 
       it('should apply image aspect ratio to character mesh while keeping width equal to size', () => {
@@ -423,23 +421,6 @@ describe('ObjectConverter', () => {
       const result = convertObject(character);
 
       expect(result.rotation).toEqual({ x: 0, y: 0, z: 0 });
-    });
-
-    it('should map image identifiers to textures', () => {
-      const character: GameCharacter = {
-        ...createBaseObject(),
-        type: 'character',
-        size: 1,
-        resources: [],
-        images: [
-          { identifier: 'img1', name: 'image1.png' },
-          { identifier: 'img2', name: 'image2.png' },
-        ],
-      };
-
-      const result = convertObject(character);
-
-      expect(result.textures).toEqual(['img1', 'img2']);
     });
 
     it('should initialize empty children array', () => {
