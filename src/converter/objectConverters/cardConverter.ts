@@ -1,9 +1,9 @@
 import { Card } from '../../domain/UdonariumObject';
 import { ImageBlendMode } from '../../config/MappingConfig';
 import { ResoniteObject } from '../../domain/ResoniteObject';
-import { BlendModeValue, resolveTextureValue } from './textureUtils';
+import { BlendModeValue, resolveTextureValue } from '../textureUtils';
 import { lookupImageAspectRatio, lookupImageBlendMode } from '../imageAspectRatioMap';
-import { ResoniteObjectBuilder } from './ResoniteObjectBuilder';
+import { ResoniteObjectBuilder } from '../ResoniteObjectBuilder';
 
 const CARD_Y_OFFSET = 0.001;
 const CARD_FACE_SEPARATION = 0.0001;

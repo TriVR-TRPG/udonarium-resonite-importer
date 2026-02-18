@@ -1,7 +1,7 @@
 import { CardStack, UdonariumObject } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
 import { lookupImageAspectRatio } from '../imageAspectRatioMap';
-import { ResoniteObjectBuilder } from './ResoniteObjectBuilder';
+import { ResoniteObjectBuilder } from '../ResoniteObjectBuilder';
 
 const CARD_STACK_Y_OFFSET = 0.001;
 const DEFAULT_CARD_ASPECT_RATIO = 1;

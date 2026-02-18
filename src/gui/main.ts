@@ -8,7 +8,7 @@ import { extractZip } from '../parser/ZipExtractor';
 import { parseXmlFiles } from '../parser/XmlParser';
 import { convertObjectsWithTextureMap } from '../converter/ObjectConverter';
 import { buildImageAspectRatioMap, buildImageBlendModeMap } from '../converter/imageAspectRatioMap';
-import { toTextureReference } from '../converter/objectConverters/textureUtils';
+import { toTextureReference } from '../converter/textureUtils';
 import { prepareSharedMeshDefinitions, resolveSharedMeshReferences } from '../converter/sharedMesh';
 import {
   prepareSharedMaterialDefinitions,

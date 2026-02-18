@@ -1,4 +1,4 @@
-import { ResoniteComponent, ResoniteObject } from '../../domain/ResoniteObject';
+import { ResoniteComponent, ResoniteObject } from '../domain/ResoniteObject';
 import {
   BlendModeValue,
   ColorXValue,

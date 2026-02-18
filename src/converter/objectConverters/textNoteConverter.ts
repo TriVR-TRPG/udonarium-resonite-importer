@@ -1,6 +1,6 @@
 import { TextNote } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
-import { ResoniteObjectBuilder } from './ResoniteObjectBuilder';
+import { ResoniteObjectBuilder } from '../ResoniteObjectBuilder';
 
 export function convertTextNote(udonObj: TextNote, baseObj: ResoniteObject): ResoniteObject {
   // Udonarium positions are edge-based; Resonite uses center-based transforms.

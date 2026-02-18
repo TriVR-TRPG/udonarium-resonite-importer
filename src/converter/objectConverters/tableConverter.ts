@@ -1,9 +1,9 @@
 import { GameTable, UdonariumObject } from '../../domain/UdonariumObject';
 import { ImageBlendMode } from '../../config/MappingConfig';
 import { ResoniteObject } from '../../domain/ResoniteObject';
-import { BlendModeValue, resolveTextureValue } from './textureUtils';
+import { BlendModeValue, resolveTextureValue } from '../textureUtils';
 import { lookupImageBlendMode } from '../imageAspectRatioMap';
-import { ResoniteObjectBuilder } from './ResoniteObjectBuilder';
+import { ResoniteObjectBuilder } from '../ResoniteObjectBuilder';
 
 function resolveBlendMode(
   identifier: string | undefined,
