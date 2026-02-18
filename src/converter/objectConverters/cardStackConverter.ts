@@ -45,10 +45,10 @@ function resolveCardAspectRatio(
 
 export function convertCardStack(
   udonObj: CardStack,
-  slotId: string | undefined,
   basePosition: Vector3,
   convertObject: (obj: UdonariumObject) => ResoniteObject,
-  imageAspectRatioMap?: Map<string, number>
+  imageAspectRatioMap?: Map<string, number>,
+  slotId?: string
 ): ResoniteObject {
   const cardWidth = udonObj.cards[0]?.size ?? 1;
   const cardHeight = cardWidth * resolveCardAspectRatio(udonObj, imageAspectRatioMap);

@@ -17,11 +17,11 @@ function resolveBlendMode(
 
 export function convertTable(
   udonObj: GameTable,
-  slotId: string | undefined,
   basePosition: Vector3,
   textureMap?: Map<string, string>,
   convertObject?: (obj: UdonariumObject) => ResoniteObject,
-  imageBlendModeMap?: Map<string, ImageBlendMode>
+  imageBlendModeMap?: Map<string, ImageBlendMode>,
+  slotId?: string
 ): ResoniteObject {
   const parentBuilder = ResoniteObjectBuilder.create({
     id: slotId,

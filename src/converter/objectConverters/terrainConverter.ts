@@ -33,10 +33,10 @@ function buildWallSlot(
 
 export function convertTerrain(
   udonObj: Terrain,
-  slotId: string | undefined,
   basePosition: Vector3,
   textureMap?: Map<string, string>,
-  imageBlendModeMap?: Map<string, ImageBlendMode>
+  imageBlendModeMap?: Map<string, ImageBlendMode>,
+  slotId?: string
 ): ResoniteObject {
   const topTextureIdentifier =
     udonObj.floorImage?.identifier ??

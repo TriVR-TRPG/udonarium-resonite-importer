@@ -4,8 +4,8 @@ import { ResoniteObjectBuilder } from '../ResoniteObjectBuilder';
 
 export function convertTextNote(
   udonObj: TextNote,
-  slotId: string | undefined,
-  basePosition: Vector3
+  basePosition: Vector3,
+  slotId?: string
 ): ResoniteObject {
   // Udonarium positions are edge-based; Resonite uses center-based transforms.
   return ResoniteObjectBuilder.create({

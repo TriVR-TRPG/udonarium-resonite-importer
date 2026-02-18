@@ -30,7 +30,13 @@ describe('convertTerrain', () => {
       children: [],
     };
 
-    const result = convertTerrain(udonObj, resoniteObj.id, resoniteObj.position);
+    const result = convertTerrain(
+      udonObj,
+      resoniteObj.position,
+      undefined,
+      undefined,
+      resoniteObj.id
+    );
 
     expect(result.components.map((c) => c.type)).toEqual([
       '[FrooxEngine]FrooxEngine.BoxCollider',
@@ -122,7 +128,13 @@ describe('convertTerrain', () => {
       children: [],
     };
 
-    const result = convertTerrain(udonObj, resoniteObj.id, resoniteObj.position);
+    const result = convertTerrain(
+      udonObj,
+      resoniteObj.position,
+      undefined,
+      undefined,
+      resoniteObj.id
+    );
 
     expect(result.components.map((c) => c.type)).toEqual(['[FrooxEngine]FrooxEngine.BoxCollider']);
     expect(result.components[0].fields).toEqual({
@@ -167,7 +179,13 @@ describe('convertTerrain', () => {
       children: [],
     };
 
-    const result = convertTerrain(udonObj, resoniteObj.id, resoniteObj.position);
+    const result = convertTerrain(
+      udonObj,
+      resoniteObj.position,
+      undefined,
+      undefined,
+      resoniteObj.id
+    );
 
     expect(result.children).toHaveLength(2);
     expect(result.children[0].id).toBe('slot-terrain-3-top');
@@ -209,7 +227,13 @@ describe('convertTerrain', () => {
       children: [],
     };
 
-    const result = convertTerrain(udonObj, resoniteObj.id, resoniteObj.position);
+    const result = convertTerrain(
+      udonObj,
+      resoniteObj.position,
+      undefined,
+      undefined,
+      resoniteObj.id
+    );
 
     expect(result.position).toEqual({ x: 1, y: 1, z: -1 });
     expect(result.rotation).toEqual({ x: 0, y: 30, z: 0 });

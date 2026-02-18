@@ -40,11 +40,19 @@ describe('convertDiceSymbol', () => {
     const udonObj = createBaseDice();
     const resoniteObj = createBaseResonite();
 
-    const result = convertDiceSymbol(udonObj, resoniteObj.id, resoniteObj.position, (size) => ({
-      x: size,
-      y: size,
-      z: size,
-    }));
+    const result = convertDiceSymbol(
+      udonObj,
+      resoniteObj.position,
+      (size) => ({
+        x: size,
+        y: size,
+        z: size,
+      }),
+      undefined,
+      undefined,
+      undefined,
+      resoniteObj.id
+    );
 
     expect(result.components.map((c) => c.type)).toEqual([
       '[FrooxEngine]FrooxEngine.BoxCollider',
@@ -68,11 +76,12 @@ describe('convertDiceSymbol', () => {
 
     const result = convertDiceSymbol(
       udonObj,
-      resoniteObj.id,
       resoniteObj.position,
       (size) => ({ x: size, y: size, z: size }),
       undefined,
-      imageAspectRatioMap
+      imageAspectRatioMap,
+      undefined,
+      resoniteObj.id
     );
 
     expect(result.components[0].fields).toEqual({
@@ -100,11 +109,19 @@ describe('convertDiceSymbol', () => {
     udonObj.rotate = -30;
     const resoniteObj = createBaseResonite();
 
-    const result = convertDiceSymbol(udonObj, resoniteObj.id, resoniteObj.position, (size) => ({
-      x: size,
-      y: size,
-      z: size,
-    }));
+    const result = convertDiceSymbol(
+      udonObj,
+      resoniteObj.position,
+      (size) => ({
+        x: size,
+        y: size,
+        z: size,
+      }),
+      undefined,
+      undefined,
+      undefined,
+      resoniteObj.id
+    );
 
     expect(result.rotation).toEqual({ x: 0, y: -30, z: 0 });
   });

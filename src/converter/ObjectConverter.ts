@@ -61,7 +61,6 @@ function convertObjectWithTextures(
     case 'character':
       return convertCharacter(
         udonObj,
-        undefined,
         position,
         convertSize,
         textureMap,
@@ -71,7 +70,6 @@ function convertObjectWithTextures(
     case 'dice-symbol':
       return convertDiceSymbol(
         udonObj,
-        undefined,
         position,
         convertSize,
         textureMap,
@@ -79,37 +77,28 @@ function convertObjectWithTextures(
         imageBlendModeMap
       );
     case 'terrain':
-      return convertTerrain(udonObj, undefined, position, textureMap, imageBlendModeMap);
+      return convertTerrain(udonObj, position, textureMap, imageBlendModeMap);
     case 'table':
       return convertTable(
         udonObj,
-        undefined,
         position,
         textureMap,
         (obj) => convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageBlendModeMap),
         imageBlendModeMap
       );
     case 'table-mask':
-      return convertTableMask(udonObj, undefined, position, textureMap);
+      return convertTableMask(udonObj, position, textureMap);
     case 'card':
-      return convertCard(
-        udonObj,
-        undefined,
-        position,
-        textureMap,
-        imageAspectRatioMap,
-        imageBlendModeMap
-      );
+      return convertCard(udonObj, position, textureMap, imageAspectRatioMap, imageBlendModeMap);
     case 'card-stack':
       return convertCardStack(
         udonObj,
-        undefined,
         position,
         (obj) => convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageBlendModeMap),
         imageAspectRatioMap
       );
     case 'text-note':
-      return convertTextNote(udonObj, undefined, position);
+      return convertTextNote(udonObj, position);
     default: {
       // Keep fallback for forward-compatibility when new object types are introduced.
       const unknownObj = udonObj as UdonariumObject;

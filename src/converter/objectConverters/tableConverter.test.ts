@@ -56,10 +56,11 @@ describe('convertTable', () => {
 
     const result = convertTable(
       udonObj,
-      resoniteObj.id,
       resoniteObj.position,
       undefined,
-      () => convertedTerrain
+      () => convertedTerrain,
+      undefined,
+      resoniteObj.id
     );
 
     expect(result.rotation).toEqual({ x: 0, y: 0, z: 0 });

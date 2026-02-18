@@ -1,10 +1,10 @@
-import { describe, expect, it } from 'vitest';
+﻿import { describe, expect, it } from 'vitest';
 import { convertTextNote } from './textNoteConverter';
 import { TextNote } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
 
 describe('convertTextNote', () => {
-  it('TextNote用のスケールとUIX.Textコンポーネントを設定する', () => {
+  it('creates TextNote slot with UIX.Text component', () => {
     const udonObj: TextNote = {
       id: 'note-1',
       type: 'text-note',
@@ -24,7 +24,7 @@ describe('convertTextNote', () => {
       children: [],
     };
 
-    const result = convertTextNote(udonObj, resoniteObj.id, resoniteObj.position);
+    const result = convertTextNote(udonObj, resoniteObj.position, resoniteObj.id);
 
     expect(result.position).toEqual({ x: 0.5, y: 0, z: -0.5 });
     expect(result.components).toEqual([
@@ -46,7 +46,7 @@ describe('convertTextNote', () => {
     ]);
   });
 
-  it('fontSizeが小さすぎる場合は最小8に丸める', () => {
+  it('clamps too-small fontSize to minimum', () => {
     const udonObj: TextNote = {
       id: 'note-2',
       type: 'text-note',
@@ -66,7 +66,7 @@ describe('convertTextNote', () => {
       children: [],
     };
 
-    const result = convertTextNote(udonObj, resoniteObj.id, resoniteObj.position);
+    const result = convertTextNote(udonObj, resoniteObj.position, resoniteObj.id);
 
     expect(result.position).toEqual({ x: 0.5, y: 0, z: -0.5 });
     expect(result.components[0].fields).toEqual({

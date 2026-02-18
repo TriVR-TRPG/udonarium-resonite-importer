@@ -19,12 +19,12 @@ function resolveBlendMode(
 
 export function convertDiceSymbol(
   udonObj: DiceSymbol,
-  slotId: string | undefined,
   basePosition: Vector3,
   convertSize: (size: number) => Vector3,
   textureMap?: Map<string, string>,
   imageAspectRatioMap?: Map<string, number>,
-  imageBlendModeMap?: Map<string, ImageBlendMode>
+  imageBlendModeMap?: Map<string, ImageBlendMode>,
+  slotId?: string
 ): ResoniteObject {
   const size = convertSize(udonObj.size);
   const faceWidth = size.x;

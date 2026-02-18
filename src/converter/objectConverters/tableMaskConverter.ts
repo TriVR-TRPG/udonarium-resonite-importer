@@ -20,9 +20,9 @@ function resolveMaskOpacity(mask: TableMask): number {
 
 export function convertTableMask(
   udonObj: TableMask,
-  slotId: string | undefined,
   basePosition: Vector3,
-  textureMap?: Map<string, string>
+  textureMap?: Map<string, string>,
+  slotId?: string
 ): ResoniteObject {
   const hasMaskImage = !!udonObj.images[0]?.identifier;
   const textureValue = resolveTextureValue(udonObj.images[0]?.identifier, textureMap);

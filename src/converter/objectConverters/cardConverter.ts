@@ -73,11 +73,11 @@ function resolveAspectRatio(
 
 export function convertCard(
   udonObj: Card,
-  slotId: string | undefined,
   basePosition: Vector3,
   textureMap?: Map<string, string>,
   imageAspectRatioMap?: Map<string, number>,
-  imageBlendModeMap?: Map<string, ImageBlendMode>
+  imageBlendModeMap?: Map<string, ImageBlendMode>,
+  slotId?: string
 ): ResoniteObject {
   const cardWidth = udonObj.size ?? 1;
   const frontAspectRatio = resolveAspectRatio(

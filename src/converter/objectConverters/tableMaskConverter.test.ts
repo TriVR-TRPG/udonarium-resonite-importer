@@ -25,7 +25,7 @@ describe('convertTableMask', () => {
       children: [],
     };
 
-    const result = convertTableMask(udonObj, resoniteObj.id, resoniteObj.position);
+    const result = convertTableMask(udonObj, resoniteObj.position, undefined, resoniteObj.id);
 
     expect(result.rotation).toEqual({ x: 90, y: 0, z: 0 });
     expect(result.position).toEqual({ x: 3.5, y: 2.002, z: 1.5 });
@@ -78,7 +78,7 @@ describe('convertTableMask', () => {
       children: [],
     };
 
-    const result = convertTableMask(udonObj, resoniteObj.id, resoniteObj.position);
+    const result = convertTableMask(udonObj, resoniteObj.position, undefined, resoniteObj.id);
 
     const material = result.components.find(
       (component) => component.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
@@ -112,7 +112,7 @@ describe('convertTableMask', () => {
       children: [],
     };
 
-    const result = convertTableMask(udonObj, resoniteObj.id, resoniteObj.position);
+    const result = convertTableMask(udonObj, resoniteObj.position, undefined, resoniteObj.id);
 
     const grabbable = result.components.find(
       (component) => component.type === '[FrooxEngine]FrooxEngine.Grabbable'
@@ -145,7 +145,7 @@ describe('convertTableMask', () => {
       children: [],
     };
 
-    const result = convertTableMask(udonObj, resoniteObj.id, resoniteObj.position);
+    const result = convertTableMask(udonObj, resoniteObj.position, undefined, resoniteObj.id);
 
     const grabbable = result.components.find(
       (component) => component.type === '[FrooxEngine]FrooxEngine.Grabbable'
