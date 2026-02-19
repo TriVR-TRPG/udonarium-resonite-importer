@@ -20,9 +20,16 @@ vi.mock('../config/MappingConfig', async (importOriginal) => {
   };
 });
 
-function makeAssetImporter(): { registerExternalUrl: ReturnType<typeof vi.fn> } {
-  return { registerExternalUrl: vi.fn() } as unknown as AssetImporter & {
+function makeAssetImporter(): {
+  registerExternalUrl: ReturnType<typeof vi.fn>;
+  importExternalSvgUrl: ReturnType<typeof vi.fn>;
+} {
+  return {
+    registerExternalUrl: vi.fn(),
+    importExternalSvgUrl: vi.fn().mockResolvedValue(undefined),
+  } as unknown as AssetImporter & {
     registerExternalUrl: ReturnType<typeof vi.fn>;
+    importExternalSvgUrl: ReturnType<typeof vi.fn>;
   };
 }
 
@@ -41,14 +48,14 @@ const baseCharacter = (): GameCharacter => ({
 
 describe('registerExternalUrls', () => {
   describe('relative path identifiers (./ prefix)', () => {
-    it('registers relative path as udonarium.app URL', () => {
+    it('registers relative path as udonarium.app URL', async () => {
       const assetImporter = makeAssetImporter();
       const obj: GameCharacter = {
         ...baseCharacter(),
         images: [{ identifier: './assets/images/bg.jpg', name: 'bg' }],
       };
 
-      registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
+      await registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
 
       expect(assetImporter.registerExternalUrl).toHaveBeenCalledWith(
         './assets/images/bg.jpg',
@@ -58,14 +65,14 @@ describe('registerExternalUrls', () => {
   });
 
   describe('KNOWN_IMAGES identifiers', () => {
-    it('registers known identifier as its mapped URL', () => {
+    it('registers known identifier as its mapped URL', async () => {
       const assetImporter = makeAssetImporter();
       const obj: GameCharacter = {
         ...baseCharacter(),
         images: [{ identifier: 'known_icon', name: 'known_icon' }],
       };
 
-      registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
+      await registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
 
       expect(assetImporter.registerExternalUrl).toHaveBeenCalledWith(
         'known_icon',
@@ -75,14 +82,14 @@ describe('registerExternalUrls', () => {
   });
 
   describe('absolute URL identifiers', () => {
-    it('registers https:// identifier as itself', () => {
+    it('registers https:// identifier as itself', async () => {
       const assetImporter = makeAssetImporter();
       const obj: GameCharacter = {
         ...baseCharacter(),
         images: [{ identifier: 'https://example.com/images/character.png', name: 'character' }],
       };
 
-      registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
+      await registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
 
       expect(assetImporter.registerExternalUrl).toHaveBeenCalledWith(
         'https://example.com/images/character.png',
@@ -90,14 +97,14 @@ describe('registerExternalUrls', () => {
       );
     });
 
-    it('registers http:// identifier as itself', () => {
+    it('registers http:// identifier as itself', async () => {
       const assetImporter = makeAssetImporter();
       const obj: GameCharacter = {
         ...baseCharacter(),
         images: [{ identifier: 'http://example.com/img.png', name: 'img' }],
       };
 
-      registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
+      await registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
 
       expect(assetImporter.registerExternalUrl).toHaveBeenCalledWith(
         'http://example.com/img.png',
@@ -105,7 +112,23 @@ describe('registerExternalUrls', () => {
       );
     });
 
-    it('registers absolute URL on terrain wallImage', () => {
+    it('imports external SVG URL via importExternalSvgUrl instead of registerExternalUrl', async () => {
+      const assetImporter = makeAssetImporter();
+      const obj: GameCharacter = {
+        ...baseCharacter(),
+        images: [{ identifier: 'https://example.com/icons/badge.svg', name: 'badge' }],
+      };
+
+      await registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
+
+      expect(assetImporter.importExternalSvgUrl).toHaveBeenCalledWith(
+        'https://example.com/icons/badge.svg',
+        'https://example.com/icons/badge.svg'
+      );
+      expect(assetImporter.registerExternalUrl).not.toHaveBeenCalled();
+    });
+
+    it('registers absolute URL on terrain wallImage', async () => {
       const assetImporter = makeAssetImporter();
       const obj: Terrain = {
         id: 't1',
@@ -123,7 +146,7 @@ describe('registerExternalUrls', () => {
         floorImage: null,
       };
 
-      registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
+      await registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
 
       expect(assetImporter.registerExternalUrl).toHaveBeenCalledWith(
         'https://example.com/wall.png',
@@ -131,7 +154,7 @@ describe('registerExternalUrls', () => {
       );
     });
 
-    it('registers absolute URL on terrain floorImage', () => {
+    it('registers absolute URL on terrain floorImage', async () => {
       const assetImporter = makeAssetImporter();
       const obj: Terrain = {
         id: 't1',
@@ -149,7 +172,7 @@ describe('registerExternalUrls', () => {
         floorImage: { identifier: 'https://example.com/floor.jpg', name: 'floor' },
       };
 
-      registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
+      await registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
 
       expect(assetImporter.registerExternalUrl).toHaveBeenCalledWith(
         'https://example.com/floor.jpg',
@@ -157,7 +180,7 @@ describe('registerExternalUrls', () => {
       );
     });
 
-    it('registers absolute URL on card frontImage and backImage', () => {
+    it('registers absolute URL on card frontImage and backImage', async () => {
       const assetImporter = makeAssetImporter();
       const obj: Card = {
         id: 'card1',
@@ -170,7 +193,7 @@ describe('registerExternalUrls', () => {
         backImage: { identifier: 'https://example.com/back.png', name: 'back' },
       };
 
-      registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
+      await registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
 
       expect(assetImporter.registerExternalUrl).toHaveBeenCalledWith(
         'https://example.com/front.png',
@@ -182,7 +205,7 @@ describe('registerExternalUrls', () => {
       );
     });
 
-    it('registers absolute URL on cards in card-stack', () => {
+    it('registers absolute URL on cards in card-stack', async () => {
       const assetImporter = makeAssetImporter();
       const obj: CardStack = {
         id: 'cs1',
@@ -204,7 +227,7 @@ describe('registerExternalUrls', () => {
         ],
       };
 
-      registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
+      await registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
 
       expect(assetImporter.registerExternalUrl).toHaveBeenCalledWith(
         'https://example.com/card.png',
@@ -214,14 +237,14 @@ describe('registerExternalUrls', () => {
   });
 
   describe('unrecognized identifiers', () => {
-    it('does not register bare filename identifiers', () => {
+    it('does not register bare filename identifiers', async () => {
       const assetImporter = makeAssetImporter();
       const obj: GameCharacter = {
         ...baseCharacter(),
         images: [{ identifier: 'front', name: 'front' }],
       };
 
-      registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
+      await registerExternalUrls([obj], assetImporter as unknown as AssetImporter);
 
       expect(assetImporter.registerExternalUrl).not.toHaveBeenCalled();
     });

@@ -7,7 +7,7 @@
  *   3. 固定 identifier（KNOWN_IMAGES）
  *   4. Udonarium アセット（./assets/... 始まり）
  *   5. 外部 URL 画像（https://...png 等）
- *   6. 外部 URL の SVG（https://...svg）
+ *   6. 外部 URL の SVG（https://...svg）→ ダウンロード後 PNG 変換
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -71,10 +71,25 @@ describe('共有テクスチャへの登録 - 全画像パターン', () => {
       importTexture: vi.fn().mockResolvedValue('resdb:///imported-texture'),
     };
     assetImporter = new AssetImporter(mockClient as unknown as ResoniteLinkClient);
+
+    // fetch のグローバルモック（外部 SVG URL のダウンロード用）
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        arrayBuffer: () =>
+          Promise.resolve(
+            Buffer.from(
+              '<svg xmlns="http://www.w3.org/2000/svg"><rect width="10" height="10"/></svg>'
+            ).buffer
+          ),
+      })
+    );
   });
 
   afterEach(() => {
     assetImporter.cleanup();
+    vi.unstubAllGlobals();
   });
 
   it('ZIP内の通常画像ファイルが importedTextures に登録される', async () => {
@@ -110,16 +125,16 @@ describe('共有テクスチャへの登録 - 全画像パターン', () => {
     expect(sharp).toHaveBeenCalled();
   });
 
-  it('固定 identifier（KNOWN_IMAGES）が importedTextures に登録される', () => {
-    registerExternalUrls([makeCharacterWith('known_icon')], assetImporter);
+  it('固定 identifier（KNOWN_IMAGES）が importedTextures に登録される', async () => {
+    await registerExternalUrls([makeCharacterWith('known_icon')], assetImporter);
 
     const textures = assetImporter.getImportedTextures();
     expect(textures.has('known_icon')).toBe(true);
     expect(textures.get('known_icon')).toBe('https://udonarium.app/assets/images/known_icon.png');
   });
 
-  it('Udonarium アセット（./assets/...）が importedTextures に登録される', () => {
-    registerExternalUrls([makeCharacterWith('./assets/images/bg.jpg')], assetImporter);
+  it('Udonarium アセット（./assets/...）が importedTextures に登録される', async () => {
+    await registerExternalUrls([makeCharacterWith('./assets/images/bg.jpg')], assetImporter);
 
     const textures = assetImporter.getImportedTextures();
     expect(textures.has('./assets/images/bg.jpg')).toBe(true);
@@ -128,8 +143,8 @@ describe('共有テクスチャへの登録 - 全画像パターン', () => {
     );
   });
 
-  it('外部 URL 画像（https://...png）が importedTextures に登録される', () => {
-    registerExternalUrls(
+  it('外部 URL 画像（https://...png）が importedTextures に登録される', async () => {
+    await registerExternalUrls(
       [makeCharacterWith('https://example.com/images/character.png')],
       assetImporter
     );
@@ -141,14 +156,20 @@ describe('共有テクスチャへの登録 - 全画像パターン', () => {
     );
   });
 
-  it('外部 URL の SVG（https://...svg）が importedTextures に登録される', () => {
-    registerExternalUrls([makeCharacterWith('https://example.com/icons/badge.svg')], assetImporter);
+  it('外部 URL の SVG（https://...svg）がダウンロード・PNG変換されて importedTextures に登録される', async () => {
+    await registerExternalUrls(
+      [makeCharacterWith('https://example.com/icons/badge.svg')],
+      assetImporter
+    );
 
     const textures = assetImporter.getImportedTextures();
     expect(textures.has('https://example.com/icons/badge.svg')).toBe(true);
-    expect(textures.get('https://example.com/icons/badge.svg')).toBe(
-      'https://example.com/icons/badge.svg'
-    );
+    // URL ではなくインポートされたテクスチャ ID が格納される
+    expect(textures.get('https://example.com/icons/badge.svg')).toBe('resdb:///imported-texture');
+    // fetch によるダウンロードと sharp による PNG 変換が行われたことを検証
+    expect(fetch).toHaveBeenCalledWith('https://example.com/icons/badge.svg');
+    const sharp = (await import('sharp')).default;
+    expect(sharp).toHaveBeenCalled();
   });
 
   it('6パターン全てが同時に importedTextures に登録できる', async () => {
@@ -165,7 +186,7 @@ describe('共有テクスチャへの登録 - 全画像パターン', () => {
     });
 
     // 外部 URL 系を registerExternalUrls で登録
-    registerExternalUrls(
+    await registerExternalUrls(
       [
         makeCharacterWith('known_icon'),
         makeCharacterWith('./assets/images/bg.jpg'),
@@ -182,6 +203,8 @@ describe('共有テクスチャへの登録 - 全画像パターン', () => {
     expect(textures.has('known_icon')).toBe(true);
     expect(textures.has('./assets/images/bg.jpg')).toBe(true);
     expect(textures.has('https://example.com/images/character.png')).toBe(true);
+    // SVG URL はインポートされた texture ID で登録される
     expect(textures.has('https://example.com/icons/badge.svg')).toBe(true);
+    expect(textures.get('https://example.com/icons/badge.svg')).toBe('resdb:///imported-texture');
   });
 });

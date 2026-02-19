@@ -90,6 +90,30 @@ export class AssetImporter {
   }
 
   /**
+   * Download an SVG from a URL, convert to PNG, and import as texture.
+   * Resonite does not support SVG, so conversion is required.
+   */
+  async importExternalSvgUrl(identifier: string, url: string): Promise<void> {
+    if (this.importedTextures.has(identifier)) return;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch SVG from ${url}: ${response.status}`);
+    }
+    const svgBuffer = Buffer.from(await response.arrayBuffer());
+
+    const dir = this.getTempDir();
+    const baseName = identifier.split('?')[0].split('/').at(-1) ?? 'image.svg';
+    const pngName = baseName.replace(/\.svg$/i, '.png');
+    const filePath = path.join(dir, pngName);
+    const pngBuffer = await sharp(svgBuffer).png().toBuffer();
+    fs.writeFileSync(filePath, pngBuffer);
+
+    const textureId = await this.client.importTexture(filePath);
+    this.importedTextures.set(identifier, textureId);
+  }
+
+  /**
    * Get texture ID for a previously imported identifier
    */
   getTextureId(identifier: string): string | undefined {
