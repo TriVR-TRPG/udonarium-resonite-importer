@@ -62,7 +62,7 @@ describe('ResoniteObjectBuilder', () => {
 
   describe('addQuadMesh()', () => {
     it('derives all component IDs from the slot ID', () => {
-      const result = makeBuilder(makeSpec('s1')).addQuadMesh('texture://img.png').build();
+      const result = makeBuilder(makeSpec('s1')).addQuadMesh('img.png').build();
 
       for (const c of result.components) {
         expect(c.id).toMatch(/^s1-/);
@@ -70,7 +70,7 @@ describe('ResoniteObjectBuilder', () => {
     });
 
     it('adds QuadMesh, StaticTexture2D, XiexeToonMaterial, MainTexturePropertyBlock, MeshRenderer when texture is given', () => {
-      const result = makeBuilder(makeSpec()).addQuadMesh('texture://img.png').build();
+      const result = makeBuilder(makeSpec()).addQuadMesh('img.png').build();
 
       expect(result.components.map((c) => c.type)).toEqual([
         COMPONENT_TYPES.QUAD_MESH,
@@ -284,7 +284,7 @@ describe('ResoniteObjectBuilder', () => {
   describe('method chaining', () => {
     it('produces the correct component order when chaining multiple add methods', () => {
       const result = makeBuilder(makeSpec('s5'))
-        .addQuadMesh('texture://img.png', true, { x: 2, y: 3 }, 'Opaque')
+        .addQuadMesh('img.png', true, { x: 2, y: 3 }, 'Opaque')
         .addBoxCollider({ x: 2, y: 3, z: 0.05 })
         .addGrabbable()
         .build();
@@ -302,7 +302,7 @@ describe('ResoniteObjectBuilder', () => {
 
     it('all component IDs are derived from the same slot ID', () => {
       const result = makeBuilder(makeSpec('my-id'))
-        .addQuadMesh('texture://img.png')
+        .addQuadMesh('img.png')
         .addBoxCollider({ x: 1, y: 1, z: 1 })
         .addGrabbable()
         .build();

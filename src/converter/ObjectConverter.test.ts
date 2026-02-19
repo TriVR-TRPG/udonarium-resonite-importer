@@ -2,8 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   convertPosition,
   convertSize,
-  convertObject,
-  convertObjects,
+  convertObjectWithTextures,
   convertObjectsWithTextureMap,
 } from './ObjectConverter';
 import { SCALE_FACTOR } from '../config/MappingConfig';
@@ -81,7 +80,7 @@ describe('ObjectConverter', () => {
     });
   });
 
-  describe('convertObject', () => {
+  describe('convertObjectWithTextures', () => {
     const createBaseObject = () => ({
       id: 'test-id',
       name: 'Test Object',
@@ -101,7 +100,7 @@ describe('ObjectConverter', () => {
           resources: [],
         };
 
-        const result = convertObject(character);
+        const result = convertObjectWithTextures(character, new Map());
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
         expect(result.name).toBe('Test Object');
@@ -156,7 +155,7 @@ describe('ObjectConverter', () => {
           ],
         };
 
-        const result = convertObject(dice);
+        const result = convertObjectWithTextures(dice, new Map());
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
         const basePos = convertPosition(100, 200, 50);
@@ -232,7 +231,7 @@ describe('ObjectConverter', () => {
           floorImage: null,
         };
 
-        const result = convertObject(terrain);
+        const result = convertObjectWithTextures(terrain, new Map());
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
       });
@@ -278,7 +277,7 @@ describe('ObjectConverter', () => {
           children: [],
         };
 
-        const result = convertObject(table);
+        const result = convertObjectWithTextures(table, new Map());
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
 
@@ -320,7 +319,7 @@ describe('ObjectConverter', () => {
           backImage: { identifier: 'back', name: 'back.png' },
         };
 
-        const result = convertObject(card);
+        const result = convertObjectWithTextures(card, new Map());
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
       });
@@ -334,7 +333,7 @@ describe('ObjectConverter', () => {
           cards: [],
         };
 
-        const result = convertObject(cardStack);
+        const result = convertObjectWithTextures(cardStack, new Map());
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
       });
@@ -349,7 +348,7 @@ describe('ObjectConverter', () => {
           fontSize: 14,
         };
 
-        const result = convertObject(textNote);
+        const result = convertObjectWithTextures(textNote, new Map());
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
       });
@@ -366,7 +365,7 @@ describe('ObjectConverter', () => {
           opacity: 30,
         };
 
-        const result = convertObject(tableMask);
+        const result = convertObjectWithTextures(tableMask, new Map());
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
         expect(result.rotation).toEqual({ x: 90, y: 0, z: 0 });
@@ -444,7 +443,7 @@ describe('ObjectConverter', () => {
       ];
 
       for (const [index, obj] of objects.entries()) {
-        const result = convertObject(obj);
+        const result = convertObjectWithTextures(obj, new Map());
         // Table has collider on -surface child slot, others on the slot itself
         const searchTarget =
           obj.type === 'table' ? (result.children[0]?.components ?? []) : result.components;
@@ -470,7 +469,7 @@ describe('ObjectConverter', () => {
         resources: [],
       };
 
-      const result = convertObject(character);
+      const result = convertObjectWithTextures(character, new Map());
 
       expect(result.rotation).toEqual({ x: 0, y: 0, z: 0 });
     });
@@ -486,15 +485,15 @@ describe('ObjectConverter', () => {
         resources: [],
       };
 
-      const result = convertObject(character);
+      const result = convertObjectWithTextures(character, new Map());
 
       expect(result.children).toEqual([]);
     });
   });
 
-  describe('convertObjects', () => {
+  describe('convertObjectsWithTextureMap', () => {
     it('should convert empty array', () => {
-      const result = convertObjects([]);
+      const result = convertObjectsWithTextureMap([], new Map());
       expect(result).toEqual([]);
     });
 
@@ -526,7 +525,7 @@ describe('ObjectConverter', () => {
         },
       ];
 
-      const result = convertObjects(objects);
+      const result = convertObjectsWithTextureMap(objects, new Map());
 
       expect(result).toHaveLength(2);
       expect(result[0].id).toMatch(/^udon-imp-/);
@@ -574,7 +573,7 @@ describe('ObjectConverter', () => {
         },
       ];
 
-      const result = convertObjects(objects);
+      const result = convertObjectsWithTextureMap(objects, new Map());
 
       expect(result).toHaveLength(3);
       const ids = new Set(result.map((r) => r.id));
@@ -611,11 +610,14 @@ describe('ObjectConverter', () => {
         resources: [],
       };
 
-      const result = convertObjects([
-        createTable('table-1', 'Table 1', true),
-        createTable('table-2', 'Table 2', false),
-        character,
-      ]);
+      const result = convertObjectsWithTextureMap(
+        [
+          createTable('table-1', 'Table 1', true),
+          createTable('table-2', 'Table 2', false),
+          character,
+        ],
+        new Map()
+      );
 
       expect(result[0].isActive).toBe(true);
       expect(result[1].isActive).toBe(false);

@@ -265,7 +265,7 @@ async function run(options: CLIOptions): Promise<void> {
   const assetImporter = new AssetImporter(client);
 
   // Register external URL references (e.g., ./assets/images/tex.jpg → https://udonarium.app/assets/images/tex.jpg)
-  registerExternalUrls(parseResult.objects, assetImporter);
+  await registerExternalUrls(parseResult.objects, assetImporter);
 
   try {
     const slotBuilder = new SlotBuilder(client);

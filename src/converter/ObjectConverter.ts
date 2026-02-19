@@ -15,7 +15,6 @@ import { convertTable } from './objectConverters/tableConverter';
 import { convertTableMask } from './objectConverters/tableMaskConverter';
 import { convertTextNote } from './objectConverters/textNoteConverter';
 import { ResoniteObjectBuilder } from './ResoniteObjectBuilder';
-import { replaceTexturesInValue } from './textureUtils';
 
 interface ConverterOptions {
   enableCharacterColliderOnLockedTerrain?: boolean;
@@ -48,11 +47,7 @@ export function convertSize(size: number): Vector3 {
 /**
  * Convert a single Udonarium object to Resonite object
  */
-export function convertObject(udonObj: UdonariumObject): ResoniteObject {
-  return convertObjectWithTextures(udonObj);
-}
-
-function convertObjectWithTextures(
+export function convertObjectWithTextures(
   udonObj: UdonariumObject,
   textureMap?: Map<string, string>,
   imageAspectRatioMap?: Map<string, number>,
@@ -160,14 +155,6 @@ function applyGameTableVisibility(
 }
 
 /**
- * Convert multiple Udonarium objects to Resonite objects
- */
-export function convertObjects(udonObjects: UdonariumObject[]): ResoniteObject[] {
-  const converted = udonObjects.map((obj) => convertObjectWithTextures(obj));
-  return applyGameTableVisibility(converted, udonObjects);
-}
-
-/**
  * Convert multiple Udonarium objects using imported texture URL map.
  */
 export function convertObjectsWithTextureMap(
@@ -181,25 +168,4 @@ export function convertObjectsWithTextureMap(
     convertObjectWithTextures(obj, textureMap, imageAspectRatioMap, imageBlendModeMap, options)
   );
   return applyGameTableVisibility(converted, udonObjects);
-}
-
-/**
- * Resolve texture placeholders in component fields.
- * Placeholders use the format "texture://<identifier>".
- */
-export function resolveTexturePlaceholders(
-  objects: ResoniteObject[],
-  textureMap: Map<string, string>
-): void {
-  for (const obj of objects) {
-    for (const component of obj.components) {
-      component.fields = replaceTexturesInValue(component.fields, textureMap) as Record<
-        string,
-        unknown
-      >;
-    }
-    if (obj.children.length > 0) {
-      resolveTexturePlaceholders(obj.children, textureMap);
-    }
-  }
 }

@@ -199,7 +199,7 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     sendProgress('import', 0, 'インポート中...');
     const assetImporter = new AssetImporter(client);
     const slotBuilder = new SlotBuilder(client);
-    registerExternalUrls(parseResult.objects, assetImporter);
+    await registerExternalUrls(parseResult.objects, assetImporter);
     const previousImport = await client.captureTransformAndRemoveRootChildrenByTag(IMPORT_ROOT_TAG);
 
     // Create import group
