@@ -10,6 +10,7 @@ import {
 } from './textureUtils';
 import { SLOT_ID_PREFIX } from '../config/MappingConfig';
 import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
+import { buildStaticTexture2DFields, buildMainTexturePropertyBlockFields } from './componentFields';
 
 // ---- private types ----
 type QuadSize = { x: number; y: number };
@@ -22,18 +23,7 @@ export type NewResoniteObjectSpec = {
 
 type ResoniteObjectIdentity = Required<NewResoniteObjectSpec>;
 
-type StaticTexture2DFields = {
-  URL: { $type: 'Uri'; value: string };
-  WrapModeU: { $type: 'enum'; value: 'Clamp'; enumType: 'TextureWrapMode' };
-  WrapModeV: { $type: 'enum'; value: 'Clamp'; enumType: 'TextureWrapMode' };
-  FilterMode?: { $type: 'enum?'; value: 'Point'; enumType: 'TextureFilterMode' };
-};
-
 type BlendModeField = { $type: 'enum'; value: BlendModeValue; enumType: 'BlendMode' };
-
-type MainTexturePropertyBlockFields = {
-  Texture: { $type: 'reference'; targetId: string };
-};
 
 type XiexeToonMaterialFields = {
   BlendMode: BlendModeField;
@@ -60,18 +50,6 @@ function buildXiexeToonMaterialFields(
     ...(cullingOff ? { Culling: { $type: 'enum', value: 'Off', enumType: 'Culling' } } : {}),
     ...(color !== undefined ? { Color: { $type: 'colorX', value: color } } : {}),
   };
-}
-
-function buildStaticTexture2DFields(textureValue: string): StaticTexture2DFields {
-  const fields: StaticTexture2DFields = {
-    URL: { $type: 'Uri', value: textureValue },
-    WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
-    WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
-  };
-  if (isGifTexture(textureValue)) {
-    fields.FilterMode = { $type: 'enum?', value: 'Point', enumType: 'TextureFilterMode' };
-  }
-  return fields;
 }
 
 function buildQuadMeshComponents(
@@ -108,7 +86,7 @@ function buildQuadMeshComponents(
     components.push({
       id: textureId,
       type: COMPONENT_TYPES.STATIC_TEXTURE_2D,
-      fields: buildStaticTexture2DFields(textureValue),
+      fields: buildStaticTexture2DFields(textureValue, isGifTexture(textureValue)),
     });
   }
 
@@ -120,13 +98,10 @@ function buildQuadMeshComponents(
 
   if (textureValue && !sharedTextureId) {
     const textureProviderId = sharedTextureId ?? localTextureId!;
-    const textureBlockFields: MainTexturePropertyBlockFields = {
-      Texture: { $type: 'reference', targetId: textureProviderId },
-    };
     components.push({
       id: textureBlockId,
       type: COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
-      fields: textureBlockFields,
+      fields: buildMainTexturePropertyBlockFields(textureProviderId),
     });
   }
 

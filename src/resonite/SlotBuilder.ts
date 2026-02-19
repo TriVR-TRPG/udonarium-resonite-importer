@@ -13,13 +13,12 @@ import {
   SLOT_ID_PREFIX,
 } from '../config/MappingConfig';
 import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
+import {
+  buildStaticTexture2DFields,
+  buildMainTexturePropertyBlockFields,
+} from '../converter/componentFields';
+import { isGifTextureByIdentifierOrUrl } from '../converter/textureUtils';
 import { ResoniteLinkClient, SlotTransform } from './ResoniteLinkClient';
-
-const GIF_EXTENSION_PATTERN = /\.gif(?:$|[?#])/i;
-
-function shouldUsePointFilterMode(identifier: string, textureUrl: string): boolean {
-  return GIF_EXTENSION_PATTERN.test(identifier) || GIF_EXTENSION_PATTERN.test(textureUrl);
-}
 
 function isListField(value: unknown): boolean {
   return (
@@ -243,28 +242,16 @@ export class SlotBuilder {
         id: textureComponentId,
         slotId: textureSlotId,
         componentType: COMPONENT_TYPES.STATIC_TEXTURE_2D,
-        fields: {
-          URL: { $type: 'Uri', value: textureUrl },
-          WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
-          WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
-          ...(shouldUsePointFilterMode(identifier, textureUrl)
-            ? {
-                FilterMode: {
-                  $type: 'enum?',
-                  value: 'Point',
-                  enumType: 'TextureFilterMode',
-                },
-              }
-            : {}),
-        },
+        fields: buildStaticTexture2DFields(
+          textureUrl,
+          isGifTextureByIdentifierOrUrl(identifier, textureUrl)
+        ),
       });
       await this.client.addComponent({
         id: `${textureSlotId}-main-texture-property-block`,
         slotId: textureSlotId,
         componentType: COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
-        fields: {
-          Texture: { $type: 'reference', targetId: textureComponentId },
-        },
+        fields: buildMainTexturePropertyBlockFields(textureComponentId),
       });
 
       textureReferenceMap.set(identifier, textureComponentId);

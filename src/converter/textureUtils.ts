@@ -63,6 +63,14 @@ export function isGifTexture(textureValue: string): boolean {
   return GIF_EXTENSION_PATTERN.test(textureValue);
 }
 
+/**
+ * Returns true if either the identifier or the resolved URL suggests a GIF texture.
+ * Used when the identifier and URL are already resolved (i.e. no texture:// prefixes).
+ */
+export function isGifTextureByIdentifierOrUrl(identifier: string, url: string): boolean {
+  return GIF_EXTENSION_PATTERN.test(identifier) || GIF_EXTENSION_PATTERN.test(url);
+}
+
 export function parseTextureReferenceId(textureValue?: string): string | undefined {
   if (!textureValue || !textureValue.startsWith(TEXTURE_REFERENCE_PREFIX)) {
     return undefined;
