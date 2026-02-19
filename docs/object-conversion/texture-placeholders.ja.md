@@ -84,6 +84,56 @@ identifier: './assets/images/BG10a_80.jpg'
   → importedTextures: Map { './assets/images/BG10a_80.jpg'
                             → 'https://udonarium.app/assets/images/BG10a_80.jpg' }
   → StaticTexture2D.URL = 'https://udonarium.app/assets/images/BG10a_80.jpg'
+     （Assets/Textures スロットに共有テクスチャとして作成）
+```
+
+### 4. 絶対 URL（`http://` / `https://` 始まり）
+
+ユーザーが外部ホストの画像を直接 URL で指定した場合の形式です。
+
+```
+identifier: 'https://example.com/images/character.png'
+```
+
+**`registerExternalUrls()` の対象外**（`./` 始まりでも KNOWN_IMAGES でもないため）です。
+そのため `importedTextures` にも `textureComponentMap` にも登録されません。
+
+```
+registerExternalUrls() → 何もしない
+
+resolveTextureValue('https://example.com/images/character.png', textureComponentMap)
+  → textureComponentMap.get('https://...') → undefined
+  → フォールバック: identifier そのもの（URL）を返す
+
+buildQuadMeshComponents(textureValue='https://example.com/images/character.png')
+  → parseTextureReferenceId('https://...') → undefined（texture-ref:// ではない）
+  → ローカルに StaticTexture2D( URL='https://example.com/images/character.png' ) を生成
+  → ローカルに MainTexturePropertyBlock を生成
+  （Assets/Textures スロットには何も作られない）
+```
+
+**`./` 始まりとの違い**:
+
+| | `./assets/images/foo.png` | `https://example.com/images/foo.png` |
+|---|---|---|
+| `registerExternalUrls` | 登録する | 登録しない |
+| Assets/Textures に共有スロット | 作成する | 作成しない |
+| オブジェクト内の StaticTexture2D | 作成しない（共有参照） | ローカルに作成 |
+| 同一テクスチャの重複 | 発生しない | オブジェクトごとに生成 |
+
+**ブレンドモードの扱い**:
+
+`buildImageBlendModeMap()` は絶対 URL を `buildExternalProbeUrl()` でそのままプローブ対象 URL として扱い、
+実際に HTTP フェッチしてアルファチャンネルを検出します。
+ただしこれはオブジェクト変換前の準備処理であり、`importedTextures` への登録とは無関係です。
+
+```
+buildExternalProbeUrl('https://example.com/images/character.png')
+  → 'https://example.com/images/character.png'（http/https はそのまま返す）
+
+probeBlendModeFromExternalUrl('https://example.com/images/character.png')
+  → HTTP フェッチ → アルファチャンネル判定 → 'Opaque' / 'Cutout'
+  → imageBlendModeMap: { 'https://example.com/images/character.png' → 'Opaque' }
 ```
 
 ---
