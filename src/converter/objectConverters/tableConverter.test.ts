@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { convertTable } from './tableConverter';
 import { GameTable, Terrain } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
+import { COMPONENT_TYPES } from '../../config/ResoniteComponentTypes';
 
 describe('convertTable', () => {
   it('keeps the table container unrotated and builds visual quad as a child slot', () => {
@@ -71,9 +72,7 @@ describe('convertTable', () => {
     expect(visual.position).toEqual({ x: 10, y: 0, z: -5 });
     expect(visual.rotation).toEqual({ x: 90, y: 0, z: 0 });
     // QuadMesh + MeshRenderer + Material + StaticTexture2D + BoxCollider
-    const collider = visual.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-    );
+    const collider = visual.components.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
     expect(collider).toBeDefined();
     expect(collider!.fields).toEqual({
       Size: { $type: 'float3', value: { x: 20, y: 10, z: 0 } },
@@ -81,9 +80,7 @@ describe('convertTable', () => {
     expect(visual.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 20, y: 10 } },
     });
-    const material = visual.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
-    );
+    const material = visual.components.find((c) => c.type === COMPONENT_TYPES.XIEXE_TOON_MATERIAL);
     expect(material?.fields.Culling).toEqual({
       $type: 'enum',
       value: 'Off',
@@ -117,9 +114,7 @@ describe('convertTable', () => {
       { enableCharacterColliderOnLockedTerrain: true }
     );
     const visual = result.children[0];
-    const collider = visual.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-    );
+    const collider = visual.components.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
 
     expect(collider).toBeDefined();
     expect(collider?.fields).toEqual({

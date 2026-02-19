@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { convertTextNote } from './textNoteConverter';
 import { TextNote } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
+import { COMPONENT_TYPES } from '../../config/ResoniteComponentTypes';
 
 describe('convertTextNote', () => {
   it('creates TextNote slot with UIX.Text component', () => {
@@ -30,7 +31,7 @@ describe('convertTextNote', () => {
     expect(result.components).toEqual([
       {
         id: 'slot-note-1-text',
-        type: '[FrooxEngine]FrooxEngine.UIX.Text',
+        type: COMPONENT_TYPES.UIX_TEXT,
         fields: {
           Content: { $type: 'string', value: 'hello' },
           Size: { $type: 'float', value: 14 },
@@ -38,7 +39,7 @@ describe('convertTextNote', () => {
       },
       {
         id: 'slot-note-1-collider',
-        type: '[FrooxEngine]FrooxEngine.BoxCollider',
+        type: COMPONENT_TYPES.BOX_COLLIDER,
         fields: {
           Size: { $type: 'float3', value: { x: 1, y: 0.02, z: 1 } },
         },

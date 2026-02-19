@@ -9,6 +9,7 @@ import {
   toSharedTexturePropertyBlockId,
 } from './textureUtils';
 import { SLOT_ID_PREFIX } from '../config/MappingConfig';
+import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 
 // ---- private types ----
 type QuadSize = { x: number; y: number };
@@ -96,7 +97,7 @@ function buildQuadMeshComponents(
   const components: ResoniteComponent[] = [
     {
       id: meshId,
-      type: '[FrooxEngine]FrooxEngine.QuadMesh',
+      type: COMPONENT_TYPES.QUAD_MESH,
       fields: {
         Size: { $type: 'float2', value: size },
       },
@@ -106,14 +107,14 @@ function buildQuadMeshComponents(
   if (textureValue && !sharedTextureId) {
     components.push({
       id: textureId,
-      type: '[FrooxEngine]FrooxEngine.StaticTexture2D',
+      type: COMPONENT_TYPES.STATIC_TEXTURE_2D,
       fields: buildStaticTexture2DFields(textureValue),
     });
   }
 
   components.push({
     id: materialId,
-    type: '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
+    type: COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
     fields: buildXiexeToonMaterialFields(blendMode, color, dualSided),
   });
 
@@ -124,14 +125,14 @@ function buildQuadMeshComponents(
     };
     components.push({
       id: textureBlockId,
-      type: '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
+      type: COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
       fields: textureBlockFields,
     });
   }
 
   components.push({
     id: `${slotId}-renderer`,
-    type: '[FrooxEngine]FrooxEngine.MeshRenderer',
+    type: COMPONENT_TYPES.MESH_RENDERER,
     fields: {
       Mesh: { $type: 'reference', targetId: meshId },
       Materials: {
@@ -159,7 +160,7 @@ function buildBoxColliderComponent(
 ): ResoniteComponent {
   return {
     id: `${slotId}-collider`,
-    type: '[FrooxEngine]FrooxEngine.BoxCollider',
+    type: COMPONENT_TYPES.BOX_COLLIDER,
     fields: {
       Size: { $type: 'float3', value: size },
       ...(options?.characterCollider ? { CharacterCollider: { $type: 'bool', value: true } } : {}),
@@ -170,7 +171,7 @@ function buildBoxColliderComponent(
 function buildGrabbableComponent(slotId: string): ResoniteComponent {
   return {
     id: `${slotId}-grabbable`,
-    type: '[FrooxEngine]FrooxEngine.Grabbable',
+    type: COMPONENT_TYPES.GRABBABLE,
     fields: {
       Scalable: { $type: 'bool', value: true },
     },
@@ -273,7 +274,7 @@ export class ResoniteObjectBuilder {
   addTextComponent(content: string, size: number): this {
     this.obj.components.push({
       id: `${this.obj.id}-text`,
-      type: '[FrooxEngine]FrooxEngine.UIX.Text',
+      type: COMPONENT_TYPES.UIX_TEXT,
       fields: {
         Content: { $type: 'string', value: content },
         Size: { $type: 'float', value: size },

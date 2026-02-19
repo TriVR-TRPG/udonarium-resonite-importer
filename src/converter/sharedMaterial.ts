@@ -1,16 +1,17 @@
 import { ResoniteComponent, ResoniteObject } from '../domain/ResoniteObject';
+import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 
 const MATERIAL_REFERENCE_PREFIX = 'material-ref://';
 
 export type SharedMaterialDefinition = {
   key: string;
   name: string;
-  componentType: '[FrooxEngine]FrooxEngine.XiexeToonMaterial';
+  componentType: typeof COMPONENT_TYPES.XIEXE_TOON_MATERIAL;
   fields: Record<string, unknown>;
 };
 
 function buildMaterialKey(component: ResoniteComponent): string | undefined {
-  if (component.type !== '[FrooxEngine]FrooxEngine.XiexeToonMaterial') {
+  if (component.type !== COMPONENT_TYPES.XIEXE_TOON_MATERIAL) {
     return undefined;
   }
   if (!component.fields || Object.keys(component.fields).length === 0) {
@@ -89,18 +90,18 @@ function prepareObjectForSharedMaterials(
       definitions.set(key, {
         key,
         name: buildMaterialName(key),
-        componentType: '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
+        componentType: COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
         fields: component.fields,
       });
     }
   }
 
   obj.components = obj.components.filter(
-    (component) => component.type !== '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
+    (component) => component.type !== COMPONENT_TYPES.XIEXE_TOON_MATERIAL
   );
 
   for (const component of obj.components) {
-    if (component.type !== '[FrooxEngine]FrooxEngine.MeshRenderer') {
+    if (component.type !== COMPONENT_TYPES.MESH_RENDERER) {
       continue;
     }
     const materialsField = component.fields.Materials as

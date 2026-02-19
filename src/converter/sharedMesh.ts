@@ -1,11 +1,12 @@
 import { ResoniteComponent, ResoniteObject } from '../domain/ResoniteObject';
+import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 
 const MESH_REFERENCE_PREFIX = 'mesh-ref://';
 
 export type SharedMeshDefinition = {
   key: string;
   name: string;
-  componentType: '[FrooxEngine]FrooxEngine.BoxMesh' | '[FrooxEngine]FrooxEngine.QuadMesh';
+  componentType: typeof COMPONENT_TYPES.BOX_MESH | typeof COMPONENT_TYPES.QUAD_MESH;
   sizeFieldType: 'float2' | 'float3';
   sizeValue: { x: number; y: number } | { x: number; y: number; z: number };
   dualSided?: boolean;
@@ -27,7 +28,7 @@ function buildMeshKey(component: ResoniteComponent): string | undefined {
     return undefined;
   }
 
-  if (component.type === '[FrooxEngine]FrooxEngine.QuadMesh') {
+  if (component.type === COMPONENT_TYPES.QUAD_MESH) {
     const { x, y } = sizeField.value;
     if (typeof x !== 'number' || typeof y !== 'number') {
       return undefined;
@@ -35,7 +36,7 @@ function buildMeshKey(component: ResoniteComponent): string | undefined {
     return `quad:${x},${y}`;
   }
 
-  if (component.type === '[FrooxEngine]FrooxEngine.BoxMesh') {
+  if (component.type === COMPONENT_TYPES.BOX_MESH) {
     const { x, y, z } = sizeField.value;
     if (typeof x !== 'number' || typeof y !== 'number' || typeof z !== 'number') {
       return undefined;
@@ -57,7 +58,7 @@ function buildDefinitionFromComponent(
     return undefined;
   }
 
-  if (component.type === '[FrooxEngine]FrooxEngine.QuadMesh') {
+  if (component.type === COMPONENT_TYPES.QUAD_MESH) {
     const { x, y } = sizeField.value;
     if (typeof x !== 'number' || typeof y !== 'number') {
       return undefined;
@@ -67,14 +68,14 @@ function buildDefinitionFromComponent(
     return {
       key,
       name: `QuadMesh_${formatSizeNumber(x)}x${formatSizeNumber(y)}${dualSided ? '_DualSided' : ''}`,
-      componentType: '[FrooxEngine]FrooxEngine.QuadMesh',
+      componentType: COMPONENT_TYPES.QUAD_MESH,
       sizeFieldType: 'float2',
       sizeValue: { x, y },
       ...(dualSided ? { dualSided: true } : {}),
     };
   }
 
-  if (component.type === '[FrooxEngine]FrooxEngine.BoxMesh') {
+  if (component.type === COMPONENT_TYPES.BOX_MESH) {
     const { x, y, z } = sizeField.value;
     if (typeof x !== 'number' || typeof y !== 'number' || typeof z !== 'number') {
       return undefined;
@@ -82,7 +83,7 @@ function buildDefinitionFromComponent(
     return {
       key,
       name: `BoxMesh_${formatSizeNumber(x)}x${formatSizeNumber(y)}x${formatSizeNumber(z)}`,
-      componentType: '[FrooxEngine]FrooxEngine.BoxMesh',
+      componentType: COMPONENT_TYPES.BOX_MESH,
       sizeFieldType: 'float3',
       sizeValue: { x, y, z },
     };
@@ -99,8 +100,8 @@ function prepareObjectForSharedMeshes(
 
   for (const component of obj.components) {
     if (
-      component.type !== '[FrooxEngine]FrooxEngine.BoxMesh' &&
-      component.type !== '[FrooxEngine]FrooxEngine.QuadMesh'
+      component.type !== COMPONENT_TYPES.BOX_MESH &&
+      component.type !== COMPONENT_TYPES.QUAD_MESH
     ) {
       continue;
     }
@@ -122,7 +123,7 @@ function prepareObjectForSharedMeshes(
       continue;
     }
 
-    if (definition.componentType === '[FrooxEngine]FrooxEngine.QuadMesh' && definition.dualSided) {
+    if (definition.componentType === COMPONENT_TYPES.QUAD_MESH && definition.dualSided) {
       existingDefinition.dualSided = true;
       if (!existingDefinition.name.endsWith('_DualSided')) {
         existingDefinition.name = `${existingDefinition.name}_DualSided`;
@@ -132,12 +133,11 @@ function prepareObjectForSharedMeshes(
 
   obj.components = obj.components.filter(
     (component) =>
-      component.type !== '[FrooxEngine]FrooxEngine.BoxMesh' &&
-      component.type !== '[FrooxEngine]FrooxEngine.QuadMesh'
+      component.type !== COMPONENT_TYPES.BOX_MESH && component.type !== COMPONENT_TYPES.QUAD_MESH
   );
 
   for (const component of obj.components) {
-    if (component.type !== '[FrooxEngine]FrooxEngine.MeshRenderer') {
+    if (component.type !== COMPONENT_TYPES.MESH_RENDERER) {
       continue;
     }
     const meshField = component.fields.Mesh as { targetId?: string } | undefined;

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { DiceSymbol } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
 import { convertDiceSymbol } from './diceSymbolConverter';
+import { COMPONENT_TYPES } from '../../config/ResoniteComponentTypes';
 
 function createBaseDice(): DiceSymbol {
   return {
@@ -55,8 +56,8 @@ describe('convertDiceSymbol', () => {
     );
 
     expect(result.components.map((c) => c.type)).toEqual([
-      '[FrooxEngine]FrooxEngine.BoxCollider',
-      '[FrooxEngine]FrooxEngine.Grabbable',
+      COMPONENT_TYPES.BOX_COLLIDER,
+      COMPONENT_TYPES.GRABBABLE,
     ]);
     expect(result.components[0].fields).toEqual({
       Size: { $type: 'float3', value: { x: 2, y: 2, z: 0.05 } },
@@ -90,10 +91,10 @@ describe('convertDiceSymbol', () => {
     expect(result.position).toEqual({ x: 1, y: 2, z: -1 });
 
     const firstQuad = result.children[0].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
+      (c) => c.type === COMPONENT_TYPES.QUAD_MESH
     );
     const secondQuad = result.children[1].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
+      (c) => c.type === COMPONENT_TYPES.QUAD_MESH
     );
     expect(firstQuad?.fields.Size).toEqual({ $type: 'float2', value: { x: 2, y: 2 } });
     expect(secondQuad?.fields.Size).toEqual({ $type: 'float2', value: { x: 2, y: 4 } });

@@ -2,6 +2,7 @@
 import { convertCharacter } from './characterConverter';
 import { GameCharacter } from '../../domain/UdonariumObject';
 import { ResoniteObject, Vector3 } from '../../domain/ResoniteObject';
+import { COMPONENT_TYPES } from '../../config/ResoniteComponentTypes';
 
 describe('convertCharacter', () => {
   it('converts character and generates quad mesh, material, and collider', () => {
@@ -41,13 +42,13 @@ describe('convertCharacter', () => {
 
     expect(convertSize).toHaveBeenCalledWith(3);
     expect(result.components.map((c) => c.type)).toEqual([
-      '[FrooxEngine]FrooxEngine.QuadMesh',
-      '[FrooxEngine]FrooxEngine.StaticTexture2D',
-      '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
-      '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
-      '[FrooxEngine]FrooxEngine.MeshRenderer',
-      '[FrooxEngine]FrooxEngine.BoxCollider',
-      '[FrooxEngine]FrooxEngine.Grabbable',
+      COMPONENT_TYPES.QUAD_MESH,
+      COMPONENT_TYPES.STATIC_TEXTURE_2D,
+      COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
+      COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
+      COMPONENT_TYPES.MESH_RENDERER,
+      COMPONENT_TYPES.BOX_COLLIDER,
+      COMPONENT_TYPES.GRABBABLE,
     ]);
     expect(result.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 0.3, y: 0.3 } },
@@ -60,7 +61,7 @@ describe('convertCharacter', () => {
     expect((result as { locationName?: string }).locationName).toBe('graveyard');
 
     const materialComponent = result.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
+      (c) => c.type === COMPONENT_TYPES.XIEXE_TOON_MATERIAL
     );
     expect(materialComponent?.fields).toEqual({
       BlendMode: { $type: 'enum', value: 'Opaque', enumType: 'BlendMode' },
@@ -69,7 +70,7 @@ describe('convertCharacter', () => {
       Culling: { $type: 'enum', value: 'Off', enumType: 'Culling' },
     });
     const textureBlockComponent = result.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock'
+      (c) => c.type === COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK
     );
     expect(textureBlockComponent?.fields).toEqual({
       Texture: { $type: 'reference', targetId: 'slot-char-1-tex' },
@@ -117,8 +118,8 @@ describe('convertCharacter', () => {
     );
 
     expect(result.components.map((c) => c.type)).toEqual([
-      '[FrooxEngine]FrooxEngine.BoxCollider',
-      '[FrooxEngine]FrooxEngine.Grabbable',
+      COMPONENT_TYPES.BOX_COLLIDER,
+      COMPONENT_TYPES.GRABBABLE,
     ]);
   });
 
@@ -157,11 +158,9 @@ describe('convertCharacter', () => {
       resoniteObj.id
     );
 
-    const quad = result.components.find((c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh');
+    const quad = result.components.find((c) => c.type === COMPONENT_TYPES.QUAD_MESH);
     expect(quad?.fields.Size).toEqual({ $type: 'float2', value: { x: 1, y: 2 } });
-    const collider = result.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-    );
+    const collider = result.components.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
     expect(collider?.fields.Size).toEqual({ $type: 'float3', value: { x: 1, y: 2, z: 0.05 } });
     expect(result.position).toEqual({ x: 0.5, y: 1, z: -0.5 });
   });

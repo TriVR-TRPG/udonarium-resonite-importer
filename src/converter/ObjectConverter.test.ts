@@ -17,6 +17,7 @@ import type {
   TableMask,
   TextNote,
 } from '../domain/UdonariumObject';
+import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 
 describe('ObjectConverter', () => {
   describe('convertPosition', () => {
@@ -128,7 +129,7 @@ describe('ObjectConverter', () => {
 
         const [result] = convertObjectsWithTextureMap([character], new Map(), imageAspectRatioMap);
 
-        const quad = result.components.find((c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh');
+        const quad = result.components.find((c) => c.type === COMPONENT_TYPES.QUAD_MESH);
         expect(quad?.fields.Size).toEqual({ $type: 'float2', value: { x: 2, y: 3 } });
         expect(result.position).toEqual({
           x: 3,
@@ -166,12 +167,8 @@ describe('ObjectConverter', () => {
         });
         expect(result.children).toHaveLength(2);
         expect(result.children.map((child) => child.isActive)).toEqual([false, true]);
-        expect(result.components.some((c) => c.type === '[FrooxEngine]FrooxEngine.Grabbable')).toBe(
-          true
-        );
-        expect(
-          result.components.some((c) => c.type === '[FrooxEngine]FrooxEngine.MeshRenderer')
-        ).toBe(false);
+        expect(result.components.some((c) => c.type === COMPONENT_TYPES.GRABBABLE)).toBe(true);
+        expect(result.components.some((c) => c.type === COMPONENT_TYPES.MESH_RENDERER)).toBe(false);
       });
 
       it('should size each face by image aspect ratio and bottom-align to largest face', () => {
@@ -202,9 +199,7 @@ describe('ObjectConverter', () => {
           y: basePos.y + 2,
           z: basePos.z - 1,
         });
-        const collider = result.components.find(
-          (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-        );
+        const collider = result.components.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
         expect(collider?.fields).toEqual({
           Size: { $type: 'float3', value: { x: 2, y: 4, z: 0.05 } },
         });
@@ -212,10 +207,10 @@ describe('ObjectConverter', () => {
         expect(result.children[1].position.y).toBeCloseTo(0);
 
         const smallQuad = result.children[0].components.find(
-          (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
+          (c) => c.type === COMPONENT_TYPES.QUAD_MESH
         );
         const largeQuad = result.children[1].components.find(
-          (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
+          (c) => c.type === COMPONENT_TYPES.QUAD_MESH
         );
         expect(smallQuad?.fields.Size).toEqual({ $type: 'float2', value: { x: 2, y: 2 } });
         expect(largeQuad?.fields.Size).toEqual({ $type: 'float2', value: { x: 2, y: 4 } });
@@ -259,9 +254,7 @@ describe('ObjectConverter', () => {
         const [result] = convertObjectsWithTextureMap([terrain], new Map(), undefined, undefined, {
           enableCharacterColliderOnLockedTerrain: false,
         });
-        const collider = result.components.find(
-          (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-        );
+        const collider = result.components.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
 
         expect(collider).toBeDefined();
         expect(collider?.fields).toEqual({
@@ -307,9 +300,7 @@ describe('ObjectConverter', () => {
           enableCharacterColliderOnLockedTerrain: true,
         });
         const visual = result.children[0];
-        const collider = visual.components.find(
-          (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-        );
+        const collider = visual.components.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
 
         expect(collider).toBeDefined();
         expect(collider?.fields).toEqual({
@@ -379,10 +370,8 @@ describe('ObjectConverter', () => {
 
         expect(result.id).toMatch(/^udon-imp-[0-9a-f-]{36}$/);
         expect(result.rotation).toEqual({ x: 90, y: 0, z: 0 });
-        expect(result.components.map((c) => c.type)).toContain('[FrooxEngine]FrooxEngine.QuadMesh');
-        expect(result.components.map((c) => c.type)).toContain(
-          '[FrooxEngine]FrooxEngine.MeshRenderer'
-        );
+        expect(result.components.map((c) => c.type)).toContain(COMPONENT_TYPES.QUAD_MESH);
+        expect(result.components.map((c) => c.type)).toContain(COMPONENT_TYPES.MESH_RENDERER);
       });
     });
 
@@ -459,9 +448,7 @@ describe('ObjectConverter', () => {
         // Table has collider on -surface child slot, others on the slot itself
         const searchTarget =
           obj.type === 'table' ? (result.children[0]?.components ?? []) : result.components;
-        const collider = searchTarget.find(
-          (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-        );
+        const collider = searchTarget.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
         expect(collider).toBeDefined();
         expect(collider?.fields).toEqual({
           Size: {

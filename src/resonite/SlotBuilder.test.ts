@@ -7,6 +7,7 @@ import {
   IMPORT_GROUP_Y_OFFSET,
   IMPORT_ROOT_TAG,
 } from '../config/MappingConfig';
+import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 
 // Mock ResoniteLinkClient
 vi.mock('./ResoniteLinkClient', () => {
@@ -522,7 +523,7 @@ describe('SlotBuilder', () => {
         componentType: string;
         fields: Record<string, unknown>;
       };
-      expect(firstComponentCall.componentType).toBe('[FrooxEngine]FrooxEngine.StaticTexture2D');
+      expect(firstComponentCall.componentType).toBe(COMPONENT_TYPES.STATIC_TEXTURE_2D);
       expect(firstComponentCall.fields).toMatchObject({
         URL: { $type: 'Uri', value: 'resdb:///card-front' },
       });
@@ -531,9 +532,7 @@ describe('SlotBuilder', () => {
         componentType: string;
         fields: Record<string, unknown>;
       };
-      expect(secondComponentCall.componentType).toBe(
-        '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock'
-      );
+      expect(secondComponentCall.componentType).toBe(COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK);
       const textureField = secondComponentCall.fields.Texture as
         | { $type?: string; targetId?: string }
         | undefined;
@@ -568,7 +567,7 @@ describe('SlotBuilder', () => {
         componentType: string;
         fields: Record<string, unknown>;
       };
-      expect(firstComponentCall.componentType).toBe('[FrooxEngine]FrooxEngine.StaticTexture2D');
+      expect(firstComponentCall.componentType).toBe(COMPONENT_TYPES.STATIC_TEXTURE_2D);
       expect(firstComponentCall.fields).toMatchObject({
         URL: { $type: 'Uri', value: 'https://example.com/image.png' },
       });
@@ -606,7 +605,7 @@ describe('SlotBuilder', () => {
         {
           key: 'box:1,1,1',
           name: 'BoxMesh_1x1x1',
-          componentType: '[FrooxEngine]FrooxEngine.BoxMesh',
+          componentType: COMPONENT_TYPES.BOX_MESH,
           sizeFieldType: 'float3',
           sizeValue: { x: 1, y: 1, z: 1 },
         },
@@ -630,7 +629,7 @@ describe('SlotBuilder', () => {
         componentType: string;
         fields: Record<string, unknown>;
       };
-      expect(firstComponentCall.componentType).toBe('[FrooxEngine]FrooxEngine.BoxMesh');
+      expect(firstComponentCall.componentType).toBe(COMPONENT_TYPES.BOX_MESH);
       expect(firstComponentCall.fields).toMatchObject({
         Size: { $type: 'float3', value: { x: 1, y: 1, z: 1 } },
       });
@@ -646,7 +645,7 @@ describe('SlotBuilder', () => {
         {
           key: 'quad:2,3',
           name: 'QuadMesh_2x3',
-          componentType: '[FrooxEngine]FrooxEngine.QuadMesh',
+          componentType: COMPONENT_TYPES.QUAD_MESH,
           sizeFieldType: 'float2',
           sizeValue: { x: 2, y: 3 },
         },
@@ -670,7 +669,7 @@ describe('SlotBuilder', () => {
         {
           key: 'xiexe-toon:#FFFFFFFF:Cutout',
           name: 'XiexeToon_Cutout_FFFFFFFF',
-          componentType: '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
+          componentType: COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
           fields: {
             BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' },
           },
@@ -695,7 +694,7 @@ describe('SlotBuilder', () => {
         componentType: string;
         fields: Record<string, unknown>;
       };
-      expect(firstComponentCall.componentType).toBe('[FrooxEngine]FrooxEngine.XiexeToonMaterial');
+      expect(firstComponentCall.componentType).toBe(COMPONENT_TYPES.XIEXE_TOON_MATERIAL);
       expect(firstComponentCall.fields).toMatchObject({
         BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' },
       });
@@ -723,7 +722,7 @@ describe('SlotBuilder', () => {
       expect(mockClient.addComponent).toHaveBeenCalledWith({
         id: `${callArgs.id}-object-root`,
         slotId: callArgs.id,
-        componentType: '[FrooxEngine]FrooxEngine.ObjectRoot',
+        componentType: COMPONENT_TYPES.OBJECT_ROOT,
         fields: {},
       });
     });

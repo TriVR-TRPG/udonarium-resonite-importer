@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { convertCard } from './cardConverter';
 import { Card } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
+import { COMPONENT_TYPES } from '../../config/ResoniteComponentTypes';
 
 describe('convertCard', () => {
   const createBaseCard = (): Card => ({
@@ -41,8 +42,8 @@ describe('convertCard', () => {
     expect(result.position).toEqual({ x: 0.5, y: 0.001, z: -0.5 });
     expect(result.rotation).toEqual({ x: 0, y: 0, z: 0 });
     expect(result.components.map((c) => c.type)).toEqual([
-      '[FrooxEngine]FrooxEngine.BoxCollider',
-      '[FrooxEngine]FrooxEngine.Grabbable',
+      COMPONENT_TYPES.BOX_COLLIDER,
+      COMPONENT_TYPES.GRABBABLE,
     ]);
     expect(result.children).toHaveLength(2);
     expect(result.children.map((c) => c.id)).toEqual(['slot-card-1-front', 'slot-card-1-back']);
@@ -65,18 +66,16 @@ describe('convertCard', () => {
     );
 
     expect(result.position).toEqual({ x: 1, y: 0.001, z: -1 });
-    const collider = result.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-    );
+    const collider = result.components.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
     expect(collider?.fields).toEqual({
       Size: { $type: 'float3', value: { x: 2, y: 0.01, z: 2 } },
     });
 
     const frontQuad = result.children[0].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
+      (c) => c.type === COMPONENT_TYPES.QUAD_MESH
     );
     const backQuad = result.children[1].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
+      (c) => c.type === COMPONENT_TYPES.QUAD_MESH
     );
     expect(frontQuad?.fields).toEqual({ Size: { $type: 'float2', value: { x: 2, y: 2 } } });
     expect(backQuad?.fields).toEqual({ Size: { $type: 'float2', value: { x: 2, y: 2 } } });
@@ -96,10 +95,10 @@ describe('convertCard', () => {
     );
 
     const frontTexture = result.children[0].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
+      (c) => c.type === COMPONENT_TYPES.STATIC_TEXTURE_2D
     );
     const backTexture = result.children[1].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
+      (c) => c.type === COMPONENT_TYPES.STATIC_TEXTURE_2D
     );
     expect(frontTexture?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://front.png' },
@@ -148,10 +147,10 @@ describe('convertCard', () => {
     );
 
     const frontTexture = result.children[0].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
+      (c) => c.type === COMPONENT_TYPES.STATIC_TEXTURE_2D
     );
     const backTexture = result.children[1].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
+      (c) => c.type === COMPONENT_TYPES.STATIC_TEXTURE_2D
     );
     expect(frontTexture?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://fallback.png' },
@@ -181,7 +180,7 @@ describe('convertCard', () => {
     );
 
     const frontTexture = result.children[0].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.StaticTexture2D'
+      (c) => c.type === COMPONENT_TYPES.STATIC_TEXTURE_2D
     );
     expect(frontTexture?.fields).toEqual({
       URL: { $type: 'Uri', value: 'texture://front.gif' },
@@ -207,9 +206,7 @@ describe('convertCard', () => {
     );
 
     expect(result.position).toEqual({ x: 1, y: 0.001, z: -2 });
-    const collider = result.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-    );
+    const collider = result.components.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
     expect(collider?.fields).toEqual({
       Size: { $type: 'float3', value: { x: 2, y: 0.01, z: 4 } },
     });
@@ -259,17 +256,15 @@ describe('convertCard', () => {
     );
 
     expect(result.position).toEqual({ x: 1, y: 0.001, z: -1.2 });
-    const collider = result.components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-    );
+    const collider = result.components.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
     expect(collider?.fields).toEqual({
       Size: { $type: 'float3', value: { x: 2, y: 0.01, z: 2.4 } },
     });
     const frontQuad = result.children[0].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
+      (c) => c.type === COMPONENT_TYPES.QUAD_MESH
     );
     const backQuad = result.children[1].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.QuadMesh'
+      (c) => c.type === COMPONENT_TYPES.QUAD_MESH
     );
     expect(result.children[0].position.x).toBe(0);
     expect(result.children[0].position.y).toBe(0.0001);
@@ -297,10 +292,10 @@ describe('convertCard', () => {
     );
 
     const frontMaterial = result.children[0].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
+      (c) => c.type === COMPONENT_TYPES.XIEXE_TOON_MATERIAL
     );
     const backMaterial = result.children[1].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
+      (c) => c.type === COMPONENT_TYPES.XIEXE_TOON_MATERIAL
     );
     expect(frontMaterial?.fields.BlendMode).toEqual({
       $type: 'enum',
@@ -329,7 +324,7 @@ describe('convertCard', () => {
     );
 
     const frontMaterial = result.children[0].components.find(
-      (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
+      (c) => c.type === COMPONENT_TYPES.XIEXE_TOON_MATERIAL
     );
     expect(frontMaterial?.fields.BlendMode).toEqual({
       $type: 'enum',

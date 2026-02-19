@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ResoniteObjectBuilder } from './ResoniteObjectBuilder';
 import { toTextureReference } from './textureUtils';
+import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 
 function makeSpec(id = 'slot-abc') {
   return {
@@ -72,11 +73,11 @@ describe('ResoniteObjectBuilder', () => {
       const result = makeBuilder(makeSpec()).addQuadMesh('texture://img.png').build();
 
       expect(result.components.map((c) => c.type)).toEqual([
-        '[FrooxEngine]FrooxEngine.QuadMesh',
-        '[FrooxEngine]FrooxEngine.StaticTexture2D',
-        '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
-        '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
-        '[FrooxEngine]FrooxEngine.MeshRenderer',
+        COMPONENT_TYPES.QUAD_MESH,
+        COMPONENT_TYPES.STATIC_TEXTURE_2D,
+        COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
+        COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
+        COMPONENT_TYPES.MESH_RENDERER,
       ]);
     });
 
@@ -289,13 +290,13 @@ describe('ResoniteObjectBuilder', () => {
         .build();
 
       expect(result.components.map((c) => c.type)).toEqual([
-        '[FrooxEngine]FrooxEngine.QuadMesh',
-        '[FrooxEngine]FrooxEngine.StaticTexture2D',
-        '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
-        '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
-        '[FrooxEngine]FrooxEngine.MeshRenderer',
-        '[FrooxEngine]FrooxEngine.BoxCollider',
-        '[FrooxEngine]FrooxEngine.Grabbable',
+        COMPONENT_TYPES.QUAD_MESH,
+        COMPONENT_TYPES.STATIC_TEXTURE_2D,
+        COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
+        COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
+        COMPONENT_TYPES.MESH_RENDERER,
+        COMPONENT_TYPES.BOX_COLLIDER,
+        COMPONENT_TYPES.GRABBABLE,
       ]);
     });
 

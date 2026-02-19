@@ -12,6 +12,7 @@ import {
   IMPORT_ROOT_TAG,
   SLOT_ID_PREFIX,
 } from '../config/MappingConfig';
+import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 import { ResoniteLinkClient, SlotTransform } from './ResoniteLinkClient';
 
 const GIF_EXTENSION_PATTERN = /\.gif(?:$|[?#])/i;
@@ -202,7 +203,7 @@ export class SlotBuilder {
     await this.client.addComponent({
       id: `${groupId}-object-root`,
       slotId: groupId,
-      componentType: '[FrooxEngine]FrooxEngine.ObjectRoot',
+      componentType: COMPONENT_TYPES.OBJECT_ROOT,
       fields: {},
     });
 
@@ -241,7 +242,7 @@ export class SlotBuilder {
       await this.client.addComponent({
         id: textureComponentId,
         slotId: textureSlotId,
-        componentType: '[FrooxEngine]FrooxEngine.StaticTexture2D',
+        componentType: COMPONENT_TYPES.STATIC_TEXTURE_2D,
         fields: {
           URL: { $type: 'Uri', value: textureUrl },
           WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
@@ -260,7 +261,7 @@ export class SlotBuilder {
       await this.client.addComponent({
         id: `${textureSlotId}-main-texture-property-block`,
         slotId: textureSlotId,
-        componentType: '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
+        componentType: COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
         fields: {
           Texture: { $type: 'reference', targetId: textureComponentId },
         },

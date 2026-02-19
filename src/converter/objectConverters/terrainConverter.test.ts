@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { convertTerrain } from './terrainConverter';
 import { Terrain } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
+import { COMPONENT_TYPES } from '../../config/ResoniteComponentTypes';
 
 describe('convertTerrain', () => {
   it('terrain (unlocked) has BoxCollider + Grabbable and creates five QuadMesh faces', () => {
@@ -39,8 +40,8 @@ describe('convertTerrain', () => {
     );
 
     expect(result.components.map((c) => c.type)).toEqual([
-      '[FrooxEngine]FrooxEngine.BoxCollider',
-      '[FrooxEngine]FrooxEngine.Grabbable',
+      COMPONENT_TYPES.BOX_COLLIDER,
+      COMPONENT_TYPES.GRABBABLE,
     ]);
     expect(result.components[0].fields).toEqual({
       Size: {
@@ -62,18 +63,18 @@ describe('convertTerrain', () => {
     expect(topFace).toBeDefined();
     expect(bottomFace).toBeDefined();
     expect(topFace?.components.map((c) => c.type)).toEqual([
-      '[FrooxEngine]FrooxEngine.QuadMesh',
-      '[FrooxEngine]FrooxEngine.StaticTexture2D',
-      '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
-      '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
-      '[FrooxEngine]FrooxEngine.MeshRenderer',
+      COMPONENT_TYPES.QUAD_MESH,
+      COMPONENT_TYPES.STATIC_TEXTURE_2D,
+      COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
+      COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
+      COMPONENT_TYPES.MESH_RENDERER,
     ]);
     expect(bottomFace?.components.map((c) => c.type)).toEqual([
-      '[FrooxEngine]FrooxEngine.QuadMesh',
-      '[FrooxEngine]FrooxEngine.StaticTexture2D',
-      '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
-      '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
-      '[FrooxEngine]FrooxEngine.MeshRenderer',
+      COMPONENT_TYPES.QUAD_MESH,
+      COMPONENT_TYPES.STATIC_TEXTURE_2D,
+      COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
+      COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
+      COMPONENT_TYPES.MESH_RENDERER,
     ]);
 
     const wallsSlot = result.children.find((child) => child.id === 'slot-terrain-1-walls');
@@ -82,11 +83,11 @@ describe('convertTerrain', () => {
     expect(wallsSlot?.children).toHaveLength(4);
     for (const wallFace of wallsSlot?.children ?? []) {
       expect(wallFace.components.map((c) => c.type)).toEqual([
-        '[FrooxEngine]FrooxEngine.QuadMesh',
-        '[FrooxEngine]FrooxEngine.StaticTexture2D',
-        '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
-        '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
-        '[FrooxEngine]FrooxEngine.MeshRenderer',
+        COMPONENT_TYPES.QUAD_MESH,
+        COMPONENT_TYPES.STATIC_TEXTURE_2D,
+        COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
+        COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
+        COMPONENT_TYPES.MESH_RENDERER,
       ]);
     }
 
@@ -150,7 +151,7 @@ describe('convertTerrain', () => {
       resoniteObj.id
     );
 
-    expect(result.components.map((c) => c.type)).toEqual(['[FrooxEngine]FrooxEngine.BoxCollider']);
+    expect(result.components.map((c) => c.type)).toEqual([COMPONENT_TYPES.BOX_COLLIDER]);
     expect(result.components[0].fields).toEqual({
       Size: {
         $type: 'float3',
@@ -193,7 +194,7 @@ describe('convertTerrain', () => {
       { enableCharacterColliderOnLockedTerrain: false }
     );
 
-    expect(result.components.map((c) => c.type)).toEqual(['[FrooxEngine]FrooxEngine.BoxCollider']);
+    expect(result.components.map((c) => c.type)).toEqual([COMPONENT_TYPES.BOX_COLLIDER]);
     expect(result.components[0].fields).toEqual({
       Size: {
         $type: 'float3',
@@ -248,21 +249,21 @@ describe('convertTerrain', () => {
     expect(result.children[0].id).toBe('slot-terrain-3-top');
     expect(result.children[0].position).toEqual({ x: 0, y: 0, z: 0 });
     expect(result.children[0].components.map((c) => c.type)).toEqual([
-      '[FrooxEngine]FrooxEngine.QuadMesh',
-      '[FrooxEngine]FrooxEngine.StaticTexture2D',
-      '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
-      '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
-      '[FrooxEngine]FrooxEngine.MeshRenderer',
+      COMPONENT_TYPES.QUAD_MESH,
+      COMPONENT_TYPES.STATIC_TEXTURE_2D,
+      COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
+      COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
+      COMPONENT_TYPES.MESH_RENDERER,
     ]);
     expect(result.children[1].id).toBe('slot-terrain-3-top-back');
     expect(result.children[1].position).toEqual({ x: 0, y: 0, z: 0 });
     expect(result.children[1].rotation).toEqual({ x: -90, y: 0, z: 0 });
     expect(result.children[1].components.map((c) => c.type)).toEqual([
-      '[FrooxEngine]FrooxEngine.QuadMesh',
-      '[FrooxEngine]FrooxEngine.StaticTexture2D',
-      '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
-      '[FrooxEngine]FrooxEngine.MainTexturePropertyBlock',
-      '[FrooxEngine]FrooxEngine.MeshRenderer',
+      COMPONENT_TYPES.QUAD_MESH,
+      COMPONENT_TYPES.STATIC_TEXTURE_2D,
+      COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
+      COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
+      COMPONENT_TYPES.MESH_RENDERER,
     ]);
   });
 

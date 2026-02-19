@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import { ResoniteObject } from '../domain/ResoniteObject';
 import { prepareSharedMeshDefinitions, resolveSharedMeshReferences } from './sharedMesh';
+import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 
 function createObject(
   id: string,
-  meshType: '[FrooxEngine]FrooxEngine.BoxMesh' | '[FrooxEngine]FrooxEngine.QuadMesh',
+  meshType: typeof COMPONENT_TYPES.BOX_MESH | typeof COMPONENT_TYPES.QUAD_MESH,
   size: Record<string, number>
 ): ResoniteObject {
   return {
@@ -25,7 +26,7 @@ function createObject(
       },
       {
         id: `${id}-renderer`,
-        type: '[FrooxEngine]FrooxEngine.MeshRenderer',
+        type: COMPONENT_TYPES.MESH_RENDERER,
         fields: {
           Mesh: { $type: 'reference', targetId: `${id}-mesh` },
           Materials: { $type: 'list', elements: [] },
@@ -40,9 +41,9 @@ function createObject(
 describe('sharedMesh', () => {
   it('deduplicates meshes by mesh type and size', () => {
     const objects: ResoniteObject[] = [
-      createObject('box-a', '[FrooxEngine]FrooxEngine.BoxMesh', { x: 1, y: 1, z: 1 }),
-      createObject('box-b', '[FrooxEngine]FrooxEngine.BoxMesh', { x: 1, y: 1, z: 1 }),
-      createObject('quad-a', '[FrooxEngine]FrooxEngine.QuadMesh', { x: 2, y: 3 }),
+      createObject('box-a', COMPONENT_TYPES.BOX_MESH, { x: 1, y: 1, z: 1 }),
+      createObject('box-b', COMPONENT_TYPES.BOX_MESH, { x: 1, y: 1, z: 1 }),
+      createObject('quad-a', COMPONENT_TYPES.QUAD_MESH, { x: 2, y: 3 }),
     ];
 
     const definitions = prepareSharedMeshDefinitions(objects);
@@ -60,7 +61,7 @@ describe('sharedMesh', () => {
 
   it('replaces mesh placeholders with created shared mesh component ids', () => {
     const objects: ResoniteObject[] = [
-      createObject('quad-a', '[FrooxEngine]FrooxEngine.QuadMesh', { x: 4, y: 5 }),
+      createObject('quad-a', COMPONENT_TYPES.QUAD_MESH, { x: 4, y: 5 }),
     ];
 
     const definitions = prepareSharedMeshDefinitions(objects);
@@ -70,7 +71,7 @@ describe('sharedMesh', () => {
     );
 
     const renderer = objects[0].components.find(
-      (component) => component.type === '[FrooxEngine]FrooxEngine.MeshRenderer'
+      (component) => component.type === COMPONENT_TYPES.MESH_RENDERER
     );
     expect(renderer?.fields.Mesh).toEqual({
       $type: 'reference',

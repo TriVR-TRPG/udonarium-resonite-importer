@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { convertCardStack } from './cardStackConverter';
 import { Card, CardStack, UdonariumObject } from '../../domain/UdonariumObject';
 import { ResoniteObject } from '../../domain/ResoniteObject';
+import { COMPONENT_TYPES } from '../../config/ResoniteComponentTypes';
 
 describe('convertCardStack', () => {
   it('reverses card order and applies stack offsets', () => {
@@ -65,14 +66,14 @@ describe('convertCardStack', () => {
     expect(result.components).toEqual([
       {
         id: 'slot-stack-1-collider',
-        type: '[FrooxEngine]FrooxEngine.BoxCollider',
+        type: COMPONENT_TYPES.BOX_COLLIDER,
         fields: {
           Size: { $type: 'float3', value: { x: 2, y: 0.05, z: 2 } },
         },
       },
       {
         id: 'slot-stack-1-grabbable',
-        type: '[FrooxEngine]FrooxEngine.Grabbable',
+        type: COMPONENT_TYPES.GRABBABLE,
         fields: {
           Scalable: { $type: 'bool', value: true },
         },
@@ -139,7 +140,7 @@ describe('convertCardStack', () => {
     expect(result.position).toEqual({ x: 1, y: 0.001, z: -2 });
     expect(result.components[0]).toEqual({
       id: 'slot-stack-2-collider',
-      type: '[FrooxEngine]FrooxEngine.BoxCollider',
+      type: COMPONENT_TYPES.BOX_COLLIDER,
       fields: {
         Size: { $type: 'float3', value: { x: 2, y: 0.05, z: 4 } },
       },
@@ -204,7 +205,7 @@ describe('convertCardStack', () => {
     expect(result.position).toEqual({ x: 1, y: 0.001, z: -1.2 });
     expect(result.components[0]).toEqual({
       id: 'slot-stack-3-collider',
-      type: '[FrooxEngine]FrooxEngine.BoxCollider',
+      type: COMPONENT_TYPES.BOX_COLLIDER,
       fields: {
         Size: { $type: 'float3', value: { x: 2, y: 0.05, z: 2.4 } },
       },

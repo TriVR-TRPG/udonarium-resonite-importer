@@ -4,6 +4,7 @@ import {
   prepareSharedMaterialDefinitions,
   resolveSharedMaterialReferences,
 } from './sharedMaterial';
+import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 
 function createObject(id: string): ResoniteObject {
   return {
@@ -14,14 +15,14 @@ function createObject(id: string): ResoniteObject {
     components: [
       {
         id: `${id}-mat`,
-        type: '[FrooxEngine]FrooxEngine.XiexeToonMaterial',
+        type: COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
         fields: {
           BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' },
         },
       },
       {
         id: `${id}-renderer`,
-        type: '[FrooxEngine]FrooxEngine.MeshRenderer',
+        type: COMPONENT_TYPES.MESH_RENDERER,
         fields: {
           Mesh: { $type: 'reference', targetId: `${id}-mesh` },
           Materials: {
@@ -45,7 +46,7 @@ describe('sharedMaterial', () => {
     expect(definitions).toHaveLength(1);
     expect(definitions[0].key).toBe('xiexe-toon:#FFFFFFFF:Cutout:Default');
     expect(definitions[0].name).toBe('XiexeToon_Cutout_Default_FFFFFFFF');
-    expect(definitions[0].componentType).toBe('[FrooxEngine]FrooxEngine.XiexeToonMaterial');
+    expect(definitions[0].componentType).toBe(COMPONENT_TYPES.XIEXE_TOON_MATERIAL);
     expect(
       objects
         .flatMap((obj) => obj.components)
@@ -63,7 +64,7 @@ describe('sharedMaterial', () => {
     );
 
     const renderer = objects[0].components.find(
-      (component) => component.type === '[FrooxEngine]FrooxEngine.MeshRenderer'
+      (component) => component.type === COMPONENT_TYPES.MESH_RENDERER
     );
     expect(renderer?.fields.Materials).toEqual({
       $type: 'list',
@@ -74,7 +75,7 @@ describe('sharedMaterial', () => {
   it('does not deduplicate materials when fields differ', () => {
     const objects: ResoniteObject[] = [createObject('a'), createObject('b')];
     const materialB = objects[1].components.find(
-      (component) => component.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
+      (component) => component.type === COMPONENT_TYPES.XIEXE_TOON_MATERIAL
     );
     if (!materialB) {
       throw new Error('material missing');
@@ -95,7 +96,7 @@ describe('sharedMaterial', () => {
   it('does not deduplicate materials when Culling differs', () => {
     const objects: ResoniteObject[] = [createObject('a'), createObject('b')];
     const materialB = objects[1].components.find(
-      (component) => component.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
+      (component) => component.type === COMPONENT_TYPES.XIEXE_TOON_MATERIAL
     );
     if (!materialB) {
       throw new Error('material missing');

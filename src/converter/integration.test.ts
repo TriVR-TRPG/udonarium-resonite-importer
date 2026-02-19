@@ -5,6 +5,7 @@ import { extractZip } from '../parser/ZipExtractor';
 import { parseXmlFiles } from '../parser/XmlParser';
 import { buildImageAspectRatioMap, buildImageBlendModeMap } from './imageAspectRatioMap';
 import { convertObjectsWithTextureMap } from './ObjectConverter';
+import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 
 const SKIP_EXTERNAL_URL_DOWNLOAD_IN_CI = process.env.CI === 'true';
 const SAMPLE_DICE_ZIP_PATH = path.join(process.cwd(), 'src', '__fixtures__', 'sample-dice.zip');
@@ -67,14 +68,14 @@ describe.skipIf(SKIP_EXTERNAL_URL_DOWNLOAD_IN_CI)('Converter integration (sample
       expect(convertedDice.length).toBeGreaterThan(0);
       const dice = convertedDice[0];
       expect(dice.components.map((c) => c.type)).toEqual([
-        '[FrooxEngine]FrooxEngine.BoxCollider',
-        '[FrooxEngine]FrooxEngine.Grabbable',
+        COMPONENT_TYPES.BOX_COLLIDER,
+        COMPONENT_TYPES.GRABBABLE,
       ]);
       expect(dice.children.length).toBe(6);
       expect(dice.children.filter((child) => child.isActive)).toHaveLength(1);
 
       const material = dice.children[0].components.find(
-        (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
+        (c) => c.type === COMPONENT_TYPES.XIEXE_TOON_MATERIAL
       );
       expect(material?.fields.BlendMode).toEqual({
         $type: 'enum',
@@ -94,12 +95,10 @@ describe.skipIf(SKIP_EXTERNAL_URL_DOWNLOAD_IN_CI)('Converter integration (sample
       const flattened = flattenObjects(converted);
 
       const cards = flattened.filter((obj) => {
-        const hasGrabbable = obj.components.some(
-          (c) => c.type === '[FrooxEngine]FrooxEngine.Grabbable'
-        );
+        const hasGrabbable = obj.components.some((c) => c.type === COMPONENT_TYPES.GRABBABLE);
         const hasCardCollider = obj.components.some(
           (c) =>
-            c.type === '[FrooxEngine]FrooxEngine.BoxCollider' &&
+            c.type === COMPONENT_TYPES.BOX_COLLIDER &&
             (c.fields.Size as { value?: { y?: number } }).value?.y === 0.01
         );
         const front = obj.children.find((c) => c.id.endsWith('-front'));
@@ -109,7 +108,7 @@ describe.skipIf(SKIP_EXTERNAL_URL_DOWNLOAD_IN_CI)('Converter integration (sample
       const stacks = flattened.filter((obj) =>
         obj.components.some(
           (c) =>
-            c.type === '[FrooxEngine]FrooxEngine.BoxCollider' &&
+            c.type === COMPONENT_TYPES.BOX_COLLIDER &&
             (c.fields.Size as { value?: { y?: number } }).value?.y === 0.05
         )
       );
@@ -132,11 +131,9 @@ describe.skipIf(SKIP_EXTERNAL_URL_DOWNLOAD_IN_CI)(
 
         const masks = flattened.filter((obj) => {
           const material = obj.components.find(
-            (c) => c.type === '[FrooxEngine]FrooxEngine.XiexeToonMaterial'
+            (c) => c.type === COMPONENT_TYPES.XIEXE_TOON_MATERIAL
           );
-          const collider = obj.components.find(
-            (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-          );
+          const collider = obj.components.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
           const blendMode = (material?.fields.BlendMode as { value?: string } | undefined)?.value;
           const colliderZ = (collider?.fields.Size as { value?: { z?: number } } | undefined)?.value
             ?.z;
@@ -162,16 +159,14 @@ describe.skipIf(SKIP_EXTERNAL_URL_DOWNLOAD_IN_CI)(
         const terrains = flattened.filter((obj) => {
           const top = obj.children.find((c) => c.id.endsWith('-top'));
           const walls = obj.children.find((c) => c.id.endsWith('-walls'));
-          const hasCollider = obj.components.some(
-            (c) => c.type === '[FrooxEngine]FrooxEngine.BoxCollider'
-          );
+          const hasCollider = obj.components.some((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
           return !!top && !!walls && hasCollider;
         });
 
         expect(terrains.length).toBeGreaterThan(0);
         expect(
           terrains.some((terrain) =>
-            terrain.components.some((c) => c.type === '[FrooxEngine]FrooxEngine.Grabbable')
+            terrain.components.some((c) => c.type === COMPONENT_TYPES.GRABBABLE)
           )
         ).toBe(true);
       },
