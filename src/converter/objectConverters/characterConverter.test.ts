@@ -11,7 +11,6 @@ describe('convertCharacter', () => {
       name: 'Character',
       position: { x: 0, y: 0, z: 0 },
       images: [{ identifier: 'char.png', name: 'char.png' }],
-      properties: new Map(),
       locationName: 'graveyard',
       size: 3,
       rotate: 30,
@@ -88,10 +87,12 @@ describe('convertCharacter', () => {
       id: 'char-no-image',
       type: 'character',
       name: 'No Image Character',
+      locationName: 'table',
       position: { x: 0, y: 0, z: 0 },
       images: [],
-      properties: new Map(),
       size: 2,
+      rotate: 0,
+      roll: 0,
       resources: [],
     };
     const resoniteObj: ResoniteObject = {
@@ -126,10 +127,12 @@ describe('convertCharacter', () => {
       id: 'char-ratio',
       type: 'character',
       name: 'Ratio Character',
+      locationName: 'table',
       position: { x: 0, y: 0, z: 0 },
       images: [{ identifier: 'char-ratio.png', name: 'char-ratio.png' }],
-      properties: new Map(),
       size: 1,
+      rotate: 0,
+      roll: 0,
       resources: [],
     };
     const resoniteObj: ResoniteObject = {

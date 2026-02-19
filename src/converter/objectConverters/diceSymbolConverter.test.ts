@@ -17,7 +17,6 @@ function createBaseDice(): DiceSymbol {
       { identifier: 'face-1.png', name: '1' },
       { identifier: 'face-2.png', name: '2' },
     ],
-    properties: new Map(),
     size: 2,
     face: '2',
     rotate: 0,

@@ -11,11 +11,7 @@ function clamp01(value: number): number {
 }
 
 function resolveMaskOpacity(mask: TableMask): number {
-  const opacityRaw = mask.properties.get('opacity');
-  if (typeof opacityRaw !== 'number') {
-    return 1;
-  }
-  return clamp01(opacityRaw / 100);
+  return clamp01(mask.opacity / 100);
 }
 
 export function convertTableMask(

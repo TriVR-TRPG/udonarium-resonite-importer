@@ -45,7 +45,6 @@ export function parseGameTable(data: unknown, fileName: string): GameTable {
     gridColor,
     selected,
     images,
-    properties: new Map(),
     children: [],
   };
 }
@@ -84,7 +83,6 @@ export function parseTable(data: unknown, fileName: string): GameTable {
     gridType,
     gridColor,
     images,
-    properties: new Map(),
     children: [],
   };
 }
@@ -106,10 +104,6 @@ export function parseTableMask(data: unknown, fileName: string): TableMask {
   // Parse position and attributes
   const position = parsePosition(root);
   const isLock = getBooleanValue(root['@_isLock']) ?? false;
-  const properties = new Map<string, string | number>();
-  if (opacity !== undefined) {
-    properties.set('opacity', opacity);
-  }
   const images: ImageRef[] = [];
   if (imageIdentifier) {
     images.push({
@@ -127,6 +121,6 @@ export function parseTableMask(data: unknown, fileName: string): TableMask {
     width,
     height,
     images,
-    properties,
+    opacity: opacity ?? 100,
   };
 }

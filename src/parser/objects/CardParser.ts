@@ -47,7 +47,6 @@ export function parseCard(data: unknown, fileName: string): Card {
     name,
     position,
     images,
-    properties: new Map(),
     size,
     rotate,
     isFaceUp,
@@ -94,7 +93,6 @@ export function parseCardStack(data: unknown, fileName: string): CardStack {
     name,
     position,
     images: [],
-    properties: new Map(),
     rotate,
     cards,
   };

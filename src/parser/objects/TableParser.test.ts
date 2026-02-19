@@ -257,6 +257,7 @@ describe('TableParser', () => {
 
       expect(result.width).toBe(4);
       expect(result.height).toBe(4);
+      expect(result.opacity).toBe(100);
     });
 
     it('should parse position', () => {
@@ -377,7 +378,7 @@ describe('TableParser', () => {
 
       const result = parseTableMask(data, 'test.xml');
 
-      expect(result.properties.get('opacity')).toBe(30);
+      expect(result.opacity).toBe(30);
     });
 
     it('should handle empty data gracefully', () => {
@@ -389,6 +390,7 @@ describe('TableParser', () => {
       expect(result.name).toBe('empty.xml');
       expect(result.width).toBe(4);
       expect(result.height).toBe(4);
+      expect(result.opacity).toBe(100);
     });
 
     it('should parse isLock as false when attribute is "false"', () => {

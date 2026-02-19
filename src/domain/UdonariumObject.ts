@@ -15,7 +15,6 @@ export type ObjectType =
 export interface ImageRef {
   identifier: string;
   name: string;
-  data?: Buffer;
 }
 
 export interface Vector3 {
@@ -36,15 +35,14 @@ export interface BaseUdonariumObject {
   name: string;
   position: Vector3;
   images: ImageRef[];
-  properties: Map<string, string | number>;
 }
 
 export interface GameCharacter extends BaseUdonariumObject {
   type: 'character';
-  locationName?: string;
+  locationName: string;
   size: number;
-  rotate?: number;
-  roll?: number;
+  rotate: number;
+  roll: number;
   resources: NumberResource[];
 }
 
@@ -112,6 +110,7 @@ export interface TableMask extends BaseUdonariumObject {
   isLock: boolean;
   width: number;
   height: number;
+  opacity: number;
 }
 
 export interface TextNote extends BaseUdonariumObject {

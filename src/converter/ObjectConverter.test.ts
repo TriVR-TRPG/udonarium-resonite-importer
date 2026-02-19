@@ -86,7 +86,6 @@ describe('ObjectConverter', () => {
       name: 'Test Object',
       position: { x: 100, y: 200, z: 50 },
       images: [{ identifier: 'img1', name: 'image1.png' }],
-      properties: new Map<string, string | number>(),
     });
 
     describe('character conversion', () => {
@@ -94,7 +93,10 @@ describe('ObjectConverter', () => {
         const character: GameCharacter = {
           ...createBaseObject(),
           type: 'character',
+          locationName: 'table',
           size: 2,
+          rotate: 0,
+          roll: 0,
           resources: [],
         };
 
@@ -115,8 +117,11 @@ describe('ObjectConverter', () => {
         const character: GameCharacter = {
           ...createBaseObject(),
           type: 'character',
+          locationName: 'table',
           size: 2,
           images: [{ identifier: 'char-aspect', name: 'char-aspect.png' }],
+          rotate: 0,
+          roll: 0,
           resources: [],
         };
         const imageAspectRatioMap = new Map<string, number>([['char-aspect', 1.5]]);
@@ -367,7 +372,7 @@ describe('ObjectConverter', () => {
           isLock: false,
           width: 5,
           height: 4,
-          properties: new Map([['opacity', 30]]),
+          opacity: 30,
         };
 
         const result = convertObject(tableMask);
@@ -386,7 +391,10 @@ describe('ObjectConverter', () => {
         {
           ...createBaseObject(),
           type: 'character' as const,
+          locationName: 'table',
           size: 1,
+          rotate: 0,
+          roll: 0,
           resources: [],
         },
         {
@@ -468,7 +476,10 @@ describe('ObjectConverter', () => {
       const character: GameCharacter = {
         ...createBaseObject(),
         type: 'character',
+        locationName: 'table',
         size: 1,
+        rotate: 0,
+        roll: 0,
         resources: [],
       };
 
@@ -481,7 +492,10 @@ describe('ObjectConverter', () => {
       const character: GameCharacter = {
         ...createBaseObject(),
         type: 'character',
+        locationName: 'table',
         size: 1,
+        rotate: 0,
+        roll: 0,
         resources: [],
       };
 
@@ -503,20 +517,24 @@ describe('ObjectConverter', () => {
           id: 'char1',
           type: 'character',
           name: 'Character 1',
+          locationName: 'table',
           position: { x: 0, y: 0, z: 0 },
           images: [],
-          properties: new Map(),
           size: 1,
+          rotate: 0,
+          roll: 0,
           resources: [],
         },
         {
           id: 'char2',
           type: 'character',
           name: 'Character 2',
+          locationName: 'table',
           position: { x: 100, y: 100, z: 0 },
           images: [],
-          properties: new Map(),
           size: 2,
+          rotate: 0,
+          roll: 0,
           resources: [],
         },
       ];
@@ -535,30 +553,36 @@ describe('ObjectConverter', () => {
           id: 'data',
           type: 'character',
           name: 'Monster A',
+          locationName: 'table',
           position: { x: 0, y: 0, z: 0 },
           images: [],
-          properties: new Map(),
           size: 1,
+          rotate: 0,
+          roll: 0,
           resources: [],
         },
         {
           id: 'data',
           type: 'character',
           name: 'Monster B',
+          locationName: 'table',
           position: { x: 100, y: 0, z: 0 },
           images: [],
-          properties: new Map(),
           size: 1,
+          rotate: 0,
+          roll: 0,
           resources: [],
         },
         {
           id: 'data',
           type: 'character',
           name: 'Monster C',
+          locationName: 'table',
           position: { x: 200, y: 0, z: 0 },
           images: [],
-          properties: new Map(),
           size: 1,
+          rotate: 0,
+          roll: 0,
           resources: [],
         },
       ];
@@ -580,7 +604,6 @@ describe('ObjectConverter', () => {
         name,
         position: { x: 0, y: 0, z: 0 },
         images: [],
-        properties: new Map(),
         width: 20,
         height: 15,
         gridType: 'SQUARE',
@@ -592,10 +615,12 @@ describe('ObjectConverter', () => {
         id: 'char-1',
         type: 'character',
         name: 'Character 1',
+        locationName: 'table',
         position: { x: 0, y: 0, z: 0 },
         images: [],
-        properties: new Map(),
         size: 1,
+        rotate: 0,
+        roll: 0,
         resources: [],
       };
 

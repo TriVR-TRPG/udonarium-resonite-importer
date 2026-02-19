@@ -62,7 +62,6 @@ export function parseDiceSymbol(data: unknown, fileName: string): DiceSymbol {
     position: parsePosition(root),
     images,
     faceImages,
-    properties: new Map(),
     size,
     face,
     owner,
