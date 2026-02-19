@@ -101,12 +101,12 @@ describe('convertCard', () => {
       (c) => c.type === COMPONENT_TYPES.STATIC_TEXTURE_2D
     );
     expect(frontTexture?.fields).toEqual({
-      URL: { $type: 'Uri', value: 'texture://front.png' },
+      URL: { $type: 'Uri', value: 'front.png' },
       WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
       WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
     });
     expect(backTexture?.fields).toEqual({
-      URL: { $type: 'Uri', value: 'texture://back.png' },
+      URL: { $type: 'Uri', value: 'back.png' },
       WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
       WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
     });
@@ -153,12 +153,12 @@ describe('convertCard', () => {
       (c) => c.type === COMPONENT_TYPES.STATIC_TEXTURE_2D
     );
     expect(frontTexture?.fields).toEqual({
-      URL: { $type: 'Uri', value: 'texture://fallback.png' },
+      URL: { $type: 'Uri', value: 'fallback.png' },
       WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
       WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
     });
     expect(backTexture?.fields).toEqual({
-      URL: { $type: 'Uri', value: 'texture://fallback.png' },
+      URL: { $type: 'Uri', value: 'fallback.png' },
       WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
       WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
     });
@@ -183,7 +183,7 @@ describe('convertCard', () => {
       (c) => c.type === COMPONENT_TYPES.STATIC_TEXTURE_2D
     );
     expect(frontTexture?.fields).toEqual({
-      URL: { $type: 'Uri', value: 'texture://front.gif' },
+      URL: { $type: 'Uri', value: 'front.gif' },
       WrapModeU: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
       WrapModeV: { $type: 'enum', value: 'Clamp', enumType: 'TextureWrapMode' },
       FilterMode: { $type: 'enum?', value: 'Point', enumType: 'TextureFilterMode' },
