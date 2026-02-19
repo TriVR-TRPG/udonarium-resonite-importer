@@ -42,8 +42,8 @@ export interface GameCharacter extends BaseUdonariumObject {
   type: 'character';
   locationName: string;
   size: number;
-  rotate?: number;
-  roll?: number;
+  rotate: number;
+  roll: number;
   resources: NumberResource[];
 }
 

@@ -25,8 +25,8 @@ export function parseCharacter(data: unknown, fileName: string): GameCharacter {
   const commonData = findDataByName(characterData, 'common');
   const name = getTextValue(findDataByName(commonData, 'name')) || fileName;
   const size = getNumberValue(findDataByName(commonData, 'size')) ?? 1;
-  const rotate = getNumberValue(root['@_rotate']);
-  const roll = getNumberValue(root['@_roll']);
+  const rotate = getNumberValue(root['@_rotate']) ?? 0;
+  const roll = getNumberValue(root['@_roll']) ?? 0;
 
   // Parse resources
   const resources: NumberResource[] = [];

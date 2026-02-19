@@ -128,10 +128,13 @@ describe('buildImageBlendModeMap', () => {
           id: 'char-1',
           type: 'character',
           name: 'Char',
+          locationName: 'table',
           position: { x: 0, y: 0, z: 0 },
           images: [{ identifier: 'https://example.com/some-image.png', name: 'main' }],
           properties: new Map(),
           size: 1,
+          rotate: 0,
+          roll: 0,
           resources: [],
         },
       ];
