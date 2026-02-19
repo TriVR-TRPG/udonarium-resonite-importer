@@ -95,31 +95,28 @@ identifier: './assets/images/BG10a_80.jpg'
 identifier: 'https://example.com/images/character.png'
 ```
 
-**`registerExternalUrls()` の対象外**（`./` 始まりでも KNOWN_IMAGES でもないため）です。
-そのため `importedTextures` にも `textureComponentMap` にも登録されません。
+`registerExternalUrls()` が identifier をそのまま URL として `registerExternalUrl()` に渡します。
+`./` 始まりや KNOWN_IMAGES と同様に、`importedTextures` に登録され、
+Assets/Textures スロットに**共有テクスチャ**として作成されます。
 
 ```
-registerExternalUrls() → 何もしない
-
-resolveTextureValue('https://example.com/images/character.png', textureComponentMap)
-  → textureComponentMap.get('https://...') → undefined
-  → フォールバック: identifier そのもの（URL）を返す
-
-buildQuadMeshComponents(textureValue='https://example.com/images/character.png')
-  → parseTextureReferenceId('https://...') → undefined（texture-ref:// ではない）
-  → ローカルに StaticTexture2D( URL='https://example.com/images/character.png' ) を生成
-  → ローカルに MainTexturePropertyBlock を生成
-  （Assets/Textures スロットには何も作られない）
+identifier: 'https://example.com/images/character.png'
+  → registerExternalUrl('https://example.com/images/character.png',
+                        'https://example.com/images/character.png')
+  → importedTextures: Map { 'https://example.com/images/character.png'
+                            → 'https://example.com/images/character.png' }
+  → StaticTexture2D.URL = 'https://example.com/images/character.png'
+     （Assets/Textures スロットに共有テクスチャとして作成）
 ```
 
-**`./` 始まりとの違い**:
+**`./` 始まりとの比較**:
 
 | | `./assets/images/foo.png` | `https://example.com/images/foo.png` |
 |---|---|---|
-| `registerExternalUrls` | 登録する | 登録しない |
-| Assets/Textures に共有スロット | 作成する | 作成しない |
-| オブジェクト内の StaticTexture2D | 作成しない（共有参照） | ローカルに作成 |
-| 同一テクスチャの重複 | 発生しない | オブジェクトごとに生成 |
+| `registerExternalUrls` | 登録する | 登録する |
+| Assets/Textures に共有スロット | 作成する | 作成する |
+| オブジェクト内の StaticTexture2D | 作成しない（共有参照） | 作成しない（共有参照） |
+| 同一テクスチャの重複 | 発生しない | 発生しない |
 
 **ブレンドモードの扱い**:
 

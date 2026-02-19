@@ -10,6 +10,8 @@ function tryRegister(identifier: string, assetImporter: AssetImporter): void {
     assetImporter.registerExternalUrl(identifier, url);
   } else if (KNOWN_IMAGES.has(identifier)) {
     assetImporter.registerExternalUrl(identifier, KNOWN_IMAGES.get(identifier)!.url);
+  } else if (identifier.startsWith('http://') || identifier.startsWith('https://')) {
+    assetImporter.registerExternalUrl(identifier, identifier);
   }
 }
 
