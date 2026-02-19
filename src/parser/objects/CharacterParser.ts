@@ -49,7 +49,6 @@ export function parseCharacter(data: unknown, fileName: string): GameCharacter {
     rotate,
     roll,
     images,
-    properties: new Map(),
     resources,
   };
 }

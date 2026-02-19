@@ -28,6 +28,5 @@ export function parseTextNote(data: unknown, fileName: string): TextNote {
     text,
     fontSize,
     images: [],
-    properties: new Map(),
   };
 }

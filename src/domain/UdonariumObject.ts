@@ -35,7 +35,6 @@ export interface BaseUdonariumObject {
   name: string;
   position: Vector3;
   images: ImageRef[];
-  properties: Map<string, string | number>;
 }
 
 export interface GameCharacter extends BaseUdonariumObject {

@@ -59,7 +59,6 @@ export function parseTerrain(data: unknown, fileName: string): Terrain {
     height,
     depth,
     images,
-    properties: new Map(),
     wallImage,
     floorImage,
   };

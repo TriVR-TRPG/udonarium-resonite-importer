@@ -15,7 +15,6 @@ describe('convertTableMask', () => {
       height: 3,
       images: [],
       opacity: 40,
-      properties: new Map(),
     };
     const resoniteObj: ResoniteObject = {
       id: 'slot-mask-1',
@@ -70,7 +69,6 @@ describe('convertTableMask', () => {
       height: 2,
       images: [{ identifier: 'none_icon', name: 'mask' }],
       opacity: 70,
-      properties: new Map(),
     };
     const resoniteObj: ResoniteObject = {
       id: 'slot-mask-2',
@@ -106,7 +104,6 @@ describe('convertTableMask', () => {
       height: 4,
       images: [],
       opacity: 100,
-      properties: new Map(),
     };
     const resoniteObj: ResoniteObject = {
       id: 'slot-mask-unlocked',
@@ -141,7 +138,6 @@ describe('convertTableMask', () => {
       height: 4,
       images: [],
       opacity: 100,
-      properties: new Map(),
     };
     const resoniteObj: ResoniteObject = {
       id: 'slot-mask-locked',

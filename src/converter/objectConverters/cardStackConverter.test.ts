@@ -11,7 +11,6 @@ describe('convertCardStack', () => {
       name: 'A',
       position: { x: 1, y: 2, z: 0 },
       images: [],
-      properties: new Map(),
       size: 2,
       isFaceUp: true,
       frontImage: null,
@@ -29,7 +28,6 @@ describe('convertCardStack', () => {
       rotate: 45,
       position: { x: 0, y: 0, z: 0 },
       images: [],
-      properties: new Map(),
       cards: [cardA, cardB],
     };
     const resoniteObj: ResoniteObject = {
@@ -96,7 +94,6 @@ describe('convertCardStack', () => {
       name: 'A',
       position: { x: 0, y: 0, z: 0 },
       images: [{ identifier: 'front.png', name: 'front' }],
-      properties: new Map(),
       size: 2,
       isFaceUp: true,
       frontImage: { identifier: 'front.png', name: 'front' },
@@ -108,7 +105,6 @@ describe('convertCardStack', () => {
       name: 'Stack',
       position: { x: 0, y: 0, z: 0 },
       images: [],
-      properties: new Map(),
       cards: [card],
     };
     const resoniteObj: ResoniteObject = {
@@ -160,7 +156,6 @@ describe('convertCardStack', () => {
         { identifier: './assets/images/trump/c01.gif', name: 'front' },
         { identifier: 'testCharacter_1_image', name: 'back' },
       ],
-      properties: new Map(),
       size: 2,
       isFaceUp: false,
       frontImage: { identifier: './assets/images/trump/c01.gif', name: 'front' },
@@ -172,7 +167,6 @@ describe('convertCardStack', () => {
       name: 'Stack',
       position: { x: 0, y: 0, z: 0 },
       images: [],
-      properties: new Map(),
       cards: [card],
     };
     const resoniteObj: ResoniteObject = {

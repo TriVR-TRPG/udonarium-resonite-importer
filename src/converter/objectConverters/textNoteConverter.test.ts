@@ -11,7 +11,6 @@ describe('convertTextNote', () => {
       name: 'Note',
       position: { x: 0, y: 0, z: 0 },
       images: [],
-      properties: new Map(),
       text: 'hello',
       fontSize: 14,
     };
@@ -54,7 +53,6 @@ describe('convertTextNote', () => {
       name: 'Note',
       position: { x: 0, y: 0, z: 0 },
       images: [],
-      properties: new Map(),
       text: 'tiny',
       fontSize: 1,
     };
