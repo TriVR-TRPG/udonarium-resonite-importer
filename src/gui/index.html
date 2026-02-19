@@ -86,10 +86,6 @@
           <div class="card-body">
             <div class="settings-grid">
               <div class="setting-item">
-                <label for="host" data-i18n="gui.host">ホスト</label>
-                <input type="text" id="host" value="localhost" />
-              </div>
-              <div class="setting-item">
                 <label for="root-scale" data-i18n="gui.rootScale">ルートスケール:</label>
                 <div class="root-scale-control">
                   <input type="range" id="root-scale" min="0" max="6" step="1" value="3" />
@@ -123,6 +119,10 @@
                   <option value="Cutout" data-i18n="gui.blendModeCutout">Cutout</option>
                   <option value="Alpha" data-i18n="gui.blendModeAlpha">Alpha</option>
                 </select>
+              </div>
+              <div class="setting-item">
+                <label for="host" data-i18n="gui.host">ResoniteLinkホスト</label>
+                <input type="text" id="host" value="" placeholder="localhost" />
               </div>
             </div>
           </div>

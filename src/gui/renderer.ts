@@ -136,6 +136,11 @@ function getRootScaleFromDirectInput(): number {
   return getSelectedRootScale();
 }
 
+function getHostOrDefault(): string {
+  const host = hostInput.value.trim();
+  return host || 'localhost';
+}
+
 function findNearestRootScaleIndex(scale: number): number {
   let nearestIndex = 0;
   let nearestDelta = Number.POSITIVE_INFINITY;
@@ -304,7 +309,7 @@ importBtn.addEventListener('click', () => {
 
     const options: ImportOptions = {
       filePath: currentFilePath,
-      host: hostInput.value || 'localhost',
+      host: getHostOrDefault(),
       port: parsePortOrNull(portInput.value) ?? DEFAULT_PORT,
       rootScale: getRootScaleFromDirectInput(),
       enableCharacterColliderOnLockedTerrain: lockedTerrainCharacterColliderInput.checked,

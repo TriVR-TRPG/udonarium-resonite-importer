@@ -157,6 +157,7 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     enableCharacterColliderOnLockedTerrain,
     semiTransparentImageBlendMode,
   } = options;
+  const resolvedHost = (typeof host === 'string' ? host : '').trim() || 'localhost';
 
   const sendProgress = (step: string, progress: number, detail?: string) => {
     mainWindow?.webContents.send('import-progress', {
@@ -188,7 +189,7 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
 
     // Step 3: Connect to ResoniteLink
     sendProgress('connect', 0);
-    const client = new ResoniteLinkClient({ host, port });
+    const client = new ResoniteLinkClient({ host: resolvedHost, port });
     await client.connect();
     await warnVersionIfChangedForGui(client, (message) => {
       sendProgress('connect', 100, message);
