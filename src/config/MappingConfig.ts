@@ -79,7 +79,7 @@ export const DEFAULT_RESONITE_LINK = {
  * ResoniteLink version that fixtures and compatibility checks were last validated against.
  * If runtime version differs, import can continue but behavior may have changed.
  */
-export const VERIFIED_RESONITE_LINK_VERSION = '0.7.0.0';
+export const VERIFIED_RESONITE_LINK_VERSION = '0.8.3.0';
 
 export interface KnownImageDefinition {
   url: string;
