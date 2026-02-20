@@ -193,5 +193,6 @@ export type ImageAssetContext = {
 - `sourceKind` は import/register イベント起点で `ImageAssetInfo` に保存する実装へ移行済み。context 側推定は後方互換の最終フォールバックとして限定。
 - context 生成は `buildImageAssetContext(...)` に集約し、CLI/GUI は importer ヘルパー経由で共通利用する構成へ移行済み。
 - `AssetImporter` は `ImageAssetInfo` を一次情報として保持し、shared texture 作成時は `SlotBuilder.createTextureAssetsWithUpdater(...)` と `applyTextureReference(...)` で直接更新する構成へ移行済み。
+- 旧API `AssetImporter.applyTextureReferences(...)` は後方互換のため残置しつつ `@deprecated` 化済み。
 - dry-run も `buildDryRunImageAssetInfoMap(...)` で `ImageAssetInfo` を生成し、通常 import と同じ context 入力形式で処理する構成へ移行済み。
 - `BuildImageAssetContextOptions` の legacy 項目には deprecate 注釈と実行時 warning を追加済み。
