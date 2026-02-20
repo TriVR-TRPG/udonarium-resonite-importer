@@ -47,7 +47,7 @@ export function convertDiceSymbol(
     id: slotId,
     name: udonObj.name,
   })
-    .setRotation({ x: 0, y: udonObj.rotate ?? 0, z: 0 })
+    .setRotation({ x: 0, y: udonObj.rotate, z: 0 })
     .setPosition({
       x: basePosition.x + faceWidth / 2,
       y: basePosition.y + maxFaceHeight / 2,

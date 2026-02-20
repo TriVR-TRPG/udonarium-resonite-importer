@@ -43,8 +43,8 @@ export interface DiceSymbol extends BaseUdonariumObject {
   type: 'dice-symbol';
   size: number;
   faceImages: ImageRef[];
-  face?: string;
-  rotate?: number;
+  face: string | undefined;
+  rotate: number;
 }
 
 export interface Card extends BaseUdonariumObject {

@@ -143,6 +143,7 @@ describe('ObjectConverter', () => {
           type: 'dice-symbol',
           size: 2,
           face: '6',
+          rotate: 0,
           images: [
             { identifier: 'dice-face-6', name: '6' },
             { identifier: 'dice-face-1', name: '1' },
@@ -174,6 +175,7 @@ describe('ObjectConverter', () => {
           type: 'dice-symbol',
           size: 2,
           face: 'large',
+          rotate: 0,
           images: [
             { identifier: 'small-face', name: 'small' },
             { identifier: 'large-face', name: 'large' },
@@ -387,6 +389,7 @@ describe('ObjectConverter', () => {
           type: 'dice-symbol' as const,
           size: 1,
           face: '1',
+          rotate: 0,
           faceImages: [{ identifier: 'img1', name: '1' }],
         },
         {

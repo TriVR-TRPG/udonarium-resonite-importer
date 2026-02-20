@@ -95,6 +95,8 @@ describe('buildImageBlendModeMap', () => {
         images: [{ identifier: './assets/images/dice/6_dice/6_dice[1].png', name: '1' }],
         faceImages: [{ identifier: './assets/images/dice/6_dice/6_dice[1].png', name: '1' }],
         size: 1,
+        face: undefined,
+        rotate: 0,
       },
     ];
 
