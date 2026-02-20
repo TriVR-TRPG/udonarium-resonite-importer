@@ -1,4 +1,4 @@
-﻿# 画像情報の取り扱い統合（ImageAssetContext）提案（改訂）
+# 画像情報の取り扱い統合（ImageAssetContext）提案（改訂）
 
 ## 目的
 画像関連情報が複数 `Map` に分散していることで、変換処理の追跡コストが高くなっている。
@@ -91,7 +91,7 @@ export type ImageAssetInfo = {
 };
 
 export type ImageAssetContext = {
-  byIdentifier: Map<string, ImageAssetInfo>;
+  byIdentifier: ReadonlyMap<string, ImageAssetInfo>;
 };
 ```
 
@@ -131,7 +131,7 @@ export type ImageAssetContext = {
 - [x] context 生成ロジックを `buildImageAssetContext(...)` に一本化し、CLI/GUI から共通利用
 
 
-- [ ] `ImageAssetContext.byIdentifier` を `ReadonlyMap<string, ImageAssetInfo>` に変更し、context を読み取り専用ビューとして型レベルでも保証する
+- [x] `ImageAssetContext.byIdentifier` を `ReadonlyMap<string, ImageAssetInfo>` に変更し、context を読み取り専用ビューとして型レベルでも保証する
 
 ### ローカル作業向け TODO（次の実装順）
 - [x] `AssetImporter` で `sourceKind` を推定依存にせず、登録/取り込みイベント（ZIP・known-id・外部URL・外部SVG）起点で必ず確定させる

@@ -23,7 +23,7 @@ export type ImageAssetInfo = {
 };
 
 export interface ImageAssetContext {
-  byIdentifier: Map<string, ImageAssetInfo>;
+  byIdentifier: ReadonlyMap<string, ImageAssetInfo>;
   getAssetInfo(identifier?: string): ImageAssetInfo | undefined;
   resolveTextureValue(identifier?: string): string | undefined;
   lookupAspectRatio(identifier?: string): number | undefined;
