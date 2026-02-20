@@ -131,17 +131,17 @@ export type ImageAssetContext = {
 4. converter/builder は map を意識せず context から取得
 
 ### 残タスク（理想形との差分）
-- [ ] `sourceKind` を推定ではなく取り込み時イベントから確定値として保存
+- [x] `sourceKind` を推定ではなく取り込み時イベントから確定値として保存（import/register 経路は対応済み。context 側推定は最終フォールバックとしてのみ残置）
 - [x] `AssetImporter` から `ImageAssetInfo` を直接受け渡す API を追加
-- [ ] `textureComponentMap` など中間 map を段階的に廃止（CLI/GUI では importer 内の `ImageAssetInfo` を `texture-ref` へ更新する形に移行済み）
-- [ ] context 生成ロジックを `buildImageAssetContext(...)` に一本化し、CLI/GUI から共通利用
+- [x] `textureComponentMap` など中間 map を段階的に廃止（CLI/GUI は `SlotBuilder.createTextureAssetsWithUpdater` で importer の `ImageAssetInfo` を直接更新）
+- [x] context 生成ロジックを `buildImageAssetContext(...)` に一本化し、CLI/GUI から共通利用
 
 
 ### ローカル作業向け TODO（次の実装順）
-- [ ] `AssetImporter` で `sourceKind` を推定依存にせず、登録/取り込みイベント（ZIP・known-id・外部URL・外部SVG）起点で必ず確定させる
-- [ ] dry-run 経路でも `ImageAssetInfo` を一時生成できる共通ヘルパーを追加し、通常 import と同一の context 入力形式に揃える
-- [ ] `createImageAssetContext` の map フォールバック（`textureMap` / `imageSourceKindMap`）を縮小し、`imageAssetInfoMap` 優先の API に段階移行する
-- [ ] `SlotBuilder` の `createTextureAssets` 戻り値を段階的に `Map<string, ImageAssetInfo>` 更新APIへ置き換え、componentId map を外部に露出しない形へ寄せる
+- [x] `AssetImporter` で `sourceKind` を推定依存にせず、登録/取り込みイベント（ZIP・known-id・外部URL・外部SVG）起点で必ず確定させる
+- [x] dry-run 経路でも `ImageAssetInfo` を一時生成できる共通ヘルパーを追加し、通常 import と同一の context 入力形式に揃える
+- [x] `createImageAssetContext` の map フォールバック（`textureMap` / `imageSourceKindMap`）を縮小し、`imageAssetInfoMap` 優先の API に段階移行する
+- [x] `SlotBuilder` の `createTextureAssets` 戻り値を段階的に `Map<string, ImageAssetInfo>` 更新APIへ置き換え、componentId map を外部に露出しない形へ寄せる
 - [ ] 完了後に `BuildImageAssetContextOptions` の legacy 項目（`textureValueMap` など）を deprecated 表記し、最終的な削除計画を明記する
 
 ---
@@ -180,7 +180,8 @@ export type ImageAssetContext = {
 - `ResoniteObjectBuilder.addQuadMesh` も `imageAssetContext` 参照で texture/blend/filter を解決する実装に移行済み。
 - `ImageAssetContext` に `byIdentifier` / `getAssetInfo(...)` を追加し、
   提案時に想定した「画像単位の情報集約」に近づけた。
-- `sourceKind` は推定ロジックに加えて、`AssetImporter` が保持する source kind map を context に渡せるようにした。
-  ただし ZIP/外部URL 以外の細分化や取り込みイベント起点の完全確定は今後の整理対象。
-- context 生成は `buildImageAssetContext(...)` を追加し、CLI/GUI で共通利用を開始した。さらに `AssetImporter.buildImageAssetContext(...)` ヘルパーを追加し、インポート実行経路での context 組み立てを importer 側に寄せた。
-- `AssetImporter` は `ImageAssetInfo` を内部の一次情報として保持し、`getImportedImageAssetInfoMap()` で直接受け渡せるようにした。さらに `applyTextureReferences(...)` で shared texture 生成後に `textureValue` を `texture-ref://...` へ反映し、CLI/GUI では context へ `ImageAssetInfo` をそのまま渡す形に寄せた。
+- `sourceKind` は import/register イベント起点で `ImageAssetInfo` に保存する実装へ移行済み。context 側推定は後方互換の最終フォールバックとして限定。
+- context 生成は `buildImageAssetContext(...)` に集約し、CLI/GUI は importer ヘルパー経由で共通利用する構成へ移行済み。
+- `AssetImporter` は `ImageAssetInfo` を一次情報として保持し、shared texture 作成時は `SlotBuilder.createTextureAssetsWithUpdater(...)` と `applyTextureReference(...)` で直接更新する構成へ移行済み。
+- dry-run も `buildDryRunImageAssetInfoMap(...)` で `ImageAssetInfo` を生成し、通常 import と同じ context 入力形式で処理する構成へ移行済み。
+- `BuildImageAssetContextOptions` の legacy 項目には deprecate 注釈と実行時 warning を追加済み。
