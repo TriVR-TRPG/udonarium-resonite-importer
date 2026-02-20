@@ -33,8 +33,6 @@ export class AssetImporter {
   private client: ResoniteLinkClient;
   private importedImageAssetInfoMap: Map<string, ImageAssetInfo> = new Map();
   private tempDir: string | null = null;
-  private hasWarnedApplyTextureReferences = false;
-  private readonly strictDeprecations = process.env.UDONARIUM_IMPORTER_STRICT_DEPRECATIONS === '1';
 
   constructor(client: ResoniteLinkClient) {
     this.client = client;
@@ -184,27 +182,6 @@ export class AssetImporter {
       ...info,
       textureValue: toTextureReference(componentId),
     });
-  }
-
-  /**
-   * Replace texture values with shared texture references when components are created.
-   * @deprecated Prefer applyTextureReference(identifier, componentId) from updater callback.
-   */
-  applyTextureReferences(textureReferenceComponentMap: Map<string, string>): void {
-    if (this.strictDeprecations) {
-      throw new Error(
-        '[deprecated-strict] AssetImporter.applyTextureReferences is forbidden. Use applyTextureReference via SlotBuilder updater callback.'
-      );
-    }
-    if (!this.hasWarnedApplyTextureReferences) {
-      this.hasWarnedApplyTextureReferences = true;
-      console.warn(
-        '[deprecated] AssetImporter.applyTextureReferences is deprecated. Prefer applyTextureReference via SlotBuilder updater callback.'
-      );
-    }
-    for (const [identifier, componentId] of textureReferenceComponentMap) {
-      this.applyTextureReference(identifier, componentId);
-    }
   }
 
   buildImageAssetContext(options: BuildImporterImageAssetContextOptions = {}): ImageAssetContext {

@@ -5,8 +5,6 @@ import { AssetImporter } from './AssetImporter';
 import { ResoniteLinkClient } from './ResoniteLinkClient';
 import { ExtractedFile } from '../parser/ZipExtractor';
 
-const STRICT_ENV_KEY = 'UDONARIUM_IMPORTER_STRICT_DEPRECATIONS';
-
 // Mock ResoniteLinkClient
 vi.mock('./ResoniteLinkClient', () => {
   return {
@@ -21,15 +19,6 @@ describe('AssetImporter', () => {
     importTexture: Mock;
   };
   let assetImporter: AssetImporter;
-  const originalStrictEnv = process.env[STRICT_ENV_KEY];
-
-  function restoreStrictEnv(): void {
-    if (originalStrictEnv === undefined) {
-      delete process.env[STRICT_ENV_KEY];
-      return;
-    }
-    process.env[STRICT_ENV_KEY] = originalStrictEnv;
-  }
 
   const createExtractedFile = (overrides: Partial<ExtractedFile> = {}): ExtractedFile => ({
     path: 'images/test-image.png',
@@ -368,7 +357,7 @@ describe('AssetImporter', () => {
     });
   });
 
-  describe('applyTextureReferences', () => {
+  describe('applyTextureReference', () => {
     it('updates a single identifier via applyTextureReference', async () => {
       await assetImporter.importImage(
         createExtractedFile({ path: 'images/single-ref.png', name: 'single-ref.png' })
@@ -379,59 +368,6 @@ describe('AssetImporter', () => {
       expect(assetImporter.getTextureId('single-ref.png')).toBe(
         'texture-ref://shared-single-ref-component'
       );
-    });
-
-    it('keeps backward compatibility for map-based updates', async () => {
-      delete process.env[STRICT_ENV_KEY];
-      assetImporter = new AssetImporter(mockClient as unknown as ResoniteLinkClient);
-      await assetImporter.importImage(
-        createExtractedFile({ path: 'images/ref.png', name: 'ref.png' })
-      );
-
-      assetImporter.applyTextureReferences(new Map([['ref.png', 'shared-ref-component']]));
-
-      expect(assetImporter.getTextureId('ref.png')).toBe('texture-ref://shared-ref-component');
-      expect(assetImporter.getImportedImageAssetInfoMap().get('ref.png')?.sourceKind).toBe(
-        'zip-image'
-      );
-      restoreStrictEnv();
-    });
-
-    it('warns once when using deprecated map-based update API', async () => {
-      delete process.env[STRICT_ENV_KEY];
-      assetImporter = new AssetImporter(mockClient as unknown as ResoniteLinkClient);
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-      await assetImporter.importImage(
-        createExtractedFile({ path: 'images/ref-warn.png', name: 'ref-warn.png' })
-      );
-
-      assetImporter.applyTextureReferences(
-        new Map([['ref-warn.png', 'shared-ref-warn-component']])
-      );
-      assetImporter.applyTextureReferences(
-        new Map([['ref-warn.png', 'shared-ref-warn-component-2']])
-      );
-
-      expect(warnSpy).toHaveBeenCalledTimes(1);
-      warnSpy.mockRestore();
-      restoreStrictEnv();
-    });
-
-    it('throws when strict deprecation mode is enabled', async () => {
-      process.env[STRICT_ENV_KEY] = '1';
-      const strictImporter = new AssetImporter(mockClient as unknown as ResoniteLinkClient);
-      await strictImporter.importImage(
-        createExtractedFile({ path: 'images/ref-strict.png', name: 'ref-strict.png' })
-      );
-
-      expect(() =>
-        strictImporter.applyTextureReferences(
-          new Map([['ref-strict.png', 'shared-ref-strict-component']])
-        )
-      ).toThrow(/deprecated-strict/);
-
-      strictImporter.cleanup();
-      restoreStrictEnv();
     });
   });
 
@@ -466,23 +402,6 @@ describe('AssetImporter', () => {
 
       expect(warnSpy).not.toHaveBeenCalled();
       warnSpy.mockRestore();
-    });
-
-    it('works under strict deprecation mode on importer context path', async () => {
-      process.env[STRICT_ENV_KEY] = '1';
-      const strictImporter = new AssetImporter(mockClient as unknown as ResoniteLinkClient);
-      await strictImporter.importImage(
-        createExtractedFile({ path: 'images/context3.png', name: 'context3.png' })
-      );
-
-      expect(() =>
-        strictImporter.buildImageAssetContext({
-          imageAspectRatioMap: new Map([['context3.png', 1.0]]),
-        })
-      ).not.toThrow();
-
-      strictImporter.cleanup();
-      restoreStrictEnv();
     });
   });
 

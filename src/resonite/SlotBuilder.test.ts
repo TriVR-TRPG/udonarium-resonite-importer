@@ -9,8 +9,6 @@ import {
 } from '../config/MappingConfig';
 import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 
-const STRICT_ENV_KEY = 'UDONARIUM_IMPORTER_STRICT_DEPRECATIONS';
-
 // Mock ResoniteLinkClient
 vi.mock('./ResoniteLinkClient', () => {
   return {
@@ -29,15 +27,6 @@ describe('SlotBuilder', () => {
     addComponent: Mock;
   };
   let slotBuilder: SlotBuilder;
-  const originalStrictEnv = process.env[STRICT_ENV_KEY];
-
-  function restoreStrictEnv(): void {
-    if (originalStrictEnv === undefined) {
-      delete process.env[STRICT_ENV_KEY];
-      return;
-    }
-    process.env[STRICT_ENV_KEY] = originalStrictEnv;
-  }
 
   const createResoniteObject = (overrides: Partial<ResoniteObject> = {}): ResoniteObject => ({
     id: 'test-id',
@@ -524,44 +513,6 @@ describe('SlotBuilder', () => {
   });
 
   describe('createTextureAssets', () => {
-    it('warns once when using deprecated createTextureAssets API', async () => {
-      delete process.env[STRICT_ENV_KEY];
-      slotBuilder = new SlotBuilder(mockClient as unknown as ResoniteLinkClient);
-      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-      const textureMap = new Map<string, string>([['card-front.png', 'resdb:///card-front']]);
-
-      await slotBuilder.createTextureAssets(textureMap);
-      await slotBuilder.createTextureAssets(textureMap);
-
-      expect(warnSpy).toHaveBeenCalledTimes(1);
-      warnSpy.mockRestore();
-      restoreStrictEnv();
-    });
-
-    it('throws when strict deprecation mode is enabled', async () => {
-      process.env[STRICT_ENV_KEY] = '1';
-      const strictBuilder = new SlotBuilder(mockClient as unknown as ResoniteLinkClient);
-      const textureMap = new Map<string, string>([['card-front.png', 'resdb:///card-front']]);
-
-      await expect(strictBuilder.createTextureAssets(textureMap)).rejects.toThrow(
-        /deprecated-strict/
-      );
-
-      restoreStrictEnv();
-    });
-
-    it('works with updater API under strict deprecation mode', async () => {
-      process.env[STRICT_ENV_KEY] = '1';
-      const strictBuilder = new SlotBuilder(mockClient as unknown as ResoniteLinkClient);
-      const textureMap = new Map<string, string>([['card-front.png', 'resdb:///card-front']]);
-
-      await expect(
-        strictBuilder.createTextureAssetsWithUpdater(textureMap, () => undefined)
-      ).resolves.toBeUndefined();
-
-      restoreStrictEnv();
-    });
-
     it('can apply texture references via updater callback without exposing map', async () => {
       const textureMap = new Map<string, string>([['card-front.png', 'resdb:///card-front']]);
       const updateTextureReference = vi.fn();

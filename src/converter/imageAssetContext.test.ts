@@ -166,7 +166,7 @@ describe('imageAssetContext', () => {
   });
 
   it('prefers importer asset info over texture reference component map', () => {
-    const context = buildImageAssetContext({
+    const context = createImageAssetContext({
       imageAssetInfoMap: new Map([
         [
           'known_icon',
