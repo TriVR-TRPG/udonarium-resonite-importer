@@ -67,12 +67,14 @@ Generated components:
 - `MeshRenderer`
 - Optional texture chain from `buildQuadMeshComponents(...)`
 - `BoxCollider` (`Size = (size, size * aspectRatio, 0.05)`)
+- `Grabbable` (always added)
 
 ### 5.2 Without image
 
 Generated components:
 
-- `BoxCollider` only (`Size = (size, size, 0.05)`)
+- `BoxCollider` (`Size = (size, size, 0.05)`)
+- `Grabbable` (always added)
 
 ## 6. Texture and Material Rules
 
@@ -105,4 +107,5 @@ During slot build (outside converter), character slots are routed by `location.n
 3. With image, mesh height follows image aspect ratio
 4. Without image, no mesh/material/renderer components are created
 5. Collider exists in both cases
-6. `location.name` routing places character under expected `Inventory` child slot
+6. `Grabbable` is always added regardless of image presence
+7. `location.name` routing places character under expected `Inventory` child slot
