@@ -142,7 +142,17 @@ export type ImageAssetContext = {
 - [x] dry-run 経路でも `ImageAssetInfo` を一時生成できる共通ヘルパーを追加し、通常 import と同一の context 入力形式に揃える
 - [x] `createImageAssetContext` の map フォールバック（`textureMap` / `imageSourceKindMap`）を縮小し、`imageAssetInfoMap` 優先の API に段階移行する
 - [x] `SlotBuilder` の `createTextureAssets` 戻り値を段階的に `Map<string, ImageAssetInfo>` 更新APIへ置き換え、componentId map を外部に露出しない形へ寄せる
-- [ ] 完了後に `BuildImageAssetContextOptions` の legacy 項目（`textureValueMap` など）を deprecated 表記し、最終的な削除計画を明記する
+- [x] 完了後に `BuildImageAssetContextOptions` の legacy 項目（`textureValueMap` など）を deprecated 表記し、最終的な削除計画を明記する
+
+### Legacy削除計画（確定）
+1. Phase A（現行）:
+   `BuildImageAssetContextOptions` の legacy 項目（`textureValueMap` / `textureReferenceComponentMap` / `imageSourceKindMap`）は `@deprecated` + 実行時 warning で維持。
+2. Phase B（次マイナー）:
+   CLI/GUI/Importer からの legacy オプション利用を禁止し、`imageAssetInfoMap` を唯一の推奨入力としてドキュメント更新。
+3. Phase C（次メジャー）:
+   `BuildImageAssetContextOptions` から legacy 項目を削除し、`buildImageAssetContext(...)` は `imageAssetInfoMap` ベース API のみを公開。
+4. 互換性方針:
+   テストは `createImageAssetContext` の legacy フォールバック検証を段階的に縮小し、最終的に `imageAssetInfoMap` 前提ケースのみ残す。
 
 ---
 
