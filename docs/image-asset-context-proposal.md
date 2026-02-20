@@ -131,6 +131,8 @@ export type ImageAssetContext = {
 - [x] context 生成ロジックを `buildImageAssetContext(...)` に一本化し、CLI/GUI から共通利用
 
 
+- [ ] `ImageAssetContext.byIdentifier` を `ReadonlyMap<string, ImageAssetInfo>` に変更し、context を読み取り専用ビューとして型レベルでも保証する
+
 ### ローカル作業向け TODO（次の実装順）
 - [x] `AssetImporter` で `sourceKind` を推定依存にせず、登録/取り込みイベント（ZIP・known-id・外部URL・外部SVG）起点で必ず確定させる
 - [x] dry-run 経路でも `ImageAssetInfo` を一時生成できる共通ヘルパーを追加し、通常 import と同一の context 入力形式に揃える
