@@ -23,12 +23,6 @@ export interface Vector3 {
   z: number;
 }
 
-export interface NumberResource {
-  name: string;
-  currentValue: number;
-  maxValue: number;
-}
-
 export interface BaseUdonariumObject {
   id: string;
   type: ObjectType;
@@ -43,22 +37,20 @@ export interface GameCharacter extends BaseUdonariumObject {
   size: number;
   rotate: number;
   roll: number;
-  resources: NumberResource[];
 }
 
 export interface DiceSymbol extends BaseUdonariumObject {
   type: 'dice-symbol';
   size: number;
   faceImages: ImageRef[];
-  face?: string;
-  owner?: string;
-  rotate?: number;
+  face: string;
+  rotate: number;
 }
 
 export interface Card extends BaseUdonariumObject {
   type: 'card';
-  size?: number;
-  rotate?: number;
+  size: number;
+  rotate: number;
   isFaceUp: boolean;
   frontImage: ImageRef | null;
   backImage: ImageRef | null;
@@ -66,7 +58,7 @@ export interface Card extends BaseUdonariumObject {
 
 export interface CardStack extends BaseUdonariumObject {
   type: 'card-stack';
-  rotate?: number;
+  rotate: number;
   cards: Card[];
 }
 
@@ -86,14 +78,7 @@ export interface Terrain extends BaseUdonariumObject {
  * Types that can be children of a GameTable.
  * Excludes GameTable itself to avoid circular type reference.
  */
-export type GameTableChild =
-  | GameCharacter
-  | DiceSymbol
-  | Card
-  | CardStack
-  | Terrain
-  | TableMask
-  | TextNote;
+export type GameTableChild = Terrain | TableMask;
 
 export interface GameTable extends BaseUdonariumObject {
   type: 'table';
@@ -101,7 +86,7 @@ export interface GameTable extends BaseUdonariumObject {
   height: number;
   gridType: string;
   gridColor: string;
-  selected?: boolean;
+  selected: boolean;
   children: GameTableChild[];
 }
 

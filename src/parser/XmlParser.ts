@@ -9,7 +9,7 @@ import { parseCharacter } from './objects/CharacterParser';
 import { parseDiceSymbol } from './objects/DiceSymbolParser';
 import { parseCard, parseCardStack } from './objects/CardParser';
 import { parseTerrain } from './objects/TerrainParser';
-import { parseTable, parseGameTable, parseTableMask } from './objects/TableParser';
+import { parseGameTable, parseTableMask } from './objects/TableParser';
 import { parseTextNote } from './objects/TextNoteParser';
 
 /**
@@ -144,8 +144,6 @@ function parseObjectByType(
         return parseCardStack(data, fileName);
       case 'terrain':
         return parseTerrain(data, fileName);
-      case 'table':
-        return parseTable(data, fileName);
       case 'game-table':
         return parseGameTable(data, fileName);
       case 'table-mask':

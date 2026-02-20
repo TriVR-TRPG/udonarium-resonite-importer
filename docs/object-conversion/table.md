@@ -4,7 +4,7 @@
 
 ## 1. Scope
 
-Defines conversion behavior for Udonarium table objects (`table` and `game-table`) into Resonite slots/components.
+Defines conversion behavior for Udonarium `game-table` objects into Resonite slots/components.
 
 ## 2. Source Fields (Udonarium)
 
@@ -13,26 +13,26 @@ Defines conversion behavior for Udonarium table objects (`table` and `game-table
 - `height`
 - `gridType`
 - `gridColor`
-- `image.imageIdentifier` (`table`) or `imageIdentifier` (`game-table`)
-- `selected` (`game-table`, optional)
-- `children` (`game-table` nested objects such as terrain/table-mask/card-stack/etc.)
+- `imageIdentifier` (surface image, optional)
+- `selected` (optional)
+- `children` (nested objects: terrain / table-mask)
 
 ## 3. Parser Behavior
 
-`parseTable(...)` and `parseGameTable(...)` normalize both source shapes into `GameTable`.
+`parseGameTable(...)` normalizes the source into `GameTable`.
 
 Stored fields:
 
 - `type = "table"`
-- `position = (0, 0, 0)` (table object itself is origin-based in current implementation)
-- `images[0]` from table surface identifier when present
-- `children` (for `game-table`) from nested supported objects
-- `selected` from `game-table.selected` when present
+- `position = (0, 0, 0)` (table object itself is origin-based)
+- `images[0]` from surface image identifier when present
+- `children` from nested terrain / table-mask objects
+- `selected` when present
 
 Defaults:
 
-- `width = 20` (`game-table`), `20` (`table`)
-- `height = 15` (`game-table`), `20` (`table`)
+- `width = 20`
+- `height = 15`
 - `gridType = "SQUARE"`
 - `gridColor = "#000000"`
 
@@ -60,7 +60,7 @@ Table root slot:
 - no direct components
 - contains:
   1. `-surface` visual slot
-  2. converted child objects (terrain, table-mask, card-stack, etc.)
+  2. converted child objects (terrain, table-mask)
 
 Surface slot (`-surface`):
 

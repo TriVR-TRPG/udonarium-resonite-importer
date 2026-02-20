@@ -68,7 +68,7 @@ export function convertCardStack(
       y: basePosition.y + CARD_STACK_Y_OFFSET,
       z: basePosition.z - cardHeight / 2,
     })
-    .setRotation({ x: 0, y: udonObj.rotate ?? 0, z: 0 })
+    .setRotation({ x: 0, y: udonObj.rotate, z: 0 })
     .setSourceType(udonObj.type)
     .addBoxCollider({ x: cardWidth, y: 0.05, z: cardHeight })
     .addGrabbable()

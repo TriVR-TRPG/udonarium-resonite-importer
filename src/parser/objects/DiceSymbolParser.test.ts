@@ -11,7 +11,6 @@ describe('DiceSymbolParser', () => {
       const data = {
         '@_identifier': 'dice-001',
         '@_face': '6',
-        '@_owner': 'player-a',
         '@_rotate': '-30',
         '@_location.x': '120',
         '@_location.y': '220',
@@ -46,7 +45,6 @@ describe('DiceSymbolParser', () => {
       expect(result.name).toBe('D6');
       expect(result.size).toBe(1.5);
       expect(result.face).toBe('6');
-      expect(result.owner).toBe('player-a');
       expect(result.rotate).toBe(-30);
       expect(result.position).toEqual({ x: 120, y: 220, z: 10 });
 

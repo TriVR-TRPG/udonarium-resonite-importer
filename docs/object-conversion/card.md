@@ -77,20 +77,25 @@ Parent slot rotation:
 - rotation: `(-90, 180, 0)`
 - `QuadMesh` size: `(cardWidth, backHeight)`
 
-## 6. Texture Selection
+## 6. Texture and Material
 
-Front:
+Texture selection (front):
 
 1. `frontImage`
 2. `backImage`
 3. `images[0]`
 
-Back:
+Texture selection (back):
 
 1. `backImage`
 2. `frontImage`
 3. `images[1]`
 4. `images[0]`
+
+Blend mode:
+
+- Resolved per face via `lookupImageBlendMode(...)`
+- Default fallback: `Cutout` (differs from character / dice-symbol which use `Opaque`)
 
 ## 7. Validation Points
 
@@ -98,6 +103,4 @@ Back:
 2. Parent position and collider match the larger face height
 3. Smaller face is top-aligned when front/back heights differ
 4. `isFaceUp=false` results in parent `rotation.z=180`
-5. Material `BlendMode` is selected from image alpha metadata:
-   - `hasAlpha=true` -> `Alpha`
-   - `hasAlpha=false` -> `Opaque`
+5. Default `BlendMode` is `Cutout`

@@ -174,36 +174,6 @@ describe('Integration: Sample Save Data', () => {
   });
 
   describe('character parsing details', () => {
-    it('should parse character resources (HP/MP)', () => {
-      const extracted = extractZip(SAMPLE_ZIP_PATH);
-      const dataFile = extracted.xmlFiles.find((f) => f.name === 'data');
-      const content = dataFile!.data.toString('utf-8');
-
-      const result = parseXml(content, 'data.xml');
-      const characters = result.objects.filter((o) => o.type === 'character');
-
-      // Find a character with resources
-      const charWithResources = characters.find(
-        (c) => 'resources' in c && (c as { resources: unknown[] }).resources.length > 0
-      );
-
-      expect(charWithResources).toBeDefined();
-
-      if (charWithResources && 'resources' in charWithResources) {
-        const resources = charWithResources.resources as Array<{
-          name: string;
-          currentValue: number;
-          maxValue: number;
-        }>;
-        expect(resources.length).toBeGreaterThanOrEqual(2);
-
-        // Should have HP and MP
-        const resourceNames = resources.map((r) => r.name);
-        expect(resourceNames).toContain('HP');
-        expect(resourceNames).toContain('MP');
-      }
-    });
-
     it('should parse character position from location attributes', () => {
       const extracted = extractZip(SAMPLE_ZIP_PATH);
       const dataFile = extracted.xmlFiles.find((f) => f.name === 'data');

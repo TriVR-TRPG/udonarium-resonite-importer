@@ -77,20 +77,25 @@ Udonarium の `card` を Resonite の親 Slot + 表裏子 Slot 構成へ変換�
 - rotation: `(-90, 180, 0)`
 - `QuadMesh` サイズ: `(cardWidth, backHeight)`
 
-## 6. テクスチャ選択
+## 6. テクスチャ・マテリアル
 
-表面:
+テクスチャ選択（表面）:
 
 1. `frontImage`
 2. `backImage`
 3. `images[0]`
 
-裏面:
+テクスチャ選択（裏面）:
 
 1. `backImage`
 2. `frontImage`
 3. `images[1]`
 4. `images[0]`
+
+BlendMode:
+
+- 各面のテクスチャ識別子に対して `lookupImageBlendMode(...)` で解決
+- 未解決時のデフォルト: `Cutout`（character / dice-symbol の `Opaque` とは異なる）
 
 ## 7. 検証ポイント
 
@@ -98,3 +103,4 @@ Udonarium の `card` を Resonite の親 Slot + 表裏子 Slot 構成へ変換�
 2. 親の位置と Collider が大きい方の高さに一致する
 3. 表裏サイズ不一致時に小さい面が上端揃えになる
 4. `isFaceUp=false` 時に親 `rotation.z=180` になる
+5. `BlendMode` のデフォルトは `Cutout`

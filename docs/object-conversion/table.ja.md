@@ -4,7 +4,7 @@
 
 ## 1. 対象
 
-Udonarium の table 系オブジェクト（`table` / `game-table`）を Resonite の slot/component へ変換する仕様です。
+Udonarium の `game-table` オブジェクトを Resonite の slot/component へ変換する仕様です。
 
 ## 2. 入力フィールド（Udonarium）
 
@@ -13,26 +13,26 @@ Udonarium の table 系オブジェクト（`table` / `game-table`）を Resonit
 - `height`
 - `gridType`
 - `gridColor`
-- `image.imageIdentifier`（`table`）または `imageIdentifier`（`game-table`）
-- `selected`（`game-table`、任意）
-- `children`（`game-table` の配下オブジェクト: terrain/table-mask/card-stack など）
+- `imageIdentifier`（天板画像、任意）
+- `selected`（任意）
+- `children`（配下オブジェクト: terrain / table-mask）
 
 ## 3. パーサー挙動
 
-`parseTable(...)` と `parseGameTable(...)` は、どちらも `GameTable` へ正規化します。
+`parseGameTable(...)` は `GameTable` へ正規化します。
 
 保持される値:
 
 - `type = "table"`
-- `position = (0, 0, 0)`（現実装では table 自体は原点基準）
+- `position = (0, 0, 0)`（table 自体は原点基準）
 - 天板画像識別子がある場合は `images[0]` に保持
-- `game-table` の場合、対応オブジェクトを `children` に収集
-- `game-table.selected` がある場合は `selected` に保持
+- 配下の terrain / table-mask オブジェクトを `children` に収集
+- `selected` がある場合は `selected` に保持
 
 デフォルト値:
 
-- `width = 20`（`game-table` / `table`）
-- `height = 15`（`game-table`）、`20`（`table`）
+- `width = 20`
+- `height = 15`
 - `gridType = "SQUARE"`
 - `gridColor = "#000000"`
 
@@ -60,7 +60,7 @@ table ルート slot:
 - ルート自身には component を持たない
 - 子として以下を持つ:
   1. `-surface`（天板表示）
-  2. 変換済みの table 配下オブジェクト（terrain/table-mask/card-stack など）
+  2. 変換済みの table 配下オブジェクト（terrain / table-mask）
 
 天板 slot（`-surface`）:
 

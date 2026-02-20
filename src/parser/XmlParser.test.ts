@@ -151,29 +151,6 @@ describe('XmlParser', () => {
       });
     });
 
-    describe('table parsing', () => {
-      it('should parse table XML', () => {
-        const xml = `
-          <table identifier="table-001">
-            <data name="table">
-              <data name="common">
-                <data name="name">#text=Game Table</data>
-              </data>
-              <data name="image">
-                <data name="imageIdentifier">#text=table-bg</data>
-              </data>
-            </data>
-          </table>
-        `;
-
-        const result = parseXml(xml, 'table.xml');
-
-        expect(result.errors).toHaveLength(0);
-        expect(result.objects).toHaveLength(1);
-        expect(result.objects[0].type).toBe('table');
-      });
-    });
-
     describe('table-mask parsing', () => {
       it('should parse table-mask XML', () => {
         const xml = `
@@ -480,12 +457,6 @@ describe('XmlParser', () => {
               <data name="name">モンスターA</data>
               <data name="size">1</data>
             </data>
-            <data name="detail">
-              <data name="リソース">
-                <data type="numberResource" currentValue="200" name="HP">200</data>
-                <data type="numberResource" currentValue="100" name="MP">100</data>
-              </data>
-            </data>
           </data>
         </character>
       `;
@@ -501,9 +472,6 @@ describe('XmlParser', () => {
       expect(character.position).toEqual({ x: 250, y: 450, z: 0 });
       expect(character.size).toBe(1);
       expect(character.images[0].identifier).toBe('testCharacter_1_image');
-      expect(character.resources).toHaveLength(2);
-      expect(character.resources[0]).toEqual({ name: 'HP', currentValue: 200, maxValue: 200 });
-      expect(character.resources[1]).toEqual({ name: 'MP', currentValue: 100, maxValue: 100 });
     });
 
     it('should parse text-note with location.x/location.y coordinates', () => {
@@ -633,11 +601,7 @@ describe('XmlParser', () => {
                 <data name="name">モンスターC</data>
                 <data name="size">3</data>
               </data>
-              <data name="detail">
-                <data name="リソース">
-                  <data type="numberResource" currentValue="200" name="HP">200</data>
-                </data>
-              </data>
+              <data name="detail"></data>
             </data>
           </character>
         </room>

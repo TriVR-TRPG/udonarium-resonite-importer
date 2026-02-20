@@ -97,7 +97,6 @@ describe('ObjectConverter', () => {
           size: 2,
           rotate: 0,
           roll: 0,
-          resources: [],
         };
 
         const result = convertObjectWithTextures(character, new Map());
@@ -122,7 +121,6 @@ describe('ObjectConverter', () => {
           images: [{ identifier: 'char-aspect', name: 'char-aspect.png' }],
           rotate: 0,
           roll: 0,
-          resources: [],
         };
         const imageAspectRatioMap = new Map<string, number>([['char-aspect', 1.5]]);
 
@@ -145,6 +143,7 @@ describe('ObjectConverter', () => {
           type: 'dice-symbol',
           size: 2,
           face: '6',
+          rotate: 0,
           images: [
             { identifier: 'dice-face-6', name: '6' },
             { identifier: 'dice-face-1', name: '1' },
@@ -176,6 +175,7 @@ describe('ObjectConverter', () => {
           type: 'dice-symbol',
           size: 2,
           face: 'large',
+          rotate: 0,
           images: [
             { identifier: 'small-face', name: 'small' },
             { identifier: 'large-face', name: 'large' },
@@ -274,6 +274,7 @@ describe('ObjectConverter', () => {
           height: 20,
           gridType: 'square',
           gridColor: '#000000',
+          selected: false,
           children: [],
         };
 
@@ -292,6 +293,7 @@ describe('ObjectConverter', () => {
           height: 20,
           gridType: 'square',
           gridColor: '#000000',
+          selected: false,
           children: [],
         };
 
@@ -314,6 +316,8 @@ describe('ObjectConverter', () => {
         const card: Card = {
           ...createBaseObject(),
           type: 'card',
+          size: 1,
+          rotate: 0,
           isFaceUp: true,
           frontImage: { identifier: 'front', name: 'front.png' },
           backImage: { identifier: 'back', name: 'back.png' },
@@ -330,6 +334,7 @@ describe('ObjectConverter', () => {
         const cardStack: CardStack = {
           ...createBaseObject(),
           type: 'card-stack',
+          rotate: 0,
           cards: [],
         };
 
@@ -383,13 +388,13 @@ describe('ObjectConverter', () => {
           size: 1,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
         {
           ...createBaseObject(),
           type: 'dice-symbol' as const,
           size: 1,
           face: '1',
+          rotate: 0,
           faceImages: [{ identifier: 'img1', name: '1' }],
         },
         {
@@ -411,11 +416,14 @@ describe('ObjectConverter', () => {
           height: 1,
           gridType: 'square' as const,
           gridColor: '#000000',
+          selected: false,
           children: [],
         },
         {
           ...createBaseObject(),
           type: 'card' as const,
+          size: 1,
+          rotate: 0,
           isFaceUp: true,
           frontImage: { identifier: 'front', name: 'front.png' },
           backImage: { identifier: 'back', name: 'back.png' },
@@ -423,6 +431,7 @@ describe('ObjectConverter', () => {
         {
           ...createBaseObject(),
           type: 'card-stack' as const,
+          rotate: 0,
           cards: [],
         },
         {
@@ -466,7 +475,6 @@ describe('ObjectConverter', () => {
         size: 1,
         rotate: 0,
         roll: 0,
-        resources: [],
       };
 
       const result = convertObjectWithTextures(character, new Map());
@@ -482,7 +490,6 @@ describe('ObjectConverter', () => {
         size: 1,
         rotate: 0,
         roll: 0,
-        resources: [],
       };
 
       const result = convertObjectWithTextures(character, new Map());
@@ -509,7 +516,6 @@ describe('ObjectConverter', () => {
           size: 1,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
         {
           id: 'char2',
@@ -521,7 +527,6 @@ describe('ObjectConverter', () => {
           size: 2,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
       ];
 
@@ -545,7 +550,6 @@ describe('ObjectConverter', () => {
           size: 1,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
         {
           id: 'data',
@@ -557,7 +561,6 @@ describe('ObjectConverter', () => {
           size: 1,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
         {
           id: 'data',
@@ -569,7 +572,6 @@ describe('ObjectConverter', () => {
           size: 1,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
       ];
 
@@ -607,7 +609,6 @@ describe('ObjectConverter', () => {
         size: 1,
         rotate: 0,
         roll: 0,
-        resources: [],
       };
 
       const result = convertObjectsWithTextureMap(

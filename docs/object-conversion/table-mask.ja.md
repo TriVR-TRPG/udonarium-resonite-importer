@@ -24,7 +24,7 @@ Udonarium の `table-mask` を Resonite の slot/component へ変換する仕様
 
 - `isLock` 属性から `isLock`（boolean）を格納
 - `imageIdentifier` があれば `images[0]` に格納
-- `opacity.currentValue` があれば `properties.opacity` に格納
+- `opacity.currentValue` があれば `opacity` に格納
 
 デフォルト:
 

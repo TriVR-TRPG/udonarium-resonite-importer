@@ -31,7 +31,8 @@ Udonarium の `terrain` を Resonite の slot/component へ変換する仕様で
 
 Udonarium（端基準）から Resonite（中心基準）への補正:
 - `x += width / 2`
-- `y += height / 2`
+- `y += height / 2`（`mode !== 1` の場合）
+- `y += height`（`mode === 1` の場合、上面を地面高さに合わせるため）
 - `z -= depth / 2`
 
 ## 4. 回転
@@ -43,25 +44,46 @@ terrain ルート:
 - `BoxCollider`
 - `isLocked == true` の場合、`BoxCollider.CharacterCollider = true`
 - `isLocked == false` の場合のみ `Grabbable`
-- 子に `-top` と `-walls` を持つ
+- 子スロット構成は `mode` によって異なる
+
+`mode !== 1`（壁あり）の場合:
 
 `-top`:
 - 位置: `(0, height/2, 0)`
 - 回転: `(90, 0, 0)`
-- サイズ: `(width, depth)` の `QuadMesh`
+- サイズ: `(width, depth)` の `QuadMesh`（上面テクスチャ）
 
-`-walls`:
-- `mode === 1` のとき `isActive = false`
-- それ以外は `isActive = true`
+`-bottom`:
+- 位置: `(0, -height/2, 0)`
+- 回転: `(-90, 0, 0)`
+- サイズ: `(width, depth)` の `QuadMesh`（上面テクスチャと同一）
+
+`-walls`（コンテナ、アクティブ）:
 - 子に `-front/-back/-left/-right` を生成
-
-壁面:
 - `-front`: pos `(0, 0, -depth/2)`, rot `(0, 0, 0)`, size `(width, height)`
 - `-back`: pos `(0, 0, depth/2)`, rot `(0, 180, 0)`, size `(width, height)`
 - `-left`: pos `(-width/2, 0, 0)`, rot `(0, 90, 0)`, size `(depth, height)`
 - `-right`: pos `(width/2, 0, 0)`, rot `(0, -90, 0)`, size `(depth, height)`
 
+`mode === 1`（壁なし）の場合:
+
+`-top`:
+- 位置: `(0, 0, 0)`
+- 回転: `(90, 0, 0)`
+- サイズ: `(width, depth)` の `QuadMesh`（上面テクスチャ）
+
+`-top-back`:
+- 位置: `(0, 0, 0)`
+- 回転: `(-90, 0, 0)`
+- サイズ: `(width, depth)` の `QuadMesh`（上面テクスチャと同一）
+
+`-walls`: **生成しない**
+
 ## 6. コンポーネント
+`BoxCollider` サイズ（ルートに付与）:
+- `mode !== 1`: `(width, height, depth)`
+- `mode === 1`: `(width, 0, depth)`（平面コライダー）
+
 各面の描画は `buildQuadMeshComponents(...)` を使用し、以下を生成:
 - `QuadMesh`
 - `XiexeToonMaterial`
@@ -83,8 +105,11 @@ terrain ルート:
 
 ## 8. 確認ポイント
 1. サイズ軸対応（`width/x`, `height/y`, `depth/z`）
-2. 中心補正（`+width/2`, `+height/2`, `-depth/2`）
-3. `rotate` が Y 回転に反映されること
-4. `mode === 1` で壁が非表示になること
-5. `isLocked == false` で `Grabbable` が付くこと
-6. 上面/壁面のテクスチャ優先順が想定どおりであること
+2. `mode !== 1` 時の中心補正: `y += height/2`
+3. `mode === 1` 時の中心補正: `y += height`
+4. `rotate` が Y 回転に反映されること
+5. `mode !== 1` 時は `-top`・`-bottom`・`-walls`（+壁面4枚）が生成される
+6. `mode === 1` 時は `-top`・`-top-back` のみ生成され `-walls` は生成されない
+7. `isLocked == true` で `BoxCollider.CharacterCollider = true`
+8. `isLocked == false` で `Grabbable` が付くこと
+9. 上面/壁面のテクスチャ優先順が想定どおりであること

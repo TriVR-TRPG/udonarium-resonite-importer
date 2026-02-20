@@ -79,7 +79,7 @@ export function convertCard(
   imageBlendModeMap?: Map<string, ImageBlendMode>,
   slotId?: string
 ): ResoniteObject {
-  const cardWidth = udonObj.size ?? 1;
+  const cardWidth = udonObj.size;
   const frontAspectRatio = resolveAspectRatio(
     resolveFrontAspectIdentifier(udonObj),
     resolveBackAspectIdentifier(udonObj),
@@ -116,7 +116,7 @@ export function convertCard(
     })
     .setRotation({
       x: 0,
-      y: udonObj.rotate ?? 0,
+      y: udonObj.rotate,
       z: udonObj.isFaceUp ? 0 : 180,
     })
     .setSourceType(udonObj.type);

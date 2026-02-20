@@ -41,13 +41,13 @@ export function convertDiceSymbol(
     (max, current) => (current > max ? current : max),
     faceWidth * DEFAULT_DICE_ASPECT_RATIO
   );
-  const activeFaceName = udonObj.face ?? udonObj.faceImages[0]?.name;
+  const activeFaceName = udonObj.face;
 
   const parentBuilder = ResoniteObjectBuilder.create({
     id: slotId,
     name: udonObj.name,
   })
-    .setRotation({ x: 0, y: udonObj.rotate ?? 0, z: 0 })
+    .setRotation({ x: 0, y: udonObj.rotate, z: 0 })
     .setPosition({
       x: basePosition.x + faceWidth / 2,
       y: basePosition.y + maxFaceHeight / 2,

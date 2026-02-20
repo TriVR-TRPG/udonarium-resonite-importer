@@ -16,7 +16,6 @@ describe('convertCharacter', () => {
       size: 3,
       rotate: 30,
       roll: 15,
-      resources: [],
     };
     const resoniteObj: ResoniteObject = {
       id: 'slot-char-1',
@@ -94,7 +93,6 @@ describe('convertCharacter', () => {
       size: 2,
       rotate: 0,
       roll: 0,
-      resources: [],
     };
     const resoniteObj: ResoniteObject = {
       id: 'slot-char-no-image',
@@ -134,7 +132,6 @@ describe('convertCharacter', () => {
       size: 1,
       rotate: 0,
       roll: 0,
-      resources: [],
     };
     const resoniteObj: ResoniteObject = {
       id: 'slot-char-ratio',

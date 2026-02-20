@@ -57,7 +57,6 @@ function makeCharacterWith(identifier: string): GameCharacter {
     size: 1,
     rotate: 0,
     roll: 0,
-    resources: [],
   };
 }
 

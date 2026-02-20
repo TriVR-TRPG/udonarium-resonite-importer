@@ -24,7 +24,7 @@ Defines conversion behavior for Udonarium `table-mask` objects into Resonite slo
 
 - `isLock` from `isLock` attribute (boolean)
 - `images[0]` from `imageIdentifier` when present
-- `properties.opacity` from `opacity.currentValue` when present
+- `opacity` from `opacity.currentValue` when present
 
 Defaults:
 

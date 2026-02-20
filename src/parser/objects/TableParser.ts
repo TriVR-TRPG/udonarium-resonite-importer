@@ -24,7 +24,7 @@ export function parseGameTable(data: unknown, fileName: string): GameTable {
   const gridType = (root['@_gridType'] as string) || 'SQUARE';
   const gridColor = (root['@_gridColor'] as string) || '#000000';
   const imageIdentifier = root['@_imageIdentifier'] as string;
-  const selected = getBooleanValue(root['@_selected']);
+  const selected = getBooleanValue(root['@_selected']) ?? false;
 
   const images: ImageRef[] = [];
   if (imageIdentifier) {
@@ -44,44 +44,6 @@ export function parseGameTable(data: unknown, fileName: string): GameTable {
     gridType,
     gridColor,
     selected,
-    images,
-    children: [],
-  };
-}
-
-export function parseTable(data: unknown, fileName: string): GameTable {
-  const root = data as Record<string, unknown>;
-  const tableData = findDataByName(root.data, 'table');
-
-  // Parse image
-  const imageData = findDataByName(tableData, 'image');
-  const imageIdentifier = getTextValue(findDataByName(imageData, 'imageIdentifier'));
-
-  const images: ImageRef[] = [];
-  if (imageIdentifier) {
-    images.push({
-      identifier: imageIdentifier,
-      name: 'surface',
-    });
-  }
-
-  // Parse common data
-  const commonData = findDataByName(tableData, 'common');
-  const name = getTextValue(findDataByName(commonData, 'name')) || fileName;
-  const width = getNumberValue(findDataByName(commonData, 'width')) ?? 20;
-  const height = getNumberValue(findDataByName(commonData, 'height')) ?? 20;
-  const gridType = getTextValue(findDataByName(commonData, 'gridType')) || 'SQUARE';
-  const gridColor = getTextValue(findDataByName(commonData, 'gridColor')) || '#000000';
-
-  return {
-    id: (root['@_identifier'] as string) || fileName,
-    type: 'table',
-    name,
-    position: { x: 0, y: 0, z: 0 },
-    width,
-    height,
-    gridType,
-    gridColor,
     images,
     children: [],
   };

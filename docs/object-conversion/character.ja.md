@@ -67,12 +67,14 @@ Udonarium の `character` を Resonite の slot/component に変換する仕様�
 - `MeshRenderer`
 - `buildQuadMeshComponents(...)` が生成するテクスチャ関連
 - `BoxCollider`（`Size = (size, size * aspectRatio, 0.05)`）
+- `Grabbable`（常に付与）
 
 ### 5.2 画像なし
 
 生成されるコンポーネント:
 
-- `BoxCollider` のみ（`Size = (size, size, 0.05)`）
+- `BoxCollider`（`Size = (size, size, 0.05)`）
+- `Grabbable`（常に付与）
 
 ## 6. テクスチャ・マテリアル
 
@@ -105,4 +107,5 @@ slot 作成時（converter 外）に `location.name` で振り分けられます
 3. 画像あり時のメッシュ縦幅が画像比率に従う
 4. 画像なし時に mesh/material/renderer が生成されない
 5. Collider は常に生成される
-6. `location.name` に応じて `Inventory` 配下へ配置される
+6. `Grabbable` は画像あり/なしにかかわらず常に付与される
+7. `location.name` に応じて `Inventory` 配下へ配置される
