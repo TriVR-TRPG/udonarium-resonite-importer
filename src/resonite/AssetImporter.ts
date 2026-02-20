@@ -140,17 +140,6 @@ export class AssetImporter {
   }
 
   /**
-   * Get source kind mappings for imported textures
-   */
-  getImportedSourceKinds(): Map<string, ImageSourceKind> {
-    const sourceKinds = new Map<string, ImageSourceKind>();
-    for (const [identifier, info] of this.importedImageAssetInfoMap) {
-      sourceKinds.set(identifier, info.sourceKind ?? 'unknown');
-    }
-    return sourceKinds;
-  }
-
-  /**
    * Get imported image asset info map (identifier -> texture/source metadata)
    */
   getImportedImageAssetInfoMap(): Map<string, ImageAssetInfo> {

@@ -311,14 +311,14 @@ describe('AssetImporter', () => {
     });
   });
 
-  describe('getImportedSourceKinds', () => {
+  describe('source kind tracking', () => {
     it('tracks source kind for imported zip images', async () => {
       await assetImporter.importImage(
         createExtractedFile({ path: 'images/sample.png', name: 'sample.png' })
       );
 
-      const sourceKinds = assetImporter.getImportedSourceKinds();
-      expect(sourceKinds.get('sample.png')).toBe('zip-image');
+      const infoMap = assetImporter.getImportedImageAssetInfoMap();
+      expect(infoMap.get('sample.png')?.sourceKind).toBe('zip-image');
     });
 
     it('tracks source kind for registered external URLs', () => {
@@ -328,8 +328,8 @@ describe('AssetImporter', () => {
         'external-url'
       );
 
-      const sourceKinds = assetImporter.getImportedSourceKinds();
-      expect(sourceKinds.get('https://example.com/a.png')).toBe('external-url');
+      const infoMap = assetImporter.getImportedImageAssetInfoMap();
+      expect(infoMap.get('https://example.com/a.png')?.sourceKind).toBe('external-url');
     });
   });
 
