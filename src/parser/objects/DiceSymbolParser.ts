@@ -29,7 +29,7 @@ export function parseDiceSymbol(data: unknown, fileName: string): DiceSymbol {
 
   const commonData = findDataByName(diceData, 'common');
   const imageData = findDataByName(diceData, 'image');
-  const face = (root['@_face'] as string) || undefined;
+  const face = root['@_face'] as string;
 
   const name = getTextValue(findDataByName(commonData, 'name')) || fileName;
   const size = getNumberValue(findDataByName(commonData, 'size')) ?? 1;
