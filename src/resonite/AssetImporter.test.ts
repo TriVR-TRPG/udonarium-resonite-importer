@@ -346,6 +346,15 @@ describe('AssetImporter', () => {
         sourceKind: 'zip-image',
       });
     });
+
+    it('stores filterMode as Point for gif textures', async () => {
+      await assetImporter.importImage(
+        createExtractedFile({ path: 'images/anim.gif', name: 'anim.gif' })
+      );
+
+      const infoMap = assetImporter.getImportedImageAssetInfoMap();
+      expect(infoMap.get('anim.gif')?.filterMode).toBe('Point');
+    });
   });
 
   describe('applyTextureReferences', () => {

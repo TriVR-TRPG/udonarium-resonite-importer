@@ -2,11 +2,16 @@ import * as path from 'path';
 import { UdonariumObject } from '../domain/UdonariumObject';
 import { ExtractedFile } from '../parser/ZipExtractor';
 import { ImageAssetInfo } from '../converter/imageAssetContext';
+import { isGifTexture } from '../converter/textureUtils';
 import { collectExternalImageSources } from './registerExternalUrls';
 
 function resolveZipImageSourceKind(image: ExtractedFile): ImageAssetInfo['sourceKind'] {
   const extension = path.extname(image.path || image.name).toLowerCase();
   return extension === '.svg' ? 'zip-svg' : 'zip-image';
+}
+
+function resolveFilterMode(identifier: string, textureValue: string): ImageAssetInfo['filterMode'] {
+  return isGifTexture(identifier, new Map([[identifier, textureValue]])) ? 'Point' : 'Default';
 }
 
 export function buildDryRunImageAssetInfoMap(
@@ -20,6 +25,7 @@ export function buildDryRunImageAssetInfoMap(
       identifier: imageFile.name,
       textureValue: imageFile.name,
       sourceKind: resolveZipImageSourceKind(imageFile),
+      filterMode: resolveFilterMode(imageFile.name, imageFile.name),
     });
   }
 
@@ -28,6 +34,7 @@ export function buildDryRunImageAssetInfoMap(
       identifier: source.identifier,
       textureValue: source.url,
       sourceKind: source.sourceKind,
+      filterMode: resolveFilterMode(source.identifier, source.url),
     });
   }
 

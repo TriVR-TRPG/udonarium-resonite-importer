@@ -14,12 +14,13 @@ import {
   ImageAssetInfo,
   ImageSourceKind,
 } from '../converter/imageAssetContext';
-import { toTextureReference } from '../converter/textureUtils';
+import { isGifTexture, toTextureReference } from '../converter/textureUtils';
 import { ImageBlendMode } from '../config/MappingConfig';
 
 export interface BuildImporterImageAssetContextOptions {
   imageAspectRatioMap?: Map<string, number>;
   imageBlendModeMap?: Map<string, ImageBlendMode>;
+  /** @deprecated filterMode is inferred into ImageAssetInfo during import/registration. */
   filterModeSourceTextureMap?: Map<string, string>;
 }
 
@@ -197,7 +198,6 @@ export class AssetImporter {
   buildImageAssetContext(options: BuildImporterImageAssetContextOptions = {}): ImageAssetContext {
     return buildImageAssetContext({
       imageAssetInfoMap: this.getImportedImageAssetInfoMap(),
-      filterModeSourceTextureMap: options.filterModeSourceTextureMap ?? this.getImportedTextures(),
       imageAspectRatioMap: options.imageAspectRatioMap,
       imageBlendModeMap: options.imageBlendModeMap,
     });
@@ -218,10 +218,12 @@ export class AssetImporter {
     textureValue: string,
     sourceKind: ImageSourceKind
   ): void {
+    const imageFilterLookupMap = new Map([[identifier, textureValue]]);
     this.importedImageAssetInfoMap.set(identifier, {
       identifier,
       textureValue,
       sourceKind,
+      filterMode: isGifTexture(identifier, imageFilterLookupMap) ? 'Point' : 'Default',
     });
   }
 

@@ -213,15 +213,8 @@ async function run(options: CLIOptions): Promise<void> {
       extractedData.imageFiles,
       parseResult.objects
     );
-    const filterModeSourceTextureMap = new Map<string, string>();
-    for (const [identifier, imageAssetInfo] of imageAssetInfoMap) {
-      if (imageAssetInfo.textureValue) {
-        filterModeSourceTextureMap.set(identifier, imageAssetInfo.textureValue);
-      }
-    }
     const imageAssetContext = buildImageAssetContext({
       imageAssetInfoMap,
-      filterModeSourceTextureMap,
       imageAspectRatioMap,
       imageBlendModeMap,
     });
@@ -331,7 +324,6 @@ async function run(options: CLIOptions): Promise<void> {
 
     // Build objects after texture asset creation so materials reference shared StaticTexture2D components.
     const imageAssetContext = assetImporter.buildImageAssetContext({
-      filterModeSourceTextureMap: importedTextures,
       imageAspectRatioMap,
       imageBlendModeMap,
     });

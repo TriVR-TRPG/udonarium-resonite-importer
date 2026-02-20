@@ -242,7 +242,6 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     );
 
     const imageAssetContext = assetImporter.buildImageAssetContext({
-      filterModeSourceTextureMap: importedTextures,
       imageAspectRatioMap,
       imageBlendModeMap,
     });

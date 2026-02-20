@@ -57,6 +57,7 @@ describe('buildDryRunImageAssetInfoMap', () => {
       identifier: 'front.png',
       textureValue: 'front.png',
       sourceKind: 'zip-image',
+      filterMode: 'Default',
     });
     expect(infoMap.get('icon.svg')).toMatchObject({
       identifier: 'icon.svg',
@@ -67,6 +68,7 @@ describe('buildDryRunImageAssetInfoMap', () => {
       identifier: './assets/images/bg.jpg',
       textureValue: 'https://udonarium.app/assets/images/bg.jpg',
       sourceKind: 'udonarium-asset-url',
+      filterMode: 'Default',
     });
     expect(infoMap.get('https://example.com/marker.png')).toMatchObject({
       identifier: 'https://example.com/marker.png',
@@ -77,6 +79,17 @@ describe('buildDryRunImageAssetInfoMap', () => {
       identifier: 'known_icon',
       textureValue: 'https://udonarium.app/assets/images/known_icon.png',
       sourceKind: 'known-id',
+      filterMode: 'Default',
     });
+  });
+
+  it('sets Point filterMode for gif sources', () => {
+    const imageFiles = [createExtractedFile({ path: 'images/anim.gif', name: 'anim.gif' })];
+    const objects = [makeCharacter('https://example.com/sprite.gif')];
+
+    const infoMap = buildDryRunImageAssetInfoMap(imageFiles, objects);
+
+    expect(infoMap.get('anim.gif')?.filterMode).toBe('Point');
+    expect(infoMap.get('https://example.com/sprite.gif')?.filterMode).toBe('Point');
   });
 });
