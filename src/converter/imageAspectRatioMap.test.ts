@@ -47,6 +47,8 @@ describe('buildImageAspectRatioMap', () => {
           { identifier: 'none_icon', name: 'front' },
           { identifier: './assets/images/trump/c01.gif', name: 'back' },
         ],
+        size: 1,
+        rotate: 0,
         isFaceUp: true,
         frontImage: { identifier: 'none_icon', name: 'front' },
         backImage: { identifier: './assets/images/trump/c01.gif', name: 'back' },
@@ -95,7 +97,7 @@ describe('buildImageBlendModeMap', () => {
         images: [{ identifier: './assets/images/dice/6_dice/6_dice[1].png', name: '1' }],
         faceImages: [{ identifier: './assets/images/dice/6_dice/6_dice[1].png', name: '1' }],
         size: 1,
-        face: undefined,
+        face: '1',
         rotate: 0,
       },
     ];

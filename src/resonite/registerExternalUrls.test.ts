@@ -187,6 +187,8 @@ describe('registerExternalUrls', () => {
         name: 'Card',
         position: { x: 0, y: 0, z: 0 },
         images: [],
+        size: 1,
+        rotate: 0,
         isFaceUp: true,
         frontImage: { identifier: 'https://example.com/front.png', name: 'front' },
         backImage: { identifier: 'https://example.com/back.png', name: 'back' },
@@ -212,6 +214,7 @@ describe('registerExternalUrls', () => {
         name: 'Stack',
         position: { x: 0, y: 0, z: 0 },
         images: [],
+        rotate: 0,
         cards: [
           {
             id: 'card1',
@@ -219,6 +222,8 @@ describe('registerExternalUrls', () => {
             name: 'Card',
             position: { x: 0, y: 0, z: 0 },
             images: [],
+            size: 1,
+            rotate: 0,
             isFaceUp: true,
             frontImage: { identifier: 'https://example.com/card.png', name: 'card' },
             backImage: null,

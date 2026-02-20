@@ -32,6 +32,7 @@ describe('convertTable', () => {
       height: 10,
       gridType: 'square',
       gridColor: '#ffffff',
+      selected: false,
       children: [childTerrain],
     };
 
@@ -101,6 +102,7 @@ describe('convertTable', () => {
       height: 10,
       gridType: 'square',
       gridColor: '#ffffff',
+      selected: false,
       children: [],
     };
 
