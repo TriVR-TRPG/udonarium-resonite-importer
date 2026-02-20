@@ -85,7 +85,8 @@ function buildQuadMeshComponents(
   options: QuadMeshOptions = {}
 ): ResoniteComponent[] {
   const textureValue = options.imageAssetContext
-    ? options.imageAssetContext.resolveTextureValue(options.textureIdentifier)
+    ? (options.imageAssetContext.resolveTextureValue(options.textureIdentifier) ??
+      options.textureIdentifier)
     : options.textureIdentifier;
   const dualSided = options.dualSided ?? false;
   const size = options.size ?? { x: 1, y: 1 };
