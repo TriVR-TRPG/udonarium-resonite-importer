@@ -20,8 +20,6 @@ import { ImageBlendMode } from '../config/MappingConfig';
 export interface BuildImporterImageAssetContextOptions {
   imageAspectRatioMap?: Map<string, number>;
   imageBlendModeMap?: Map<string, ImageBlendMode>;
-  /** @deprecated filterMode is inferred into ImageAssetInfo during import/registration. */
-  filterModeSourceTextureMap?: Map<string, string>;
 }
 
 export interface AssetImportResult {
