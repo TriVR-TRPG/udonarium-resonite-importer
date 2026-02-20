@@ -255,21 +255,8 @@ export class ResoniteObjectBuilder {
     return this;
   }
 
-  addQuadMesh(
-    textureIdentifier?: string,
-    dualSided = false,
-    size: QuadSize = { x: 1, y: 1 },
-    options?: QuadMeshOptions
-  ): this {
-    this.obj.components.push(
-      ...buildQuadMeshComponents(this.obj.id, {
-        textureIdentifier: options?.textureIdentifier ?? textureIdentifier,
-        textureMap: options?.textureMap,
-        dualSided,
-        size,
-        ...options,
-      })
-    );
+  addQuadMesh(options?: QuadMeshOptions): this {
+    this.obj.components.push(...buildQuadMeshComponents(this.obj.id, options));
     return this;
   }
 

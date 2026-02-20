@@ -58,16 +58,13 @@ export function convertDiceSymbol(
         .setPosition({ x: 0, y: -(maxFaceHeight - childHeight) / 2, z: 0 })
         .setRotation({ x: 0, y: 0, z: 0 })
         .setActive(faceImage.name === activeFaceName)
-        .addQuadMesh(
-          faceImage.identifier,
-          true,
-          { x: faceWidth, y: childHeight },
-          {
-            textureIdentifier: faceImage.identifier,
-            imageBlendModeMap,
-            textureMap,
-          }
-        )
+        .addQuadMesh({
+          textureIdentifier: faceImage.identifier,
+          dualSided: true,
+          size: { x: faceWidth, y: childHeight },
+          imageBlendModeMap,
+          textureMap,
+        })
         .build()
     );
   });

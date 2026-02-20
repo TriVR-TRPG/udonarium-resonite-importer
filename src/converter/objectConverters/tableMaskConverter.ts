@@ -37,23 +37,20 @@ export function convertTableMask(
       z: basePosition.z - udonObj.height / 2,
     })
     .setSourceType(udonObj.type)
-    .addQuadMesh(
-      udonObj.images[0]?.identifier,
-      true,
-      { x: udonObj.width, y: udonObj.height },
-      {
-        textureIdentifier: udonObj.images[0]?.identifier,
-        imageBlendModeMap,
-        textureMap,
-        color: {
-          r: colorValue,
-          g: colorValue,
-          b: colorValue,
-          a: opacity,
-          profile: 'Linear',
-        },
-      }
-    )
+    .addQuadMesh({
+      textureIdentifier: udonObj.images[0]?.identifier,
+      dualSided: true,
+      size: { x: udonObj.width, y: udonObj.height },
+      imageBlendModeMap,
+      textureMap,
+      color: {
+        r: colorValue,
+        g: colorValue,
+        b: colorValue,
+        a: opacity,
+        profile: 'Linear',
+      },
+    })
     .addBoxCollider({ x: udonObj.width, y: udonObj.height, z: TABLE_MASK_COLLIDER_THICKNESS });
 
   if (!udonObj.isLock) {

@@ -62,7 +62,9 @@ describe('ResoniteObjectBuilder', () => {
 
   describe('addQuadMesh()', () => {
     it('derives all component IDs from the slot ID', () => {
-      const result = makeBuilder(makeSpec('s1')).addQuadMesh('img.png').build();
+      const result = makeBuilder(makeSpec('s1'))
+        .addQuadMesh({ textureIdentifier: 'img.png' })
+        .build();
 
       for (const c of result.components) {
         expect(c.id).toMatch(/^s1-/);
@@ -70,7 +72,7 @@ describe('ResoniteObjectBuilder', () => {
     });
 
     it('adds QuadMesh, StaticTexture2D, XiexeToonMaterial, MainTexturePropertyBlock, MeshRenderer when texture is given', () => {
-      const result = makeBuilder(makeSpec()).addQuadMesh('img.png').build();
+      const result = makeBuilder(makeSpec()).addQuadMesh({ textureIdentifier: 'img.png' }).build();
 
       expect(result.components.map((c) => c.type)).toEqual([
         COMPONENT_TYPES.QUAD_MESH,
@@ -82,7 +84,7 @@ describe('ResoniteObjectBuilder', () => {
     });
 
     it('sets material Culling=Off when dualSided=true', () => {
-      const result = makeBuilder(makeSpec()).addQuadMesh(undefined, true).build();
+      const result = makeBuilder(makeSpec()).addQuadMesh({ dualSided: true }).build();
 
       const quad = result.components.find((c) => c.type.endsWith('QuadMesh'));
       expect(quad?.fields.DualSided).toBeUndefined();
@@ -95,7 +97,9 @@ describe('ResoniteObjectBuilder', () => {
     });
 
     it('applies the given size to the QuadMesh', () => {
-      const result = makeBuilder(makeSpec()).addQuadMesh(undefined, false, { x: 2, y: 3 }).build();
+      const result = makeBuilder(makeSpec())
+        .addQuadMesh({ size: { x: 2, y: 3 } })
+        .build();
 
       const quad = result.components.find((c) => c.type.endsWith('QuadMesh'));
       expect(quad?.fields.Size).toEqual({ $type: 'float2', value: { x: 2, y: 3 } });
@@ -103,16 +107,13 @@ describe('ResoniteObjectBuilder', () => {
 
     it('resolves textureValue from textureMap while using textureIdentifier for blend lookup', () => {
       const result = makeBuilder(makeSpec('s-map'))
-        .addQuadMesh(
-          'front.png',
-          false,
-          { x: 1, y: 1 },
-          {
-            textureIdentifier: 'front.png',
-            textureMap: new Map([['front.png', 'texture-ref://shared-front-static-texture']]),
-            imageBlendModeMap: new Map([['front.png', 'Opaque' as const]]),
-          }
-        )
+        .addQuadMesh({
+          textureIdentifier: 'front.png',
+          dualSided: false,
+          size: { x: 1, y: 1 },
+          textureMap: new Map([['front.png', 'texture-ref://shared-front-static-texture']]),
+          imageBlendModeMap: new Map([['front.png', 'Opaque' as const]]),
+        })
         .build();
 
       expect(result.components.find((c) => c.type.endsWith('StaticTexture2D'))).toBeUndefined();
@@ -126,7 +127,7 @@ describe('ResoniteObjectBuilder', () => {
 
     it('applies the given blendMode to the material', () => {
       const result = makeBuilder(makeSpec())
-        .addQuadMesh(undefined, false, { x: 1, y: 1 }, { blendMode: 'Alpha' })
+        .addQuadMesh({ size: { x: 1, y: 1 }, blendMode: 'Alpha' })
         .build();
 
       const mat = result.components.find((c) => c.type.endsWith('XiexeToonMaterial'));
@@ -139,7 +140,7 @@ describe('ResoniteObjectBuilder', () => {
 
     it('returns this for chaining', () => {
       const builder = makeBuilder(makeSpec());
-      expect(builder.addQuadMesh()).toBe(builder);
+      expect(builder.addQuadMesh({})).toBe(builder);
     });
   });
 
@@ -223,21 +224,17 @@ describe('ResoniteObjectBuilder', () => {
   describe('addQuadMesh() color option', () => {
     it('adds a Color field to the XiexeToonMaterial when color is given', () => {
       const result = makeBuilder(makeSpec())
-        .addQuadMesh(
-          undefined,
-          false,
-          { x: 1, y: 1 },
-          {
-            blendMode: 'Alpha',
-            color: {
-              r: 0.5,
-              g: 0.5,
-              b: 0.5,
-              a: 0.8,
-              profile: 'Linear',
-            },
-          }
-        )
+        .addQuadMesh({
+          size: { x: 1, y: 1 },
+          blendMode: 'Alpha',
+          color: {
+            r: 0.5,
+            g: 0.5,
+            b: 0.5,
+            a: 0.8,
+            profile: 'Linear',
+          },
+        })
         .build();
 
       const mat = result.components.find((c) => c.type.endsWith('XiexeToonMaterial'));
@@ -249,21 +246,17 @@ describe('ResoniteObjectBuilder', () => {
 
     it('preserves existing material fields (e.g. BlendMode) alongside color', () => {
       const result = makeBuilder(makeSpec())
-        .addQuadMesh(
-          undefined,
-          false,
-          { x: 1, y: 1 },
-          {
-            blendMode: 'Alpha',
-            color: {
-              r: 0,
-              g: 0,
-              b: 0,
-              a: 1,
-              profile: 'Linear',
-            },
-          }
-        )
+        .addQuadMesh({
+          size: { x: 1, y: 1 },
+          blendMode: 'Alpha',
+          color: {
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 1,
+            profile: 'Linear',
+          },
+        })
         .build();
 
       const mat = result.components.find((c) => c.type.endsWith('XiexeToonMaterial'));
@@ -276,7 +269,7 @@ describe('ResoniteObjectBuilder', () => {
 
     it('does not add Color field when color is not given', () => {
       const result = makeBuilder(makeSpec())
-        .addQuadMesh(undefined, false, { x: 1, y: 1 }, { blendMode: 'Alpha' })
+        .addQuadMesh({ size: { x: 1, y: 1 }, blendMode: 'Alpha' })
         .build();
 
       const mat = result.components.find((c) => c.type.endsWith('XiexeToonMaterial'));
@@ -323,7 +316,12 @@ describe('ResoniteObjectBuilder', () => {
   describe('method chaining', () => {
     it('produces the correct component order when chaining multiple add methods', () => {
       const result = makeBuilder(makeSpec('s5'))
-        .addQuadMesh('img.png', true, { x: 2, y: 3 }, { blendMode: 'Opaque' })
+        .addQuadMesh({
+          textureIdentifier: 'img.png',
+          dualSided: true,
+          size: { x: 2, y: 3 },
+          blendMode: 'Opaque',
+        })
         .addBoxCollider({ x: 2, y: 3, z: 0.05 })
         .addGrabbable()
         .build();
@@ -341,7 +339,7 @@ describe('ResoniteObjectBuilder', () => {
 
     it('all component IDs are derived from the same slot ID', () => {
       const result = makeBuilder(makeSpec('my-id'))
-        .addQuadMesh('img.png')
+        .addQuadMesh({ textureIdentifier: 'img.png' })
         .addBoxCollider({ x: 1, y: 1, z: 1 })
         .addGrabbable()
         .build();
@@ -355,15 +353,13 @@ describe('ResoniteObjectBuilder', () => {
   describe('addQuadMesh() with shared texture reference', () => {
     it('uses textureIdentifier for blend lookup when textureValue is a shared reference', () => {
       const result = makeBuilder(makeSpec('slot-lookup'))
-        .addQuadMesh(
-          toTextureReference('shared-texture-id'),
-          false,
-          { x: 1, y: 1 },
-          {
-            textureIdentifier: 'front.png',
-            imageBlendModeMap: new Map([['front.png', 'Opaque' as const]]),
-          }
-        )
+        .addQuadMesh({
+          textureIdentifier: 'front.png',
+          textureMap: new Map([['front.png', toTextureReference('shared-texture-id')]]),
+          dualSided: false,
+          size: { x: 1, y: 1 },
+          imageBlendModeMap: new Map([['front.png', 'Opaque' as const]]),
+        })
         .build();
 
       const material = result.components.find((c) => c.type.endsWith('XiexeToonMaterial'));
@@ -376,7 +372,7 @@ describe('ResoniteObjectBuilder', () => {
 
     it('uses shared StaticTexture2D references without creating local texture components', () => {
       const result = makeBuilder(makeSpec('slot-1'))
-        .addQuadMesh(toTextureReference('shared-texture-id'))
+        .addQuadMesh({ textureIdentifier: toTextureReference('shared-texture-id') })
         .build();
 
       expect(result.components.find((c) => c.type.endsWith('StaticTexture2D'))).toBeUndefined();

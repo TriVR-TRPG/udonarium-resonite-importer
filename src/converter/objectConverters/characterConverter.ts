@@ -41,16 +41,13 @@ export function convertCharacter(
 
   if (hasCharacterImage) {
     builder
-      .addQuadMesh(
+      .addQuadMesh({
         textureIdentifier,
-        true,
-        { x: meshWidth, y: meshHeight },
-        {
-          textureIdentifier,
-          imageBlendModeMap,
-          textureMap,
-        }
-      )
+        dualSided: true,
+        size: { x: meshWidth, y: meshHeight },
+        imageBlendModeMap,
+        textureMap,
+      })
       .addBoxCollider({ x: meshWidth, y: meshHeight, z: 0.05 });
   } else {
     builder.addBoxCollider({ x: meshWidth, y: size.y, z: 0.05 });

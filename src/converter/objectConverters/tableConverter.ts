@@ -28,16 +28,13 @@ export function convertTable(
   })
     .setPosition({ x: udonObj.width / 2, y: 0, z: -udonObj.height / 2 })
     .setRotation({ x: 90, y: 0, z: 0 })
-    .addQuadMesh(
+    .addQuadMesh({
       textureIdentifier,
-      true,
-      { x: udonObj.width, y: udonObj.height },
-      {
-        textureIdentifier,
-        imageBlendModeMap,
-        textureMap,
-      }
-    )
+      dualSided: true,
+      size: { x: udonObj.width, y: udonObj.height },
+      imageBlendModeMap,
+      textureMap,
+    })
     .addBoxCollider(
       { x: udonObj.width, y: udonObj.height, z: 0 },
       { characterCollider: options?.enableCharacterColliderOnLockedTerrain ?? false }

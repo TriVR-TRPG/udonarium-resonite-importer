@@ -16,8 +16,10 @@ function buildWallSlot(
   return ResoniteObjectBuilder.create({ id, name })
     .setPosition(position)
     .setRotation(rotation)
-    .addQuadMesh(textureIdentifier, false, size, {
+    .addQuadMesh({
       textureIdentifier,
+      dualSided: false,
+      size,
       imageBlendModeMap,
       textureMap,
     })
@@ -69,16 +71,13 @@ export function convertTerrain(
   })
     .setPosition({ x: 0, y: hideWalls ? 0 : udonObj.height / 2, z: 0 })
     .setRotation({ x: 90, y: 0, z: 0 })
-    .addQuadMesh(
-      topTextureIdentifier,
-      false,
-      { x: udonObj.width, y: udonObj.depth },
-      {
-        textureIdentifier: topTextureIdentifier,
-        imageBlendModeMap,
-        textureMap,
-      }
-    )
+    .addQuadMesh({
+      textureIdentifier: topTextureIdentifier,
+      dualSided: false,
+      size: { x: udonObj.width, y: udonObj.depth },
+      imageBlendModeMap,
+      textureMap,
+    })
     .build();
   const bottomLikeSurface = ResoniteObjectBuilder.create({
     id: hideWalls ? topBackId : bottomId,
@@ -86,16 +85,13 @@ export function convertTerrain(
   })
     .setPosition({ x: 0, y: hideWalls ? 0 : -udonObj.height / 2, z: 0 })
     .setRotation({ x: -90, y: 0, z: 0 })
-    .addQuadMesh(
-      topTextureIdentifier,
-      false,
-      { x: udonObj.width, y: udonObj.depth },
-      {
-        textureIdentifier: topTextureIdentifier,
-        imageBlendModeMap,
-        textureMap,
-      }
-    )
+    .addQuadMesh({
+      textureIdentifier: topTextureIdentifier,
+      dualSided: false,
+      size: { x: udonObj.width, y: udonObj.depth },
+      imageBlendModeMap,
+      textureMap,
+    })
     .build();
 
   const wallsContainer = ResoniteObjectBuilder.create({

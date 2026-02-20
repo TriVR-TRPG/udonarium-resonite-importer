@@ -115,16 +115,13 @@ export function convertCard(
     // Align top edges when front/back heights differ.
     .setPosition({ x: 0, y: CARD_FACE_SEPARATION, z: frontZOffset })
     .setRotation({ x: 90, y: 0, z: 0 })
-    .addQuadMesh(
-      frontTextureIdentifier,
-      false,
-      { x: cardWidth, y: frontHeight },
-      {
-        textureIdentifier: frontTextureIdentifier,
-        imageBlendModeMap,
-        textureMap,
-      }
-    )
+    .addQuadMesh({
+      textureIdentifier: frontTextureIdentifier,
+      dualSided: false,
+      size: { x: cardWidth, y: frontHeight },
+      imageBlendModeMap,
+      textureMap,
+    })
     .build();
 
   const backSlot = ResoniteObjectBuilder.create({
@@ -134,16 +131,13 @@ export function convertCard(
     // Align top edges when front/back heights differ.
     .setPosition({ x: 0, y: -CARD_FACE_SEPARATION, z: backZOffset })
     .setRotation({ x: -90, y: 180, z: 0 })
-    .addQuadMesh(
-      backTextureIdentifier,
-      false,
-      { x: cardWidth, y: backHeight },
-      {
-        textureIdentifier: backTextureIdentifier,
-        imageBlendModeMap,
-        textureMap,
-      }
-    )
+    .addQuadMesh({
+      textureIdentifier: backTextureIdentifier,
+      dualSided: false,
+      size: { x: cardWidth, y: backHeight },
+      imageBlendModeMap,
+      textureMap,
+    })
     .build();
 
   return (
