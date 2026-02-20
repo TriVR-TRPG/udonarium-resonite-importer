@@ -332,6 +332,7 @@ describe('ObjectConverter', () => {
         const cardStack: CardStack = {
           ...createBaseObject(),
           type: 'card-stack',
+          rotate: 0,
           cards: [],
         };
 
@@ -427,6 +428,7 @@ describe('ObjectConverter', () => {
         {
           ...createBaseObject(),
           type: 'card-stack' as const,
+          rotate: 0,
           cards: [],
         },
         {

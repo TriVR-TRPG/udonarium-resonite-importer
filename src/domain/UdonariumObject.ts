@@ -58,7 +58,7 @@ export interface Card extends BaseUdonariumObject {
 
 export interface CardStack extends BaseUdonariumObject {
   type: 'card-stack';
-  rotate?: number;
+  rotate: number;
   cards: Card[];
 }
 
