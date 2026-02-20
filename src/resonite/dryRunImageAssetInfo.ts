@@ -11,7 +11,7 @@ function resolveZipImageSourceKind(image: ExtractedFile): ImageAssetInfo['source
 }
 
 function resolveFilterMode(identifier: string, textureValue: string): ImageAssetInfo['filterMode'] {
-  return isGifTexture(identifier, new Map([[identifier, textureValue]])) ? 'Point' : 'Default';
+  return isGifTexture(identifier) || isGifTexture(textureValue) ? 'Point' : 'Default';
 }
 
 export function buildDryRunImageAssetInfoMap(

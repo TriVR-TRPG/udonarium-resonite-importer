@@ -194,12 +194,12 @@ export class AssetImporter {
     textureValue: string,
     sourceKind: ImageSourceKind
   ): void {
-    const imageFilterLookupMap = new Map([[identifier, textureValue]]);
+    const usePointFilter = isGifTexture(identifier) || isGifTexture(textureValue);
     this.importedImageAssetInfoMap.set(identifier, {
       identifier,
       textureValue,
       sourceKind,
-      filterMode: isGifTexture(identifier, imageFilterLookupMap) ? 'Point' : 'Default',
+      filterMode: usePointFilter ? 'Point' : 'Default',
     });
   }
 

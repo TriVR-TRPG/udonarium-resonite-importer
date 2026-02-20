@@ -10,13 +10,9 @@ export function toTextureReference(componentId: string): string {
   return `${TEXTURE_REFERENCE_PREFIX}${componentId}`;
 }
 
-export function isGifTexture(identifier: string, textureMap?: Map<string, string>): boolean {
+export function isGifTexture(identifier: string): boolean {
   if (identifier.startsWith(TEXTURE_REFERENCE_PREFIX)) {
     return false;
-  }
-  if (textureMap) {
-    const resolvedUrl = textureMap.get(identifier) ?? identifier;
-    return GIF_EXTENSION_PATTERN.test(identifier) || GIF_EXTENSION_PATTERN.test(resolvedUrl);
   }
   return GIF_EXTENSION_PATTERN.test(identifier);
 }
