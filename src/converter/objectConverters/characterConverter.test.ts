@@ -63,7 +63,7 @@ describe('convertCharacter', () => {
       (c) => c.type === COMPONENT_TYPES.XIEXE_TOON_MATERIAL
     );
     expect(materialComponent?.fields).toEqual({
-      BlendMode: { $type: 'enum', value: 'Opaque', enumType: 'BlendMode' },
+      BlendMode: { $type: 'enum', value: 'Cutout', enumType: 'BlendMode' },
       ShadowRamp: { $type: 'reference', targetId: null },
       ShadowSharpness: { $type: 'float', value: 0 },
       Culling: { $type: 'enum', value: 'Off', enumType: 'Culling' },

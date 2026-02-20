@@ -10,9 +10,9 @@ function resolveBlendMode(
   imageBlendModeMap?: Map<string, ImageBlendMode>
 ): BlendModeValue {
   if (!imageBlendModeMap) {
-    return 'Opaque';
+    return 'Cutout';
   }
-  return lookupImageBlendMode(imageBlendModeMap, identifier) ?? 'Opaque';
+  return lookupImageBlendMode(imageBlendModeMap, identifier) ?? 'Cutout';
 }
 
 function buildWallSlot(
