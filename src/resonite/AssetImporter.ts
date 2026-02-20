@@ -186,6 +186,7 @@ export class AssetImporter {
 
   /**
    * Replace texture values with shared texture references when components are created.
+   * @deprecated Prefer applyTextureReference(identifier, componentId) from updater callback.
    */
   applyTextureReferences(textureReferenceComponentMap: Map<string, string>): void {
     for (const [identifier, componentId] of textureReferenceComponentMap) {

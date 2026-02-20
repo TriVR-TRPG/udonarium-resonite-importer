@@ -370,7 +370,7 @@ describe('AssetImporter', () => {
       );
     });
 
-    it('overwrites textureValue with texture-ref for matching identifiers', async () => {
+    it('keeps backward compatibility for map-based updates', async () => {
       await assetImporter.importImage(
         createExtractedFile({ path: 'images/ref.png', name: 'ref.png' })
       );
@@ -389,7 +389,7 @@ describe('AssetImporter', () => {
       await assetImporter.importImage(
         createExtractedFile({ path: 'images/context.png', name: 'context.png' })
       );
-      assetImporter.applyTextureReferences(new Map([['context.png', 'shared-context-component']]));
+      assetImporter.applyTextureReference('context.png', 'shared-context-component');
 
       const context = assetImporter.buildImageAssetContext({
         imageAspectRatioMap: new Map([['context.png', 1.25]]),
