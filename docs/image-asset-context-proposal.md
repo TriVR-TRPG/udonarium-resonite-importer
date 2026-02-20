@@ -198,6 +198,7 @@ export type ImageAssetContext = {
 - 旧API（`AssetImporter.applyTextureReferences(...)` / `SlotBuilder.createTextureAssets(...)`）は実行時に one-time warning を出す実装へ移行済み。
 - `SlotBuilder.createTextureAssets(...)` は `@deprecated` を付与し、`createTextureAssetsWithUpdater(...)` への移行を明示済み。
 - `UDONARIUM_IMPORTER_STRICT_DEPRECATIONS=1` の場合、deprecated API/オプション使用時は warning ではなく例外を投げる。
+- CI は strict モード専用テスト（`npm run test:strict-deprecations`）を実行し、deprecated API/オプション混入を継続検知する。
 - ランタイム経路（CLI/GUI の importer context 経路）で legacy warning が発火しないことをテストで固定済み。
 - dry-run も `buildDryRunImageAssetInfoMap(...)` で `ImageAssetInfo` を生成し、通常 import と同じ context 入力形式で処理する構成へ移行済み。
 - `BuildImageAssetContextOptions` の legacy 項目には deprecate 注釈と実行時 warning を追加済み。

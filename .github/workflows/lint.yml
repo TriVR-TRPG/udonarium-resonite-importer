@@ -39,6 +39,11 @@ jobs:
       - name: Validate (lint, format, types)
         run: npm run check:validate
 
+      - name: Run strict deprecation guard tests
+        env:
+          UDONARIUM_IMPORTER_STRICT_DEPRECATIONS: "1"
+        run: npm run test:strict-deprecations
+
       - name: Run tests with coverage
         run: npm run test:coverage -- --reporter=json --outputFile=test-results.json
 

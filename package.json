@@ -30,6 +30,7 @@
     "check:validate:types:test": "tsc -p tsconfig.test.json --noEmit",
     "check:validate:types:scripts": "tsc -p tsconfig.scripts.json --noEmit",
     "test": "vitest run",
+    "test:strict-deprecations": "vitest run src/converter/imageAssetContext.test.ts src/resonite/AssetImporter.test.ts src/resonite/SlotBuilder.test.ts",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:integration": "vitest run --testNamePattern='Integration'",

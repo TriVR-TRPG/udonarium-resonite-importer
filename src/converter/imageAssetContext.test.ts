@@ -7,8 +7,21 @@ import {
   ImageFilterMode,
 } from './imageAssetContext';
 
+const STRICT_ENV_KEY = 'UDONARIUM_IMPORTER_STRICT_DEPRECATIONS';
+
 describe('imageAssetContext', () => {
+  const originalStrictEnv = process.env[STRICT_ENV_KEY];
+
+  function restoreStrictEnv(): void {
+    if (originalStrictEnv === undefined) {
+      delete process.env[STRICT_ENV_KEY];
+      return;
+    }
+    process.env[STRICT_ENV_KEY] = originalStrictEnv;
+  }
+
   it('warns once when legacy build options are used', () => {
+    delete process.env[STRICT_ENV_KEY];
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     __resetLegacyBuildOptionWarningForTests();
 
@@ -21,11 +34,11 @@ describe('imageAssetContext', () => {
 
     expect(warnSpy).toHaveBeenCalledTimes(1);
     warnSpy.mockRestore();
+    restoreStrictEnv();
   });
 
   it('throws when strict deprecation mode is enabled and legacy options are used', () => {
-    const original = process.env.UDONARIUM_IMPORTER_STRICT_DEPRECATIONS;
-    process.env.UDONARIUM_IMPORTER_STRICT_DEPRECATIONS = '1';
+    process.env[STRICT_ENV_KEY] = '1';
     __resetLegacyBuildOptionWarningForTests();
 
     expect(() =>
@@ -33,12 +46,7 @@ describe('imageAssetContext', () => {
         textureValueMap: new Map([['front.png', 'resdb:///front']]),
       })
     ).toThrow(/deprecated-strict/);
-
-    if (original === undefined) {
-      delete process.env.UDONARIUM_IMPORTER_STRICT_DEPRECATIONS;
-    } else {
-      process.env.UDONARIUM_IMPORTER_STRICT_DEPRECATIONS = original;
-    }
+    restoreStrictEnv();
   });
 
   it('buildImageFilterModeMap marks gif identifiers as Point filter', () => {
@@ -90,6 +98,7 @@ describe('imageAssetContext', () => {
   });
 
   it('buildImageAssetContext composes filter mode map from source texture map', () => {
+    delete process.env[STRICT_ENV_KEY];
     const context = buildImageAssetContext({
       textureValueMap: new Map([['anim.gif', 'texture-ref://anim']]),
       filterModeSourceTextureMap: new Map([['anim.gif', 'resdb:///anim.gif']]),
@@ -97,6 +106,7 @@ describe('imageAssetContext', () => {
 
     expect(context.resolveUsePointFilter('anim.gif')).toBe(true);
     expect(context.resolveTextureValue('anim.gif')).toBe('texture-ref://anim');
+    restoreStrictEnv();
   });
 
   it('prefers explicit source kind from imageAssetInfoMap over inferred source kind', () => {

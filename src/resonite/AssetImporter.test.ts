@@ -5,6 +5,8 @@ import { AssetImporter } from './AssetImporter';
 import { ResoniteLinkClient } from './ResoniteLinkClient';
 import { ExtractedFile } from '../parser/ZipExtractor';
 
+const STRICT_ENV_KEY = 'UDONARIUM_IMPORTER_STRICT_DEPRECATIONS';
+
 // Mock ResoniteLinkClient
 vi.mock('./ResoniteLinkClient', () => {
   return {
@@ -19,6 +21,15 @@ describe('AssetImporter', () => {
     importTexture: Mock;
   };
   let assetImporter: AssetImporter;
+  const originalStrictEnv = process.env[STRICT_ENV_KEY];
+
+  function restoreStrictEnv(): void {
+    if (originalStrictEnv === undefined) {
+      delete process.env[STRICT_ENV_KEY];
+      return;
+    }
+    process.env[STRICT_ENV_KEY] = originalStrictEnv;
+  }
 
   const createExtractedFile = (overrides: Partial<ExtractedFile> = {}): ExtractedFile => ({
     path: 'images/test-image.png',
@@ -371,6 +382,8 @@ describe('AssetImporter', () => {
     });
 
     it('keeps backward compatibility for map-based updates', async () => {
+      delete process.env[STRICT_ENV_KEY];
+      assetImporter = new AssetImporter(mockClient as unknown as ResoniteLinkClient);
       await assetImporter.importImage(
         createExtractedFile({ path: 'images/ref.png', name: 'ref.png' })
       );
@@ -381,9 +394,12 @@ describe('AssetImporter', () => {
       expect(assetImporter.getImportedImageAssetInfoMap().get('ref.png')?.sourceKind).toBe(
         'zip-image'
       );
+      restoreStrictEnv();
     });
 
     it('warns once when using deprecated map-based update API', async () => {
+      delete process.env[STRICT_ENV_KEY];
+      assetImporter = new AssetImporter(mockClient as unknown as ResoniteLinkClient);
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
       await assetImporter.importImage(
         createExtractedFile({ path: 'images/ref-warn.png', name: 'ref-warn.png' })
@@ -398,11 +414,11 @@ describe('AssetImporter', () => {
 
       expect(warnSpy).toHaveBeenCalledTimes(1);
       warnSpy.mockRestore();
+      restoreStrictEnv();
     });
 
     it('throws when strict deprecation mode is enabled', async () => {
-      const original = process.env.UDONARIUM_IMPORTER_STRICT_DEPRECATIONS;
-      process.env.UDONARIUM_IMPORTER_STRICT_DEPRECATIONS = '1';
+      process.env[STRICT_ENV_KEY] = '1';
       const strictImporter = new AssetImporter(mockClient as unknown as ResoniteLinkClient);
       await strictImporter.importImage(
         createExtractedFile({ path: 'images/ref-strict.png', name: 'ref-strict.png' })
@@ -415,11 +431,7 @@ describe('AssetImporter', () => {
       ).toThrow(/deprecated-strict/);
 
       strictImporter.cleanup();
-      if (original === undefined) {
-        delete process.env.UDONARIUM_IMPORTER_STRICT_DEPRECATIONS;
-      } else {
-        process.env.UDONARIUM_IMPORTER_STRICT_DEPRECATIONS = original;
-      }
+      restoreStrictEnv();
     });
   });
 
@@ -454,6 +466,23 @@ describe('AssetImporter', () => {
 
       expect(warnSpy).not.toHaveBeenCalled();
       warnSpy.mockRestore();
+    });
+
+    it('works under strict deprecation mode on importer context path', async () => {
+      process.env[STRICT_ENV_KEY] = '1';
+      const strictImporter = new AssetImporter(mockClient as unknown as ResoniteLinkClient);
+      await strictImporter.importImage(
+        createExtractedFile({ path: 'images/context3.png', name: 'context3.png' })
+      );
+
+      expect(() =>
+        strictImporter.buildImageAssetContext({
+          imageAspectRatioMap: new Map([['context3.png', 1.0]]),
+        })
+      ).not.toThrow();
+
+      strictImporter.cleanup();
+      restoreStrictEnv();
     });
   });
 
