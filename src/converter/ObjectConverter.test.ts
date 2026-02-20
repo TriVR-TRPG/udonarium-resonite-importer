@@ -274,6 +274,7 @@ describe('ObjectConverter', () => {
           height: 20,
           gridType: 'square',
           gridColor: '#000000',
+          selected: false,
           children: [],
         };
 
@@ -292,6 +293,7 @@ describe('ObjectConverter', () => {
           height: 20,
           gridType: 'square',
           gridColor: '#000000',
+          selected: false,
           children: [],
         };
 
@@ -414,6 +416,7 @@ describe('ObjectConverter', () => {
           height: 1,
           gridType: 'square' as const,
           gridColor: '#000000',
+          selected: false,
           children: [],
         },
         {
