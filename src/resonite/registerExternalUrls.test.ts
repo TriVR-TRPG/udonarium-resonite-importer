@@ -43,7 +43,6 @@ const baseCharacter = (): GameCharacter => ({
   size: 1,
   rotate: 0,
   roll: 0,
-  resources: [],
 });
 
 describe('registerExternalUrls', () => {

@@ -23,12 +23,6 @@ export interface Vector3 {
   z: number;
 }
 
-export interface NumberResource {
-  name: string;
-  currentValue: number;
-  maxValue: number;
-}
-
 export interface BaseUdonariumObject {
   id: string;
   type: ObjectType;
@@ -43,7 +37,6 @@ export interface GameCharacter extends BaseUdonariumObject {
   size: number;
   rotate: number;
   roll: number;
-  resources: NumberResource[];
 }
 
 export interface DiceSymbol extends BaseUdonariumObject {

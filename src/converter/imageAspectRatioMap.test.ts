@@ -132,7 +132,6 @@ describe('buildImageBlendModeMap', () => {
           size: 1,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
       ];
 

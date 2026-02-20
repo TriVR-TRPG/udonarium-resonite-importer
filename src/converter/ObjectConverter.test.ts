@@ -97,7 +97,6 @@ describe('ObjectConverter', () => {
           size: 2,
           rotate: 0,
           roll: 0,
-          resources: [],
         };
 
         const result = convertObjectWithTextures(character, new Map());
@@ -122,7 +121,6 @@ describe('ObjectConverter', () => {
           images: [{ identifier: 'char-aspect', name: 'char-aspect.png' }],
           rotate: 0,
           roll: 0,
-          resources: [],
         };
         const imageAspectRatioMap = new Map<string, number>([['char-aspect', 1.5]]);
 
@@ -383,7 +381,6 @@ describe('ObjectConverter', () => {
           size: 1,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
         {
           ...createBaseObject(),
@@ -466,7 +463,6 @@ describe('ObjectConverter', () => {
         size: 1,
         rotate: 0,
         roll: 0,
-        resources: [],
       };
 
       const result = convertObjectWithTextures(character, new Map());
@@ -482,7 +478,6 @@ describe('ObjectConverter', () => {
         size: 1,
         rotate: 0,
         roll: 0,
-        resources: [],
       };
 
       const result = convertObjectWithTextures(character, new Map());
@@ -509,7 +504,6 @@ describe('ObjectConverter', () => {
           size: 1,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
         {
           id: 'char2',
@@ -521,7 +515,6 @@ describe('ObjectConverter', () => {
           size: 2,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
       ];
 
@@ -545,7 +538,6 @@ describe('ObjectConverter', () => {
           size: 1,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
         {
           id: 'data',
@@ -557,7 +549,6 @@ describe('ObjectConverter', () => {
           size: 1,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
         {
           id: 'data',
@@ -569,7 +560,6 @@ describe('ObjectConverter', () => {
           size: 1,
           rotate: 0,
           roll: 0,
-          resources: [],
         },
       ];
 
@@ -607,7 +597,6 @@ describe('ObjectConverter', () => {
         size: 1,
         rotate: 0,
         roll: 0,
-        resources: [],
       };
 
       const result = convertObjectsWithTextureMap(

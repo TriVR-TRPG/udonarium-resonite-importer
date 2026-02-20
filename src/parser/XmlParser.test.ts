@@ -480,12 +480,6 @@ describe('XmlParser', () => {
               <data name="name">モンスターA</data>
               <data name="size">1</data>
             </data>
-            <data name="detail">
-              <data name="リソース">
-                <data type="numberResource" currentValue="200" name="HP">200</data>
-                <data type="numberResource" currentValue="100" name="MP">100</data>
-              </data>
-            </data>
           </data>
         </character>
       `;
@@ -501,9 +495,6 @@ describe('XmlParser', () => {
       expect(character.position).toEqual({ x: 250, y: 450, z: 0 });
       expect(character.size).toBe(1);
       expect(character.images[0].identifier).toBe('testCharacter_1_image');
-      expect(character.resources).toHaveLength(2);
-      expect(character.resources[0]).toEqual({ name: 'HP', currentValue: 200, maxValue: 200 });
-      expect(character.resources[1]).toEqual({ name: 'MP', currentValue: 100, maxValue: 100 });
     });
 
     it('should parse text-note with location.x/location.y coordinates', () => {
@@ -633,11 +624,7 @@ describe('XmlParser', () => {
                 <data name="name">モンスターC</data>
                 <data name="size">3</data>
               </data>
-              <data name="detail">
-                <data name="リソース">
-                  <data type="numberResource" currentValue="200" name="HP">200</data>
-                </data>
-              </data>
+              <data name="detail"></data>
             </data>
           </character>
         </room>
