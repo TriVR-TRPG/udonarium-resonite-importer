@@ -10,6 +10,9 @@
 見た目は URL 風ですが、**変換パイプライン内部で使う識別子** であり、
 Assets/Textures スロット内の既存 `StaticTexture2D` を参照することを意味します。
 
+画像情報は `Map<string, ImageAssetInfo>`（`importedImageAssetInfoMap`）で保持され、
+`buildImageAssetContext(...)` が `ReadonlyMap` として公開します。
+
 ---
 
 ## identifier の種類と登録方法
@@ -29,8 +32,8 @@ Udonarium の保存ファイル（ZIP）に画像が同梱されている場合�
 | `bg/table.jpg` | `table` | `table` |
 
 `ZipExtractor` は `path.basename(entry.entryName, ext)` を `file.name` として返します。
-`AssetImporter.importImage()` はこの `file.name` をキーに `importedImageAssetInfoMap` マップへ登録し、
-`ResoniteLinkClient.importTexture()` が返す `resdb:///...` 形式の URL を値に格納します。
+`AssetImporter.importImage()` はこの `file.name` をキーに `importedImageAssetInfoMap` へ登録し、
+`ImageAssetInfo.textureValue` に `ResoniteLinkClient.importTexture()` の `resdb:///...` を格納します。
 
 **SVG ファイルの場合**: `sharp` で PNG 変換後にテンプファイルに書き出してからインポートします（Resonite は SVG 非対応）。
 
@@ -190,6 +193,7 @@ probeBlendModeFromExternalUrl('https://example.com/images/character.png')
 [5] ImageAssetContext を構築
     imageAssetInfoMap + imageAspectRatioMap + imageBlendModeMap を
     buildImageAssetContext(...) へ渡す
+    ※ `imageAssetContext.byIdentifier` は `ReadonlyMap<string, ImageAssetInfo>`
 
 [6] オブジェクト変換（convertObjectsWithImageAssetContext）
     imageAssetContext.resolveTextureValue('front')
@@ -251,3 +255,10 @@ convertObjectsWithImageAssetContext(objects, imageAssetContext, ...);
 
 dry-run 用 `imageAssetInfoMap` には identifier をそのまま `textureValue` として保持するため、
 変換結果では `StaticTexture2D.URL` に identifier 文字列が入ります（接続しないため実行上は問題なし）。
+
+---
+
+## 検証状況
+
+- 2026-02-20: `npm run test` 実行
+- 結果: 34 Test Files / 397 Tests が全件成功

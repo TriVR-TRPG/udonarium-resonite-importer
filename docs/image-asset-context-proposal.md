@@ -187,3 +187,4 @@ export type ImageAssetContext = {
 - `BuildImageAssetContextOptions` は `imageAssetInfoMap` ベース API のみを受け付ける構成に移行済み。
 - context 生成 API は `buildImageAssetContext` に一本化し、`imageAssetInfoMap` ベースで統一済み。
 - dry-run も `buildDryRunImageAssetInfoMap(...)` で `ImageAssetInfo` を生成し、通常 import と同じ context 入力形式で処理する構成へ移行済み。
+- 2026-02-20 に `npm run test` を実行し、34 Test Files / 397 Tests が全件成功。
