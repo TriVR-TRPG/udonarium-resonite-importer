@@ -402,6 +402,20 @@ describe('AssetImporter', () => {
       expect(context.lookupAspectRatio('context.png')).toBe(1.25);
       expect(context.lookupBlendMode('context.png')).toBe('Opaque');
     });
+
+    it('does not trigger legacy option warning for importer context path', async () => {
+      const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+      await assetImporter.importImage(
+        createExtractedFile({ path: 'images/context2.png', name: 'context2.png' })
+      );
+
+      assetImporter.buildImageAssetContext({
+        imageAspectRatioMap: new Map([['context2.png', 1.0]]),
+      });
+
+      expect(warnSpy).not.toHaveBeenCalled();
+      warnSpy.mockRestore();
+    });
   });
 
   describe('cleanup', () => {
