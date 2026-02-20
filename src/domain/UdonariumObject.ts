@@ -49,8 +49,8 @@ export interface DiceSymbol extends BaseUdonariumObject {
 
 export interface Card extends BaseUdonariumObject {
   type: 'card';
-  size?: number;
-  rotate?: number;
+  size: number;
+  rotate: number;
   isFaceUp: boolean;
   frontImage: ImageRef | null;
   backImage: ImageRef | null;

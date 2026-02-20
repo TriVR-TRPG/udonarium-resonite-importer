@@ -11,6 +11,8 @@ describe('convertCard', () => {
     name: 'Card',
     position: { x: 0, y: 0, z: 0 },
     images: [{ identifier: 'front.png', name: 'front.png' }],
+    size: 1,
+    rotate: 0,
     isFaceUp: true,
     frontImage: { identifier: 'front.png', name: 'front.png' },
     backImage: { identifier: 'back.png', name: 'back.png' },

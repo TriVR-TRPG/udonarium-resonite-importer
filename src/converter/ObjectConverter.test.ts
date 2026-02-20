@@ -314,6 +314,8 @@ describe('ObjectConverter', () => {
         const card: Card = {
           ...createBaseObject(),
           type: 'card',
+          size: 1,
+          rotate: 0,
           isFaceUp: true,
           frontImage: { identifier: 'front', name: 'front.png' },
           backImage: { identifier: 'back', name: 'back.png' },
@@ -416,6 +418,8 @@ describe('ObjectConverter', () => {
         {
           ...createBaseObject(),
           type: 'card' as const,
+          size: 1,
+          rotate: 0,
           isFaceUp: true,
           frontImage: { identifier: 'front', name: 'front.png' },
           backImage: { identifier: 'back', name: 'back.png' },
