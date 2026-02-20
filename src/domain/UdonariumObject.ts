@@ -44,7 +44,6 @@ export interface DiceSymbol extends BaseUdonariumObject {
   size: number;
   faceImages: ImageRef[];
   face?: string;
-  owner?: string;
   rotate?: number;
 }
 

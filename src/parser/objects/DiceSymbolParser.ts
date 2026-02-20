@@ -34,7 +34,6 @@ export function parseDiceSymbol(data: unknown, fileName: string): DiceSymbol {
   const name = getTextValue(findDataByName(commonData, 'name')) || fileName;
   const size = getNumberValue(findDataByName(commonData, 'size')) ?? 1;
   const rotate = getNumberValue(root['@_rotate']) ?? 0;
-  const owner = (root['@_owner'] as string) || undefined;
 
   const faceImages: ImageRef[] = getImageEntries(imageData)
     .filter((entry) => entry && typeof entry === 'object' && entry['@_type'] === 'image')
@@ -64,7 +63,6 @@ export function parseDiceSymbol(data: unknown, fileName: string): DiceSymbol {
     faceImages,
     size,
     face,
-    owner,
     rotate,
   };
 }
