@@ -36,7 +36,6 @@ type XiexeToonMaterialFields = {
 };
 
 type QuadMeshOptions = {
-  textureValue?: string;
   textureIdentifier?: string;
   textureMap?: Map<string, string>;
   dualSided?: boolean;
@@ -47,13 +46,11 @@ type QuadMeshOptions = {
 };
 
 function resolveBlendModeLookupIdentifier(options?: QuadMeshOptions): string | undefined {
-  if (options?.textureIdentifier) {
-    return options.textureIdentifier;
-  }
-  if (!options?.textureValue || options.textureValue.startsWith('texture-ref://')) {
+  const identifier = options?.textureIdentifier;
+  if (!identifier || identifier.startsWith('texture-ref://')) {
     return undefined;
   }
-  return options.textureValue;
+  return identifier;
 }
 
 function resolveBlendMode(options?: QuadMeshOptions): BlendModeValue {
@@ -92,10 +89,7 @@ function buildQuadMeshComponents(
   slotId: string,
   options: QuadMeshOptions = {}
 ): ResoniteComponent[] {
-  const textureValue = resolveTextureValue(
-    options.textureIdentifier ?? options.textureValue,
-    options.textureMap
-  );
+  const textureValue = resolveTextureValue(options.textureIdentifier, options.textureMap);
   const dualSided = options.dualSided ?? false;
   const size = options.size ?? { x: 1, y: 1 };
   const meshId = `${slotId}-mesh`;
@@ -262,15 +256,14 @@ export class ResoniteObjectBuilder {
   }
 
   addQuadMesh(
-    textureValue?: string,
+    textureIdentifier?: string,
     dualSided = false,
     size: QuadSize = { x: 1, y: 1 },
     options?: QuadMeshOptions
   ): this {
     this.obj.components.push(
       ...buildQuadMeshComponents(this.obj.id, {
-        textureValue,
-        textureIdentifier: options?.textureIdentifier ?? textureValue,
+        textureIdentifier: options?.textureIdentifier ?? textureIdentifier,
         textureMap: options?.textureMap,
         dualSided,
         size,
