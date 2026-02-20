@@ -159,6 +159,6 @@ describe('imageAssetContext', () => {
 
     expect(context.resolveTextureValue('known_icon')).toBe('texture-ref://shared-known-icon');
     expect(context.resolveTextureValue('legacy_only.png')).toBeUndefined();
-    expect(context.getAssetInfo('legacy_only.png')?.sourceKind).toBe('unknown');
+    expect(context.getAssetInfo('legacy_only.png')).toBeUndefined();
   });
 });

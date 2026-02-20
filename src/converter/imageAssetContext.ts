@@ -97,14 +97,12 @@ function resolveTextureReferenceValue(
 
 function buildIdentifierSet(options: ImageAssetContextOptions): Set<string> {
   const identifiers = new Set<string>();
-  for (const key of options.textureMap?.keys() ?? []) {
-    identifiers.add(key);
-  }
-  for (const key of options.textureReferenceComponentMap?.keys() ?? []) {
-    identifiers.add(key);
-  }
-  for (const key of options.imageAssetInfoMap?.keys() ?? []) {
-    identifiers.add(key);
+  const preferImageAssetInfo = (options.imageAssetInfoMap?.size ?? 0) > 0;
+  for (const key of options.imageAssetInfoMap?.keys() ?? []) identifiers.add(key);
+  if (!preferImageAssetInfo) {
+    for (const key of options.textureMap?.keys() ?? []) identifiers.add(key);
+    for (const key of options.textureReferenceComponentMap?.keys() ?? []) identifiers.add(key);
+    for (const key of options.imageSourceKindMap?.keys() ?? []) identifiers.add(key);
   }
   for (const key of options.imageAspectRatioMap?.keys() ?? []) {
     identifiers.add(key);
@@ -113,9 +111,6 @@ function buildIdentifierSet(options: ImageAssetContextOptions): Set<string> {
     identifiers.add(key);
   }
   for (const key of options.imageFilterModeMap?.keys() ?? []) {
-    identifiers.add(key);
-  }
-  for (const key of options.imageSourceKindMap?.keys() ?? []) {
     identifiers.add(key);
   }
   return identifiers;
