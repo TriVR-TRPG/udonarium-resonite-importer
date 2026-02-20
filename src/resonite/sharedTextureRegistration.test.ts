@@ -1,5 +1,5 @@
 /**
- * 全画像パターンが共有テクスチャ（importedTextures）に登録されることを検証するテスト
+ * 全画像パターンが共有テクスチャ（importedImageAssetInfoMap）に登録されることを検証するテスト
  *
  * 対象パターン:
  *   1. ZIP内の通常画像ファイル（PNG等）
@@ -91,7 +91,7 @@ describe('共有テクスチャへの登録 - 全画像パターン', () => {
     vi.unstubAllGlobals();
   });
 
-  it('ZIP内の通常画像ファイルが importedTextures に登録される', async () => {
+  it('ZIP内の通常画像ファイルが importedImageAssetInfoMap に登録される', async () => {
     const file = {
       path: 'images/character.png',
       name: 'character',
@@ -100,12 +100,12 @@ describe('共有テクスチャへの登録 - 全画像パターン', () => {
 
     await assetImporter.importImage(file);
 
-    const textures = assetImporter.getImportedTextures();
-    expect(textures.has('character')).toBe(true);
-    expect(textures.get('character')).toBe('resdb:///imported-texture');
+    const infoMap = assetImporter.getImportedImageAssetInfoMap();
+    expect(infoMap.has('character')).toBe(true);
+    expect(infoMap.get('character')?.textureValue).toBe('resdb:///imported-texture');
   });
 
-  it('ZIP内のSVGファイルがPNGに変換されて importedTextures に登録される', async () => {
+  it('ZIP内のSVGファイルがPNGに変換されて importedImageAssetInfoMap に登録される', async () => {
     const file = {
       path: 'images/icon.svg',
       name: 'icon',
@@ -116,62 +116,66 @@ describe('共有テクスチャへの登録 - 全画像パターン', () => {
 
     await assetImporter.importImage(file);
 
-    const textures = assetImporter.getImportedTextures();
-    expect(textures.has('icon')).toBe(true);
-    expect(textures.get('icon')).toBe('resdb:///imported-texture');
+    const infoMap = assetImporter.getImportedImageAssetInfoMap();
+    expect(infoMap.has('icon')).toBe(true);
+    expect(infoMap.get('icon')?.textureValue).toBe('resdb:///imported-texture');
     // sharp を使って PNG 変換が行われたことを検証
     const sharp = (await import('sharp')).default;
     expect(sharp).toHaveBeenCalled();
   });
 
-  it('固定 identifier（KNOWN_IMAGES）が importedTextures に登録される', async () => {
+  it('固定 identifier（KNOWN_IMAGES）が importedImageAssetInfoMap に登録される', async () => {
     await registerExternalUrls([makeCharacterWith('known_icon')], assetImporter);
 
-    const textures = assetImporter.getImportedTextures();
-    expect(textures.has('known_icon')).toBe(true);
-    expect(textures.get('known_icon')).toBe('https://udonarium.app/assets/images/known_icon.png');
+    const infoMap = assetImporter.getImportedImageAssetInfoMap();
+    expect(infoMap.has('known_icon')).toBe(true);
+    expect(infoMap.get('known_icon')?.textureValue).toBe(
+      'https://udonarium.app/assets/images/known_icon.png'
+    );
   });
 
-  it('Udonarium アセット（./assets/...）が importedTextures に登録される', async () => {
+  it('Udonarium アセット（./assets/...）が importedImageAssetInfoMap に登録される', async () => {
     await registerExternalUrls([makeCharacterWith('./assets/images/bg.jpg')], assetImporter);
 
-    const textures = assetImporter.getImportedTextures();
-    expect(textures.has('./assets/images/bg.jpg')).toBe(true);
-    expect(textures.get('./assets/images/bg.jpg')).toBe(
+    const infoMap = assetImporter.getImportedImageAssetInfoMap();
+    expect(infoMap.has('./assets/images/bg.jpg')).toBe(true);
+    expect(infoMap.get('./assets/images/bg.jpg')?.textureValue).toBe(
       'https://udonarium.app/assets/images/bg.jpg'
     );
   });
 
-  it('外部 URL 画像（https://...png）が importedTextures に登録される', async () => {
+  it('外部 URL 画像（https://...png）が importedImageAssetInfoMap に登録される', async () => {
     await registerExternalUrls(
       [makeCharacterWith('https://example.com/images/character.png')],
       assetImporter
     );
 
-    const textures = assetImporter.getImportedTextures();
-    expect(textures.has('https://example.com/images/character.png')).toBe(true);
-    expect(textures.get('https://example.com/images/character.png')).toBe(
+    const infoMap = assetImporter.getImportedImageAssetInfoMap();
+    expect(infoMap.has('https://example.com/images/character.png')).toBe(true);
+    expect(infoMap.get('https://example.com/images/character.png')?.textureValue).toBe(
       'https://example.com/images/character.png'
     );
   });
 
-  it('外部 URL の SVG（https://...svg）がダウンロード・PNG変換されて importedTextures に登録される', async () => {
+  it('外部 URL の SVG（https://...svg）がダウンロード・PNG変換されて importedImageAssetInfoMap に登録される', async () => {
     await registerExternalUrls(
       [makeCharacterWith('https://example.com/icons/badge.svg')],
       assetImporter
     );
 
-    const textures = assetImporter.getImportedTextures();
-    expect(textures.has('https://example.com/icons/badge.svg')).toBe(true);
+    const infoMap = assetImporter.getImportedImageAssetInfoMap();
+    expect(infoMap.has('https://example.com/icons/badge.svg')).toBe(true);
     // URL ではなくインポートされたテクスチャ ID が格納される
-    expect(textures.get('https://example.com/icons/badge.svg')).toBe('resdb:///imported-texture');
+    expect(infoMap.get('https://example.com/icons/badge.svg')?.textureValue).toBe(
+      'resdb:///imported-texture'
+    );
     // fetch によるダウンロードと sharp による PNG 変換が行われたことを検証
     expect(fetch).toHaveBeenCalledWith('https://example.com/icons/badge.svg');
     const sharp = (await import('sharp')).default;
     expect(sharp).toHaveBeenCalled();
   });
 
-  it('6パターン全てが同時に importedTextures に登録できる', async () => {
+  it('6パターン全てが同時に importedImageAssetInfoMap に登録できる', async () => {
     // ZIP ファイルを importImages で登録
     await assetImporter.importImage({
       path: 'images/character.png',
@@ -195,15 +199,17 @@ describe('共有テクスチャへの登録 - 全画像パターン', () => {
       assetImporter
     );
 
-    const textures = assetImporter.getImportedTextures();
-    expect(textures.size).toBe(6);
-    expect(textures.has('character')).toBe(true);
-    expect(textures.has('icon')).toBe(true);
-    expect(textures.has('known_icon')).toBe(true);
-    expect(textures.has('./assets/images/bg.jpg')).toBe(true);
-    expect(textures.has('https://example.com/images/character.png')).toBe(true);
+    const infoMap = assetImporter.getImportedImageAssetInfoMap();
+    expect(infoMap.size).toBe(6);
+    expect(infoMap.has('character')).toBe(true);
+    expect(infoMap.has('icon')).toBe(true);
+    expect(infoMap.has('known_icon')).toBe(true);
+    expect(infoMap.has('./assets/images/bg.jpg')).toBe(true);
+    expect(infoMap.has('https://example.com/images/character.png')).toBe(true);
     // SVG URL はインポートされた texture ID で登録される
-    expect(textures.has('https://example.com/icons/badge.svg')).toBe(true);
-    expect(textures.get('https://example.com/icons/badge.svg')).toBe('resdb:///imported-texture');
+    expect(infoMap.has('https://example.com/icons/badge.svg')).toBe(true);
+    expect(infoMap.get('https://example.com/icons/badge.svg')?.textureValue).toBe(
+      'resdb:///imported-texture'
+    );
   });
 });

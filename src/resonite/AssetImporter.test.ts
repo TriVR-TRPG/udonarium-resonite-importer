@@ -257,14 +257,14 @@ describe('AssetImporter', () => {
     });
   });
 
-  describe('getImportedTextures', () => {
+  describe('getImportedImageAssetInfoMap', () => {
     it('should return empty map initially', () => {
-      const textures = assetImporter.getImportedTextures();
+      const infoMap = assetImporter.getImportedImageAssetInfoMap();
 
-      expect(textures.size).toBe(0);
+      expect(infoMap.size).toBe(0);
     });
 
-    it('should return all imported textures', async () => {
+    it('should return all imported image asset info', async () => {
       mockClient.importTexture.mockResolvedValueOnce('tex-1').mockResolvedValueOnce('tex-2');
 
       await assetImporter.importImage(
@@ -274,18 +274,18 @@ describe('AssetImporter', () => {
         createExtractedFile({ path: 'images/img2.png', name: 'img2.png' })
       );
 
-      const textures = assetImporter.getImportedTextures();
+      const infoMap = assetImporter.getImportedImageAssetInfoMap();
 
-      expect(textures.size).toBe(2);
-      expect(textures.get('img1.png')).toBe('tex-1');
-      expect(textures.get('img2.png')).toBe('tex-2');
+      expect(infoMap.size).toBe(2);
+      expect(infoMap.get('img1.png')?.textureValue).toBe('tex-1');
+      expect(infoMap.get('img2.png')?.textureValue).toBe('tex-2');
     });
 
     it('should return a copy of the map (not the original)', async () => {
       await assetImporter.importImage(createExtractedFile({ name: 'original.png' }));
 
-      const textures = assetImporter.getImportedTextures();
-      textures.set('modified.png', 'fake-texture');
+      const infoMap = assetImporter.getImportedImageAssetInfoMap();
+      infoMap.set('modified.png', { identifier: 'modified.png', textureValue: 'fake-texture' });
 
       // Original should not be affected
       expect(assetImporter.getTextureId('modified.png')).toBeUndefined();
@@ -303,11 +303,11 @@ describe('AssetImporter', () => {
         createExtractedFile({ path: 'images/fail.png', name: 'fail.png' })
       );
 
-      const textures = assetImporter.getImportedTextures();
+      const infoMap = assetImporter.getImportedImageAssetInfoMap();
 
-      expect(textures.size).toBe(1);
-      expect(textures.has('success.png')).toBe(true);
-      expect(textures.has('fail.png')).toBe(false);
+      expect(infoMap.size).toBe(1);
+      expect(infoMap.has('success.png')).toBe(true);
+      expect(infoMap.has('fail.png')).toBe(false);
     });
   });
 
@@ -333,7 +333,7 @@ describe('AssetImporter', () => {
     });
   });
 
-  describe('getImportedImageAssetInfoMap', () => {
+  describe('getImportedImageAssetInfoMap detail', () => {
     it('returns texture/source metadata per identifier', async () => {
       await assetImporter.importImage(
         createExtractedFile({ path: 'images/info.png', name: 'info.png' })

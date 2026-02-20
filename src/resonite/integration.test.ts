@@ -502,7 +502,7 @@ describe.skipIf(SKIP_INTEGRATION)('ResoniteLink Integration Tests', () => {
     );
 
     it(
-      'should return all imported textures',
+      'should return all imported image asset info',
       async () => {
         // Create a fresh importer
         const freshImporter = new AssetImporter(client);
@@ -512,10 +512,10 @@ describe.skipIf(SKIP_INTEGRATION)('ResoniteLink Integration Tests', () => {
         await freshImporter.importImage(image1);
         await freshImporter.importImage(image2);
 
-        const textures = freshImporter.getImportedTextures();
-        expect(textures.size).toBe(2);
-        expect(textures.has(image1.name)).toBe(true);
-        expect(textures.has(image2.name)).toBe(true);
+        const infoMap = freshImporter.getImportedImageAssetInfoMap();
+        expect(infoMap.size).toBe(2);
+        expect(infoMap.has(image1.name)).toBe(true);
+        expect(infoMap.has(image2.name)).toBe(true);
       },
       TEST_TIMEOUT
     );
