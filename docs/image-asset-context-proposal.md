@@ -1,4 +1,4 @@
-# 画像情報の取り扱い統合（ImageAssetContext）提案（改訂）
+﻿# 画像情報の取り扱い統合（ImageAssetContext）提案（改訂）
 
 ## 目的
 画像関連情報が複数 `Map` に分散していることで、変換処理の追跡コストが高くなっている。
@@ -56,7 +56,7 @@
 
 ## 現状の問題有無（調査観点）
 
-- 上記 A〜F はすべて `importedTextures` に収束できるため、shared texture 化の入口は一貫している。
+- 上記 A〜F はすべて `importedImageAssetInfoMap` に収束できるため、shared texture 化の入口は一貫している。
 - 一方で、以下は改善余地がある。
   - `filterMode` 判定が `isGifTexture(identifier, textureMap)` に依存しており、
     identifier/URL の揺れがあると判定責務が読みにくい。
