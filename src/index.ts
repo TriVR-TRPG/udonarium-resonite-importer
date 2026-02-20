@@ -28,6 +28,7 @@ import { ResoniteLinkClient } from './resonite/ResoniteLinkClient';
 import { SlotBuilder } from './resonite/SlotBuilder';
 import { AssetImporter } from './resonite/AssetImporter';
 import { registerExternalUrls } from './resonite/registerExternalUrls';
+import { buildDryRunImageAssetInfoMap } from './resonite/dryRunImageAssetInfo';
 import {
   SCALE_FACTOR,
   IMPORT_ROOT_TAG,
@@ -208,11 +209,21 @@ async function run(options: CLIOptions): Promise<void> {
 
   // Dry run - stop here
   if (options.dryRun) {
+    const imageAssetInfoMap = buildDryRunImageAssetInfoMap(
+      extractedData.imageFiles,
+      parseResult.objects
+    );
+    const filterModeSourceTextureMap = new Map<string, string>();
+    for (const [identifier, imageAssetInfo] of imageAssetInfoMap) {
+      if (imageAssetInfo.textureValue) {
+        filterModeSourceTextureMap.set(identifier, imageAssetInfo.textureValue);
+      }
+    }
     const imageAssetContext = buildImageAssetContext({
-      textureValueMap: new Map<string, string>(),
+      imageAssetInfoMap,
+      filterModeSourceTextureMap,
       imageAspectRatioMap,
       imageBlendModeMap,
-      imageFilterModeMap: new Map<string, 'Default' | 'Point'>(),
     });
     // Convert to Resonite objects (dry-run only)
     const resoniteObjects = convertObjectsWithImageAssetContext(

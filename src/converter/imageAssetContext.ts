@@ -163,13 +163,17 @@ export function buildImageFilterModeMap(
 }
 
 export interface BuildImageAssetContextOptions {
+  /** @deprecated Prefer imageAssetInfoMap. */
   textureValueMap?: Map<string, string>;
+  /** @deprecated Prefer updating imageAssetInfoMap via AssetImporter.applyTextureReferences. */
   textureReferenceComponentMap?: Map<string, string>;
   imageAssetInfoMap?: Map<string, ImageAssetInfo>;
+  /** @deprecated Prefer supplying precomputed filterMode in imageAssetInfoMap when possible. */
   filterModeSourceTextureMap?: Map<string, string>;
   imageAspectRatioMap?: Map<string, number>;
   imageBlendModeMap?: Map<string, ImageBlendMode>;
   imageFilterModeMap?: Map<string, ImageFilterMode>;
+  /** @deprecated Prefer sourceKind set in imageAssetInfoMap. */
   imageSourceKindMap?: Map<string, ImageSourceKind>;
 }
 
