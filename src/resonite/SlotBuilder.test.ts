@@ -433,38 +433,46 @@ describe('SlotBuilder', () => {
 
       expect(results).toHaveLength(3);
       expect(results.every((r) => r.success)).toBe(true);
-      expect(mockClient.addSlot).toHaveBeenCalledTimes(7);
+      expect(mockClient.addSlot).toHaveBeenCalledTimes(8);
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
         1,
         expect.objectContaining({
           parentId: 'Root',
-          name: 'Tables',
+          name: 'Offset',
         })
       );
+      const offsetCallArgs = mockClient.addSlot.mock.calls[0][0] as { id: string };
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
         2,
         expect.objectContaining({
-          parentId: 'Root',
-          name: 'Objects',
+          parentId: offsetCallArgs.id,
+          name: 'Tables',
         })
       );
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
         3,
         expect.objectContaining({
-          parentId: 'Root',
-          name: 'Inventory',
+          parentId: offsetCallArgs.id,
+          name: 'Objects',
         })
       );
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
         4,
         expect.objectContaining({
+          parentId: offsetCallArgs.id,
+          name: 'Inventory',
+        })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        5,
+        expect.objectContaining({
           name: 'table',
           isActive: true,
         })
       );
-      const objectsCallArgs = mockClient.addSlot.mock.calls[1][0] as { id: string };
+      const objectsCallArgs = mockClient.addSlot.mock.calls[2][0] as { id: string };
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
-        5,
+        6,
         expect.objectContaining({
           parentId: objectsCallArgs.id,
           id: 'obj-1',
@@ -490,10 +498,10 @@ describe('SlotBuilder', () => {
 
       await slotBuilder.buildSlots([table, character]);
 
-      const tablesSlotCall = mockClient.addSlot.mock.calls[0][0] as { id: string };
-      const objectsSlotCall = mockClient.addSlot.mock.calls[1][0] as { id: string };
+      const tablesSlotCall = mockClient.addSlot.mock.calls[1][0] as { id: string };
+      const objectsSlotCall = mockClient.addSlot.mock.calls[2][0] as { id: string };
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
-        5,
+        6,
         expect.objectContaining({
           id: 'table-1',
           parentId: tablesSlotCall.id,
@@ -505,6 +513,41 @@ describe('SlotBuilder', () => {
           return args.id === 'char-1' && args.parentId === objectsSlotCall.id;
         })
       ).toBe(true);
+    });
+
+    it('creates Offset slot positioned to center the largest table', async () => {
+      const largeTable = createResoniteObject({
+        id: 'table-large',
+        sourceType: 'table',
+        position: { x: 20, y: 0, z: -10 },
+        children: [
+          createResoniteObject({
+            id: 'table-large-surface',
+            position: { x: 10, y: 0, z: -5 },
+          }),
+        ],
+      });
+      const smallTable = createResoniteObject({
+        id: 'table-small',
+        sourceType: 'table',
+        position: { x: 5, y: 0, z: 5 },
+        children: [
+          createResoniteObject({
+            id: 'table-small-surface',
+            position: { x: 2, y: 0, z: -2 },
+          }),
+        ],
+      });
+
+      await slotBuilder.buildSlots([smallTable, largeTable]);
+
+      const offsetCall = mockClient.addSlot.mock.calls[0]?.[0] as
+        | { name?: string; parentId?: string; position?: { x: number; y: number; z: number } }
+        | undefined;
+      expect(offsetCall?.name).toBe('Offset');
+      expect(offsetCall?.parentId).toBe('Root');
+      expect(offsetCall?.position?.x).toBe(-30);
+      expect(offsetCall?.position?.z).toBe(15);
     });
 
     it('should place characters under Inventory grouped by location name', async () => {
@@ -532,9 +575,9 @@ describe('SlotBuilder', () => {
         anotherGraveyardCharacter,
       ]);
 
-      const inventorySlotCall = mockClient.addSlot.mock.calls[2][0] as { id: string };
+      const inventorySlotCall = mockClient.addSlot.mock.calls[3][0] as { id: string };
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
-        4,
+        5,
         expect.objectContaining({
           parentId: inventorySlotCall.id,
           name: 'table',
@@ -542,33 +585,33 @@ describe('SlotBuilder', () => {
         })
       );
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
-        5,
+        6,
         expect.objectContaining({
           parentId: inventorySlotCall.id,
           name: 'graveyard',
           isActive: false,
         })
       );
-      const graveyardSlotCall = mockClient.addSlot.mock.calls[4][0] as { id: string };
+      const graveyardSlotCall = mockClient.addSlot.mock.calls[5][0] as { id: string };
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
-        6,
+        7,
         expect.objectContaining({ id: 'char-graveyard', parentId: graveyardSlotCall.id })
       );
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
-        7,
+        8,
         expect.objectContaining({
           parentId: inventorySlotCall.id,
           name: 'Unknown',
           isActive: false,
         })
       );
-      const unknownSlotCall = mockClient.addSlot.mock.calls[6][0] as { id: string };
+      const unknownSlotCall = mockClient.addSlot.mock.calls[7][0] as { id: string };
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
-        8,
+        9,
         expect.objectContaining({ id: 'char-common', parentId: unknownSlotCall.id })
       );
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
-        9,
+        10,
         expect.objectContaining({ id: 'char-graveyard-2', parentId: graveyardSlotCall.id })
       );
     });
@@ -591,7 +634,7 @@ describe('SlotBuilder', () => {
       let callCount = 0;
       mockClient.addSlot.mockImplementation(() => {
         callCount += 1;
-        if (callCount === 6) {
+        if (callCount === 7) {
           return Promise.reject(new Error('Failed'));
         }
         return Promise.resolve('created-slot-id');
@@ -656,18 +699,22 @@ describe('SlotBuilder', () => {
       expect(results[0].success).toBe(true);
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
         1,
-        expect.objectContaining({ name: 'Tables', parentId: 'Root' })
+        expect.objectContaining({ name: 'Offset', parentId: 'Root' })
       );
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
         2,
-        expect.objectContaining({ name: 'Objects', parentId: 'Root' })
+        expect.objectContaining({ name: 'Tables' })
       );
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
         3,
-        expect.objectContaining({ name: 'Inventory', parentId: 'Root' })
+        expect.objectContaining({ name: 'Objects' })
       );
       expect(mockClient.addSlot).toHaveBeenNthCalledWith(
         4,
+        expect.objectContaining({ name: 'Inventory' })
+      );
+      expect(mockClient.addSlot).toHaveBeenNthCalledWith(
+        5,
         expect.objectContaining({ name: 'table', isActive: true })
       );
     });

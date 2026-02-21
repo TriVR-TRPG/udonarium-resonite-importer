@@ -94,6 +94,7 @@ export class SlotBuilder {
   private tablesSlotId?: string;
   private objectsSlotId?: string;
   private inventorySlotId?: string;
+  private offsetSlotId?: string;
   private inventoryLocationSlotIds = new Map<string, string>();
   private assetsSlotId?: string;
   private texturesSlotId?: string;
@@ -199,13 +200,14 @@ export class SlotBuilder {
 
     const results: SlotBuildResult[] = [];
     const total = objects.length;
+    const offsetPosition = this.computeOffsetPositionFromLargestTableCenter(objects);
 
     for (let i = 0; i < objects.length; i++) {
       const object = objects[i];
       let result: SlotBuildResult;
       try {
         const { tablesSlotId, objectsSlotId, inventorySlotId } =
-          await this.ensureTopLevelObjectSlots();
+          await this.ensureTopLevelObjectSlots(offsetPosition);
         const isTable = isTableRootObject(object) || object.sourceType === 'table';
         const isInventoryObject = !isTable && isCharacterObject(object);
         const parentId = isTable
@@ -283,6 +285,7 @@ export class SlotBuilder {
     this.tablesSlotId = undefined;
     this.objectsSlotId = undefined;
     this.inventorySlotId = undefined;
+    this.offsetSlotId = undefined;
     this.inventoryLocationSlotIds.clear();
     this.assetsSlotId = undefined;
     this.texturesSlotId = undefined;
@@ -424,16 +427,18 @@ export class SlotBuilder {
     return this.assetsSlotId;
   }
 
-  private async ensureTopLevelObjectSlots(): Promise<{
+  private async ensureTopLevelObjectSlots(offsetPosition: Vector3): Promise<{
     tablesSlotId: string;
     objectsSlotId: string;
     inventorySlotId: string;
   }> {
+    const parentSlotId = await this.ensureOffsetSlot(offsetPosition);
+
     if (!this.tablesSlotId) {
       this.tablesSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
       await this.client.addSlot({
         id: this.tablesSlotId,
-        parentId: this.rootSlotId,
+        parentId: parentSlotId,
         name: 'Tables',
         position: { x: 0, y: 0, z: 0 },
       });
@@ -443,7 +448,7 @@ export class SlotBuilder {
       this.objectsSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
       await this.client.addSlot({
         id: this.objectsSlotId,
-        parentId: this.rootSlotId,
+        parentId: parentSlotId,
         name: 'Objects',
         position: { x: 0, y: 0, z: 0 },
       });
@@ -453,7 +458,7 @@ export class SlotBuilder {
       this.inventorySlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
       await this.client.addSlot({
         id: this.inventorySlotId,
-        parentId: this.rootSlotId,
+        parentId: parentSlotId,
         name: 'Inventory',
         position: { x: 0, y: 0, z: 0 },
       });
@@ -466,6 +471,63 @@ export class SlotBuilder {
       objectsSlotId: this.objectsSlotId,
       inventorySlotId: this.inventorySlotId,
     };
+  }
+
+  private async ensureOffsetSlot(position: Vector3): Promise<string> {
+    if (this.offsetSlotId) {
+      return this.offsetSlotId;
+    }
+    this.offsetSlotId = `${SLOT_ID_PREFIX}-${randomUUID()}`;
+    await this.client.addSlot({
+      id: this.offsetSlotId,
+      parentId: this.rootSlotId,
+      name: 'Offset',
+      position,
+    });
+    return this.offsetSlotId;
+  }
+
+  private computeOffsetPositionFromLargestTableCenter(objects: ResoniteObject[]): Vector3 {
+    const largestTableCenter = this.findLargestTableCenter(objects);
+    if (!largestTableCenter) {
+      return { x: 0, y: 0, z: 0 };
+    }
+    // Move all content so the largest table center becomes the local origin.
+    return {
+      x: -largestTableCenter.x,
+      y: -largestTableCenter.y,
+      z: -largestTableCenter.z,
+    };
+  }
+
+  private findLargestTableCenter(objects: ResoniteObject[]): Vector3 | undefined {
+    let largestArea = -1;
+    let center: Vector3 | undefined;
+
+    const visit = (obj: ResoniteObject): void => {
+      const surface = obj.children.find((child) => child.id.endsWith('-surface'));
+      if (surface) {
+        const halfWidth = Math.abs(surface.position.x);
+        const halfHeight = Math.abs(surface.position.z);
+        const area = halfWidth * 2 * (halfHeight * 2);
+        if (area > largestArea) {
+          largestArea = area;
+          center = {
+            x: obj.position.x + surface.position.x,
+            y: obj.position.y + surface.position.y,
+            z: obj.position.z + surface.position.z,
+          };
+        }
+      }
+      for (const child of obj.children) {
+        visit(child);
+      }
+    };
+
+    for (const obj of objects) {
+      visit(obj);
+    }
+    return center;
   }
 
   private async ensureInventoryLocationSlot(
