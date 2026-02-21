@@ -21,6 +21,7 @@ type BaseResoniteObject = {
   name: string;
   position: Vector3;
   rotation: Vector3;
+  scale?: Vector3;
   sourceType?: Exclude<ObjectType, 'character'>;
   isActive: boolean;
   components: ResoniteComponent[];

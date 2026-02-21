@@ -151,16 +151,18 @@ describe.skipIf(SKIP_EXTERNAL_URL_DOWNLOAD_IN_CI)(
   'Converter integration (sample-terrain.zip)',
   () => {
     it(
-      'converts terrain objects with top and walls child slots',
+      'converts terrain objects with top and individual wall child slots',
       async () => {
         const converted = await loadConvertedFromZip(SAMPLE_TERRAIN_ZIP_PATH);
         const flattened = flattenObjects(converted);
 
         const terrains = flattened.filter((obj) => {
           const top = obj.children.find((c) => c.id.endsWith('-top'));
-          const walls = obj.children.find((c) => c.id.endsWith('-walls'));
+          const hasAllWalls = ['-front', '-back', '-left', '-right'].every((suffix) =>
+            obj.children.some((c) => c.id.endsWith(suffix))
+          );
           const hasCollider = obj.components.some((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
-          return !!top && !!walls && hasCollider;
+          return !!top && hasAllWalls && hasCollider;
         });
 
         expect(terrains.length).toBeGreaterThan(0);

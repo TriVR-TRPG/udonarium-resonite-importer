@@ -123,6 +123,7 @@ export class SlotBuilder {
         parentId: parentId || this.rootSlotId,
         name: obj.name,
         position: obj.position,
+        ...(obj.scale ? { scale: obj.scale } : {}),
         ...(obj.isActive !== undefined ? { isActive: obj.isActive } : {}),
       });
 

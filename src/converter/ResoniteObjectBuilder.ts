@@ -198,6 +198,7 @@ export class ResoniteObjectBuilder {
     name: string;
     position: ResoniteObject['position'];
     rotation: ResoniteObject['rotation'];
+    scale?: ResoniteObject['scale'];
     sourceType?: ObjectType;
     locationName?: string;
     isActive: boolean;
@@ -235,6 +236,11 @@ export class ResoniteObjectBuilder {
 
   setRotation(rotation: ResoniteObject['rotation']): this {
     this.obj.rotation = rotation;
+    return this;
+  }
+
+  setScale(scale: ResoniteObject['scale']): this {
+    this.obj.scale = scale;
     return this;
   }
 

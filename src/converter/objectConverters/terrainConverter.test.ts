@@ -58,7 +58,7 @@ describe('convertTerrain', () => {
     expect(result.position.y).toBe(1);
     expect(result.position.z).toBe(-2);
 
-    expect(result.children).toHaveLength(3);
+    expect(result.children).toHaveLength(6);
     const topFace = result.children.find((child) => child.id === 'slot-terrain-1-top');
     const bottomFace = result.children.find((child) => child.id === 'slot-terrain-1-bottom');
     expect(topFace).toBeDefined();
@@ -78,11 +78,15 @@ describe('convertTerrain', () => {
       COMPONENT_TYPES.MESH_RENDERER,
     ]);
 
-    const wallsSlot = result.children.find((child) => child.id === 'slot-terrain-1-walls');
-    expect(wallsSlot).toBeDefined();
-    expect(wallsSlot?.isActive).toBe(true);
-    expect(wallsSlot?.children).toHaveLength(4);
-    for (const wallFace of wallsSlot?.children ?? []) {
+    const wallFaces = [
+      result.children.find((child) => child.id === 'slot-terrain-1-front'),
+      result.children.find((child) => child.id === 'slot-terrain-1-back'),
+      result.children.find((child) => child.id === 'slot-terrain-1-left'),
+      result.children.find((child) => child.id === 'slot-terrain-1-right'),
+    ];
+    const definedWallFaces = wallFaces.filter((face): face is NonNullable<typeof face> => !!face);
+    expect(definedWallFaces).toHaveLength(4);
+    for (const wallFace of definedWallFaces) {
       expect(wallFace.components.map((c) => c.type)).toEqual([
         COMPONENT_TYPES.QUAD_MESH,
         COMPONENT_TYPES.STATIC_TEXTURE_2D,
@@ -98,20 +102,22 @@ describe('convertTerrain', () => {
       Size: { $type: 'float2', value: { x: 10, y: 4 } },
     });
     expect(bottomFace?.position).toEqual({ x: 0, y: -1, z: 0 });
+    expect(bottomFace?.scale).toEqual({ x: 1, y: -1, z: 1 });
     expect(bottomFace?.rotation).toEqual({ x: -90, y: 0, z: 0 });
     expect(bottomFace?.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 10, y: 4 } },
     });
 
-    const frontFace = wallsSlot?.children.find(
-      (child) => child.id === 'slot-terrain-1-walls-front'
-    );
+    const frontFace = result.children.find((child) => child.id === 'slot-terrain-1-front');
     expect(frontFace?.position).toEqual({ x: 0, y: 0, z: -2 });
     expect(frontFace?.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 10, y: 2 } },
     });
 
-    const leftFace = wallsSlot?.children.find((child) => child.id === 'slot-terrain-1-walls-left');
+    const backFace = result.children.find((child) => child.id === 'slot-terrain-1-back');
+    expect(backFace?.scale).toEqual({ x: -1, y: 1, z: 1 });
+    const leftFace = result.children.find((child) => child.id === 'slot-terrain-1-left');
+    expect(leftFace?.scale).toEqual({ x: -1, y: 1, z: 1 });
     expect(leftFace?.position).toEqual({ x: -5, y: 0, z: 0 });
     expect(leftFace?.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 4, y: 2 } },
