@@ -202,14 +202,14 @@ describe('ResoniteObjectBuilder', () => {
         $type: 'syncObject',
         members: {
           Position: { $type: 'float3', value: { x: -2, y: -1, z: 0 } },
-          UV0: { $type: 'float2', value: { x: 0, y: 1 } },
+          UV0: { $type: 'float2', value: { x: 0, y: 0 } },
         },
       });
       expect(mesh?.fields.Vertex2).toEqual({
         $type: 'syncObject',
         members: {
           Position: { $type: 'float3', value: { x: 2, y: 3, z: 0 } },
-          UV0: { $type: 'float2', value: { x: 0.5, y: 0 } },
+          UV0: { $type: 'float2', value: { x: 1, y: 1 } },
         },
       });
     });

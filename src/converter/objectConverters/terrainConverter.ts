@@ -189,7 +189,6 @@ function buildTriangleWallSlot(
   const halfX = size.x / 2;
   const halfY = size.y / 2;
   const peakX = slopeSign >= 0 ? halfX : -halfX;
-  const peakUvX = slopeSign >= 0 ? 1 : 0;
 
   return ResoniteObjectBuilder.create({ id, name })
     .setPosition(position)
@@ -202,11 +201,6 @@ function buildTriangleWallSlot(
         { x: -halfX, y: -halfY, z: 0 },
         { x: halfX, y: -halfY, z: 0 },
         { x: peakX, y: halfY, z: 0 },
-      ],
-      uv0: [
-        { x: 0, y: 1 },
-        { x: 1, y: 1 },
-        { x: peakUvX, y: 0 },
       ],
     })
     .build();

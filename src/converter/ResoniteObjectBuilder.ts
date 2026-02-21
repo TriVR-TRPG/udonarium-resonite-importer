@@ -56,6 +56,24 @@ function roundTo4(value: number): number {
   return Math.round(value * 10000) / 10000;
 }
 
+function deriveTriangleUv0(
+  vertices: [TriangleVertex, TriangleVertex, TriangleVertex]
+): [{ x: number; y: number }, { x: number; y: number }, { x: number; y: number }] {
+  const xs = vertices.map((vertex) => vertex.x);
+  const ys = vertices.map((vertex) => vertex.y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  const width = maxX - minX || 1;
+  const height = maxY - minY || 1;
+
+  return vertices.map((vertex) => ({
+    x: roundTo4((vertex.x - minX) / width),
+    y: roundTo4((vertex.y - minY) / height),
+  })) as [{ x: number; y: number }, { x: number; y: number }, { x: number; y: number }];
+}
+
 function resolveBlendModeLookupIdentifier(options?: QuadMeshOptions): string | undefined {
   const identifier = options?.textureIdentifier;
   if (!identifier || identifier.startsWith('texture-ref://')) {
@@ -196,11 +214,7 @@ function buildTriangleMeshComponents(
       ? toSharedTexturePropertyBlockId(sharedTextureId)
       : textureBlockId
     : undefined;
-  const uv0 = options.uv0 ?? [
-    { x: 0, y: 1 },
-    { x: 1, y: 1 },
-    { x: 0.5, y: 0 },
-  ];
+  const uv0 = options.uv0 ?? deriveTriangleUv0(options.vertices);
 
   const components: ResoniteComponent[] = [
     {
