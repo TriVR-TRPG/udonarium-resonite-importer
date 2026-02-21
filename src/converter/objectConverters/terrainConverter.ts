@@ -108,6 +108,48 @@ function shouldSkipWall(
   }
 }
 
+function isTriangleWall(
+  wall: 'front' | 'back' | 'left' | 'right',
+  terrainLilyExtension: TerrainLilyExtension | undefined
+): boolean {
+  if (!terrainLilyExtension?.isSlope) {
+    return false;
+  }
+
+  switch (terrainLilyExtension.slopeDirection) {
+    case SLOPE_DIRECTION.TOP:
+    case SLOPE_DIRECTION.BOTTOM:
+      return wall === 'left' || wall === 'right';
+    case SLOPE_DIRECTION.LEFT:
+    case SLOPE_DIRECTION.RIGHT:
+      return wall === 'front' || wall === 'back';
+    default:
+      return false;
+  }
+}
+
+function getTriangleSlopeSign(
+  wall: 'front' | 'back' | 'left' | 'right',
+  terrainLilyExtension: TerrainLilyExtension | undefined
+): number {
+  if (!terrainLilyExtension?.isSlope) {
+    return 1;
+  }
+
+  switch (terrainLilyExtension.slopeDirection) {
+    case SLOPE_DIRECTION.TOP:
+      return wall === 'left' ? 1 : -1;
+    case SLOPE_DIRECTION.BOTTOM:
+      return wall === 'left' ? -1 : 1;
+    case SLOPE_DIRECTION.LEFT:
+      return wall === 'front' ? 1 : -1;
+    case SLOPE_DIRECTION.RIGHT:
+      return wall === 'front' ? -1 : 1;
+    default:
+      return 1;
+  }
+}
+
 function buildWallSlot(
   id: string,
   name: string,
@@ -130,6 +172,42 @@ function buildWallSlot(
       dualSided: false,
       size,
       imageAssetContext,
+    })
+    .build();
+}
+
+function buildTriangleWallSlot(
+  id: string,
+  name: string,
+  position: Vector3,
+  rotation: Vector3,
+  size: { x: number; y: number },
+  slopeSign: number,
+  textureIdentifier: string | undefined,
+  imageAssetContext: ImageAssetContext
+): ResoniteObject {
+  const halfX = size.x / 2;
+  const halfY = size.y / 2;
+  const peakX = slopeSign >= 0 ? halfX : -halfX;
+  const peakUvX = slopeSign >= 0 ? 1 : 0;
+
+  return ResoniteObjectBuilder.create({ id, name })
+    .setPosition(position)
+    .setRotation(rotation)
+    .addTriangleMesh({
+      textureIdentifier,
+      imageAssetContext,
+      dualSided: true,
+      vertices: [
+        { x: -halfX, y: -halfY, z: 0 },
+        { x: halfX, y: -halfY, z: 0 },
+        { x: peakX, y: halfY, z: 0 },
+      ],
+      uv0: [
+        { x: 0, y: 1 },
+        { x: 1, y: 1 },
+        { x: peakUvX, y: 0 },
+      ],
     })
     .build();
 }
@@ -247,58 +325,106 @@ export function convertTerrain(
     const leftRightSize = { x: udonObj.depth, y: udonObj.height };
 
     if (hasPositiveSize(frontBackSize) && !shouldSkipWall('front', terrainLilyExtension)) {
+      const useTriangle = isTriangleWall('front', terrainLilyExtension);
       mainBuilder.addChild(
-        buildWallSlot(
-          frontId,
-          `${udonObj.name}-front`,
-          { x: 0, y: 0, z: -udonObj.depth / 2 },
-          { x: 0, y: 0, z: 0 },
-          frontBackSize,
-          sideTextureIdentifier,
-          imageAssetContext
-        )
+        useTriangle
+          ? buildTriangleWallSlot(
+              frontId,
+              `${udonObj.name}-front`,
+              { x: 0, y: 0, z: -udonObj.depth / 2 },
+              { x: 0, y: 0, z: 0 },
+              frontBackSize,
+              getTriangleSlopeSign('front', terrainLilyExtension),
+              sideTextureIdentifier,
+              imageAssetContext
+            )
+          : buildWallSlot(
+              frontId,
+              `${udonObj.name}-front`,
+              { x: 0, y: 0, z: -udonObj.depth / 2 },
+              { x: 0, y: 0, z: 0 },
+              frontBackSize,
+              sideTextureIdentifier,
+              imageAssetContext
+            )
       );
     }
     if (hasPositiveSize(frontBackSize) && !shouldSkipWall('back', terrainLilyExtension)) {
+      const useTriangle = isTriangleWall('back', terrainLilyExtension);
       mainBuilder.addChild(
-        buildWallSlot(
-          backId,
-          `${udonObj.name}-back`,
-          { x: 0, y: 0, z: udonObj.depth / 2 },
-          { x: 0, y: 180, z: 0 },
-          frontBackSize,
-          sideTextureIdentifier,
-          imageAssetContext,
-          { x: -1, y: 1, z: 1 }
-        )
+        useTriangle
+          ? buildTriangleWallSlot(
+              backId,
+              `${udonObj.name}-back`,
+              { x: 0, y: 0, z: udonObj.depth / 2 },
+              { x: 0, y: 180, z: 0 },
+              frontBackSize,
+              getTriangleSlopeSign('back', terrainLilyExtension),
+              sideTextureIdentifier,
+              imageAssetContext
+            )
+          : buildWallSlot(
+              backId,
+              `${udonObj.name}-back`,
+              { x: 0, y: 0, z: udonObj.depth / 2 },
+              { x: 0, y: 180, z: 0 },
+              frontBackSize,
+              sideTextureIdentifier,
+              imageAssetContext,
+              { x: -1, y: 1, z: 1 }
+            )
       );
     }
 
     if (hasPositiveSize(leftRightSize) && !shouldSkipWall('left', terrainLilyExtension)) {
+      const useTriangle = isTriangleWall('left', terrainLilyExtension);
       mainBuilder.addChild(
-        buildWallSlot(
-          leftId,
-          `${udonObj.name}-left`,
-          { x: -udonObj.width / 2, y: 0, z: 0 },
-          { x: 0, y: 90, z: 0 },
-          leftRightSize,
-          sideTextureIdentifier,
-          imageAssetContext,
-          { x: -1, y: 1, z: 1 }
-        )
+        useTriangle
+          ? buildTriangleWallSlot(
+              leftId,
+              `${udonObj.name}-left`,
+              { x: -udonObj.width / 2, y: 0, z: 0 },
+              { x: 0, y: 90, z: 0 },
+              leftRightSize,
+              getTriangleSlopeSign('left', terrainLilyExtension),
+              sideTextureIdentifier,
+              imageAssetContext
+            )
+          : buildWallSlot(
+              leftId,
+              `${udonObj.name}-left`,
+              { x: -udonObj.width / 2, y: 0, z: 0 },
+              { x: 0, y: 90, z: 0 },
+              leftRightSize,
+              sideTextureIdentifier,
+              imageAssetContext,
+              { x: -1, y: 1, z: 1 }
+            )
       );
     }
     if (hasPositiveSize(leftRightSize) && !shouldSkipWall('right', terrainLilyExtension)) {
+      const useTriangle = isTriangleWall('right', terrainLilyExtension);
       mainBuilder.addChild(
-        buildWallSlot(
-          rightId,
-          `${udonObj.name}-right`,
-          { x: udonObj.width / 2, y: 0, z: 0 },
-          { x: 0, y: -90, z: 0 },
-          leftRightSize,
-          sideTextureIdentifier,
-          imageAssetContext
-        )
+        useTriangle
+          ? buildTriangleWallSlot(
+              rightId,
+              `${udonObj.name}-right`,
+              { x: udonObj.width / 2, y: 0, z: 0 },
+              { x: 0, y: -90, z: 0 },
+              leftRightSize,
+              getTriangleSlopeSign('right', terrainLilyExtension),
+              sideTextureIdentifier,
+              imageAssetContext
+            )
+          : buildWallSlot(
+              rightId,
+              `${udonObj.name}-right`,
+              { x: udonObj.width / 2, y: 0, z: 0 },
+              { x: 0, y: -90, z: 0 },
+              leftRightSize,
+              sideTextureIdentifier,
+              imageAssetContext
+            )
       );
     }
   }

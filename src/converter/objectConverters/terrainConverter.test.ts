@@ -440,6 +440,10 @@ describe('convertTerrain', () => {
     expect(topMesh?.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 2, y: 2.8284 } },
     });
+    const leftWall = result.children.find((child) => child.id.endsWith('-left'));
+    const rightWall = result.children.find((child) => child.id.endsWith('-right'));
+    expect(leftWall?.components[0].type).toBe(COMPONENT_TYPES.TRIANGLE_MESH);
+    expect(rightWall?.components[0].type).toBe(COMPONENT_TYPES.TRIANGLE_MESH);
     expect(result.children.some((child) => child.id.endsWith('-back'))).toBe(false);
     expect(result.children.some((child) => child.id.endsWith('-front'))).toBe(true);
   });
@@ -473,6 +477,12 @@ describe('convertTerrain', () => {
     const bottomTopMesh = bottomTop?.children.find((child) => child.id.endsWith('-top-mesh'));
     expect(bottomTopMesh?.rotation.x).toBeCloseTo(-45, 4);
     expect(bottom.children.some((child) => child.id.endsWith('-front'))).toBe(false);
+    expect(bottom.children.find((child) => child.id.endsWith('-left'))?.components[0].type).toBe(
+      COMPONENT_TYPES.TRIANGLE_MESH
+    );
+    expect(bottom.children.find((child) => child.id.endsWith('-right'))?.components[0].type).toBe(
+      COMPONENT_TYPES.TRIANGLE_MESH
+    );
 
     const left = convertTerrain(
       baseTerrain,
@@ -489,6 +499,12 @@ describe('convertTerrain', () => {
       Size: { $type: 'float2', value: { x: 2.8284, y: 2 } },
     });
     expect(left.children.some((child) => child.id.endsWith('-left'))).toBe(false);
+    expect(left.children.find((child) => child.id.endsWith('-front'))?.components[0].type).toBe(
+      COMPONENT_TYPES.TRIANGLE_MESH
+    );
+    expect(left.children.find((child) => child.id.endsWith('-back'))?.components[0].type).toBe(
+      COMPONENT_TYPES.TRIANGLE_MESH
+    );
 
     const right = convertTerrain(
       baseTerrain,
@@ -502,5 +518,11 @@ describe('convertTerrain', () => {
     const rightTopMesh = rightTop?.children.find((child) => child.id.endsWith('-top-mesh'));
     expect(rightTopMesh?.rotation.y).toBeCloseTo(-45, 4);
     expect(right.children.some((child) => child.id.endsWith('-right'))).toBe(false);
+    expect(right.children.find((child) => child.id.endsWith('-front'))?.components[0].type).toBe(
+      COMPONENT_TYPES.TRIANGLE_MESH
+    );
+    expect(right.children.find((child) => child.id.endsWith('-back'))?.components[0].type).toBe(
+      COMPONENT_TYPES.TRIANGLE_MESH
+    );
   });
 });

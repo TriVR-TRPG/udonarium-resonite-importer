@@ -16,6 +16,7 @@ import { ImageAssetContext } from './imageAssetContext';
 // ---- private types ----
 type QuadSize = { x: number; y: number };
 type BoxSize = { x: number; y: number; z: number };
+type TriangleVertex = { x: number; y: number; z: number };
 
 export type NewResoniteObjectSpec = {
   id?: string;
@@ -39,6 +40,15 @@ type QuadMeshOptions = {
   imageAssetContext?: ImageAssetContext;
   dualSided?: boolean;
   size?: QuadSize;
+  color?: ColorXValue;
+};
+
+type TriangleMeshOptions = {
+  textureIdentifier?: string;
+  imageAssetContext?: ImageAssetContext;
+  dualSided?: boolean;
+  vertices: [TriangleVertex, TriangleVertex, TriangleVertex];
+  uv0?: [{ x: number; y: number }, { x: number; y: number }, { x: number; y: number }];
   color?: ColorXValue;
 };
 
@@ -113,6 +123,114 @@ function buildQuadMeshComponents(
       type: COMPONENT_TYPES.QUAD_MESH,
       fields: {
         Size: { $type: 'float2', value: size },
+      },
+    },
+  ];
+
+  if (textureValue && !sharedTextureId) {
+    const usePointFilter = options.imageAssetContext
+      ? options.imageAssetContext.resolveUsePointFilter(options.textureIdentifier, textureValue)
+      : isGifTexture(textureValue);
+    components.push({
+      id: textureId,
+      type: COMPONENT_TYPES.STATIC_TEXTURE_2D,
+      fields: buildStaticTexture2DFields(textureValue, usePointFilter),
+    });
+  }
+
+  components.push({
+    id: materialId,
+    type: COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
+    fields: buildXiexeToonMaterialFields(resolveBlendMode(options), options.color, dualSided),
+  });
+
+  if (textureValue && !sharedTextureId) {
+    const textureProviderId = sharedTextureId ?? localTextureId!;
+    components.push({
+      id: textureBlockId,
+      type: COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
+      fields: buildMainTexturePropertyBlockFields(textureProviderId),
+    });
+  }
+
+  components.push({
+    id: `${slotId}-renderer`,
+    type: COMPONENT_TYPES.MESH_RENDERER,
+    fields: {
+      Mesh: { $type: 'reference', targetId: meshId },
+      Materials: {
+        $type: 'list',
+        elements: [{ $type: 'reference', targetId: materialId }],
+      },
+      ...(texturePropertyBlockTargetId
+        ? {
+            MaterialPropertyBlocks: {
+              $type: 'list',
+              elements: [{ $type: 'reference', targetId: texturePropertyBlockTargetId }],
+            },
+          }
+        : {}),
+    },
+  });
+
+  return components;
+}
+
+function buildTriangleMeshComponents(
+  slotId: string,
+  options: TriangleMeshOptions
+): ResoniteComponent[] {
+  const textureValue = options.imageAssetContext
+    ? (options.imageAssetContext.resolveTextureValue(options.textureIdentifier) ??
+      options.textureIdentifier)
+    : options.textureIdentifier;
+  const dualSided = options.dualSided ?? false;
+  const meshId = `${slotId}-mesh`;
+  const materialId = `${slotId}-mat`;
+  const textureBlockId = `${slotId}-texture-block`;
+  const textureId = `${slotId}-tex`;
+  const sharedTextureId = parseTextureReferenceId(textureValue);
+  const localTextureId = sharedTextureId ? undefined : textureId;
+  const texturePropertyBlockTargetId = textureValue
+    ? sharedTextureId
+      ? toSharedTexturePropertyBlockId(sharedTextureId)
+      : textureBlockId
+    : undefined;
+  const uv0 = options.uv0 ?? [
+    { x: 0, y: 1 },
+    { x: 1, y: 1 },
+    { x: 0.5, y: 0 },
+  ];
+
+  const components: ResoniteComponent[] = [
+    {
+      id: meshId,
+      type: COMPONENT_TYPES.TRIANGLE_MESH,
+      fields: {
+        Vertex0: {
+          $type: 'syncObject',
+          members: {
+            Position: { $type: 'float3', value: options.vertices[0] },
+            UV0: { $type: 'float2', value: uv0[0] },
+          },
+        },
+        Vertex1: {
+          $type: 'syncObject',
+          members: {
+            Position: { $type: 'float3', value: options.vertices[1] },
+            UV0: { $type: 'float2', value: uv0[1] },
+          },
+        },
+        Vertex2: {
+          $type: 'syncObject',
+          members: {
+            Position: { $type: 'float3', value: options.vertices[2] },
+            UV0: { $type: 'float2', value: uv0[2] },
+          },
+        },
+        AutoNormals: { $type: 'bool', value: true },
+        AutoTangents: { $type: 'bool', value: false },
+        ...(dualSided ? { DualSided: { $type: 'bool', value: true } } : {}),
       },
     },
   ];
@@ -269,6 +387,11 @@ export class ResoniteObjectBuilder {
 
   addQuadMesh(options?: QuadMeshOptions): this {
     this.obj.components.push(...buildQuadMeshComponents(this.obj.id, options));
+    return this;
+  }
+
+  addTriangleMesh(options: TriangleMeshOptions): this {
+    this.obj.components.push(...buildTriangleMeshComponents(this.obj.id, options));
     return this;
   }
 

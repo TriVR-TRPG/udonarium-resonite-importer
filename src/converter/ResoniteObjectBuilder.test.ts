@@ -167,6 +167,54 @@ describe('ResoniteObjectBuilder', () => {
     });
   });
 
+  describe('addTriangleMesh()', () => {
+    it('adds TriangleMesh and MeshRenderer components', () => {
+      const result = makeBuilder(makeSpec())
+        .addTriangleMesh({
+          vertices: [
+            { x: -1, y: -1, z: 0 },
+            { x: 1, y: -1, z: 0 },
+            { x: 1, y: 1, z: 0 },
+          ],
+        })
+        .build();
+
+      expect(result.components.map((c) => c.type)).toEqual([
+        COMPONENT_TYPES.TRIANGLE_MESH,
+        COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
+        COMPONENT_TYPES.MESH_RENDERER,
+      ]);
+    });
+
+    it('sets vertex positions on TriangleMesh fields', () => {
+      const result = makeBuilder(makeSpec('tri-slot'))
+        .addTriangleMesh({
+          vertices: [
+            { x: -2, y: -1, z: 0 },
+            { x: 2, y: -1, z: 0 },
+            { x: 2, y: 3, z: 0 },
+          ],
+        })
+        .build();
+
+      const mesh = result.components.find((c) => c.type === COMPONENT_TYPES.TRIANGLE_MESH);
+      expect(mesh?.fields.Vertex0).toEqual({
+        $type: 'syncObject',
+        members: {
+          Position: { $type: 'float3', value: { x: -2, y: -1, z: 0 } },
+          UV0: { $type: 'float2', value: { x: 0, y: 1 } },
+        },
+      });
+      expect(mesh?.fields.Vertex2).toEqual({
+        $type: 'syncObject',
+        members: {
+          Position: { $type: 'float3', value: { x: 2, y: 3, z: 0 } },
+          UV0: { $type: 'float2', value: { x: 0.5, y: 0 } },
+        },
+      });
+    });
+  });
+
   describe('addBoxCollider()', () => {
     it('derives the component ID from the slot ID', () => {
       const result = makeBuilder(makeSpec('s2')).addBoxCollider({ x: 1, y: 1, z: 1 }).build();

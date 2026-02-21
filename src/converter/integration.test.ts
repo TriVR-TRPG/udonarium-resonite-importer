@@ -225,8 +225,12 @@ describe.skipIf(SKIP_EXTERNAL_URL_DOWNLOAD_IN_CI)(
           const wallCount = ['-front', '-back', '-left', '-right'].filter((suffix) =>
             obj.children.some((c) => c.id.endsWith(suffix))
           ).length;
+          const triangleWallCount = obj.children.filter((wall) =>
+            wall.components.some((component) => component.type === COMPONENT_TYPES.TRIANGLE_MESH)
+          ).length;
           return (
             wallCount === 3 &&
+            triangleWallCount === 2 &&
             (topMesh.rotation.x !== 0 || topMesh.rotation.y !== 0 || topMesh.rotation.z !== 0)
           );
         });
