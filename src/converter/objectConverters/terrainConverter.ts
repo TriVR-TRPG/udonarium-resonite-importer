@@ -237,8 +237,6 @@ export function convertTerrain(
     .setSourceType(udonObj.type);
 
   const topId = `${mainBuilder.getId()}-top`;
-  const bottomId = `${mainBuilder.getId()}-bottom`;
-  const topBackId = `${mainBuilder.getId()}-top-back`;
   const frontId = `${mainBuilder.getId()}-front`;
   const backId = `${mainBuilder.getId()}-back`;
   const leftId = `${mainBuilder.getId()}-left`;
@@ -282,27 +280,13 @@ export function convertTerrain(
   } else {
     topSurface.addQuadMesh({
       textureIdentifier: topTextureIdentifier,
-      dualSided: false,
+      dualSided: true,
       size: topSurfaceSize,
       imageAssetContext,
     });
   }
   const builtTopSurface = topSurface.build();
   const topBottomSize = { x: udonObj.width, y: udonObj.depth };
-  const bottomLikeSurface = ResoniteObjectBuilder.create({
-    id: hideWalls ? topBackId : bottomId,
-    name: hideWalls ? `${udonObj.name}-top-back` : `${udonObj.name}-bottom`,
-  })
-    .setPosition({ x: 0, y: hideWalls ? 0 : -udonObj.height / 2, z: 0 })
-    .setRotation({ x: -90, y: 0, z: 0 })
-    .setScale(hideWalls ? undefined : { x: 1, y: -1, z: 1 })
-    .addQuadMesh({
-      textureIdentifier: topTextureIdentifier,
-      dualSided: false,
-      size: topBottomSize,
-      imageAssetContext,
-    })
-    .build();
 
   mainBuilder.addBoxCollider(
     { x: udonObj.width, y: hideWalls ? 0 : udonObj.height, z: udonObj.depth },
@@ -318,7 +302,6 @@ export function convertTerrain(
 
   if (hasPositiveSize(topBottomSize)) {
     mainBuilder.addChild(builtTopSurface);
-    mainBuilder.addChild(bottomLikeSurface);
   }
   if (!hideWalls) {
     const frontBackSize = { x: udonObj.width, y: udonObj.height };

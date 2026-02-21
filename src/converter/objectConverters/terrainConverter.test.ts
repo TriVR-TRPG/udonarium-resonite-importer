@@ -6,7 +6,7 @@ import { COMPONENT_TYPES } from '../../config/ResoniteComponentTypes';
 import { buildImageAssetContext } from '../imageAssetContext';
 
 describe('convertTerrain', () => {
-  it('terrain (unlocked) has BoxCollider + Grabbable and creates five QuadMesh faces', () => {
+  it('terrain (unlocked) has BoxCollider + Grabbable and creates top plus four wall faces', () => {
     const udonObj: Terrain = {
       id: 'terrain-1',
       type: 'terrain',
@@ -58,19 +58,12 @@ describe('convertTerrain', () => {
     expect(result.position.y).toBe(1);
     expect(result.position.z).toBe(-2);
 
-    expect(result.children).toHaveLength(6);
+    expect(result.children).toHaveLength(5);
     const topFace = result.children.find((child) => child.id === 'slot-terrain-1-top');
     const bottomFace = result.children.find((child) => child.id === 'slot-terrain-1-bottom');
     expect(topFace).toBeDefined();
-    expect(bottomFace).toBeDefined();
+    expect(bottomFace).toBeUndefined();
     expect(topFace?.components.map((c) => c.type)).toEqual([
-      COMPONENT_TYPES.QUAD_MESH,
-      COMPONENT_TYPES.STATIC_TEXTURE_2D,
-      COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
-      COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
-      COMPONENT_TYPES.MESH_RENDERER,
-    ]);
-    expect(bottomFace?.components.map((c) => c.type)).toEqual([
       COMPONENT_TYPES.QUAD_MESH,
       COMPONENT_TYPES.STATIC_TEXTURE_2D,
       COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
@@ -101,11 +94,13 @@ describe('convertTerrain', () => {
     expect(topFace?.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 10, y: 4 } },
     });
-    expect(bottomFace?.position).toEqual({ x: 0, y: -1, z: 0 });
-    expect(bottomFace?.scale).toEqual({ x: 1, y: -1, z: 1 });
-    expect(bottomFace?.rotation).toEqual({ x: -90, y: 0, z: 0 });
-    expect(bottomFace?.components[0].fields).toEqual({
-      Size: { $type: 'float2', value: { x: 10, y: 4 } },
+    const topMaterial = topFace?.components.find(
+      (component) => component.type === COMPONENT_TYPES.XIEXE_TOON_MATERIAL
+    );
+    expect(topMaterial?.fields.Culling).toEqual({
+      $type: 'enum',
+      value: 'Off',
+      enumType: 'Culling',
     });
 
     const frontFace = result.children.find((child) => child.id === 'slot-terrain-1-front');
@@ -251,20 +246,10 @@ describe('convertTerrain', () => {
     expect(result.components[0].fields).toEqual({
       Size: { $type: 'float3', value: { x: 6, y: 0, z: 4 } },
     });
-    expect(result.children).toHaveLength(2);
+    expect(result.children).toHaveLength(1);
     expect(result.children[0].id).toBe('slot-terrain-3-top');
     expect(result.children[0].position).toEqual({ x: 0, y: 0, z: 0 });
     expect(result.children[0].components.map((c) => c.type)).toEqual([
-      COMPONENT_TYPES.QUAD_MESH,
-      COMPONENT_TYPES.STATIC_TEXTURE_2D,
-      COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
-      COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
-      COMPONENT_TYPES.MESH_RENDERER,
-    ]);
-    expect(result.children[1].id).toBe('slot-terrain-3-top-back');
-    expect(result.children[1].position).toEqual({ x: 0, y: 0, z: 0 });
-    expect(result.children[1].rotation).toEqual({ x: -90, y: 0, z: 0 });
-    expect(result.children[1].components.map((c) => c.type)).toEqual([
       COMPONENT_TYPES.QUAD_MESH,
       COMPONENT_TYPES.STATIC_TEXTURE_2D,
       COMPONENT_TYPES.XIEXE_TOON_MATERIAL,
@@ -370,7 +355,7 @@ describe('convertTerrain', () => {
     );
 
     expect(result.children.some((child) => child.id.endsWith('-top'))).toBe(true);
-    expect(result.children.some((child) => child.id.endsWith('-bottom'))).toBe(true);
+    expect(result.children.some((child) => child.id.endsWith('-bottom'))).toBe(false);
     expect(result.children.some((child) => child.id.endsWith('-front'))).toBe(false);
     expect(result.children.some((child) => child.id.endsWith('-back'))).toBe(false);
     expect(result.children.some((child) => child.id.endsWith('-left'))).toBe(false);
