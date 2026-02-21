@@ -52,18 +52,29 @@ GitHub Releases から最新パッケージをダウンロードしてくださ�
 ### CLI版
 
 ```bash
-# Resoniteに接続してインポート
-npm run start -- -i ./save.zip
+# ダウンロードしたスタンドアロン実行ファイルを実行
+./udonarium-resonite-importer -i ./save.zip
 
 # ポートを指定
-npm run start -- -i ./save.zip -p 7869
+./udonarium-resonite-importer -i ./save.zip -p 7869
 
 # ドライランモード（接続せずに解析のみ）
-npm run start -- -i ./save.zip --dry-run
+./udonarium-resonite-importer -i ./save.zip --dry-run
 
 # 詳細ログ
-npm run start -- -i ./save.zip --verbose
+./udonarium-resonite-importer -i ./save.zip --verbose
 ```
+
+ソースコードからスタンドアロンCLIバンドルを生成する場合（現在OS向けのみ）:
+
+```bash
+npm run package:cli
+```
+
+出力先:
+
+- 実行ファイル: `dist/udonarium-resonite-importer*`
+- バンドルZIP: `dist/udonarium-resonite-importer-*-bundle.zip` または `dist/udonarium-resonite-importer-win.zip`
 
 ### CLIオプション
 

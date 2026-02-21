@@ -54,18 +54,29 @@ Then choose one package:
 ### CLI Version
 
 ```bash
-# Connect to Resonite and import
-npm run start -- -i ./save.zip
+# Run downloaded standalone executable
+./udonarium-resonite-importer -i ./save.zip
 
 # Specify port
-npm run start -- -i ./save.zip -p 7869
+./udonarium-resonite-importer -i ./save.zip -p 7869
 
 # Dry-run mode (analysis only)
-npm run start -- -i ./save.zip --dry-run
+./udonarium-resonite-importer -i ./save.zip --dry-run
 
 # Verbose output
-npm run start -- -i ./save.zip --verbose
+./udonarium-resonite-importer -i ./save.zip --verbose
 ```
+
+To build a standalone CLI bundle from source (current OS only):
+
+```bash
+npm run package:cli
+```
+
+Output:
+
+- executable: `dist/udonarium-resonite-importer*`
+- bundle zip: `dist/udonarium-resonite-importer-*-bundle.zip` or `dist/udonarium-resonite-importer-win.zip`
 
 ### CLI Options
 

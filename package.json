@@ -36,10 +36,10 @@
     "measure:known-image-ratios": "ts-node scripts/measure-known-image-aspect-ratios.ts",
     "collect:resonitelink": "ts-node scripts/collect-resonitelink-data.ts",
     "package": "run-s package:cli package:gui",
-    "package:cli": "run-p package:cli:*",
-    "package:cli:win": "pkg . --targets node18-win-x64 --output dist/udonarium-resonite-importer.exe",
-    "package:cli:mac": "pkg . --targets node18-macos-x64 --output dist/udonarium-resonite-importer-macos",
-    "package:cli:linux": "pkg . --targets node18-linux-x64 --output dist/udonarium-resonite-importer-linux",
+    "package:cli": "node scripts/package-cli-current.cjs",
+    "package:cli:win": "node -e \"require('fs').rmSync('dist/udonarium-resonite-importer.exe',{recursive:true,force:true})\" && npx @yao-pkg/pkg dist/index.js --targets node20-win-x64 --output dist/udonarium-resonite-importer.exe && node scripts/package-cli-runtime.cjs --exe dist/udonarium-resonite-importer.exe --bundle dist/udonarium-resonite-importer-win --target win",
+    "package:cli:mac": "node -e \"require('fs').rmSync('dist/udonarium-resonite-importer-macos',{recursive:true,force:true})\" && npx @yao-pkg/pkg dist/index.js --targets node20-macos-x64 --output dist/udonarium-resonite-importer-macos && node scripts/package-cli-runtime.cjs --exe dist/udonarium-resonite-importer-macos --bundle dist/udonarium-resonite-importer-mac-bundle --target mac",
+    "package:cli:linux": "node -e \"require('fs').rmSync('dist/udonarium-resonite-importer-linux',{recursive:true,force:true})\" && npx @yao-pkg/pkg dist/index.js --targets node20-linux-x64 --output dist/udonarium-resonite-importer-linux && node scripts/package-cli-runtime.cjs --exe dist/udonarium-resonite-importer-linux --bundle dist/udonarium-resonite-importer-linux-bundle --target linux",
     "package:gui": "node scripts/package-gui.cjs",
     "package:gui:win": "electron-builder --win --config.win.signAndEditExecutable=false",
     "package:gui:mac": "electron-builder --mac",
@@ -99,15 +99,15 @@
     "electron": "^28.0.0"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.17.0"
   },
   "pkg": {
     "scripts": "dist/**/*.js",
     "assets": [],
     "targets": [
-      "node18-win-x64",
-      "node18-macos-x64",
-      "node18-linux-x64"
+      "node20-win-x64",
+      "node20-macos-x64",
+      "node20-linux-x64"
     ]
   },
   "build": {
