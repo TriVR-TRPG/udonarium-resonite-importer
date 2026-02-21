@@ -17,11 +17,13 @@ A tool to import [Udonarium](https://github.com/TK11235/udonarium) save data int
 | Udonarium | Resonite Representation |
 |-----------|-------------------------|
 | Character (GameCharacter) | Quad + Texture |
+| Dice Symbol (DiceSymbol) | Quad (face switching) |
 | Card | Double-sided Quad |
 | Card Stack (CardStack) | Grouped cards |
 | Terrain | Top + side Quad meshes (walls grouped under one slot) |
+| Map Mask (TableMask) | Quad (semi-transparent support) |
 | Table (GameTable) | Quad |
-| Text Note (TextNote) | UIX Text |
+| Shared Note (TextNote) | UIX Text |
 
 ## Requirements
 

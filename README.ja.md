@@ -15,11 +15,13 @@
 | Udonarium | Resonite表現 |
 |-----------|-------------|
 | キャラクター (GameCharacter) | Quad + テクスチャ |
+| ダイス (DiceSymbol) | Quad（面切り替え） |
 | カード (Card) | 両面Quad |
-| カードの山 (CardStack) | グループ化されたカード |
+| カードの山札 (CardStack) | グループ化されたカード |
 | 地形 (Terrain) | 上面+側面のQuadMesh（壁は1スロット配下で制御） |
+| マップマスク (TableMask) | Quad（半透明対応） |
 | テーブル (GameTable) | Quad |
-| テキストノート (TextNote) | UIX Text |
+| 共有メモ (TextNote) | UIX Text |
 
 ## 必要環境
 
