@@ -26,6 +26,7 @@ export interface ImportOptions {
 export interface ImportResult {
   success: boolean;
   error?: string;
+  errorCode?: 'NO_PARSED_OBJECTS' | 'UNKNOWN';
   importedImages: number;
   totalImages: number;
   importedObjects: number;

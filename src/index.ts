@@ -51,6 +51,8 @@ interface CLIOptions {
   enableCharacterColliderOnLockedTerrain: boolean;
 }
 
+const NO_PARSED_OBJECTS_ERROR = 'No supported objects were found in the ZIP file.';
+
 const program = new Command();
 
 program
@@ -172,6 +174,12 @@ async function run(options: CLIOptions): Promise<void> {
   const typeCounts = new Map<string, number>();
   for (const obj of parseResult.objects) {
     typeCounts.set(obj.type, (typeCounts.get(obj.type) || 0) + 1);
+  }
+
+  if (parseResult.objects.length === 0) {
+    parseSpinner.fail(`[2/4] ${t('cli.parsed', { count: 0 })}`);
+    console.error(chalk.red(NO_PARSED_OBJECTS_ERROR));
+    process.exit(1);
   }
 
   parseSpinner.succeed(`[2/4] ${t('cli.parsed', { count: parseResult.objects.length })}`);
