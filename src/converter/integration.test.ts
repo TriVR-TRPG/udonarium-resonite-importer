@@ -209,6 +209,27 @@ describe.skipIf(SKIP_EXTERNAL_URL_DOWNLOAD_IN_CI)(
       },
       CONVERTER_INTEGRATION_TIMEOUT
     );
+
+    it(
+      'creates slope terrains with tilted top and one omitted wall',
+      async () => {
+        const converted = await loadConvertedFromZip(SAMPLE_TERRAIN_LILY_ZIP_PATH);
+        const flattened = flattenObjects(converted);
+
+        const slopeTerrains = flattened.filter((obj) => {
+          if (obj.sourceType !== 'terrain') return false;
+          const top = obj.children.find((c) => c.id.endsWith('-top'));
+          if (!top) return false;
+          const wallCount = ['-front', '-back', '-left', '-right'].filter((suffix) =>
+            obj.children.some((c) => c.id.endsWith(suffix))
+          ).length;
+          return wallCount === 3 && (top.rotation.x !== 90 || top.rotation.y !== 0);
+        });
+
+        expect(slopeTerrains.length).toBeGreaterThanOrEqual(4);
+      },
+      CONVERTER_INTEGRATION_TIMEOUT
+    );
   }
 );
 

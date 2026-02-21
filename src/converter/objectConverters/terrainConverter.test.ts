@@ -405,4 +405,88 @@ describe('convertTerrain', () => {
 
     expect(result.position).toEqual({ x: 1, y: 0.5, z: -1 });
   });
+
+  it('applies slope rotation and removes front wall for TOP direction', () => {
+    const udonObj: Terrain = {
+      id: 'terrain-slope-top',
+      type: 'terrain',
+      isLocked: true,
+      mode: 3,
+      rotate: 0,
+      name: 'Slope Top',
+      position: { x: 0, y: 0, z: 0 },
+      images: [],
+      width: 2,
+      height: 2,
+      depth: 2,
+      wallImage: null,
+      floorImage: null,
+    };
+
+    const result = convertTerrain(
+      udonObj,
+      { x: 0, y: 0, z: 0 },
+      buildImageAssetContext(),
+      undefined,
+      'slot-terrain-slope-top',
+      { altitude: 0, isSlope: true, slopeDirection: 1 }
+    );
+
+    const topFace = result.children.find((child) => child.id.endsWith('-top'));
+    expect(topFace?.rotation.x).toBeCloseTo(135, 4);
+    expect(result.children.some((child) => child.id.endsWith('-front'))).toBe(false);
+    expect(result.children.some((child) => child.id.endsWith('-back'))).toBe(true);
+  });
+
+  it('removes back/left/right wall for slope BOTTOM/LEFT/RIGHT', () => {
+    const baseTerrain: Terrain = {
+      id: 'terrain-slope',
+      type: 'terrain',
+      isLocked: true,
+      mode: 3,
+      rotate: 0,
+      name: 'Slope',
+      position: { x: 0, y: 0, z: 0 },
+      images: [],
+      width: 2,
+      height: 2,
+      depth: 2,
+      wallImage: null,
+      floorImage: null,
+    };
+
+    const bottom = convertTerrain(
+      baseTerrain,
+      { x: 0, y: 0, z: 0 },
+      buildImageAssetContext(),
+      undefined,
+      'slot-terrain-slope-bottom',
+      { altitude: 0, isSlope: true, slopeDirection: 2 }
+    );
+    expect(bottom.children.some((child) => child.id.endsWith('-back'))).toBe(false);
+
+    const left = convertTerrain(
+      baseTerrain,
+      { x: 0, y: 0, z: 0 },
+      buildImageAssetContext(),
+      undefined,
+      'slot-terrain-slope-left',
+      { altitude: 0, isSlope: true, slopeDirection: 3 }
+    );
+    const leftTop = left.children.find((child) => child.id.endsWith('-top'));
+    expect(leftTop?.rotation.y).toBeCloseTo(-45, 4);
+    expect(left.children.some((child) => child.id.endsWith('-left'))).toBe(false);
+
+    const right = convertTerrain(
+      baseTerrain,
+      { x: 0, y: 0, z: 0 },
+      buildImageAssetContext(),
+      undefined,
+      'slot-terrain-slope-right',
+      { altitude: 0, isSlope: true, slopeDirection: 4 }
+    );
+    const rightTop = right.children.find((child) => child.id.endsWith('-top'));
+    expect(rightTop?.rotation.y).toBeCloseTo(45, 4);
+    expect(right.children.some((child) => child.id.endsWith('-right'))).toBe(false);
+  });
 });

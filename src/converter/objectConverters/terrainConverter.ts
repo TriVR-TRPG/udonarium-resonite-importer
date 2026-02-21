@@ -4,8 +4,80 @@ import { ResoniteObjectBuilder } from '../ResoniteObjectBuilder';
 import { ImageAssetContext } from '../imageAssetContext';
 import { TerrainLilyExtension } from '../../parser/extensions/ObjectExtensions';
 
+const SLOPE_DIRECTION = {
+  NONE: 0,
+  TOP: 1,
+  BOTTOM: 2,
+  LEFT: 3,
+  RIGHT: 4,
+} as const;
+
 function hasPositiveSize(size: { x: number; y: number }): boolean {
   return size.x > 0 && size.y > 0;
+}
+
+function toDegrees(radian: number): number {
+  return (radian * 180) / Math.PI;
+}
+
+function getSlopeAngle(height: number, horizontalLength: number): number {
+  if (height <= 0 || horizontalLength <= 0) {
+    return 0;
+  }
+  return toDegrees(Math.atan2(height, horizontalLength));
+}
+
+function getSlopeTopRotation(
+  udonObj: Terrain,
+  terrainLilyExtension: TerrainLilyExtension | undefined
+): Vector3 {
+  const baseRotation: Vector3 = { x: 90, y: 0, z: 0 };
+  if (!terrainLilyExtension?.isSlope) {
+    return baseRotation;
+  }
+
+  switch (terrainLilyExtension.slopeDirection) {
+    case SLOPE_DIRECTION.TOP: {
+      const angle = getSlopeAngle(udonObj.height, udonObj.depth);
+      return { x: baseRotation.x + angle, y: 0, z: 0 };
+    }
+    case SLOPE_DIRECTION.BOTTOM: {
+      const angle = getSlopeAngle(udonObj.height, udonObj.depth);
+      return { x: baseRotation.x - angle, y: 0, z: 0 };
+    }
+    case SLOPE_DIRECTION.LEFT: {
+      const angle = getSlopeAngle(udonObj.height, udonObj.width);
+      return { x: 90, y: -angle, z: 0 };
+    }
+    case SLOPE_DIRECTION.RIGHT: {
+      const angle = getSlopeAngle(udonObj.height, udonObj.width);
+      return { x: 90, y: angle, z: 0 };
+    }
+    default:
+      return baseRotation;
+  }
+}
+
+function shouldSkipWall(
+  wall: 'front' | 'back' | 'left' | 'right',
+  terrainLilyExtension: TerrainLilyExtension | undefined
+): boolean {
+  if (!terrainLilyExtension?.isSlope) {
+    return false;
+  }
+
+  switch (terrainLilyExtension.slopeDirection) {
+    case SLOPE_DIRECTION.TOP:
+      return wall === 'front';
+    case SLOPE_DIRECTION.BOTTOM:
+      return wall === 'back';
+    case SLOPE_DIRECTION.LEFT:
+      return wall === 'left';
+    case SLOPE_DIRECTION.RIGHT:
+      return wall === 'right';
+    default:
+      return false;
+  }
 }
 
 function buildWallSlot(
@@ -78,7 +150,7 @@ export function convertTerrain(
     name: `${udonObj.name}-top`,
   })
     .setPosition({ x: 0, y: hideWalls ? 0 : udonObj.height / 2, z: 0 })
-    .setRotation({ x: 90, y: 0, z: 0 })
+    .setRotation(getSlopeTopRotation(udonObj, terrainLilyExtension))
     .addQuadMesh({
       textureIdentifier: topTextureIdentifier,
       dualSided: false,
@@ -122,7 +194,7 @@ export function convertTerrain(
     const frontBackSize = { x: udonObj.width, y: udonObj.height };
     const leftRightSize = { x: udonObj.depth, y: udonObj.height };
 
-    if (hasPositiveSize(frontBackSize)) {
+    if (hasPositiveSize(frontBackSize) && !shouldSkipWall('front', terrainLilyExtension)) {
       mainBuilder.addChild(
         buildWallSlot(
           frontId,
@@ -134,6 +206,8 @@ export function convertTerrain(
           imageAssetContext
         )
       );
+    }
+    if (hasPositiveSize(frontBackSize) && !shouldSkipWall('back', terrainLilyExtension)) {
       mainBuilder.addChild(
         buildWallSlot(
           backId,
@@ -148,7 +222,7 @@ export function convertTerrain(
       );
     }
 
-    if (hasPositiveSize(leftRightSize)) {
+    if (hasPositiveSize(leftRightSize) && !shouldSkipWall('left', terrainLilyExtension)) {
       mainBuilder.addChild(
         buildWallSlot(
           leftId,
@@ -161,6 +235,8 @@ export function convertTerrain(
           { x: -1, y: 1, z: 1 }
         )
       );
+    }
+    if (hasPositiveSize(leftRightSize) && !shouldSkipWall('right', terrainLilyExtension)) {
       mainBuilder.addChild(
         buildWallSlot(
           rightId,
