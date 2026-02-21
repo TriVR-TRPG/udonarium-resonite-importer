@@ -184,15 +184,21 @@ function buildTriangleWallSlot(
   size: { x: number; y: number },
   slopeSign: number,
   textureIdentifier: string | undefined,
-  imageAssetContext: ImageAssetContext
+  imageAssetContext: ImageAssetContext,
+  scale?: Vector3
 ): ResoniteObject {
   const halfX = size.x / 2;
   const halfY = size.y / 2;
-  const peakX = slopeSign >= 0 ? halfX : -halfX;
+  const adjustedSlopeSign = scale?.x && scale.x < 0 ? -slopeSign : slopeSign;
+  const peakX = adjustedSlopeSign >= 0 ? halfX : -halfX;
 
-  return ResoniteObjectBuilder.create({ id, name })
+  const builder = ResoniteObjectBuilder.create({ id, name })
     .setPosition(position)
-    .setRotation(rotation)
+    .setRotation(rotation);
+  if (scale) {
+    builder.setScale(scale);
+  }
+  return builder
     .addTriangleMesh({
       textureIdentifier,
       imageAssetContext,
@@ -247,7 +253,7 @@ export function convertTerrain(
   const topMeshId = `${topId}-mesh`;
   mainBuilder.setPosition({
     x: basePosition.x + udonObj.width / 2,
-    y: basePosition.y + altitude + (hideWalls ? udonObj.height : udonObj.height / 2),
+    y: basePosition.y + altitude + (hideWalls && !isSlope ? udonObj.height : udonObj.height / 2),
     z: basePosition.z - udonObj.depth / 2,
   });
 
@@ -267,7 +273,7 @@ export function convertTerrain(
         .setRotation(topTiltRotation)
         .addQuadMesh({
           textureIdentifier: topTextureIdentifier,
-          dualSided: false,
+          dualSided: true,
           size: topSurfaceSize,
           imageAssetContext,
         })
@@ -355,7 +361,8 @@ export function convertTerrain(
               frontBackSize,
               getTriangleSlopeSign('back', terrainLilyExtension),
               sideTextureIdentifier,
-              imageAssetContext
+              imageAssetContext,
+              { x: -1, y: 1, z: 1 }
             )
           : buildWallSlot(
               backId,
@@ -382,7 +389,8 @@ export function convertTerrain(
               leftRightSize,
               getTriangleSlopeSign('left', terrainLilyExtension),
               sideTextureIdentifier,
-              imageAssetContext
+              imageAssetContext,
+              { x: -1, y: 1, z: 1 }
             )
           : buildWallSlot(
               leftId,

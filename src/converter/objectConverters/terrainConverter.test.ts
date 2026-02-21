@@ -440,12 +440,49 @@ describe('convertTerrain', () => {
     expect(topMesh?.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 2, y: 2.8284 } },
     });
+    const topMeshMaterial = topMesh?.components.find(
+      (component) => component.type === COMPONENT_TYPES.XIEXE_TOON_MATERIAL
+    );
+    expect(topMeshMaterial?.fields.Culling).toEqual({
+      $type: 'enum',
+      value: 'Off',
+      enumType: 'Culling',
+    });
     const leftWall = result.children.find((child) => child.id.endsWith('-left'));
     const rightWall = result.children.find((child) => child.id.endsWith('-right'));
     expect(leftWall?.components[0].type).toBe(COMPONENT_TYPES.TRIANGLE_MESH);
     expect(rightWall?.components[0].type).toBe(COMPONENT_TYPES.TRIANGLE_MESH);
     expect(result.children.some((child) => child.id.endsWith('-back'))).toBe(false);
     expect(result.children.some((child) => child.id.endsWith('-front'))).toBe(true);
+  });
+
+  it('uses half-height Y offset when mode=1 and slope is enabled', () => {
+    const udonObj: Terrain = {
+      id: 'terrain-slope-mode1',
+      type: 'terrain',
+      isLocked: true,
+      mode: 1,
+      rotate: 0,
+      name: 'Slope Mode1',
+      position: { x: 0, y: 0, z: 100 },
+      images: [],
+      width: 1,
+      height: 7,
+      depth: 1,
+      wallImage: null,
+      floorImage: null,
+    };
+
+    const result = convertTerrain(
+      udonObj,
+      { x: 0, y: 2, z: 0 },
+      buildImageAssetContext(),
+      undefined,
+      'slot-terrain-slope-mode1',
+      { altitude: 0, isSlope: true, slopeDirection: 1 }
+    );
+
+    expect(result.position.y).toBe(5.5);
   });
 
   it('removes front/left/right wall and adjusts slope size for BOTTOM/LEFT/RIGHT', () => {
@@ -505,6 +542,16 @@ describe('convertTerrain', () => {
     expect(left.children.find((child) => child.id.endsWith('-back'))?.components[0].type).toBe(
       COMPONENT_TYPES.TRIANGLE_MESH
     );
+    expect(left.children.find((child) => child.id.endsWith('-back'))?.scale).toEqual({
+      x: -1,
+      y: 1,
+      z: 1,
+    });
+    const leftBackTriangle = left.children.find((child) => child.id.endsWith('-back'))
+      ?.components[0] as {
+      fields?: { Vertex2?: { members?: { Position?: { value?: { x?: number } } } } };
+    };
+    expect(leftBackTriangle.fields?.Vertex2?.members?.Position?.value?.x).toBe(1);
 
     const right = convertTerrain(
       baseTerrain,
@@ -524,5 +571,25 @@ describe('convertTerrain', () => {
     expect(right.children.find((child) => child.id.endsWith('-back'))?.components[0].type).toBe(
       COMPONENT_TYPES.TRIANGLE_MESH
     );
+    expect(right.children.find((child) => child.id.endsWith('-back'))?.scale).toEqual({
+      x: -1,
+      y: 1,
+      z: 1,
+    });
+    const rightBackTriangle = right.children.find((child) => child.id.endsWith('-back'))
+      ?.components[0] as {
+      fields?: { Vertex2?: { members?: { Position?: { value?: { x?: number } } } } };
+    };
+    expect(rightBackTriangle.fields?.Vertex2?.members?.Position?.value?.x).toBe(-1);
+    expect(bottom.children.find((child) => child.id.endsWith('-left'))?.scale).toEqual({
+      x: -1,
+      y: 1,
+      z: 1,
+    });
+    const bottomLeftTriangle = bottom.children.find((child) => child.id.endsWith('-left'))
+      ?.components[0] as {
+      fields?: { Vertex2?: { members?: { Position?: { value?: { x?: number } } } } };
+    };
+    expect(bottomLeftTriangle.fields?.Vertex2?.members?.Position?.value?.x).toBe(1);
   });
 });
