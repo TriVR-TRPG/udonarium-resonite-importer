@@ -47,15 +47,44 @@ function getSlopeTopRotation(
     }
     case SLOPE_DIRECTION.LEFT: {
       const angle = getSlopeAngle(udonObj.height, udonObj.width);
-      return { x: 90, y: -angle, z: 0 };
+      return { x: 90, y: 0, z: angle };
     }
     case SLOPE_DIRECTION.RIGHT: {
       const angle = getSlopeAngle(udonObj.height, udonObj.width);
-      return { x: 90, y: angle, z: 0 };
+      return { x: 90, y: 0, z: -angle };
     }
     default:
       return baseRotation;
   }
+}
+
+function getTopSurfaceSize(
+  udonObj: Terrain,
+  terrainLilyExtension: TerrainLilyExtension | undefined
+): { x: number; y: number } {
+  if (!terrainLilyExtension?.isSlope) {
+    return { x: udonObj.width, y: udonObj.depth };
+  }
+  switch (terrainLilyExtension.slopeDirection) {
+    case SLOPE_DIRECTION.TOP:
+    case SLOPE_DIRECTION.BOTTOM:
+      return { x: udonObj.width, y: Math.hypot(udonObj.depth, udonObj.height) };
+    case SLOPE_DIRECTION.LEFT:
+    case SLOPE_DIRECTION.RIGHT:
+      return { x: Math.hypot(udonObj.width, udonObj.height), y: udonObj.depth };
+    default:
+      return { x: udonObj.width, y: udonObj.depth };
+  }
+}
+
+function getTopSurfaceY(udonObj: Terrain, hideWalls: boolean, isSlope: boolean): number {
+  if (hideWalls) {
+    return 0;
+  }
+  if (isSlope) {
+    return 0;
+  }
+  return udonObj.height / 2;
 }
 
 function shouldSkipWall(
@@ -68,9 +97,9 @@ function shouldSkipWall(
 
   switch (terrainLilyExtension.slopeDirection) {
     case SLOPE_DIRECTION.TOP:
-      return wall === 'front';
-    case SLOPE_DIRECTION.BOTTOM:
       return wall === 'back';
+    case SLOPE_DIRECTION.BOTTOM:
+      return wall === 'front';
     case SLOPE_DIRECTION.LEFT:
       return wall === 'left';
     case SLOPE_DIRECTION.RIGHT:
@@ -139,6 +168,9 @@ export function convertTerrain(
   const rightId = `${mainBuilder.getId()}-right`;
   const hideWalls = udonObj.mode === 1;
   const altitude = terrainLilyExtension?.altitude ?? 0;
+  const isSlope = terrainLilyExtension?.isSlope ?? false;
+  const topSurfaceSize = getTopSurfaceSize(udonObj, terrainLilyExtension);
+  const topSurfaceY = getTopSurfaceY(udonObj, hideWalls, isSlope);
   mainBuilder.setPosition({
     x: basePosition.x + udonObj.width / 2,
     y: basePosition.y + altitude + (hideWalls ? udonObj.height : udonObj.height / 2),
@@ -149,12 +181,12 @@ export function convertTerrain(
     id: topId,
     name: `${udonObj.name}-top`,
   })
-    .setPosition({ x: 0, y: hideWalls ? 0 : udonObj.height / 2, z: 0 })
+    .setPosition({ x: 0, y: topSurfaceY, z: 0 })
     .setRotation(getSlopeTopRotation(udonObj, terrainLilyExtension))
     .addQuadMesh({
       textureIdentifier: topTextureIdentifier,
       dualSided: false,
-      size: { x: udonObj.width, y: udonObj.depth },
+      size: topSurfaceSize,
       imageAssetContext,
     })
     .build();

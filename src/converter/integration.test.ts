@@ -223,7 +223,10 @@ describe.skipIf(SKIP_EXTERNAL_URL_DOWNLOAD_IN_CI)(
           const wallCount = ['-front', '-back', '-left', '-right'].filter((suffix) =>
             obj.children.some((c) => c.id.endsWith(suffix))
           ).length;
-          return wallCount === 3 && (top.rotation.x !== 90 || top.rotation.y !== 0);
+          return (
+            wallCount === 3 &&
+            (top.rotation.x !== 90 || top.rotation.y !== 0 || top.rotation.z !== 0)
+          );
         });
 
         expect(slopeTerrains.length).toBeGreaterThanOrEqual(4);

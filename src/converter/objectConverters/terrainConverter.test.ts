@@ -406,7 +406,7 @@ describe('convertTerrain', () => {
     expect(result.position).toEqual({ x: 1, y: 0.5, z: -1 });
   });
 
-  it('applies slope rotation and removes front wall for TOP direction', () => {
+  it('applies slope rotation and removes back wall for TOP direction', () => {
     const udonObj: Terrain = {
       id: 'terrain-slope-top',
       type: 'terrain',
@@ -434,11 +434,15 @@ describe('convertTerrain', () => {
 
     const topFace = result.children.find((child) => child.id.endsWith('-top'));
     expect(topFace?.rotation.x).toBeCloseTo(135, 4);
-    expect(result.children.some((child) => child.id.endsWith('-front'))).toBe(false);
-    expect(result.children.some((child) => child.id.endsWith('-back'))).toBe(true);
+    expect(topFace?.position.y).toBe(0);
+    expect(topFace?.components[0].fields).toEqual({
+      Size: { $type: 'float2', value: { x: 2, y: Math.hypot(2, 2) } },
+    });
+    expect(result.children.some((child) => child.id.endsWith('-back'))).toBe(false);
+    expect(result.children.some((child) => child.id.endsWith('-front'))).toBe(true);
   });
 
-  it('removes back/left/right wall for slope BOTTOM/LEFT/RIGHT', () => {
+  it('removes front/left/right wall and adjusts slope size for BOTTOM/LEFT/RIGHT', () => {
     const baseTerrain: Terrain = {
       id: 'terrain-slope',
       type: 'terrain',
@@ -463,7 +467,9 @@ describe('convertTerrain', () => {
       'slot-terrain-slope-bottom',
       { altitude: 0, isSlope: true, slopeDirection: 2 }
     );
-    expect(bottom.children.some((child) => child.id.endsWith('-back'))).toBe(false);
+    const bottomTop = bottom.children.find((child) => child.id.endsWith('-top'));
+    expect(bottomTop?.rotation.x).toBeCloseTo(45, 4);
+    expect(bottom.children.some((child) => child.id.endsWith('-front'))).toBe(false);
 
     const left = convertTerrain(
       baseTerrain,
@@ -474,7 +480,10 @@ describe('convertTerrain', () => {
       { altitude: 0, isSlope: true, slopeDirection: 3 }
     );
     const leftTop = left.children.find((child) => child.id.endsWith('-top'));
-    expect(leftTop?.rotation.y).toBeCloseTo(-45, 4);
+    expect(leftTop?.rotation.z).toBeCloseTo(45, 4);
+    expect(leftTop?.components[0].fields).toEqual({
+      Size: { $type: 'float2', value: { x: Math.hypot(2, 2), y: 2 } },
+    });
     expect(left.children.some((child) => child.id.endsWith('-left'))).toBe(false);
 
     const right = convertTerrain(
@@ -486,7 +495,7 @@ describe('convertTerrain', () => {
       { altitude: 0, isSlope: true, slopeDirection: 4 }
     );
     const rightTop = right.children.find((child) => child.id.endsWith('-top'));
-    expect(rightTop?.rotation.y).toBeCloseTo(45, 4);
+    expect(rightTop?.rotation.z).toBeCloseTo(-45, 4);
     expect(right.children.some((child) => child.id.endsWith('-right'))).toBe(false);
   });
 });
