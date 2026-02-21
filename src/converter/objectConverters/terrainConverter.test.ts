@@ -436,7 +436,7 @@ describe('convertTerrain', () => {
     expect(topFace?.rotation.x).toBeCloseTo(135, 4);
     expect(topFace?.position.y).toBe(0);
     expect(topFace?.components[0].fields).toEqual({
-      Size: { $type: 'float2', value: { x: 2, y: Math.hypot(2, 2) } },
+      Size: { $type: 'float2', value: { x: 2, y: 2.8284 } },
     });
     expect(result.children.some((child) => child.id.endsWith('-back'))).toBe(false);
     expect(result.children.some((child) => child.id.endsWith('-front'))).toBe(true);
@@ -482,7 +482,7 @@ describe('convertTerrain', () => {
     const leftTop = left.children.find((child) => child.id.endsWith('-top'));
     expect(leftTop?.rotation.z).toBeCloseTo(45, 4);
     expect(leftTop?.components[0].fields).toEqual({
-      Size: { $type: 'float2', value: { x: Math.hypot(2, 2), y: 2 } },
+      Size: { $type: 'float2', value: { x: 2.8284, y: 2 } },
     });
     expect(left.children.some((child) => child.id.endsWith('-left'))).toBe(false);
 

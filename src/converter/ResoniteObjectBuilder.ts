@@ -42,6 +42,10 @@ type QuadMeshOptions = {
   color?: ColorXValue;
 };
 
+function roundTo4(value: number): number {
+  return Math.round(value * 10000) / 10000;
+}
+
 function resolveBlendModeLookupIdentifier(options?: QuadMeshOptions): string | undefined {
   const identifier = options?.textureIdentifier;
   if (!identifier || identifier.startsWith('texture-ref://')) {
@@ -89,7 +93,8 @@ function buildQuadMeshComponents(
       options.textureIdentifier)
     : options.textureIdentifier;
   const dualSided = options.dualSided ?? false;
-  const size = options.size ?? { x: 1, y: 1 };
+  const sizeInput = options.size ?? { x: 1, y: 1 };
+  const size = { x: roundTo4(sizeInput.x), y: roundTo4(sizeInput.y) };
   const meshId = `${slotId}-mesh`;
   const materialId = `${slotId}-mat`;
   const textureBlockId = `${slotId}-texture-block`;

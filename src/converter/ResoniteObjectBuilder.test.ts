@@ -105,6 +105,15 @@ describe('ResoniteObjectBuilder', () => {
       expect(quad?.fields.Size).toEqual({ $type: 'float2', value: { x: 2, y: 3 } });
     });
 
+    it('rounds QuadMesh size values to 4 decimal places', () => {
+      const result = makeBuilder(makeSpec())
+        .addQuadMesh({ size: { x: 1.123456, y: 2.987654 } })
+        .build();
+
+      const quad = result.components.find((c) => c.type.endsWith('QuadMesh'));
+      expect(quad?.fields.Size).toEqual({ $type: 'float2', value: { x: 1.1235, y: 2.9877 } });
+    });
+
     it('resolves textureValue from imageAssetInfoMap while using textureIdentifier for blend lookup', () => {
       const imageAssetContext = buildImageAssetContext({
         imageAssetInfoMap: new Map([
