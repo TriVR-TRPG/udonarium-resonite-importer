@@ -253,11 +253,11 @@ const jaTranslations: Translations = {
     character: 'キャラクター',
     'dice-symbol': 'ダイス',
     card: 'カード',
-    'card-stack': 'カードの山',
+    'card-stack': 'カードの山札',
     terrain: '地形',
     table: 'テーブル',
-    'table-mask': 'テーブルマスク',
-    'text-note': 'テキストノート',
+    'table-mask': 'マップマスク',
+    'text-note': '共有メモ',
   },
 };
 

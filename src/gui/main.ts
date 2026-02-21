@@ -26,6 +26,8 @@ import {
 import { AnalyzeResult, DefaultConfig, ImportOptions, ImportResult } from './types';
 
 let mainWindow: BrowserWindow | null = null;
+const NO_PARSED_OBJECTS_ERROR = 'No supported objects were found in the ZIP file.';
+const NO_PARSED_OBJECTS_ERROR_CODE: ImportResult['errorCode'] = 'NO_PARSED_OBJECTS';
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
@@ -115,6 +117,7 @@ function handleAnalyzeZip(filePath: string): AnalyzeResult {
   try {
     const extractedData = extractZip(filePath);
     const parseResult = parseXmlFiles(extractedData.xmlFiles);
+    const hasObjects = parseResult.objects.length > 0;
 
     // Count by type
     const typeCounts: Record<string, number> = {};
@@ -123,7 +126,8 @@ function handleAnalyzeZip(filePath: string): AnalyzeResult {
     }
 
     return {
-      success: true,
+      success: hasObjects,
+      error: hasObjects ? undefined : NO_PARSED_OBJECTS_ERROR,
       xmlCount: extractedData.xmlFiles.length,
       imageCount: extractedData.imageFiles.length,
       objectCount: parseResult.objects.length,
@@ -178,6 +182,9 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     // Step 2: Parse objects
     sendProgress('parse', 0, 'オブジェクトを解析中...');
     const parseResult = parseXmlFiles(extractedData.xmlFiles);
+    if (parseResult.objects.length === 0) {
+      throw new Error(NO_PARSED_OBJECTS_ERROR);
+    }
     const imageAspectRatioMap = await buildImageAspectRatioMap(
       extractedData.imageFiles,
       parseResult.objects
@@ -291,9 +298,14 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
       totalObjects,
     };
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorCode: ImportResult['errorCode'] =
+      errorMessage === NO_PARSED_OBJECTS_ERROR ? NO_PARSED_OBJECTS_ERROR_CODE : 'UNKNOWN';
+
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: errorMessage,
+      errorCode,
       importedImages: 0,
       totalImages: 0,
       importedObjects: 0,

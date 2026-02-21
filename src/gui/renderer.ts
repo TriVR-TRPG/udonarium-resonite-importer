@@ -70,6 +70,7 @@ const localeSelect = document.getElementById('locale-select') as HTMLSelectEleme
 const LAST_PORT_STORAGE_KEY = 'udonarium_resonite_importer_last_port';
 const DEFAULT_PORT = 7869;
 const ROOT_SCALE_VALUES = [0.1, 0.2, 0.5, 1, 2, 5, 10] as const;
+const NO_PARSED_OBJECTS_ERROR_CODE = 'NO_PARSED_OBJECTS';
 
 let currentFilePath: string | null = null;
 let isImporting = false;
@@ -339,11 +340,15 @@ importBtn.addEventListener('click', () => {
           <small>${t('gui.checkResonite')}</small>
         `;
       } else {
+        const hint =
+          result.errorCode === NO_PARSED_OBJECTS_ERROR_CODE
+            ? t('gui.ensureSupportedObjects')
+            : t('gui.ensureResonite');
         importResult.className = 'error';
         importResult.innerHTML = `
           <strong>${t('gui.errorOccurred')}</strong><br>
           ${result.error ?? 'Unknown error'}<br>
-          <small>${t('gui.ensureResonite')}</small>
+          <small>${hint}</small>
         `;
       }
     } finally {

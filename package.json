@@ -54,8 +54,16 @@
     "tabletop",
     "trpg"
   ],
-  "author": "",
+  "author": "TriVR",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TriVR-TRPG/udonarium-resonite-importer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TriVR-TRPG/udonarium-resonite-importer/issues"
+  },
+  "homepage": "https://github.com/TriVR-TRPG/udonarium-resonite-importer#readme",
   "dependencies": {
     "adm-zip": "^0.5.10",
     "chalk": "^4.1.2",
