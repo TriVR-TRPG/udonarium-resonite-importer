@@ -484,7 +484,7 @@ describe('convertTerrain', () => {
     );
     const leftTop = left.children.find((child) => child.id.endsWith('-top'));
     const leftTopMesh = leftTop?.children.find((child) => child.id.endsWith('-top-mesh'));
-    expect(leftTopMesh?.rotation.y).toBeCloseTo(-45, 4);
+    expect(leftTopMesh?.rotation.y).toBeCloseTo(45, 4);
     expect(leftTopMesh?.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 2.8284, y: 2 } },
     });
@@ -500,7 +500,7 @@ describe('convertTerrain', () => {
     );
     const rightTop = right.children.find((child) => child.id.endsWith('-top'));
     const rightTopMesh = rightTop?.children.find((child) => child.id.endsWith('-top-mesh'));
-    expect(rightTopMesh?.rotation.y).toBeCloseTo(45, 4);
+    expect(rightTopMesh?.rotation.y).toBeCloseTo(-45, 4);
     expect(right.children.some((child) => child.id.endsWith('-right'))).toBe(false);
   });
 });

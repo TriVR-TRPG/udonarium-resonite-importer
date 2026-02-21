@@ -46,11 +46,11 @@ function getSlopeTopTiltRotation(
     }
     case SLOPE_DIRECTION.LEFT: {
       const angle = getSlopeAngle(udonObj.height, udonObj.width);
-      return { x: 0, y: -angle, z: 0 };
+      return { x: 0, y: angle, z: 0 };
     }
     case SLOPE_DIRECTION.RIGHT: {
       const angle = getSlopeAngle(udonObj.height, udonObj.width);
-      return { x: 0, y: angle, z: 0 };
+      return { x: 0, y: -angle, z: 0 };
     }
     default:
       return { x: 0, y: 0, z: 0 };
