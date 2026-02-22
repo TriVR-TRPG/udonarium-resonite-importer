@@ -31,14 +31,10 @@ A tool to import [Udonarium](https://github.com/TK11235/udonarium) save data int
 
 ## Installation
 
-Download the latest package from GitHub Releases:
-
-- https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/latest
-
-Then choose one package:
+Download the latest package from [GitHub Releases](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/latest).
 
 - GUI (Windows/macOS): download and extract the GUI ZIP package
-- CLI (Windows/macOS/Linux): download the standalone executable for your platform
+- CLI (Windows/macOS/Linux): download and extract the CLI ZIP package for your platform
 
 ## Usage
 
@@ -51,6 +47,8 @@ Then choose one package:
 5. Click "Import to Resonite"
 
 ### CLI Version
+
+Use the executable inside the extracted CLI ZIP package.
 
 ```bash
 # Windows

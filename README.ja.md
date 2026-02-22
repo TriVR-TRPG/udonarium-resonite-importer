@@ -29,14 +29,10 @@
 
 ## インストール
 
-GitHub Releases から最新パッケージをダウンロードしてください。
-
-- https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/latest
-
-用途に応じて次を選択します。
+最新パッケージは [GitHub Releases](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/latest) からダウンロードしてください。
 
 - GUI版（Windows/macOS）: GUI ZIP をダウンロードして展開
-- CLI版（Windows/macOS/Linux）: 各OS向けスタンドアロン実行ファイルをダウンロード
+- CLI版（Windows/macOS/Linux）: 各OS向け CLI ZIP をダウンロードして展開
 
 ## 使用方法
 
@@ -49,6 +45,8 @@ GitHub Releases から最新パッケージをダウンロードしてくださ�
 5. 「Resoniteにインポート」ボタンをクリック
 
 ### CLI版
+
+展開したCLI ZIP内の実行ファイルを使用します。
 
 ```bash
 # Windows
