@@ -65,10 +65,10 @@ Use the executable inside the extracted CLI ZIP package.
 | Option      | Short | Description                   | Default     |
 | ----------- | ----- | ----------------------------- | ----------- |
 | `--input`   | `-i`  | Input ZIP file path           | (required)  |
-| `--port`    | `-p`  | ResoniteLink port             | (required, not needed in `--dry-run`) |
-| `--host`    | `-H`  | ResoniteLink host             | localhost   |
-| `--scale`   | `-s`  | Scale factor                  | 1 (m)       |
-| `--enable-character-collider-on-locked-terrain` | - | Enable CharacterCollider on locked Terrain | false |
+| `--port`    | `-p`  | ResoniteLink port (or `RESONITELINK_PORT`) | (required, not needed in `--dry-run`) |
+| `--host`    | `-H`  | ResoniteLink host (or `RESONITELINK_HOST`) | `localhost` |
+| `--scale`   | `-s`  | Scale factor                  | `0.02`      |
+| `--enable-character-collider-on-locked-terrain` | - | Enable CharacterCollider on locked Terrain and table visual collider | `false` |
 | `--dry-run` | `-d`  | Analysis only (no connection) | false       |
 | `--verbose` | `-v`  | Verbose output                | false       |
 | `--lang`    | `-l`  | Language (en, ja)             | Auto-detect |

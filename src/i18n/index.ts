@@ -134,6 +134,19 @@ const enTranslations: Translations = {
     summary: 'Summary:',
     objectsToImport: 'Objects to import: {count}',
     imagesToImport: 'Images to import: {count}',
+    help: {
+      version: 'Display version number',
+      input: 'Input ZIP file path',
+      port: 'ResoniteLink port (required, or set RESONITELINK_PORT env var)',
+      host: 'ResoniteLink host (default: localhost, or set RESONITELINK_HOST env var)',
+      scale: 'Scale factor',
+      enableCharacterColliderOnLockedTerrain:
+        'Enable CharacterCollider on locked Terrain and table visual collider',
+      dryRun: 'Analyze only, do not connect to Resonite',
+      verbose: 'Verbose output',
+      lang: 'Language (en, ja)',
+      help: 'Display help for command',
+    },
     error: {
       fileNotFound: 'Error: File not found: {path}',
       extractFailed: 'Failed to extract ZIP',
@@ -209,6 +222,19 @@ const jaTranslations: Translations = {
     summary: '概要:',
     objectsToImport: 'インポート対象オブジェクト: {count}',
     imagesToImport: 'インポート対象画像: {count}',
+    help: {
+      version: 'バージョン番号を表示',
+      input: '入力ZIPファイルのパス',
+      port: 'ResoniteLinkのポート（必須。RESONITELINK_PORT環境変数でも指定可）',
+      host: 'ResoniteLinkのホスト（既定: localhost。RESONITELINK_HOST環境変数でも指定可）',
+      scale: 'スケール係数',
+      enableCharacterColliderOnLockedTerrain:
+        'ロックされたTerrainとテーブルの当たり判定にCharacterColliderを有効化',
+      dryRun: '解析のみ実行し、Resoniteには接続しない',
+      verbose: '詳細ログを表示',
+      lang: '言語 (en, ja)',
+      help: 'コマンドのヘルプを表示',
+    },
     error: {
       fileNotFound: 'エラー: ファイルが見つかりません: {path}',
       extractFailed: 'ZIP解凍に失敗しました',

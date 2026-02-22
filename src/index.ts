@@ -53,27 +53,50 @@ interface CLIOptions {
 
 const NO_PARSED_OBJECTS_ERROR = 'No supported objects were found in the ZIP file.';
 
+function parseLocaleFromArgv(argv: string[]): Locale | undefined {
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    if (arg === '--lang' || arg === '-l') {
+      const value = argv[i + 1];
+      if (value === 'en' || value === 'ja') {
+        return value;
+      }
+    }
+
+    if (arg.startsWith('--lang=')) {
+      const value = arg.slice('--lang='.length);
+      if (value === 'en' || value === 'ja') {
+        return value;
+      }
+    }
+  }
+  return undefined;
+}
+
+const localeFromArgs = parseLocaleFromArgv(process.argv.slice(2));
+if (localeFromArgs) {
+  setLocale(localeFromArgs);
+}
+
 const program = new Command();
 
 program
   .name('udonarium-resonite-importer')
   .description(t('cli.description'))
-  .version(VERSION)
-  .requiredOption('-i, --input <path>', 'Input ZIP file path')
-  .option('-p, --port <number>', 'ResoniteLink port (required, or set RESONITELINK_PORT env var)')
-  .option(
-    '-H, --host <string>',
-    'ResoniteLink host (default: localhost, or set RESONITELINK_HOST env var)'
-  )
-  .option('-s, --scale <number>', 'Scale factor', String(SCALE_FACTOR))
+  .version(VERSION, '-V, --version', t('cli.help.version'))
+  .requiredOption('-i, --input <path>', t('cli.help.input'))
+  .option('-p, --port <number>', t('cli.help.port'))
+  .option('-H, --host <string>', t('cli.help.host'))
+  .option('-s, --scale <number>', t('cli.help.scale'), String(SCALE_FACTOR))
   .option(
     '--enable-character-collider-on-locked-terrain',
-    'Enable CharacterCollider on locked Terrain and table visual collider',
+    t('cli.help.enableCharacterColliderOnLockedTerrain'),
     false
   )
-  .option('-d, --dry-run', 'Analyze only, do not connect to Resonite', false)
-  .option('-v, --verbose', 'Verbose output', false)
-  .option('-l, --lang <locale>', 'Language (en, ja)', undefined)
+  .option('-d, --dry-run', t('cli.help.dryRun'), false)
+  .option('-v, --verbose', t('cli.help.verbose'), false)
+  .option('-l, --lang <locale>', t('cli.help.lang'), undefined)
+  .helpOption('-h, --help', t('cli.help.help'))
   .action(run);
 
 async function warnResoniteLinkVersionIfChanged(client: ResoniteLinkClient): Promise<void> {
