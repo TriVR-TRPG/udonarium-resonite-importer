@@ -227,7 +227,7 @@ function collectImageIdentifiers(objects: UdonariumObject[]): string[] {
 
 export function lookupImageAspectRatio(
   imageAspectRatioMap: Map<string, number>,
-  identifier: string | undefined
+  identifier?: string
 ): number | undefined {
   if (!identifier) {
     return;
@@ -257,7 +257,7 @@ export function lookupImageAspectRatio(
 
 function findImageBlendMode(
   imageBlendModeMap: Map<string, ImageBlendMode>,
-  identifier: string | undefined
+  identifier?: string
 ): ImageBlendMode | undefined {
   if (!identifier) {
     return;
@@ -286,8 +286,8 @@ function findImageBlendMode(
 }
 
 export function lookupImageBlendMode(
-  imageBlendModeMap: Map<string, ImageBlendMode> | undefined,
-  identifier: string | undefined
+  imageBlendModeMap?: Map<string, ImageBlendMode>,
+  identifier?: string
 ): ImageBlendMode {
   if (!imageBlendModeMap) {
     return 'Cutout';
@@ -433,11 +433,11 @@ export async function buildImageBlendModeMap(
   const externalProbeTasks: Array<Promise<void>> = [];
   for (const identifier of collectImageIdentifiers(objects)) {
     const knownBlendMode = resolveKnownBlendMode(identifier);
-    if (knownBlendMode && findImageBlendMode(map, identifier) === undefined) {
+    if (knownBlendMode && findImageBlendMode(map, identifier) == null) {
       setBlendModeForIdentifier(map, identifier, knownBlendMode);
       continue;
     }
-    if (findImageBlendMode(map, identifier) !== undefined) {
+    if (findImageBlendMode(map, identifier) != null) {
       continue;
     }
     const probeUrl = buildExternalProbeUrl(identifier);

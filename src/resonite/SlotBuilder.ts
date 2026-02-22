@@ -91,15 +91,15 @@ function shouldUsePointFilter(textureInfo: ImageAssetInfo): boolean {
 export class SlotBuilder {
   private client: ResoniteLinkClient;
   private rootSlotId: string;
-  private tablesSlotId: string | undefined = undefined;
-  private objectsSlotId: string | undefined = undefined;
-  private inventorySlotId: string | undefined = undefined;
-  private offsetSlotId: string | undefined = undefined;
+  private tablesSlotId?: string;
+  private objectsSlotId?: string;
+  private inventorySlotId?: string;
+  private offsetSlotId?: string;
   private inventoryLocationSlotIds = new Map<string, string>();
-  private assetsSlotId: string | undefined = undefined;
-  private texturesSlotId: string | undefined = undefined;
-  private meshesSlotId: string | undefined = undefined;
-  private materialsSlotId: string | undefined = undefined;
+  private assetsSlotId?: string;
+  private texturesSlotId?: string;
+  private meshesSlotId?: string;
+  private materialsSlotId?: string;
 
   constructor(client: ResoniteLinkClient, rootSlotId = 'Root') {
     this.client = client;
@@ -284,15 +284,15 @@ export class SlotBuilder {
     }
 
     this.rootSlotId = groupId;
-    this.tablesSlotId = undefined;
-    this.objectsSlotId = undefined;
-    this.inventorySlotId = undefined;
-    this.offsetSlotId = undefined;
+    delete this.tablesSlotId;
+    delete this.objectsSlotId;
+    delete this.inventorySlotId;
+    delete this.offsetSlotId;
     this.inventoryLocationSlotIds.clear();
-    this.assetsSlotId = undefined;
-    this.texturesSlotId = undefined;
-    this.meshesSlotId = undefined;
-    this.materialsSlotId = undefined;
+    delete this.assetsSlotId;
+    delete this.texturesSlotId;
+    delete this.meshesSlotId;
+    delete this.materialsSlotId;
     return groupId;
   }
 

@@ -50,16 +50,13 @@ function buildLookupKeys(identifier: string): string[] {
   return keys;
 }
 
-function lookupByKeys<T>(
-  map: Map<string, T> | undefined,
-  identifier: string | undefined
-): T | undefined {
+function lookupByKeys<T>(map?: Map<string, T>, identifier?: string): T | undefined {
   if (!map || !identifier) {
     return;
   }
   for (const key of buildLookupKeys(identifier)) {
     const value = map.get(key);
-    if (value !== undefined) {
+    if (value != null) {
       return value;
     }
   }
@@ -67,8 +64,8 @@ function lookupByKeys<T>(
 }
 
 function lookupImageFilterMode(
-  imageFilterModeMap: Map<string, ImageFilterMode> | undefined,
-  identifier: string | undefined
+  imageFilterModeMap?: Map<string, ImageFilterMode>,
+  identifier?: string
 ): ImageFilterMode | undefined {
   return lookupByKeys(imageFilterModeMap, identifier);
 }
@@ -88,7 +85,7 @@ function buildIdentifierSet(options: BuildImageAssetContextOptions): Set<string>
   return identifiers;
 }
 
-function inferSourceKind(identifier: string, textureValue: string | undefined): ImageSourceKind {
+function inferSourceKind(identifier: string, textureValue?: string): ImageSourceKind {
   const normalizedIdentifier = normalizeIdentifier(identifier).toLowerCase();
   const normalizedTextureValue = textureValue?.toLowerCase();
 
@@ -129,25 +126,23 @@ export function buildImageAssetContext(
   for (const identifier of buildIdentifierSet(options)) {
     const seed = lookupByKeys(options.imageAssetInfoMap, identifier);
     const textureValue = seed?.textureValue;
-    const aspectRatio =
-      (options.imageAspectRatioMap
-        ? lookupImageAspectRatio(options.imageAspectRatioMap, identifier)
-        : undefined) ?? seed?.aspectRatio;
-    const blendMode =
-      (options.imageBlendModeMap
-        ? lookupImageBlendMode(options.imageBlendModeMap, identifier)
-        : undefined) ?? seed?.blendMode;
+    const aspectRatio = options.imageAspectRatioMap
+      ? (lookupImageAspectRatio(options.imageAspectRatioMap, identifier) ?? seed?.aspectRatio)
+      : seed?.aspectRatio;
+    const blendMode = options.imageBlendModeMap
+      ? (lookupImageBlendMode(options.imageBlendModeMap, identifier) ?? seed?.blendMode)
+      : seed?.blendMode;
     const filterMode =
       lookupImageFilterMode(options.imageFilterModeMap, identifier) ?? seed?.filterMode;
     const sourceKind = seed?.sourceKind ?? inferSourceKind(identifier, textureValue);
 
     const info: ImageAssetInfo = {
       identifier,
-      ...(textureValue !== undefined ? { textureValue } : {}),
-      ...(aspectRatio !== undefined ? { aspectRatio } : {}),
-      ...(blendMode !== undefined ? { blendMode } : {}),
-      ...(filterMode !== undefined ? { filterMode } : {}),
-      ...(sourceKind !== undefined ? { sourceKind } : {}),
+      ...(textureValue != null ? { textureValue } : {}),
+      ...(aspectRatio != null ? { aspectRatio } : {}),
+      ...(blendMode != null ? { blendMode } : {}),
+      ...(filterMode != null ? { filterMode } : {}),
+      ...(sourceKind != null ? { sourceKind } : {}),
     };
     byIdentifier.set(identifier, info);
   }
@@ -174,7 +169,7 @@ export function buildImageAssetContext(
     },
     lookupAspectRatio(identifier?: string): number | undefined {
       const info = getAssetInfo(identifier);
-      if (info?.aspectRatio !== undefined) {
+      if (info?.aspectRatio != null) {
         return info.aspectRatio;
       }
       if (!options.imageAspectRatioMap) {

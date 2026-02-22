@@ -40,8 +40,8 @@ function resolveBackAspectIdentifier(card: Card): string | undefined {
 
 function resolveAspectRatio(
   primaryIdentifier: string | undefined,
-  secondaryIdentifier: string | undefined,
-  imageAssetContext: ImageAssetContext
+  imageAssetContext: ImageAssetContext,
+  secondaryIdentifier?: string
 ): number {
   const primaryAspect = imageAssetContext.lookupAspectRatio(primaryIdentifier);
   const secondaryAspect = imageAssetContext.lookupAspectRatio(secondaryIdentifier);
@@ -64,13 +64,13 @@ export function convertCard(
   const cardWidth = udonObj.size;
   const frontAspectRatio = resolveAspectRatio(
     resolveFrontAspectIdentifier(udonObj),
-    resolveBackAspectIdentifier(udonObj),
-    imageAssetContext
+    imageAssetContext,
+    resolveBackAspectIdentifier(udonObj)
   );
   const backAspectRatio = resolveAspectRatio(
     resolveBackAspectIdentifier(udonObj),
-    resolveFrontAspectIdentifier(udonObj),
-    imageAssetContext
+    imageAssetContext,
+    resolveFrontAspectIdentifier(udonObj)
   );
   const frontHeight = cardWidth * frontAspectRatio;
   const backHeight = cardWidth * backAspectRatio;

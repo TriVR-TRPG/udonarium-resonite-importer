@@ -56,7 +56,7 @@ export function getTextValue(node: DataNode | undefined): string | undefined {
   if (!node) return;
 
   // Direct text content
-  if (node['#text'] !== undefined) {
+  if (node['#text'] != null) {
     return String(node['#text']);
   }
 
@@ -64,11 +64,11 @@ export function getTextValue(node: DataNode | undefined): string | undefined {
   if (node.data) {
     if (Array.isArray(node.data)) {
       for (const item of node.data) {
-        if (item['#text'] !== undefined) {
+        if (item['#text'] != null) {
           return String(item['#text']);
         }
       }
-    } else if (node.data['#text'] !== undefined) {
+    } else if (node.data['#text'] != null) {
       return String(node.data['#text']);
     }
   }
@@ -80,7 +80,7 @@ export function getTextValue(node: DataNode | undefined): string | undefined {
  * Get number value from data node or raw value
  */
 export function getNumberValue(nodeOrValue: unknown): number | undefined {
-  if (nodeOrValue === undefined || nodeOrValue === null) return;
+  if (nodeOrValue == null) return;
 
   // Direct number
   if (typeof nodeOrValue === 'number') {
@@ -96,7 +96,7 @@ export function getNumberValue(nodeOrValue: unknown): number | undefined {
   // Data node
   if (typeof nodeOrValue === 'object' && nodeOrValue !== null) {
     const text = getTextValue(nodeOrValue as DataNode);
-    if (text !== undefined) {
+    if (text != null) {
       const num = parseFloat(text);
       return isNaN(num) ? undefined : num;
     }
@@ -124,7 +124,7 @@ export function parsePosition(root: Record<string, unknown>): {
  * Get boolean value from data node or raw value
  */
 export function getBooleanValue(nodeOrValue: unknown): boolean | undefined {
-  if (nodeOrValue === undefined || nodeOrValue === null) return;
+  if (nodeOrValue == null) return;
 
   // Direct boolean
   if (typeof nodeOrValue === 'boolean') {
@@ -139,7 +139,7 @@ export function getBooleanValue(nodeOrValue: unknown): boolean | undefined {
   // Data node
   if (typeof nodeOrValue === 'object' && nodeOrValue !== null) {
     const text = getTextValue(nodeOrValue as DataNode);
-    if (text !== undefined) {
+    if (text != null) {
       return text.toLowerCase() === 'true';
     }
   }

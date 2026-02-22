@@ -29,7 +29,7 @@ function getSlopeAngle(height: number, horizontalLength: number): number {
 
 function getSlopeTopTiltRotation(
   udonObj: Terrain,
-  terrainLilyExtension: TerrainLilyExtension | undefined
+  terrainLilyExtension?: TerrainLilyExtension
 ): Vector3 {
   if (!terrainLilyExtension?.isSlope) {
     return { x: 0, y: 0, z: 0 };
@@ -59,7 +59,7 @@ function getSlopeTopTiltRotation(
 
 function getTopSurfaceSize(
   udonObj: Terrain,
-  terrainLilyExtension: TerrainLilyExtension | undefined
+  terrainLilyExtension?: TerrainLilyExtension
 ): { x: number; y: number } {
   if (!terrainLilyExtension?.isSlope) {
     return { x: udonObj.width, y: udonObj.depth };
@@ -88,7 +88,7 @@ function getTopSurfaceY(udonObj: Terrain, hideWalls: boolean, isSlope: boolean):
 
 function shouldSkipWall(
   wall: 'front' | 'back' | 'left' | 'right',
-  terrainLilyExtension: TerrainLilyExtension | undefined
+  terrainLilyExtension?: TerrainLilyExtension
 ): boolean {
   if (!terrainLilyExtension?.isSlope) {
     return false;
@@ -110,7 +110,7 @@ function shouldSkipWall(
 
 function isTriangleWall(
   wall: 'front' | 'back' | 'left' | 'right',
-  terrainLilyExtension: TerrainLilyExtension | undefined
+  terrainLilyExtension?: TerrainLilyExtension
 ): boolean {
   if (!terrainLilyExtension?.isSlope) {
     return false;
@@ -130,7 +130,7 @@ function isTriangleWall(
 
 function getTriangleSlopeSign(
   wall: 'front' | 'back' | 'left' | 'right',
-  terrainLilyExtension: TerrainLilyExtension | undefined
+  terrainLilyExtension?: TerrainLilyExtension
 ): number {
   if (!terrainLilyExtension?.isSlope) {
     return 1;
@@ -158,8 +158,8 @@ function buildWallSlot(
   size: { x: number; y: number },
   textureIdentifier: string | undefined,
   imageAssetContext: ImageAssetContext,
-  scale?: Vector3,
-  colliderOptions?: { enabled: boolean; characterCollider: boolean }
+  colliderOptions?: { enabled: boolean; characterCollider: boolean },
+  scale?: Vector3
 ): ResoniteObject {
   const builder = ResoniteObjectBuilder.create({ id, name })
     .setPosition(position)
@@ -181,7 +181,7 @@ function buildWallSlot(
   }
   return builder
     .addQuadMesh({
-      ...(textureIdentifier !== undefined ? { textureIdentifier } : {}),
+      ...(textureIdentifier != null ? { textureIdentifier } : {}),
       dualSided: false,
       size,
       imageAssetContext,
@@ -198,8 +198,8 @@ function buildTriangleWallSlot(
   slopeSign: number,
   textureIdentifier: string | undefined,
   imageAssetContext: ImageAssetContext,
-  scale?: Vector3,
-  colliderOptions?: { enabled: boolean; characterCollider: boolean }
+  colliderOptions?: { enabled: boolean; characterCollider: boolean },
+  scale?: Vector3
 ): ResoniteObject {
   const halfX = size.x / 2;
   const halfY = size.y / 2;
@@ -228,7 +228,7 @@ function buildTriangleWallSlot(
   }
   return builder
     .addTriangleMesh({
-      ...(textureIdentifier !== undefined ? { textureIdentifier } : {}),
+      ...(textureIdentifier != null ? { textureIdentifier } : {}),
       imageAssetContext,
       dualSided: true,
       vertices,
@@ -254,7 +254,7 @@ export function convertTerrain(
     udonObj.images[0]?.identifier;
 
   const mainBuilder = ResoniteObjectBuilder.create({
-    ...(slotId !== undefined ? { id: slotId } : {}),
+    ...(slotId != null ? { id: slotId } : {}),
     name: udonObj.name,
   })
     .setRotation({ x: 0, y: udonObj.rotate, z: 0 })
@@ -305,7 +305,7 @@ export function convertTerrain(
         }
       )
       .addQuadMesh({
-        ...(topTextureIdentifier !== undefined ? { textureIdentifier: topTextureIdentifier } : {}),
+        ...(topTextureIdentifier != null ? { textureIdentifier: topTextureIdentifier } : {}),
         dualSided: true,
         size: topSurfaceSize,
         imageAssetContext,
@@ -313,7 +313,7 @@ export function convertTerrain(
     topSurface.addChild(topMeshBuilder.build());
   } else {
     topSurface.addQuadMesh({
-      ...(topTextureIdentifier !== undefined ? { textureIdentifier: topTextureIdentifier } : {}),
+      ...(topTextureIdentifier != null ? { textureIdentifier: topTextureIdentifier } : {}),
       dualSided: true,
       size: topSurfaceSize,
       imageAssetContext,
@@ -356,7 +356,6 @@ export function convertTerrain(
               getTriangleSlopeSign('front', terrainLilyExtension),
               sideTextureIdentifier,
               imageAssetContext,
-              undefined,
               {
                 enabled: isSlope,
                 characterCollider: slopeCharacterCollider,
@@ -370,7 +369,6 @@ export function convertTerrain(
               frontBackSize,
               sideTextureIdentifier,
               imageAssetContext,
-              undefined,
               {
                 enabled: isSlope,
                 characterCollider: slopeCharacterCollider,
@@ -391,11 +389,11 @@ export function convertTerrain(
               getTriangleSlopeSign('back', terrainLilyExtension),
               sideTextureIdentifier,
               imageAssetContext,
-              { x: -1, y: 1, z: 1 },
               {
                 enabled: isSlope,
                 characterCollider: slopeCharacterCollider,
-              }
+              },
+              { x: -1, y: 1, z: 1 }
             )
           : buildWallSlot(
               backId,
@@ -405,11 +403,11 @@ export function convertTerrain(
               frontBackSize,
               sideTextureIdentifier,
               imageAssetContext,
-              { x: -1, y: 1, z: 1 },
               {
                 enabled: isSlope,
                 characterCollider: slopeCharacterCollider,
-              }
+              },
+              { x: -1, y: 1, z: 1 }
             )
       );
     }
@@ -427,11 +425,11 @@ export function convertTerrain(
               getTriangleSlopeSign('left', terrainLilyExtension),
               sideTextureIdentifier,
               imageAssetContext,
-              { x: -1, y: 1, z: 1 },
               {
                 enabled: isSlope,
                 characterCollider: slopeCharacterCollider,
-              }
+              },
+              { x: -1, y: 1, z: 1 }
             )
           : buildWallSlot(
               leftId,
@@ -441,11 +439,11 @@ export function convertTerrain(
               leftRightSize,
               sideTextureIdentifier,
               imageAssetContext,
-              { x: -1, y: 1, z: 1 },
               {
                 enabled: isSlope,
                 characterCollider: slopeCharacterCollider,
-              }
+              },
+              { x: -1, y: 1, z: 1 }
             )
       );
     }
@@ -462,7 +460,6 @@ export function convertTerrain(
               getTriangleSlopeSign('right', terrainLilyExtension),
               sideTextureIdentifier,
               imageAssetContext,
-              undefined,
               {
                 enabled: isSlope,
                 characterCollider: slopeCharacterCollider,
@@ -476,7 +473,6 @@ export function convertTerrain(
               leftRightSize,
               sideTextureIdentifier,
               imageAssetContext,
-              undefined,
               {
                 enabled: isSlope,
                 characterCollider: slopeCharacterCollider,
