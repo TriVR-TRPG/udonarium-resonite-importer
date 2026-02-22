@@ -14,7 +14,7 @@ type DataNode = {
  * Find data element by name attribute
  */
 export function findDataByName(data: unknown, name: string): DataNode | undefined {
-  if (!data) return undefined;
+  if (!data) return;
 
   // Handle array of data elements
   if (Array.isArray(data)) {
@@ -31,7 +31,7 @@ export function findDataByName(data: unknown, name: string): DataNode | undefine
         }
       }
     }
-    return undefined;
+    return;
   }
 
   // Handle single data element
@@ -46,14 +46,14 @@ export function findDataByName(data: unknown, name: string): DataNode | undefine
     }
   }
 
-  return undefined;
+  return;
 }
 
 /**
  * Get text value from data node
  */
 export function getTextValue(node: DataNode | undefined): string | undefined {
-  if (!node) return undefined;
+  if (!node) return;
 
   // Direct text content
   if (node['#text'] !== undefined) {
@@ -73,14 +73,14 @@ export function getTextValue(node: DataNode | undefined): string | undefined {
     }
   }
 
-  return undefined;
+  return;
 }
 
 /**
  * Get number value from data node or raw value
  */
 export function getNumberValue(nodeOrValue: unknown): number | undefined {
-  if (nodeOrValue === undefined || nodeOrValue === null) return undefined;
+  if (nodeOrValue === undefined || nodeOrValue === null) return;
 
   // Direct number
   if (typeof nodeOrValue === 'number') {
@@ -102,7 +102,7 @@ export function getNumberValue(nodeOrValue: unknown): number | undefined {
     }
   }
 
-  return undefined;
+  return;
 }
 
 /**
@@ -124,7 +124,7 @@ export function parsePosition(root: Record<string, unknown>): {
  * Get boolean value from data node or raw value
  */
 export function getBooleanValue(nodeOrValue: unknown): boolean | undefined {
-  if (nodeOrValue === undefined || nodeOrValue === null) return undefined;
+  if (nodeOrValue === undefined || nodeOrValue === null) return;
 
   // Direct boolean
   if (typeof nodeOrValue === 'boolean') {
@@ -144,5 +144,5 @@ export function getBooleanValue(nodeOrValue: unknown): boolean | undefined {
     }
   }
 
-  return undefined;
+  return;
 }

@@ -18,20 +18,20 @@ function formatSizeNumber(value: number): string {
 
 function buildMeshKey(component: ResoniteComponent): string | undefined {
   if (!component.id) {
-    return undefined;
+    return;
   }
 
   const sizeField = component.fields.Size as
     | { $type?: string; value?: { x?: number; y?: number; z?: number } }
     | undefined;
   if (!sizeField?.value) {
-    return undefined;
+    return;
   }
 
   if (component.type === COMPONENT_TYPES.QUAD_MESH) {
     const { x, y } = sizeField.value;
     if (typeof x !== 'number' || typeof y !== 'number') {
-      return undefined;
+      return;
     }
     return `quad:${x},${y}`;
   }
@@ -39,12 +39,12 @@ function buildMeshKey(component: ResoniteComponent): string | undefined {
   if (component.type === COMPONENT_TYPES.BOX_MESH) {
     const { x, y, z } = sizeField.value;
     if (typeof x !== 'number' || typeof y !== 'number' || typeof z !== 'number') {
-      return undefined;
+      return;
     }
     return `box:${x},${y},${z}`;
   }
 
-  return undefined;
+  return;
 }
 
 function buildDefinitionFromComponent(
@@ -55,13 +55,13 @@ function buildDefinitionFromComponent(
     | { value?: { x?: number; y?: number; z?: number } }
     | undefined;
   if (!sizeField?.value) {
-    return undefined;
+    return;
   }
 
   if (component.type === COMPONENT_TYPES.QUAD_MESH) {
     const { x, y } = sizeField.value;
     if (typeof x !== 'number' || typeof y !== 'number') {
-      return undefined;
+      return;
     }
     const dualSided =
       (component.fields.DualSided as { value?: boolean } | undefined)?.value === true;
@@ -78,7 +78,7 @@ function buildDefinitionFromComponent(
   if (component.type === COMPONENT_TYPES.BOX_MESH) {
     const { x, y, z } = sizeField.value;
     if (typeof x !== 'number' || typeof y !== 'number' || typeof z !== 'number') {
-      return undefined;
+      return;
     }
     return {
       key,
@@ -89,7 +89,7 @@ function buildDefinitionFromComponent(
     };
   }
 
-  return undefined;
+  return;
 }
 
 function prepareObjectForSharedMeshes(

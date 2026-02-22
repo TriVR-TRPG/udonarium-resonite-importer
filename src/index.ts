@@ -68,7 +68,7 @@ function parseLocaleFromArgv(argv: string[]): Locale | undefined {
       }
     }
   }
-  return undefined;
+  return;
 }
 
 const localeFromArgs = parseLocaleFromArgv(process.argv.slice(2));

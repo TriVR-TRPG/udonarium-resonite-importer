@@ -475,7 +475,7 @@ export class ResoniteLinkClient {
   async getSlotTransform(slotId: string): Promise<SlotTransform | undefined> {
     const slotData = await this.getSlotData(slotId);
     if (!slotData) {
-      return undefined;
+      return;
     }
 
     const position = slotData.position?.value;
@@ -483,7 +483,7 @@ export class ResoniteLinkClient {
     const scale = slotData.scale?.value;
 
     if (!this.isVector3(position) || !this.isQuaternion(rotation) || !this.isVector3(scale)) {
-      return undefined;
+      return;
     }
 
     return { position, rotation, scale };
@@ -543,7 +543,7 @@ export class ResoniteLinkClient {
         scale?: { value?: unknown };
       };
     } catch {
-      return undefined;
+      return;
     }
   }
 

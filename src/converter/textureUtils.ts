@@ -19,7 +19,7 @@ export function isGifTexture(identifier: string): boolean {
 
 export function parseTextureReferenceId(textureValue?: string): string | undefined {
   if (!textureValue || !textureValue.startsWith(TEXTURE_REFERENCE_PREFIX)) {
-    return undefined;
+    return;
   }
   return textureValue.slice(TEXTURE_REFERENCE_PREFIX.length);
 }

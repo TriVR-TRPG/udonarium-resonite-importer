@@ -55,7 +55,7 @@ function lookupByKeys<T>(
   identifier: string | undefined
 ): T | undefined {
   if (!map || !identifier) {
-    return undefined;
+    return;
   }
   for (const key of buildLookupKeys(identifier)) {
     const value = map.get(key);
@@ -63,7 +63,7 @@ function lookupByKeys<T>(
       return value;
     }
   }
-  return undefined;
+  return;
 }
 
 function lookupImageFilterMode(
@@ -154,7 +154,7 @@ export function buildImageAssetContext(
 
   function getAssetInfo(identifier?: string): ImageAssetInfo | undefined {
     if (!identifier) {
-      return undefined;
+      return;
     }
     for (const key of buildLookupKeys(identifier)) {
       const info = byIdentifier.get(key);
@@ -162,7 +162,7 @@ export function buildImageAssetContext(
         return info;
       }
     }
-    return undefined;
+    return;
   }
 
   return {
@@ -178,7 +178,7 @@ export function buildImageAssetContext(
         return info.aspectRatio;
       }
       if (!options.imageAspectRatioMap) {
-        return undefined;
+        return;
       }
       return lookupImageAspectRatio(options.imageAspectRatioMap, identifier);
     },

@@ -34,7 +34,7 @@ function resolveExternalImageSource(identifier: string): ExternalImageSource | u
     };
   }
 
-  return undefined;
+  return;
 }
 
 function appendObjectImageIdentifiers(object: UdonariumObject, identifiers: Set<string>): void {

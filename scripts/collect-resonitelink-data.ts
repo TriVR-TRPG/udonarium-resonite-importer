@@ -223,7 +223,7 @@ function saveReflectionJson(filename: string, data: unknown): void {
 
 function extractResoniteLinkVersion(sessionResponse: unknown): string | undefined {
   if (!sessionResponse || typeof sessionResponse !== 'object') {
-    return undefined;
+    return;
   }
   const version = (sessionResponse as { resoniteLinkVersion?: unknown }).resoniteLinkVersion;
   return typeof version === 'string' && version.length > 0 ? version : undefined;

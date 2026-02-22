@@ -12,10 +12,10 @@ export type SharedMaterialDefinition = {
 
 function buildMaterialKey(component: ResoniteComponent): string | undefined {
   if (component.type !== COMPONENT_TYPES.XIEXE_TOON_MATERIAL) {
-    return undefined;
+    return;
   }
   if (!component.fields || Object.keys(component.fields).length === 0) {
-    return undefined;
+    return;
   }
 
   const colorHex = extractColorHexWithAlpha(component.fields) ?? '#FFFFFFFF';
@@ -34,7 +34,7 @@ function extractBlendMode(fields: Record<string, unknown>): string | undefined {
   if (typeof blendModeField?.value === 'string' && blendModeField.value.length > 0) {
     return blendModeField.value;
   }
-  return undefined;
+  return;
 }
 
 function extractCulling(fields: Record<string, unknown>): string | undefined {
@@ -42,7 +42,7 @@ function extractCulling(fields: Record<string, unknown>): string | undefined {
   if (typeof cullingField?.value === 'string' && cullingField.value.length > 0) {
     return cullingField.value;
   }
-  return undefined;
+  return;
 }
 
 function extractColorHexWithAlpha(fields: Record<string, unknown>): string | undefined {
@@ -51,21 +51,21 @@ function extractColorHexWithAlpha(fields: Record<string, unknown>): string | und
     | { r?: unknown; g?: unknown; b?: unknown; a?: unknown }
     | undefined;
   if (!colorValue) {
-    return undefined;
+    return;
   }
 
   const channels = [colorValue.r, colorValue.g, colorValue.b, colorValue.a].map((channel) =>
     toHexChannel(channel)
   );
   if (channels.some((channel) => channel === undefined)) {
-    return undefined;
+    return;
   }
   return `#${channels.join('')}`;
 }
 
 function toHexChannel(value: unknown): string | undefined {
   if (typeof value !== 'number' || Number.isNaN(value)) {
-    return undefined;
+    return;
   }
 
   const normalized = value <= 1 ? value * 255 : value;

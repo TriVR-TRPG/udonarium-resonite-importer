@@ -20,13 +20,13 @@ function normalizeIdentifier(identifier: string): string {
 
 function extractPathFromAbsoluteUrl(identifier: string): string | undefined {
   if (!identifier.startsWith('http://') && !identifier.startsWith('https://')) {
-    return undefined;
+    return;
   }
   try {
     const url = new URL(identifier);
     return normalizeIdentifier(url.pathname.replace(/^\/+/, ''));
   } catch {
-    return undefined;
+    return;
   }
 }
 
@@ -84,7 +84,7 @@ function resolveKnownRatioForFile(file: ExtractedFile): number | undefined {
       return ratio;
     }
   }
-  return undefined;
+  return;
 }
 
 function resolveKnownRatio(identifier: string): number | undefined {
@@ -122,7 +122,7 @@ function resolveKnownRatio(identifier: string): number | undefined {
       }
     }
   }
-  return undefined;
+  return;
 }
 
 function resolveKnownBlendMode(identifier: string): ImageBlendMode | undefined {
@@ -160,7 +160,7 @@ function resolveKnownBlendMode(identifier: string): ImageBlendMode | undefined {
       }
     }
   }
-  return undefined;
+  return;
 }
 
 function seedKnownAspectRatioMap(map: Map<string, number>): void {
@@ -230,7 +230,7 @@ export function lookupImageAspectRatio(
   identifier: string | undefined
 ): number | undefined {
   if (!identifier) {
-    return undefined;
+    return;
   }
 
   const normalized = normalizeIdentifier(identifier);
@@ -252,7 +252,7 @@ export function lookupImageAspectRatio(
     }
   }
 
-  return undefined;
+  return;
 }
 
 function findImageBlendMode(
@@ -260,7 +260,7 @@ function findImageBlendMode(
   identifier: string | undefined
 ): ImageBlendMode | undefined {
   if (!identifier) {
-    return undefined;
+    return;
   }
 
   const normalized = normalizeIdentifier(identifier);
@@ -282,7 +282,7 @@ function findImageBlendMode(
     }
   }
 
-  return undefined;
+  return;
 }
 
 export function lookupImageBlendMode(
@@ -365,7 +365,7 @@ function resolveKnownBlendModeForFile(file: ExtractedFile): ImageBlendMode | und
       return blendMode;
     }
   }
-  return undefined;
+  return;
 }
 
 function buildExternalProbeUrl(identifier: string): string | undefined {
@@ -376,7 +376,7 @@ function buildExternalProbeUrl(identifier: string): string | undefined {
   if (normalized.startsWith('assets/')) {
     return `https://udonarium.app/${normalized}`;
   }
-  return undefined;
+  return;
 }
 
 async function probeBlendModeFromExternalUrl(
@@ -386,14 +386,14 @@ async function probeBlendModeFromExternalUrl(
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      return undefined;
+      return;
     }
     const bytes = await response.arrayBuffer();
     const metadata = await sharp(Buffer.from(bytes)).metadata();
     const hasAlpha = metadata.hasAlpha ?? (metadata.channels ?? 0) >= 4;
     return hasAlpha ? (options?.semiTransparentMode ?? 'Alpha') : 'Opaque';
   } catch {
-    return undefined;
+    return;
   }
 }
 
