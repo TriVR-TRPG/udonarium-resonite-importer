@@ -1,0 +1,113 @@
+name: Release Build
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: windows
+            cli_script: package:cli:win
+            gui_script: package:gui:win
+          - os: macos-latest
+            target: macos
+            cli_script: package:cli:mac
+            gui_script: package:gui:mac
+          - os: ubuntu-latest
+            target: linux
+            cli_script: package:cli:linux
+            gui_script: package:gui:linux
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Package CLI
+        run: npm run ${{ matrix.cli_script }}
+
+      - name: Package GUI
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: npm run ${{ matrix.gui_script }}
+
+      - name: Collect artifacts
+        shell: pwsh
+        run: |
+          $outDir = "artifacts/${{ matrix.target }}"
+          New-Item -ItemType Directory -Path $outDir -Force | Out-Null
+
+          $patterns = @(
+            "dist/*.zip",
+            "dist/*.exe",
+            "dist/*-macos",
+            "dist/*-linux",
+            "release/*.zip",
+            "release/*.exe",
+            "release/*.dmg",
+            "release/*.AppImage",
+            "release/latest*.yml"
+          )
+
+          foreach ($pattern in $patterns) {
+            Get-ChildItem -Path $pattern -ErrorAction SilentlyContinue | ForEach-Object {
+              Copy-Item $_.FullName -Destination $outDir -Force
+            }
+          }
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundles-${{ matrix.target }}
+          path: artifacts/${{ matrix.target }}
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    name: Publish GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+          pattern: bundles-*
+          merge-multiple: true
+
+      - name: Create release and upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-artifacts/*.zip
+            release-artifacts/*.exe
+            release-artifacts/*-macos
+            release-artifacts/*-linux
+            release-artifacts/*.dmg
+            release-artifacts/*.AppImage
+            release-artifacts/latest*.yml
+          fail_on_unmatched_files: true
