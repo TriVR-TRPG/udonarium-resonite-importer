@@ -1,4 +1,4 @@
-# undefined 利用ポリシー
+﻿# undefined 利用ポリシー
 
 ## 対象
 
@@ -37,3 +37,4 @@
 
 - CI では ESLint の `no-undef-init` と `no-restricted-syntax`（`return undefined`）を `error` で運用する。
 - 本体コードで例外が必要な場合のみ、局所的な `eslint-disable` を理由付きで許可する。
+- 継続監視として、新規差分で `npm run -s metrics:undefined:count` が増えていないことを確認する。
