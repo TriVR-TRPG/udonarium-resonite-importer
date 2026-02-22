@@ -241,7 +241,7 @@ export function convertTerrain(
   basePosition: Vector3,
   imageAssetContext: ImageAssetContext,
   options?: { enableCharacterColliderOnLockedTerrain?: boolean },
-  slotId?: string,
+  slotId?: string | null,
   terrainLilyExtension?: TerrainLilyExtension
 ): ResoniteObject {
   const topTextureIdentifier =

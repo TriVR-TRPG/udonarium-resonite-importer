@@ -59,7 +59,7 @@ export function convertObjectWithTextures(
         position,
         imageAssetContext,
         options,
-        void 0,
+        null,
         getTerrainLilyExtension(udonObj, extensions)
       );
     case 'table':
