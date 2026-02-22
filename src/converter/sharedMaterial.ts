@@ -2,7 +2,7 @@ import { ResoniteComponent, ResoniteObject } from '../domain/ResoniteObject';
 import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 
 const MATERIAL_REFERENCE_PREFIX = 'material-ref://';
-type Maybe<T> = T | undefined;
+type Maybe<T> = T | null;
 
 export type SharedMaterialDefinition = {
   key: string;
@@ -13,10 +13,10 @@ export type SharedMaterialDefinition = {
 
 function buildMaterialKey(component: ResoniteComponent): Maybe<string> {
   if (component.type !== COMPONENT_TYPES.XIEXE_TOON_MATERIAL) {
-    return;
+    return null;
   }
   if (!component.fields || Object.keys(component.fields).length === 0) {
-    return;
+    return null;
   }
 
   const colorHex = extractColorHexWithAlpha(component.fields) ?? '#FFFFFFFF';
@@ -35,7 +35,7 @@ function extractBlendMode(fields: Record<string, unknown>): Maybe<string> {
   if (typeof blendModeField?.value === 'string' && blendModeField.value.length > 0) {
     return blendModeField.value;
   }
-  return;
+  return null;
 }
 
 function extractCulling(fields: Record<string, unknown>): Maybe<string> {
@@ -43,7 +43,7 @@ function extractCulling(fields: Record<string, unknown>): Maybe<string> {
   if (typeof cullingField?.value === 'string' && cullingField.value.length > 0) {
     return cullingField.value;
   }
-  return;
+  return null;
 }
 
 function extractColorHexWithAlpha(fields: Record<string, unknown>): Maybe<string> {
@@ -55,21 +55,21 @@ function extractColorHexWithAlpha(fields: Record<string, unknown>): Maybe<string
     a?: unknown;
   } | null;
   if (!colorValue) {
-    return;
+    return null;
   }
 
   const channels = [colorValue.r, colorValue.g, colorValue.b, colorValue.a].map((channel) =>
     toHexChannel(channel)
   );
   if (channels.some((channel) => channel == null)) {
-    return;
+    return null;
   }
   return `#${channels.join('')}`;
 }
 
 function toHexChannel(value: unknown): Maybe<string> {
   if (typeof value !== 'number' || Number.isNaN(value)) {
-    return;
+    return null;
   }
 
   const normalized = value <= 1 ? value * 255 : value;

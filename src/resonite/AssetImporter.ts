@@ -124,7 +124,7 @@ export class AssetImporter {
   /**
    * Get texture ID for a previously imported identifier
    */
-  getTextureId(identifier: string): string | undefined {
+  getTextureId(identifier: string) {
     return this.importedImageAssetInfoMap.get(identifier)?.textureValue;
   }
 

@@ -45,9 +45,9 @@ export const RETRY_CONFIG = {
 
 /**
  * Get ResoniteLink port from environment variable
- * Returns undefined if not set (port is required)
+ * Returns empty when not set (port is required)
  */
-export function getResoniteLinkPort(): number | undefined {
+export function getResoniteLinkPort() {
   const portStr = process.env.RESONITELINK_PORT;
   if (!portStr) {
     return;

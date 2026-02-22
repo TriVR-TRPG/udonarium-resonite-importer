@@ -9,13 +9,13 @@ type DataNode = {
   data?: DataNode | DataNode[];
   [key: string]: unknown;
 };
-type Maybe<T> = T | undefined;
+type Maybe<T> = T | null;
 
 /**
  * Find data element by name attribute
  */
 export function findDataByName(data: unknown, name: string): Maybe<DataNode> {
-  if (!data) return;
+  if (!data) return null;
 
   // Handle array of data elements
   if (Array.isArray(data)) {
@@ -32,7 +32,7 @@ export function findDataByName(data: unknown, name: string): Maybe<DataNode> {
         }
       }
     }
-    return;
+    return null;
   }
 
   // Handle single data element
@@ -47,14 +47,14 @@ export function findDataByName(data: unknown, name: string): Maybe<DataNode> {
     }
   }
 
-  return;
+  return null;
 }
 
 /**
  * Get text value from data node
  */
-export function getTextValue(node: Maybe<DataNode>): Maybe<string> {
-  if (!node) return;
+export function getTextValue(node?: Maybe<DataNode>): Maybe<string> {
+  if (!node) return null;
 
   // Direct text content
   if (node['#text'] != null) {
@@ -74,14 +74,14 @@ export function getTextValue(node: Maybe<DataNode>): Maybe<string> {
     }
   }
 
-  return;
+  return null;
 }
 
 /**
  * Get number value from data node or raw value
  */
 export function getNumberValue(nodeOrValue: unknown): Maybe<number> {
-  if (nodeOrValue == null) return;
+  if (nodeOrValue == null) return null;
 
   // Direct number
   if (typeof nodeOrValue === 'number') {
@@ -91,7 +91,7 @@ export function getNumberValue(nodeOrValue: unknown): Maybe<number> {
   // String number
   if (typeof nodeOrValue === 'string') {
     const num = parseFloat(nodeOrValue);
-    if (isNaN(num)) return;
+    if (isNaN(num)) return null;
     return num;
   }
 
@@ -100,12 +100,12 @@ export function getNumberValue(nodeOrValue: unknown): Maybe<number> {
     const text = getTextValue(nodeOrValue as DataNode);
     if (text != null) {
       const num = parseFloat(text);
-      if (isNaN(num)) return;
+      if (isNaN(num)) return null;
       return num;
     }
   }
 
-  return;
+  return null;
 }
 
 /**
@@ -127,7 +127,7 @@ export function parsePosition(root: Record<string, unknown>): {
  * Get boolean value from data node or raw value
  */
 export function getBooleanValue(nodeOrValue: unknown): Maybe<boolean> {
-  if (nodeOrValue == null) return;
+  if (nodeOrValue == null) return null;
 
   // Direct boolean
   if (typeof nodeOrValue === 'boolean') {
@@ -147,5 +147,5 @@ export function getBooleanValue(nodeOrValue: unknown): Maybe<boolean> {
     }
   }
 
-  return;
+  return null;
 }

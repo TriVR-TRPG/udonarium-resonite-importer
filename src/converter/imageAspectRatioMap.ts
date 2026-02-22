@@ -10,7 +10,7 @@ import {
   KNOWN_IMAGES,
 } from '../config/MappingConfig';
 
-type Maybe<T> = T | undefined;
+type Maybe<T> = T | null;
 
 export interface BlendModeMapOptions {
   semiTransparentMode?: 'Cutout' | 'Alpha';
@@ -22,13 +22,13 @@ function normalizeIdentifier(identifier: string): string {
 
 function extractPathFromAbsoluteUrl(identifier: string): Maybe<string> {
   if (!identifier.startsWith('http://') && !identifier.startsWith('https://')) {
-    return;
+    return null;
   }
   try {
     const url = new URL(identifier);
     return normalizeIdentifier(url.pathname.replace(/^\/+/, ''));
   } catch {
-    return;
+    return null;
   }
 }
 
@@ -86,7 +86,7 @@ function resolveKnownRatioForFile(file: ExtractedFile): Maybe<number> {
       return ratio;
     }
   }
-  return;
+  return null;
 }
 
 function resolveKnownRatio(identifier: string): Maybe<number> {
@@ -124,7 +124,7 @@ function resolveKnownRatio(identifier: string): Maybe<number> {
       }
     }
   }
-  return;
+  return null;
 }
 
 function resolveKnownBlendMode(identifier: string): Maybe<ImageBlendMode> {
@@ -162,7 +162,7 @@ function resolveKnownBlendMode(identifier: string): Maybe<ImageBlendMode> {
       }
     }
   }
-  return;
+  return null;
 }
 
 function seedKnownAspectRatioMap(map: Map<string, number>): void {
@@ -232,7 +232,7 @@ export function lookupImageAspectRatio(
   identifier?: string
 ): Maybe<number> {
   if (!identifier) {
-    return;
+    return null;
   }
 
   const normalized = normalizeIdentifier(identifier);
@@ -254,7 +254,7 @@ export function lookupImageAspectRatio(
     }
   }
 
-  return;
+  return null;
 }
 
 function findImageBlendMode(
@@ -262,7 +262,7 @@ function findImageBlendMode(
   identifier?: string
 ): Maybe<ImageBlendMode> {
   if (!identifier) {
-    return;
+    return null;
   }
 
   const normalized = normalizeIdentifier(identifier);
@@ -284,7 +284,7 @@ function findImageBlendMode(
     }
   }
 
-  return;
+  return null;
 }
 
 export function lookupImageBlendMode(
@@ -367,7 +367,7 @@ function resolveKnownBlendModeForFile(file: ExtractedFile): Maybe<ImageBlendMode
       return blendMode;
     }
   }
-  return;
+  return null;
 }
 
 function buildExternalProbeUrl(identifier: string): Maybe<string> {
@@ -378,7 +378,7 @@ function buildExternalProbeUrl(identifier: string): Maybe<string> {
   if (normalized.startsWith('assets/')) {
     return `https://udonarium.app/${normalized}`;
   }
-  return;
+  return null;
 }
 
 async function probeBlendModeFromExternalUrl(
@@ -388,14 +388,14 @@ async function probeBlendModeFromExternalUrl(
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      return;
+      return null;
     }
     const bytes = await response.arrayBuffer();
     const metadata = await sharp(Buffer.from(bytes)).metadata();
     const hasAlpha = metadata.hasAlpha ?? (metadata.channels ?? 0) >= 4;
     return hasAlpha ? (options?.semiTransparentMode ?? 'Alpha') : 'Opaque';
   } catch {
-    return;
+    return null;
   }
 }
 

@@ -51,7 +51,7 @@ interface CLIOptions {
 
 const NO_PARSED_OBJECTS_ERROR = 'No supported objects were found in the ZIP file.';
 
-function parseLocaleFromArgv(argv: string[]): Locale | undefined {
+function parseLocaleFromArgv(argv: string[]) {
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === '--lang' || arg === '-l') {

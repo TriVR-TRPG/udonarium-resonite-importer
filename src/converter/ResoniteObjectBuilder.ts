@@ -74,7 +74,7 @@ function deriveTriangleUv0(
   })) as [{ x: number; y: number }, { x: number; y: number }, { x: number; y: number }];
 }
 
-function resolveBlendModeLookupIdentifier(options?: QuadMeshOptions): string | undefined {
+function resolveBlendModeLookupIdentifier(options?: QuadMeshOptions) {
   const identifier = options?.textureIdentifier;
   if (!identifier || identifier.startsWith('texture-ref://')) {
     return;

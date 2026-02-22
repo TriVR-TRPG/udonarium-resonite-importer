@@ -2,7 +2,7 @@ import { ImageBlendMode } from '../config/MappingConfig';
 import { lookupImageAspectRatio, lookupImageBlendMode } from './imageAspectRatioMap';
 import { isGifTexture } from './textureUtils';
 
-type Maybe<T> = T | undefined;
+type Maybe<T> = T | null;
 
 export type ImageFilterMode = 'Default' | 'Point';
 
@@ -54,7 +54,7 @@ function buildLookupKeys(identifier: string): string[] {
 
 function lookupByKeys<T>(map?: Map<string, T>, identifier?: string): Maybe<T> {
   if (!map || !identifier) {
-    return;
+    return null;
   }
   for (const key of buildLookupKeys(identifier)) {
     const value = map.get(key);
@@ -62,7 +62,7 @@ function lookupByKeys<T>(map?: Map<string, T>, identifier?: string): Maybe<T> {
       return value;
     }
   }
-  return;
+  return null;
 }
 
 function lookupImageFilterMode(
@@ -151,7 +151,7 @@ export function buildImageAssetContext(
 
   function getAssetInfo(identifier?: string): Maybe<ImageAssetInfo> {
     if (!identifier) {
-      return;
+      return null;
     }
     for (const key of buildLookupKeys(identifier)) {
       const info = byIdentifier.get(key);
@@ -159,7 +159,7 @@ export function buildImageAssetContext(
         return info;
       }
     }
-    return;
+    return null;
   }
 
   return {
@@ -167,7 +167,7 @@ export function buildImageAssetContext(
     getAssetInfo,
     resolveTextureValue(identifier?: string): Maybe<string> {
       const info = getAssetInfo(identifier);
-      return info?.textureValue;
+      return info?.textureValue ?? null;
     },
     lookupAspectRatio(identifier?: string): Maybe<number> {
       const info = getAssetInfo(identifier);
@@ -175,7 +175,7 @@ export function buildImageAssetContext(
         return info.aspectRatio;
       }
       if (!options.imageAspectRatioMap) {
-        return;
+        return null;
       }
       return lookupImageAspectRatio(options.imageAspectRatioMap, identifier);
     },
