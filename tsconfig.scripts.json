@@ -1,5 +1,5 @@
 {
-  "extends": "./tsconfig.cli.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "rootDir": "."
   },
