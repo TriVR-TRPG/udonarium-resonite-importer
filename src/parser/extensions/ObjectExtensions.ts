@@ -45,8 +45,8 @@ export function buildTerrainExtensionKey(terrain: Terrain): string {
 }
 
 export function getTerrainLilyExtension(
-  extensions: ParsedObjectExtensions | undefined,
-  terrain: Terrain
+  terrain: Terrain,
+  extensions?: ParsedObjectExtensions
 ): TerrainLilyExtension {
   return (
     extensions?.terrainLilyByObjectKey[buildTerrainExtensionKey(terrain)] ??

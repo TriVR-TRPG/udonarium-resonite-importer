@@ -39,8 +39,8 @@ function resolveBackAspectIdentifier(card: Card) {
 }
 
 function resolveAspectRatio(
-  primaryIdentifier: string | undefined,
   imageAssetContext: ImageAssetContext,
+  primaryIdentifier?: string,
   secondaryIdentifier?: string
 ): number {
   const primaryAspect = imageAssetContext.lookupAspectRatio(primaryIdentifier);
@@ -63,13 +63,13 @@ export function convertCard(
 ): ResoniteObject {
   const cardWidth = udonObj.size;
   const frontAspectRatio = resolveAspectRatio(
-    resolveFrontAspectIdentifier(udonObj),
     imageAssetContext,
+    resolveFrontAspectIdentifier(udonObj),
     resolveBackAspectIdentifier(udonObj)
   );
   const backAspectRatio = resolveAspectRatio(
-    resolveBackAspectIdentifier(udonObj),
     imageAssetContext,
+    resolveBackAspectIdentifier(udonObj),
     resolveFrontAspectIdentifier(udonObj)
   );
   const frontHeight = cardWidth * frontAspectRatio;
