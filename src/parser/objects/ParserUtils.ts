@@ -9,12 +9,11 @@ type DataNode = {
   data?: DataNode | DataNode[];
   [key: string]: unknown;
 };
-type Maybe<T> = T | null;
 
 /**
  * Find data element by name attribute
  */
-export function findDataByName(data: unknown, name: string): Maybe<DataNode> {
+export function findDataByName(data: unknown, name: string): DataNode | null {
   if (!data) return null;
 
   // Handle array of data elements
@@ -53,7 +52,7 @@ export function findDataByName(data: unknown, name: string): Maybe<DataNode> {
 /**
  * Get text value from data node
  */
-export function getTextValue(node?: Maybe<DataNode>): Maybe<string> {
+export function getTextValue(node?: DataNode | null): string | null {
   if (!node) return null;
 
   // Direct text content
@@ -80,7 +79,7 @@ export function getTextValue(node?: Maybe<DataNode>): Maybe<string> {
 /**
  * Get number value from data node or raw value
  */
-export function getNumberValue(nodeOrValue: unknown): Maybe<number> {
+export function getNumberValue(nodeOrValue: unknown): number | null {
   if (nodeOrValue == null) return null;
 
   // Direct number
@@ -126,7 +125,7 @@ export function parsePosition(root: Record<string, unknown>): {
 /**
  * Get boolean value from data node or raw value
  */
-export function getBooleanValue(nodeOrValue: unknown): Maybe<boolean> {
+export function getBooleanValue(nodeOrValue: unknown): boolean | null {
   if (nodeOrValue == null) return null;
 
   // Direct boolean

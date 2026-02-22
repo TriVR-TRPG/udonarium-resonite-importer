@@ -10,8 +10,6 @@ import {
   KNOWN_IMAGES,
 } from '../config/MappingConfig';
 
-type Maybe<T> = T | null;
-
 export interface BlendModeMapOptions {
   semiTransparentMode?: 'Cutout' | 'Alpha';
 }
@@ -20,7 +18,7 @@ function normalizeIdentifier(identifier: string): string {
   return identifier.replace(/\\/g, '/').replace(/^\.\/+/, '');
 }
 
-function extractPathFromAbsoluteUrl(identifier: string): Maybe<string> {
+function extractPathFromAbsoluteUrl(identifier: string): string | null {
   if (!identifier.startsWith('http://') && !identifier.startsWith('https://')) {
     return null;
   }
@@ -77,7 +75,7 @@ function setRatioForIdentifier(
   }
 }
 
-function resolveKnownRatioForFile(file: ExtractedFile): Maybe<number> {
+function resolveKnownRatioForFile(file: ExtractedFile): number | null {
   const normalizedPath = normalizeIdentifier(file.path);
   const candidates = [file.name, file.path, normalizedPath, `./${normalizedPath}`];
   for (const candidate of candidates) {
@@ -89,7 +87,7 @@ function resolveKnownRatioForFile(file: ExtractedFile): Maybe<number> {
   return null;
 }
 
-function resolveKnownRatio(identifier: string): Maybe<number> {
+function resolveKnownRatio(identifier: string): number | null {
   const normalized = normalizeIdentifier(identifier);
   const knownImage = KNOWN_IMAGES.get(identifier);
   if (knownImage) {
@@ -127,7 +125,7 @@ function resolveKnownRatio(identifier: string): Maybe<number> {
   return null;
 }
 
-function resolveKnownBlendMode(identifier: string): Maybe<ImageBlendMode> {
+function resolveKnownBlendMode(identifier: string): ImageBlendMode | null {
   const normalized = normalizeIdentifier(identifier);
   const knownImage = KNOWN_IMAGES.get(identifier);
   if (knownImage) {
@@ -230,7 +228,7 @@ function collectImageIdentifiers(objects: UdonariumObject[]): string[] {
 export function lookupImageAspectRatio(
   imageAspectRatioMap: Map<string, number>,
   identifier?: string
-): Maybe<number> {
+): number | null {
   if (!identifier) {
     return null;
   }
@@ -260,7 +258,7 @@ export function lookupImageAspectRatio(
 function findImageBlendMode(
   imageBlendModeMap: Map<string, ImageBlendMode>,
   identifier?: string
-): Maybe<ImageBlendMode> {
+): ImageBlendMode | null {
   if (!identifier) {
     return null;
   }
@@ -358,7 +356,7 @@ function setBlendModeForIdentifier(
   }
 }
 
-function resolveKnownBlendModeForFile(file: ExtractedFile): Maybe<ImageBlendMode> {
+function resolveKnownBlendModeForFile(file: ExtractedFile): ImageBlendMode | null {
   const normalizedPath = normalizeIdentifier(file.path);
   const candidates = [file.name, file.path, normalizedPath, `./${normalizedPath}`];
   for (const candidate of candidates) {
@@ -370,7 +368,7 @@ function resolveKnownBlendModeForFile(file: ExtractedFile): Maybe<ImageBlendMode
   return null;
 }
 
-function buildExternalProbeUrl(identifier: string): Maybe<string> {
+function buildExternalProbeUrl(identifier: string): string | null {
   if (identifier.startsWith('http://') || identifier.startsWith('https://')) {
     return identifier;
   }
@@ -384,7 +382,7 @@ function buildExternalProbeUrl(identifier: string): Maybe<string> {
 async function probeBlendModeFromExternalUrl(
   url: string,
   options?: BlendModeMapOptions
-): Promise<Maybe<ImageBlendMode>> {
+): Promise<ImageBlendMode | null> {
   try {
     const response = await fetch(url);
     if (!response.ok) {

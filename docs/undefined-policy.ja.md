@@ -20,6 +20,7 @@
 - `foo = undefined` 初期化は禁止。
 - 比較は `x != null` を優先し、`undefined` 単独比較は避ける。
 - 引数スキップ目的の `func(a, undefined, c)` は禁止し、引数順や API を見直す。
+- `type Maybe<T>` の新規追加は禁止（欠損は `null` / optional / 直接 union で表現）。
 
 ## テストコードの例外
 

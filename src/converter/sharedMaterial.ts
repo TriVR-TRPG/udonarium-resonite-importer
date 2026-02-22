@@ -2,7 +2,6 @@ import { ResoniteComponent, ResoniteObject } from '../domain/ResoniteObject';
 import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 
 const MATERIAL_REFERENCE_PREFIX = 'material-ref://';
-type Maybe<T> = T | null;
 
 export type SharedMaterialDefinition = {
   key: string;
@@ -11,7 +10,7 @@ export type SharedMaterialDefinition = {
   fields: Record<string, unknown>;
 };
 
-function buildMaterialKey(component: ResoniteComponent): Maybe<string> {
+function buildMaterialKey(component: ResoniteComponent): string | null {
   if (component.type !== COMPONENT_TYPES.XIEXE_TOON_MATERIAL) {
     return null;
   }
@@ -30,7 +29,7 @@ function buildMaterialName(key: string): string {
   return `XiexeToon_${blendMode}_${culling}_${colorHex.slice(1)}`;
 }
 
-function extractBlendMode(fields: Record<string, unknown>): Maybe<string> {
+function extractBlendMode(fields: Record<string, unknown>): string | null {
   const blendModeField = fields.BlendMode as { value?: unknown } | null;
   if (typeof blendModeField?.value === 'string' && blendModeField.value.length > 0) {
     return blendModeField.value;
@@ -38,7 +37,7 @@ function extractBlendMode(fields: Record<string, unknown>): Maybe<string> {
   return null;
 }
 
-function extractCulling(fields: Record<string, unknown>): Maybe<string> {
+function extractCulling(fields: Record<string, unknown>): string | null {
   const cullingField = fields.Culling as { value?: unknown } | null;
   if (typeof cullingField?.value === 'string' && cullingField.value.length > 0) {
     return cullingField.value;
@@ -46,7 +45,7 @@ function extractCulling(fields: Record<string, unknown>): Maybe<string> {
   return null;
 }
 
-function extractColorHexWithAlpha(fields: Record<string, unknown>): Maybe<string> {
+function extractColorHexWithAlpha(fields: Record<string, unknown>): string | null {
   const colorField = fields.Color as { value?: unknown } | null;
   const colorValue = colorField?.value as {
     r?: unknown;
@@ -67,7 +66,7 @@ function extractColorHexWithAlpha(fields: Record<string, unknown>): Maybe<string
   return `#${channels.join('')}`;
 }
 
-function toHexChannel(value: unknown): Maybe<string> {
+function toHexChannel(value: unknown): string | null {
   if (typeof value !== 'number' || Number.isNaN(value)) {
     return null;
   }
