@@ -28,9 +28,9 @@
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/await-thenable": "error",
-    "no-undef-init": "warn",
+    "no-undef-init": "error",
     "no-restricted-syntax": [
-      "warn",
+      "error",
       {
         "selector": "ReturnStatement > Identifier[name='undefined']",
         "message": "Prefer implicit return (no value) instead of `return undefined`."
