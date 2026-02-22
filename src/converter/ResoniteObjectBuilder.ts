@@ -108,7 +108,7 @@ function buildXiexeToonMaterialFields(
     ShadowRamp: { $type: 'reference', targetId: null },
     ShadowSharpness: { $type: 'float', value: 0 },
     ...(cullingOff ? { Culling: { $type: 'enum', value: 'Off', enumType: 'Culling' } } : {}),
-    ...(color !== undefined ? { Color: { $type: 'colorX', value: color } } : {}),
+    ...(color != null ? { Color: { $type: 'colorX', value: color } } : {}),
   };
 }
 
@@ -132,7 +132,7 @@ function buildQuadMeshComponents(
     ? sharedTextureId
       ? toSharedTexturePropertyBlockId(sharedTextureId)
       : textureBlockId
-    : undefined;
+    : null;
 
   const components: ResoniteComponent[] = [
     {
@@ -211,7 +211,7 @@ function buildTriangleMeshComponents(
     ? sharedTextureId
       ? toSharedTexturePropertyBlockId(sharedTextureId)
       : textureBlockId
-    : undefined;
+    : null;
   const uv0 = options.uv0 ?? deriveTriangleUv0(options.vertices);
 
   const components: ResoniteComponent[] = [
@@ -404,8 +404,8 @@ export class ResoniteObjectBuilder {
     return this;
   }
 
-  setLocationName(locationName: string | undefined): this {
-    if (locationName === undefined) {
+  setLocationName(locationName?: string): this {
+    if (locationName == null) {
       delete this.obj.locationName;
       return this;
     }

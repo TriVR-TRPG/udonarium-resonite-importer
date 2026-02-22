@@ -190,10 +190,8 @@ export class ResoniteLinkClient {
     );
   }
 
-  static setRuntimeModuleLoaderForTests(
-    loader: (() => Promise<TsrlRuntimeModule>) | undefined
-  ): void {
-    if (loader === undefined) {
+  static setRuntimeModuleLoaderForTests(loader?: () => Promise<TsrlRuntimeModule>): void {
+    if (!loader) {
       delete this.runtimeModuleLoader;
       return;
     }
@@ -435,7 +433,7 @@ export class ResoniteLinkClient {
     const componentIds: string[] = [];
     for (const component of components) {
       const id = await this.addComponent({
-        ...(component.id !== undefined ? { id: component.id } : {}),
+        ...(component.id != null ? { id: component.id } : {}),
         slotId,
         componentType: component.type,
         fields: component.fields,
@@ -452,7 +450,7 @@ export class ResoniteLinkClient {
 
   async getSlotChildIds(slotId: string): Promise<string[]> {
     const link = this.getConnectedLink();
-    const slot = (await link.slotGet(slotId, false, 1)) as unknown as SlotLike | undefined;
+    const slot = (await link.slotGet(slotId, false, 1)) as unknown as SlotLike | null;
 
     if (!slot) {
       return [];
@@ -469,7 +467,10 @@ export class ResoniteLinkClient {
   async getSlotTag(slotId: string): Promise<string | undefined> {
     const slotData = await this.getSlotData(slotId);
     const tag = slotData?.tag?.value;
-    return typeof tag === 'string' ? tag : undefined;
+    if (typeof tag === 'string') {
+      return tag;
+    }
+    return;
   }
 
   async getSlotTransform(slotId: string): Promise<SlotTransform | undefined> {
@@ -498,7 +499,7 @@ export class ResoniteLinkClient {
 
     const childIds = await this.getSlotChildIds('Root');
     let removedCount = 0;
-    let capturedTransform: SlotTransform | undefined;
+    let capturedTransform: SlotTransform | null = null;
 
     for (const childId of childIds) {
       const childTag = await this.getSlotTag(childId);
@@ -507,7 +508,7 @@ export class ResoniteLinkClient {
       }
 
       if (!capturedTransform) {
-        capturedTransform = await this.getSlotTransform(childId);
+        capturedTransform = (await this.getSlotTransform(childId)) ?? null;
       }
 
       await this.removeSlot(childId);
@@ -516,7 +517,7 @@ export class ResoniteLinkClient {
 
     return {
       removedCount,
-      ...(capturedTransform !== undefined ? { transform: capturedTransform } : {}),
+      ...(capturedTransform != null ? { transform: capturedTransform } : {}),
     };
   }
 
@@ -525,15 +526,12 @@ export class ResoniteLinkClient {
     return result.removedCount;
   }
 
-  private async getSlotData(slotId: string): Promise<
-    | {
-        tag?: { value?: unknown };
-        position?: { value?: unknown };
-        rotation?: { value?: unknown };
-        scale?: { value?: unknown };
-      }
-    | undefined
-  > {
+  private async getSlotData(slotId: string): Promise<{
+    tag?: { value?: unknown };
+    position?: { value?: unknown };
+    rotation?: { value?: unknown };
+    scale?: { value?: unknown };
+  } | null> {
     const link = this.getConnectedLink();
     try {
       return (await link.slotGet(slotId, false, 0)) as unknown as {
@@ -543,7 +541,7 @@ export class ResoniteLinkClient {
         scale?: { value?: unknown };
       };
     } catch {
-      return;
+      return null;
     }
   }
 

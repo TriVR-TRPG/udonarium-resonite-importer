@@ -9,11 +9,12 @@ type DataNode = {
   data?: DataNode | DataNode[];
   [key: string]: unknown;
 };
+type Maybe<T> = T | undefined;
 
 /**
  * Find data element by name attribute
  */
-export function findDataByName(data: unknown, name: string): DataNode | undefined {
+export function findDataByName(data: unknown, name: string): Maybe<DataNode> {
   if (!data) return;
 
   // Handle array of data elements
@@ -52,7 +53,7 @@ export function findDataByName(data: unknown, name: string): DataNode | undefine
 /**
  * Get text value from data node
  */
-export function getTextValue(node: DataNode | undefined): string | undefined {
+export function getTextValue(node: Maybe<DataNode>): Maybe<string> {
   if (!node) return;
 
   // Direct text content
@@ -79,7 +80,7 @@ export function getTextValue(node: DataNode | undefined): string | undefined {
 /**
  * Get number value from data node or raw value
  */
-export function getNumberValue(nodeOrValue: unknown): number | undefined {
+export function getNumberValue(nodeOrValue: unknown): Maybe<number> {
   if (nodeOrValue == null) return;
 
   // Direct number
@@ -90,7 +91,8 @@ export function getNumberValue(nodeOrValue: unknown): number | undefined {
   // String number
   if (typeof nodeOrValue === 'string') {
     const num = parseFloat(nodeOrValue);
-    return isNaN(num) ? undefined : num;
+    if (isNaN(num)) return;
+    return num;
   }
 
   // Data node
@@ -98,7 +100,8 @@ export function getNumberValue(nodeOrValue: unknown): number | undefined {
     const text = getTextValue(nodeOrValue as DataNode);
     if (text != null) {
       const num = parseFloat(text);
-      return isNaN(num) ? undefined : num;
+      if (isNaN(num)) return;
+      return num;
     }
   }
 
@@ -123,7 +126,7 @@ export function parsePosition(root: Record<string, unknown>): {
 /**
  * Get boolean value from data node or raw value
  */
-export function getBooleanValue(nodeOrValue: unknown): boolean | undefined {
+export function getBooleanValue(nodeOrValue: unknown): Maybe<boolean> {
   if (nodeOrValue == null) return;
 
   // Direct boolean

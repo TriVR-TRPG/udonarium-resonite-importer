@@ -21,9 +21,10 @@ function buildMeshKey(component: ResoniteComponent): string | undefined {
     return;
   }
 
-  const sizeField = component.fields.Size as
-    | { $type?: string; value?: { x?: number; y?: number; z?: number } }
-    | undefined;
+  const sizeField = component.fields.Size as {
+    $type?: string;
+    value?: { x?: number; y?: number; z?: number };
+  } | null;
   if (!sizeField?.value) {
     return;
   }
@@ -51,9 +52,9 @@ function buildDefinitionFromComponent(
   key: string,
   component: ResoniteComponent
 ): SharedMeshDefinition | undefined {
-  const sizeField = component.fields.Size as
-    | { value?: { x?: number; y?: number; z?: number } }
-    | undefined;
+  const sizeField = component.fields.Size as {
+    value?: { x?: number; y?: number; z?: number };
+  } | null;
   if (!sizeField?.value) {
     return;
   }
@@ -63,8 +64,7 @@ function buildDefinitionFromComponent(
     if (typeof x !== 'number' || typeof y !== 'number') {
       return;
     }
-    const dualSided =
-      (component.fields.DualSided as { value?: boolean } | undefined)?.value === true;
+    const dualSided = (component.fields.DualSided as { value?: boolean } | null)?.value === true;
     return {
       key,
       name: `QuadMesh_${formatSizeNumber(x)}x${formatSizeNumber(y)}${dualSided ? '_DualSided' : ''}`,
@@ -140,7 +140,7 @@ function prepareObjectForSharedMeshes(
     if (component.type !== COMPONENT_TYPES.MESH_RENDERER) {
       continue;
     }
-    const meshField = component.fields.Mesh as { targetId?: string } | undefined;
+    const meshField = component.fields.Mesh as { targetId?: string } | null;
     const meshTargetId = meshField?.targetId;
     if (!meshTargetId) {
       continue;

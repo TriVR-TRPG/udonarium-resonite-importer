@@ -214,7 +214,7 @@ export class SlotBuilder {
         const parentId = isTable
           ? tablesSlotId
           : isInventoryObject
-            ? await this.ensureInventoryLocationSlot(object.locationName, inventorySlotId)
+            ? await this.ensureInventoryLocationSlot(inventorySlotId, object.locationName)
             : objectsSlotId;
         result = await this.buildSlot(object, parentId, options);
       } catch (error) {
@@ -466,7 +466,7 @@ export class SlotBuilder {
       });
     }
     // "table" inventory location is always present and should remain visible.
-    await this.ensureInventoryLocationSlot('table', this.inventorySlotId);
+    await this.ensureInventoryLocationSlot(this.inventorySlotId, 'table');
 
     return {
       tablesSlotId: this.tablesSlotId,
@@ -533,8 +533,8 @@ export class SlotBuilder {
   }
 
   private async ensureInventoryLocationSlot(
-    locationName: string | undefined,
-    inventorySlotId: string
+    inventorySlotId: string,
+    locationName?: string
   ): Promise<string> {
     const normalizedLocationName = locationName?.trim() || 'Unknown';
     const existingSlotId = this.inventoryLocationSlotIds.get(normalizedLocationName);

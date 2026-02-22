@@ -2,6 +2,8 @@ import { ImageBlendMode } from '../config/MappingConfig';
 import { lookupImageAspectRatio, lookupImageBlendMode } from './imageAspectRatioMap';
 import { isGifTexture } from './textureUtils';
 
+type Maybe<T> = T | undefined;
+
 export type ImageFilterMode = 'Default' | 'Point';
 
 export type ImageSourceKind =
@@ -24,9 +26,9 @@ export type ImageAssetInfo = {
 
 export interface ImageAssetContext {
   byIdentifier: ReadonlyMap<string, ImageAssetInfo>;
-  getAssetInfo(identifier?: string): ImageAssetInfo | undefined;
-  resolveTextureValue(identifier?: string): string | undefined;
-  lookupAspectRatio(identifier?: string): number | undefined;
+  getAssetInfo(identifier?: string): Maybe<ImageAssetInfo>;
+  resolveTextureValue(identifier?: string): Maybe<string>;
+  lookupAspectRatio(identifier?: string): Maybe<number>;
   lookupBlendMode(identifier?: string): ImageBlendMode;
   resolveUsePointFilter(identifier?: string, resolvedTextureValue?: string): boolean;
 }
@@ -50,7 +52,7 @@ function buildLookupKeys(identifier: string): string[] {
   return keys;
 }
 
-function lookupByKeys<T>(map?: Map<string, T>, identifier?: string): T | undefined {
+function lookupByKeys<T>(map?: Map<string, T>, identifier?: string): Maybe<T> {
   if (!map || !identifier) {
     return;
   }
@@ -66,7 +68,7 @@ function lookupByKeys<T>(map?: Map<string, T>, identifier?: string): T | undefin
 function lookupImageFilterMode(
   imageFilterModeMap?: Map<string, ImageFilterMode>,
   identifier?: string
-): ImageFilterMode | undefined {
+): Maybe<ImageFilterMode> {
   return lookupByKeys(imageFilterModeMap, identifier);
 }
 
@@ -147,7 +149,7 @@ export function buildImageAssetContext(
     byIdentifier.set(identifier, info);
   }
 
-  function getAssetInfo(identifier?: string): ImageAssetInfo | undefined {
+  function getAssetInfo(identifier?: string): Maybe<ImageAssetInfo> {
     if (!identifier) {
       return;
     }
@@ -163,11 +165,11 @@ export function buildImageAssetContext(
   return {
     byIdentifier,
     getAssetInfo,
-    resolveTextureValue(identifier?: string): string | undefined {
+    resolveTextureValue(identifier?: string): Maybe<string> {
       const info = getAssetInfo(identifier);
       return info?.textureValue;
     },
-    lookupAspectRatio(identifier?: string): number | undefined {
+    lookupAspectRatio(identifier?: string): Maybe<number> {
       const info = getAssetInfo(identifier);
       if (info?.aspectRatio != null) {
         return info.aspectRatio;
