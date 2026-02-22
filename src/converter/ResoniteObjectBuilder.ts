@@ -128,7 +128,6 @@ function buildQuadMeshComponents(
   const textureBlockId = `${slotId}-texture-block`;
   const textureId = `${slotId}-tex`;
   const sharedTextureId = parseTextureReferenceId(textureValue);
-  const localTextureId = sharedTextureId ? undefined : textureId;
   const texturePropertyBlockTargetId = textureValue
     ? sharedTextureId
       ? toSharedTexturePropertyBlockId(sharedTextureId)
@@ -163,7 +162,7 @@ function buildQuadMeshComponents(
   });
 
   if (textureValue && !sharedTextureId) {
-    const textureProviderId = sharedTextureId ?? localTextureId!;
+    const textureProviderId = textureId;
     components.push({
       id: textureBlockId,
       type: COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
@@ -208,7 +207,6 @@ function buildTriangleMeshComponents(
   const textureBlockId = `${slotId}-texture-block`;
   const textureId = `${slotId}-tex`;
   const sharedTextureId = parseTextureReferenceId(textureValue);
-  const localTextureId = sharedTextureId ? undefined : textureId;
   const texturePropertyBlockTargetId = textureValue
     ? sharedTextureId
       ? toSharedTexturePropertyBlockId(sharedTextureId)
@@ -267,7 +265,7 @@ function buildTriangleMeshComponents(
   });
 
   if (textureValue && !sharedTextureId) {
-    const textureProviderId = sharedTextureId ?? localTextureId!;
+    const textureProviderId = textureId;
     components.push({
       id: textureBlockId,
       type: COMPONENT_TYPES.MAIN_TEXTURE_PROPERTY_BLOCK,
@@ -407,6 +405,10 @@ export class ResoniteObjectBuilder {
   }
 
   setLocationName(locationName: string | undefined): this {
+    if (locationName === undefined) {
+      delete this.obj.locationName;
+      return this;
+    }
     this.obj.locationName = locationName;
     return this;
   }

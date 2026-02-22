@@ -12,7 +12,7 @@ export function convertTable(
   slotId?: string
 ): ResoniteObject {
   const parentBuilder = ResoniteObjectBuilder.create({
-    id: slotId,
+    ...(slotId !== undefined ? { id: slotId } : {}),
     name: udonObj.name,
   })
     .setPosition(basePosition)
@@ -28,7 +28,7 @@ export function convertTable(
     .setPosition({ x: udonObj.width / 2, y: 0, z: -udonObj.height / 2 })
     .setRotation({ x: 90, y: 0, z: 0 })
     .addQuadMesh({
-      textureIdentifier,
+      ...(textureIdentifier !== undefined ? { textureIdentifier } : {}),
       dualSided: true,
       size: { x: udonObj.width, y: udonObj.height },
       imageAssetContext,

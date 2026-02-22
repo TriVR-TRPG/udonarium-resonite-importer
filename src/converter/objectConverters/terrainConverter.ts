@@ -181,7 +181,7 @@ function buildWallSlot(
   }
   return builder
     .addQuadMesh({
-      textureIdentifier,
+      ...(textureIdentifier !== undefined ? { textureIdentifier } : {}),
       dualSided: false,
       size,
       imageAssetContext,
@@ -228,7 +228,7 @@ function buildTriangleWallSlot(
   }
   return builder
     .addTriangleMesh({
-      textureIdentifier,
+      ...(textureIdentifier !== undefined ? { textureIdentifier } : {}),
       imageAssetContext,
       dualSided: true,
       vertices,
@@ -254,7 +254,7 @@ export function convertTerrain(
     udonObj.images[0]?.identifier;
 
   const mainBuilder = ResoniteObjectBuilder.create({
-    id: slotId,
+    ...(slotId !== undefined ? { id: slotId } : {}),
     name: udonObj.name,
   })
     .setRotation({ x: 0, y: udonObj.rotate, z: 0 })
@@ -305,7 +305,7 @@ export function convertTerrain(
         }
       )
       .addQuadMesh({
-        textureIdentifier: topTextureIdentifier,
+        ...(topTextureIdentifier !== undefined ? { textureIdentifier: topTextureIdentifier } : {}),
         dualSided: true,
         size: topSurfaceSize,
         imageAssetContext,
@@ -313,7 +313,7 @@ export function convertTerrain(
     topSurface.addChild(topMeshBuilder.build());
   } else {
     topSurface.addQuadMesh({
-      textureIdentifier: topTextureIdentifier,
+      ...(topTextureIdentifier !== undefined ? { textureIdentifier: topTextureIdentifier } : {}),
       dualSided: true,
       size: topSurfaceSize,
       imageAssetContext,

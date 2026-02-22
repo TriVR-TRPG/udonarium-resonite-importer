@@ -25,9 +25,15 @@ function makeContext(options?: {
   imageBlendModeMap?: Map<string, 'Cutout' | 'Opaque' | 'Alpha'>;
 }): ReturnType<typeof buildImageAssetContext> {
   return buildImageAssetContext({
-    imageAssetInfoMap: options?.imageAssetInfoMap,
-    imageAspectRatioMap: options?.imageAspectRatioMap,
-    imageBlendModeMap: options?.imageBlendModeMap,
+    ...(options?.imageAssetInfoMap !== undefined
+      ? { imageAssetInfoMap: options.imageAssetInfoMap }
+      : {}),
+    ...(options?.imageAspectRatioMap !== undefined
+      ? { imageAspectRatioMap: options.imageAspectRatioMap }
+      : {}),
+    ...(options?.imageBlendModeMap !== undefined
+      ? { imageBlendModeMap: options.imageBlendModeMap }
+      : {}),
   });
 }
 

@@ -9,7 +9,7 @@ export function convertTextNote(
 ): ResoniteObject {
   // Udonarium positions are edge-based; Resonite uses center-based transforms.
   return ResoniteObjectBuilder.create({
-    id: slotId,
+    ...(slotId !== undefined ? { id: slotId } : {}),
     name: udonObj.name,
   })
     .setPosition({

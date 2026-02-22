@@ -81,7 +81,7 @@ export function convertCard(
   const backTextureIdentifier = resolveBackTextureIdentifier(udonObj);
 
   const parentBuilder = ResoniteObjectBuilder.create({
-    id: slotId,
+    ...(slotId !== undefined ? { id: slotId } : {}),
     name: udonObj.name,
   })
     .setPosition({
@@ -105,7 +105,9 @@ export function convertCard(
     .setPosition({ x: 0, y: CARD_FACE_SEPARATION, z: frontZOffset })
     .setRotation({ x: 90, y: 0, z: 0 })
     .addQuadMesh({
-      textureIdentifier: frontTextureIdentifier,
+      ...(frontTextureIdentifier !== undefined
+        ? { textureIdentifier: frontTextureIdentifier }
+        : {}),
       dualSided: false,
       size: { x: cardWidth, y: frontHeight },
       imageAssetContext,
@@ -119,7 +121,7 @@ export function convertCard(
     .setPosition({ x: 0, y: -CARD_FACE_SEPARATION, z: backZOffset })
     .setRotation({ x: -90, y: 180, z: 0 })
     .addQuadMesh({
-      textureIdentifier: backTextureIdentifier,
+      ...(backTextureIdentifier !== undefined ? { textureIdentifier: backTextureIdentifier } : {}),
       dualSided: false,
       size: { x: cardWidth, y: backHeight },
       imageAssetContext,

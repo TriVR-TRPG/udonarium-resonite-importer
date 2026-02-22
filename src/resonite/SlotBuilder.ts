@@ -91,15 +91,15 @@ function shouldUsePointFilter(textureInfo: ImageAssetInfo): boolean {
 export class SlotBuilder {
   private client: ResoniteLinkClient;
   private rootSlotId: string;
-  private tablesSlotId?: string;
-  private objectsSlotId?: string;
-  private inventorySlotId?: string;
-  private offsetSlotId?: string;
+  private tablesSlotId: string | undefined = undefined;
+  private objectsSlotId: string | undefined = undefined;
+  private inventorySlotId: string | undefined = undefined;
+  private offsetSlotId: string | undefined = undefined;
   private inventoryLocationSlotIds = new Map<string, string>();
-  private assetsSlotId?: string;
-  private texturesSlotId?: string;
-  private meshesSlotId?: string;
-  private materialsSlotId?: string;
+  private assetsSlotId: string | undefined = undefined;
+  private texturesSlotId: string | undefined = undefined;
+  private meshesSlotId: string | undefined = undefined;
+  private materialsSlotId: string | undefined = undefined;
 
   constructor(client: ResoniteLinkClient, rootSlotId = 'Root') {
     this.client = client;
@@ -150,7 +150,7 @@ export class SlotBuilder {
         const { creationFields, listFields } = splitListFields(component.fields);
 
         const componentId = await this.client.addComponent({
-          id: component.id,
+          ...(component.id !== undefined ? { id: component.id } : {}),
           slotId,
           componentType: component.type,
           fields: creationFields,

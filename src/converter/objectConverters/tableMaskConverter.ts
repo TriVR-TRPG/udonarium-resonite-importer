@@ -25,7 +25,7 @@ export function convertTableMask(
   const colorValue = hasMaskImage ? 1 : 0;
 
   const builder = ResoniteObjectBuilder.create({
-    id: slotId,
+    ...(slotId !== undefined ? { id: slotId } : {}),
     name: udonObj.name,
   })
     .setRotation({ x: 90, y: 0, z: 0 })
@@ -36,7 +36,9 @@ export function convertTableMask(
     })
     .setSourceType(udonObj.type)
     .addQuadMesh({
-      textureIdentifier: udonObj.images[0]?.identifier,
+      ...(udonObj.images[0]?.identifier !== undefined
+        ? { textureIdentifier: udonObj.images[0]?.identifier }
+        : {}),
       dualSided: true,
       size: { x: udonObj.width, y: udonObj.height },
       imageAssetContext,

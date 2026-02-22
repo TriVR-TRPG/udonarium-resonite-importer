@@ -193,6 +193,10 @@ export class ResoniteLinkClient {
   static setRuntimeModuleLoaderForTests(
     loader: (() => Promise<TsrlRuntimeModule>) | undefined
   ): void {
+    if (loader === undefined) {
+      delete this.runtimeModuleLoader;
+      return;
+    }
     this.runtimeModuleLoader = loader;
   }
 
@@ -431,7 +435,7 @@ export class ResoniteLinkClient {
     const componentIds: string[] = [];
     for (const component of components) {
       const id = await this.addComponent({
-        id: component.id,
+        ...(component.id !== undefined ? { id: component.id } : {}),
         slotId,
         componentType: component.type,
         fields: component.fields,
@@ -512,7 +516,7 @@ export class ResoniteLinkClient {
 
     return {
       removedCount,
-      transform: capturedTransform,
+      ...(capturedTransform !== undefined ? { transform: capturedTransform } : {}),
     };
   }
 

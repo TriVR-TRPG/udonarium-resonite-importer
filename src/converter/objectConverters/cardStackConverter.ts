@@ -51,7 +51,7 @@ export function convertCardStack(
   }));
 
   return ResoniteObjectBuilder.create({
-    id: slotId,
+    ...(slotId !== undefined ? { id: slotId } : {}),
     name: udonObj.name,
   })
     .setPosition({
