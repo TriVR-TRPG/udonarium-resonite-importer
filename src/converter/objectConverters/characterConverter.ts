@@ -22,7 +22,7 @@ export function convertCharacter(
 
   // Udonarium positions are edge-based; Resonite uses center-based transforms.
   const builder = ResoniteObjectBuilder.create({
-    ...(slotId !== undefined ? { id: slotId } : {}),
+    ...(slotId != null ? { id: slotId } : {}),
     name: udonObj.name,
   })
     .setPosition({

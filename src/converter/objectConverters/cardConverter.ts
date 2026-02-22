@@ -3,17 +3,15 @@ import { ResoniteObject, Vector3 } from '../../domain/ResoniteObject';
 import { ResoniteObjectBuilder } from '../ResoniteObjectBuilder';
 import { ImageAssetContext } from '../imageAssetContext';
 
-type Maybe<T> = T | undefined;
-
 const CARD_Y_OFFSET = 0.001;
 const CARD_FACE_SEPARATION = 0.0001;
 const DEFAULT_CARD_ASPECT_RATIO = 1;
 
-function resolveFrontTextureIdentifier(card: Card): Maybe<string> {
+function resolveFrontTextureIdentifier(card: Card) {
   return card.frontImage?.identifier ?? card.backImage?.identifier ?? card.images[0]?.identifier;
 }
 
-function resolveBackTextureIdentifier(card: Card): Maybe<string> {
+function resolveBackTextureIdentifier(card: Card) {
   return (
     card.backImage?.identifier ??
     card.frontImage?.identifier ??
@@ -22,7 +20,7 @@ function resolveBackTextureIdentifier(card: Card): Maybe<string> {
   );
 }
 
-function resolveFrontAspectIdentifier(card: Card): Maybe<string> {
+function resolveFrontAspectIdentifier(card: Card) {
   return (
     card.frontImage?.identifier ??
     card.images[0]?.identifier ??
@@ -31,7 +29,7 @@ function resolveFrontAspectIdentifier(card: Card): Maybe<string> {
   );
 }
 
-function resolveBackAspectIdentifier(card: Card): Maybe<string> {
+function resolveBackAspectIdentifier(card: Card) {
   return (
     card.backImage?.identifier ??
     card.images[1]?.identifier ??
@@ -41,7 +39,7 @@ function resolveBackAspectIdentifier(card: Card): Maybe<string> {
 }
 
 function resolveAspectRatio(
-  primaryIdentifier: Maybe<string>,
+  primaryIdentifier: string | undefined,
   imageAssetContext: ImageAssetContext,
   secondaryIdentifier?: string
 ): number {

@@ -221,12 +221,15 @@ function saveReflectionJson(filename: string, data: unknown): void {
   console.log(`    [ok] reflection/${filename}`);
 }
 
-function extractResoniteLinkVersion(sessionResponse: unknown): string | undefined {
+function extractResoniteLinkVersion(sessionResponse: unknown) {
   if (!sessionResponse || typeof sessionResponse !== 'object') {
     return;
   }
   const version = (sessionResponse as { resoniteLinkVersion?: unknown }).resoniteLinkVersion;
-  return typeof version === 'string' && version.length > 0 ? version : undefined;
+  if (typeof version === 'string' && version.length > 0) {
+    return version;
+  }
+  return;
 }
 
 function buildResponseSummary(): Record<string, unknown> {

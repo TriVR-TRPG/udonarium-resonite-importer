@@ -124,7 +124,7 @@ export class SlotBuilder {
         name: obj.name,
         position: obj.position,
         ...(obj.scale ? { scale: obj.scale } : {}),
-        ...(obj.isActive !== undefined ? { isActive: obj.isActive } : {}),
+        ...(obj.isActive != null ? { isActive: obj.isActive } : {}),
       });
 
       // Set rotation if not zero
@@ -150,7 +150,7 @@ export class SlotBuilder {
         const { creationFields, listFields } = splitListFields(component.fields);
 
         const componentId = await this.client.addComponent({
-          ...(component.id !== undefined ? { id: component.id } : {}),
+          ...(component.id != null ? { id: component.id } : {}),
           slotId,
           componentType: component.type,
           fields: creationFields,
@@ -502,9 +502,9 @@ export class SlotBuilder {
     };
   }
 
-  private findLargestTableCenter(objects: ResoniteObject[]): Vector3 | undefined {
+  private findLargestTableCenter(objects: ResoniteObject[]): Vector3 | null {
     let largestArea = -1;
-    let center: Vector3 | undefined;
+    let center: Vector3 | null = null;
 
     const visit = (obj: ResoniteObject): void => {
       const surface = obj.children.find((child) => child.id.endsWith('-surface'));

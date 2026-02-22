@@ -16,9 +16,9 @@ function formatSizeNumber(value: number): string {
   return Number.isInteger(value) ? value.toString() : value.toString();
 }
 
-function buildMeshKey(component: ResoniteComponent): string | undefined {
+function buildMeshKey(component: ResoniteComponent): string | null {
   if (!component.id) {
-    return;
+    return null;
   }
 
   const sizeField = component.fields.Size as {
@@ -26,13 +26,13 @@ function buildMeshKey(component: ResoniteComponent): string | undefined {
     value?: { x?: number; y?: number; z?: number };
   } | null;
   if (!sizeField?.value) {
-    return;
+    return null;
   }
 
   if (component.type === COMPONENT_TYPES.QUAD_MESH) {
     const { x, y } = sizeField.value;
     if (typeof x !== 'number' || typeof y !== 'number') {
-      return;
+      return null;
     }
     return `quad:${x},${y}`;
   }
@@ -40,29 +40,29 @@ function buildMeshKey(component: ResoniteComponent): string | undefined {
   if (component.type === COMPONENT_TYPES.BOX_MESH) {
     const { x, y, z } = sizeField.value;
     if (typeof x !== 'number' || typeof y !== 'number' || typeof z !== 'number') {
-      return;
+      return null;
     }
     return `box:${x},${y},${z}`;
   }
 
-  return;
+  return null;
 }
 
 function buildDefinitionFromComponent(
   key: string,
   component: ResoniteComponent
-): SharedMeshDefinition | undefined {
+): SharedMeshDefinition | null {
   const sizeField = component.fields.Size as {
     value?: { x?: number; y?: number; z?: number };
   } | null;
   if (!sizeField?.value) {
-    return;
+    return null;
   }
 
   if (component.type === COMPONENT_TYPES.QUAD_MESH) {
     const { x, y } = sizeField.value;
     if (typeof x !== 'number' || typeof y !== 'number') {
-      return;
+      return null;
     }
     const dualSided = (component.fields.DualSided as { value?: boolean } | null)?.value === true;
     return {
@@ -78,7 +78,7 @@ function buildDefinitionFromComponent(
   if (component.type === COMPONENT_TYPES.BOX_MESH) {
     const { x, y, z } = sizeField.value;
     if (typeof x !== 'number' || typeof y !== 'number' || typeof z !== 'number') {
-      return;
+      return null;
     }
     return {
       key,
@@ -89,7 +89,7 @@ function buildDefinitionFromComponent(
     };
   }
 
-  return;
+  return null;
 }
 
 function prepareObjectForSharedMeshes(

@@ -232,7 +232,7 @@ export class ResoniteLinkClient {
   /**
    * Get the underlying tsrl link instance
    */
-  getClient(): ResoniteLink | undefined {
+  getClient() {
     return this.link;
   }
 
@@ -464,7 +464,7 @@ export class ResoniteLinkClient {
     await link.slotRemove(slotId);
   }
 
-  async getSlotTag(slotId: string): Promise<string | undefined> {
+  async getSlotTag(slotId: string) {
     const slotData = await this.getSlotData(slotId);
     const tag = slotData?.tag?.value;
     if (typeof tag === 'string') {
@@ -473,7 +473,7 @@ export class ResoniteLinkClient {
     return;
   }
 
-  async getSlotTransform(slotId: string): Promise<SlotTransform | undefined> {
+  async getSlotTransform(slotId: string) {
     const slotData = await this.getSlotData(slotId);
     if (!slotData) {
       return;
