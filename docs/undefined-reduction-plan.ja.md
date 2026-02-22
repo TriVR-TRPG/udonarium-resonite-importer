@@ -101,7 +101,11 @@ TypeScript コードベースで `undefined` の明示利用を段階的に減�
 
 残タスク:
 
-- テストコード・ドキュメント・コメントの `undefined` 利用方針を別途明文化
+- 継続監視（新規差分で `metrics:undefined:count` が増えていないことを確認）
+
+関連ドキュメント:
+
+- `docs/undefined-policy.ja.md`
 
 ## 完了条件
 
