@@ -24,9 +24,9 @@ export type ImageAssetInfo = {
 
 export interface ImageAssetContext {
   byIdentifier: ReadonlyMap<string, ImageAssetInfo>;
-  getAssetInfo(identifier?: string): ImageAssetInfo | undefined;
-  resolveTextureValue(identifier?: string): string | undefined;
-  lookupAspectRatio(identifier?: string): number | undefined;
+  getAssetInfo(identifier?: string): ImageAssetInfo | null;
+  resolveTextureValue(identifier?: string): string | null;
+  lookupAspectRatio(identifier?: string): number | null;
   lookupBlendMode(identifier?: string): ImageBlendMode;
   resolveUsePointFilter(identifier?: string, resolvedTextureValue?: string): boolean;
 }
@@ -50,26 +50,23 @@ function buildLookupKeys(identifier: string): string[] {
   return keys;
 }
 
-function lookupByKeys<T>(
-  map: Map<string, T> | undefined,
-  identifier: string | undefined
-): T | undefined {
+function lookupByKeys<T>(map?: Map<string, T>, identifier?: string): T | null {
   if (!map || !identifier) {
-    return undefined;
+    return null;
   }
   for (const key of buildLookupKeys(identifier)) {
     const value = map.get(key);
-    if (value !== undefined) {
+    if (value != null) {
       return value;
     }
   }
-  return undefined;
+  return null;
 }
 
 function lookupImageFilterMode(
-  imageFilterModeMap: Map<string, ImageFilterMode> | undefined,
-  identifier: string | undefined
-): ImageFilterMode | undefined {
+  imageFilterModeMap?: Map<string, ImageFilterMode>,
+  identifier?: string
+): ImageFilterMode | null {
   return lookupByKeys(imageFilterModeMap, identifier);
 }
 
@@ -88,7 +85,7 @@ function buildIdentifierSet(options: BuildImageAssetContextOptions): Set<string>
   return identifiers;
 }
 
-function inferSourceKind(identifier: string, textureValue: string | undefined): ImageSourceKind {
+function inferSourceKind(identifier: string, textureValue?: string): ImageSourceKind {
   const normalizedIdentifier = normalizeIdentifier(identifier).toLowerCase();
   const normalizedTextureValue = textureValue?.toLowerCase();
 
@@ -129,26 +126,30 @@ export function buildImageAssetContext(
   for (const identifier of buildIdentifierSet(options)) {
     const seed = lookupByKeys(options.imageAssetInfoMap, identifier);
     const textureValue = seed?.textureValue;
+    const aspectRatio = options.imageAspectRatioMap
+      ? (lookupImageAspectRatio(options.imageAspectRatioMap, identifier) ?? seed?.aspectRatio)
+      : seed?.aspectRatio;
+    const blendMode = options.imageBlendModeMap
+      ? (lookupImageBlendMode(options.imageBlendModeMap, identifier) ?? seed?.blendMode)
+      : seed?.blendMode;
+    const filterMode =
+      lookupImageFilterMode(options.imageFilterModeMap, identifier) ?? seed?.filterMode;
+    const sourceKind = seed?.sourceKind ?? inferSourceKind(identifier, textureValue);
 
-    byIdentifier.set(identifier, {
+    const info: ImageAssetInfo = {
       identifier,
-      textureValue,
-      aspectRatio:
-        (options.imageAspectRatioMap
-          ? lookupImageAspectRatio(options.imageAspectRatioMap, identifier)
-          : undefined) ?? seed?.aspectRatio,
-      blendMode:
-        (options.imageBlendModeMap
-          ? lookupImageBlendMode(options.imageBlendModeMap, identifier)
-          : undefined) ?? seed?.blendMode,
-      filterMode: lookupImageFilterMode(options.imageFilterModeMap, identifier) ?? seed?.filterMode,
-      sourceKind: seed?.sourceKind ?? inferSourceKind(identifier, textureValue),
-    });
+      ...(textureValue != null ? { textureValue } : {}),
+      ...(aspectRatio != null ? { aspectRatio } : {}),
+      ...(blendMode != null ? { blendMode } : {}),
+      ...(filterMode != null ? { filterMode } : {}),
+      ...(sourceKind != null ? { sourceKind } : {}),
+    };
+    byIdentifier.set(identifier, info);
   }
 
-  function getAssetInfo(identifier?: string): ImageAssetInfo | undefined {
+  function getAssetInfo(identifier?: string): ImageAssetInfo | null {
     if (!identifier) {
-      return undefined;
+      return null;
     }
     for (const key of buildLookupKeys(identifier)) {
       const info = byIdentifier.get(key);
@@ -156,23 +157,23 @@ export function buildImageAssetContext(
         return info;
       }
     }
-    return undefined;
+    return null;
   }
 
   return {
     byIdentifier,
     getAssetInfo,
-    resolveTextureValue(identifier?: string): string | undefined {
+    resolveTextureValue(identifier?: string): string | null {
       const info = getAssetInfo(identifier);
-      return info?.textureValue;
+      return info?.textureValue ?? null;
     },
-    lookupAspectRatio(identifier?: string): number | undefined {
+    lookupAspectRatio(identifier?: string): number | null {
       const info = getAssetInfo(identifier);
-      if (info?.aspectRatio !== undefined) {
+      if (info?.aspectRatio != null) {
         return info.aspectRatio;
       }
       if (!options.imageAspectRatioMap) {
-        return undefined;
+        return null;
       }
       return lookupImageAspectRatio(options.imageAspectRatioMap, identifier);
     },

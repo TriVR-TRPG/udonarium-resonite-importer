@@ -49,9 +49,6 @@ export function extractZip(zipPath: string): ExtractedData {
 /**
  * Get image data by identifier from extracted files
  */
-export function getImageByIdentifier(
-  imageFiles: ExtractedFile[],
-  identifier: string
-): ExtractedFile | undefined {
+export function getImageByIdentifier(imageFiles: ExtractedFile[], identifier: string) {
   return imageFiles.find((img) => img.name === identifier || img.path.includes(identifier));
 }

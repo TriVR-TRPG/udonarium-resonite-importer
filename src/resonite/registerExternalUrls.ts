@@ -12,7 +12,7 @@ export type ExternalImageSource = {
   sourceKind: ImageSourceKind;
 };
 
-function resolveExternalImageSource(identifier: string): ExternalImageSource | undefined {
+function resolveExternalImageSource(identifier: string): ExternalImageSource | null {
   if (identifier.startsWith('./')) {
     const url = UDONARIUM_BASE_URL + identifier.slice(2);
     return { identifier, url, sourceKind: 'udonarium-asset-url' };
@@ -34,7 +34,7 @@ function resolveExternalImageSource(identifier: string): ExternalImageSource | u
     };
   }
 
-  return undefined;
+  return null;
 }
 
 function appendObjectImageIdentifiers(object: UdonariumObject, identifiers: Set<string>): void {

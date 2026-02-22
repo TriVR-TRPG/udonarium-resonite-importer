@@ -127,7 +127,7 @@ function handleAnalyzeZip(filePath: string): AnalyzeResult {
 
     return {
       success: hasObjects,
-      error: hasObjects ? undefined : NO_PARSED_OBJECTS_ERROR,
+      ...(hasObjects ? {} : { error: NO_PARSED_OBJECTS_ERROR }),
       xmlCount: extractedData.xmlFiles.length,
       imageCount: extractedData.imageFiles.length,
       objectCount: parseResult.objects.length,
@@ -219,7 +219,7 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     const defaultScale = { x: rootScale, y: rootScale, z: rootScale };
     await slotBuilder.createImportGroup(
       groupName,
-      previousImport.transform ?? undefined,
+      previousImport.transform,
       defaultScale,
       enableRootGrabbable,
       enableSimpleAvatarProtection

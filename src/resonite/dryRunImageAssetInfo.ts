@@ -1,16 +1,16 @@
 import * as path from 'path';
 import { UdonariumObject } from '../domain/UdonariumObject';
 import { ExtractedFile } from '../parser/ZipExtractor';
-import { ImageAssetInfo } from '../converter/imageAssetContext';
+import { ImageAssetInfo, ImageFilterMode, ImageSourceKind } from '../converter/imageAssetContext';
 import { isGifTexture } from '../converter/textureUtils';
 import { collectExternalImageSources } from './registerExternalUrls';
 
-function resolveZipImageSourceKind(image: ExtractedFile): ImageAssetInfo['sourceKind'] {
+function resolveZipImageSourceKind(image: ExtractedFile): ImageSourceKind {
   const extension = path.extname(image.path || image.name).toLowerCase();
   return extension === '.svg' ? 'zip-svg' : 'zip-image';
 }
 
-function resolveFilterMode(identifier: string, textureValue: string): ImageAssetInfo['filterMode'] {
+function resolveFilterMode(identifier: string, textureValue: string): ImageFilterMode {
   return isGifTexture(identifier) || isGifTexture(textureValue) ? 'Point' : 'Default';
 }
 

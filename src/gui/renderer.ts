@@ -34,7 +34,12 @@ function saveLocale(locale: Locale): void {
 }
 
 // Initialize i18n
-initI18n(loadSavedLocale() ?? undefined);
+const savedLocale = loadSavedLocale();
+if (savedLocale != null) {
+  initI18n(savedLocale);
+} else {
+  initI18n();
+}
 
 // Elements
 const filePathInput = document.getElementById('file-path') as HTMLInputElement;

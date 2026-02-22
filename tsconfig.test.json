@@ -3,7 +3,8 @@
   "compilerOptions": {
     "lib": ["ES2022", "DOM"],
     "noEmit": true,
-    "rootDir": "."
+    "rootDir": ".",
+    "exactOptionalPropertyTypes": true
   },
   "include": ["src/**/*.test.ts"],
   "exclude": ["node_modules", "dist"]

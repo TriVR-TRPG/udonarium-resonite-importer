@@ -60,8 +60,12 @@ export function parseTableMask(data: unknown, fileName: string): TableMask {
   const name = getTextValue(findDataByName(commonData, 'name')) || fileName;
   const width = getNumberValue(findDataByName(commonData, 'width')) ?? 4;
   const height = getNumberValue(findDataByName(commonData, 'height')) ?? 4;
-  const opacityNode = findDataByName(commonData, 'opacity') as Record<string, unknown> | undefined;
-  const opacity = getNumberValue(opacityNode?.['@_currentValue']) ?? getNumberValue(opacityNode);
+  const opacityNode = findDataByName(commonData, 'opacity');
+  const opacityCurrentValue =
+    opacityNode && typeof opacityNode === 'object'
+      ? (opacityNode as Record<string, unknown>)['@_currentValue']
+      : null;
+  const opacity = getNumberValue(opacityCurrentValue) ?? getNumberValue(opacityNode);
 
   // Parse position and attributes
   const position = parsePosition(root);

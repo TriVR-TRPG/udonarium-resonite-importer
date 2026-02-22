@@ -51,7 +51,7 @@ interface CLIOptions {
 
 const NO_PARSED_OBJECTS_ERROR = 'No supported objects were found in the ZIP file.';
 
-function parseLocaleFromArgv(argv: string[]): Locale | undefined {
+function parseLocaleFromArgv(argv: string[]) {
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === '--lang' || arg === '-l') {
@@ -68,7 +68,7 @@ function parseLocaleFromArgv(argv: string[]): Locale | undefined {
       }
     }
   }
-  return undefined;
+  return;
 }
 
 const localeFromArgs = parseLocaleFromArgv(process.argv.slice(2));
@@ -92,7 +92,7 @@ program
   )
   .option('-d, --dry-run', t('cli.help.dryRun'), false)
   .option('-v, --verbose', t('cli.help.verbose'), false)
-  .option('-l, --lang <locale>', t('cli.help.lang'), undefined)
+  .option('-l, --lang <locale>', t('cli.help.lang'))
   .helpOption('-h, --help', t('cli.help.help'))
   .action(run);
 
@@ -132,7 +132,7 @@ async function run(options: CLIOptions): Promise<void> {
   console.log();
 
   // Resolve port from CLI option or environment variable
-  let port: number | undefined;
+  let port: number | null = null;
   if (options.port) {
     port = parseInt(options.port, 10);
     if (isNaN(port) || port < 1 || port > 65535) {
@@ -140,7 +140,7 @@ async function run(options: CLIOptions): Promise<void> {
       process.exit(1);
     }
   } else {
-    port = getResoniteLinkPort();
+    port = getResoniteLinkPort() ?? null;
   }
 
   // Port is required unless dry-run mode

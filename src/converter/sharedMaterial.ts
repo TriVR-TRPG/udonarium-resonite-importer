@@ -10,12 +10,12 @@ export type SharedMaterialDefinition = {
   fields: Record<string, unknown>;
 };
 
-function buildMaterialKey(component: ResoniteComponent): string | undefined {
+function buildMaterialKey(component: ResoniteComponent): string | null {
   if (component.type !== COMPONENT_TYPES.XIEXE_TOON_MATERIAL) {
-    return undefined;
+    return null;
   }
   if (!component.fields || Object.keys(component.fields).length === 0) {
-    return undefined;
+    return null;
   }
 
   const colorHex = extractColorHexWithAlpha(component.fields) ?? '#FFFFFFFF';
@@ -29,43 +29,46 @@ function buildMaterialName(key: string): string {
   return `XiexeToon_${blendMode}_${culling}_${colorHex.slice(1)}`;
 }
 
-function extractBlendMode(fields: Record<string, unknown>): string | undefined {
-  const blendModeField = fields.BlendMode as { value?: unknown } | undefined;
+function extractBlendMode(fields: Record<string, unknown>): string | null {
+  const blendModeField = fields.BlendMode as { value?: unknown } | null;
   if (typeof blendModeField?.value === 'string' && blendModeField.value.length > 0) {
     return blendModeField.value;
   }
-  return undefined;
+  return null;
 }
 
-function extractCulling(fields: Record<string, unknown>): string | undefined {
-  const cullingField = fields.Culling as { value?: unknown } | undefined;
+function extractCulling(fields: Record<string, unknown>): string | null {
+  const cullingField = fields.Culling as { value?: unknown } | null;
   if (typeof cullingField?.value === 'string' && cullingField.value.length > 0) {
     return cullingField.value;
   }
-  return undefined;
+  return null;
 }
 
-function extractColorHexWithAlpha(fields: Record<string, unknown>): string | undefined {
-  const colorField = fields.Color as { value?: unknown } | undefined;
-  const colorValue = colorField?.value as
-    | { r?: unknown; g?: unknown; b?: unknown; a?: unknown }
-    | undefined;
+function extractColorHexWithAlpha(fields: Record<string, unknown>): string | null {
+  const colorField = fields.Color as { value?: unknown } | null;
+  const colorValue = colorField?.value as {
+    r?: unknown;
+    g?: unknown;
+    b?: unknown;
+    a?: unknown;
+  } | null;
   if (!colorValue) {
-    return undefined;
+    return null;
   }
 
   const channels = [colorValue.r, colorValue.g, colorValue.b, colorValue.a].map((channel) =>
     toHexChannel(channel)
   );
-  if (channels.some((channel) => channel === undefined)) {
-    return undefined;
+  if (channels.some((channel) => channel == null)) {
+    return null;
   }
   return `#${channels.join('')}`;
 }
 
-function toHexChannel(value: unknown): string | undefined {
+function toHexChannel(value: unknown): string | null {
   if (typeof value !== 'number' || Number.isNaN(value)) {
-    return undefined;
+    return null;
   }
 
   const normalized = value <= 1 ? value * 255 : value;
@@ -104,9 +107,9 @@ function prepareObjectForSharedMaterials(
     if (component.type !== COMPONENT_TYPES.MESH_RENDERER) {
       continue;
     }
-    const materialsField = component.fields.Materials as
-      | { elements?: Array<{ targetId?: string }> }
-      | undefined;
+    const materialsField = component.fields.Materials as {
+      elements?: Array<{ targetId?: string }>;
+    } | null;
     if (!materialsField?.elements) {
       continue;
     }

@@ -7,11 +7,11 @@ const CARD_Y_OFFSET = 0.001;
 const CARD_FACE_SEPARATION = 0.0001;
 const DEFAULT_CARD_ASPECT_RATIO = 1;
 
-function resolveFrontTextureIdentifier(card: Card): string | undefined {
+function resolveFrontTextureIdentifier(card: Card) {
   return card.frontImage?.identifier ?? card.backImage?.identifier ?? card.images[0]?.identifier;
 }
 
-function resolveBackTextureIdentifier(card: Card): string | undefined {
+function resolveBackTextureIdentifier(card: Card) {
   return (
     card.backImage?.identifier ??
     card.frontImage?.identifier ??
@@ -20,7 +20,7 @@ function resolveBackTextureIdentifier(card: Card): string | undefined {
   );
 }
 
-function resolveFrontAspectIdentifier(card: Card): string | undefined {
+function resolveFrontAspectIdentifier(card: Card) {
   return (
     card.frontImage?.identifier ??
     card.images[0]?.identifier ??
@@ -29,7 +29,7 @@ function resolveFrontAspectIdentifier(card: Card): string | undefined {
   );
 }
 
-function resolveBackAspectIdentifier(card: Card): string | undefined {
+function resolveBackAspectIdentifier(card: Card) {
   return (
     card.backImage?.identifier ??
     card.images[1]?.identifier ??
@@ -39,9 +39,9 @@ function resolveBackAspectIdentifier(card: Card): string | undefined {
 }
 
 function resolveAspectRatio(
-  primaryIdentifier: string | undefined,
-  secondaryIdentifier: string | undefined,
-  imageAssetContext: ImageAssetContext
+  imageAssetContext: ImageAssetContext,
+  primaryIdentifier?: string,
+  secondaryIdentifier?: string
 ): number {
   const primaryAspect = imageAssetContext.lookupAspectRatio(primaryIdentifier);
   const secondaryAspect = imageAssetContext.lookupAspectRatio(secondaryIdentifier);
@@ -63,14 +63,14 @@ export function convertCard(
 ): ResoniteObject {
   const cardWidth = udonObj.size;
   const frontAspectRatio = resolveAspectRatio(
+    imageAssetContext,
     resolveFrontAspectIdentifier(udonObj),
-    resolveBackAspectIdentifier(udonObj),
-    imageAssetContext
+    resolveBackAspectIdentifier(udonObj)
   );
   const backAspectRatio = resolveAspectRatio(
+    imageAssetContext,
     resolveBackAspectIdentifier(udonObj),
-    resolveFrontAspectIdentifier(udonObj),
-    imageAssetContext
+    resolveFrontAspectIdentifier(udonObj)
   );
   const frontHeight = cardWidth * frontAspectRatio;
   const backHeight = cardWidth * backAspectRatio;
@@ -81,7 +81,7 @@ export function convertCard(
   const backTextureIdentifier = resolveBackTextureIdentifier(udonObj);
 
   const parentBuilder = ResoniteObjectBuilder.create({
-    id: slotId,
+    ...(slotId != null ? { id: slotId } : {}),
     name: udonObj.name,
   })
     .setPosition({
@@ -105,7 +105,7 @@ export function convertCard(
     .setPosition({ x: 0, y: CARD_FACE_SEPARATION, z: frontZOffset })
     .setRotation({ x: 90, y: 0, z: 0 })
     .addQuadMesh({
-      textureIdentifier: frontTextureIdentifier,
+      ...(frontTextureIdentifier != null ? { textureIdentifier: frontTextureIdentifier } : {}),
       dualSided: false,
       size: { x: cardWidth, y: frontHeight },
       imageAssetContext,
@@ -119,7 +119,7 @@ export function convertCard(
     .setPosition({ x: 0, y: -CARD_FACE_SEPARATION, z: backZOffset })
     .setRotation({ x: -90, y: 180, z: 0 })
     .addQuadMesh({
-      textureIdentifier: backTextureIdentifier,
+      ...(backTextureIdentifier != null ? { textureIdentifier: backTextureIdentifier } : {}),
       dualSided: false,
       size: { x: cardWidth, y: backHeight },
       imageAssetContext,

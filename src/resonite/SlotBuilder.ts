@@ -124,7 +124,7 @@ export class SlotBuilder {
         name: obj.name,
         position: obj.position,
         ...(obj.scale ? { scale: obj.scale } : {}),
-        ...(obj.isActive !== undefined ? { isActive: obj.isActive } : {}),
+        ...(obj.isActive != null ? { isActive: obj.isActive } : {}),
       });
 
       // Set rotation if not zero
@@ -150,7 +150,7 @@ export class SlotBuilder {
         const { creationFields, listFields } = splitListFields(component.fields);
 
         const componentId = await this.client.addComponent({
-          id: component.id,
+          ...(component.id != null ? { id: component.id } : {}),
           slotId,
           componentType: component.type,
           fields: creationFields,
@@ -214,7 +214,7 @@ export class SlotBuilder {
         const parentId = isTable
           ? tablesSlotId
           : isInventoryObject
-            ? await this.ensureInventoryLocationSlot(object.locationName, inventorySlotId)
+            ? await this.ensureInventoryLocationSlot(inventorySlotId, object.locationName)
             : objectsSlotId;
         result = await this.buildSlot(object, parentId, options);
       } catch (error) {
@@ -284,15 +284,15 @@ export class SlotBuilder {
     }
 
     this.rootSlotId = groupId;
-    this.tablesSlotId = undefined;
-    this.objectsSlotId = undefined;
-    this.inventorySlotId = undefined;
-    this.offsetSlotId = undefined;
+    delete this.tablesSlotId;
+    delete this.objectsSlotId;
+    delete this.inventorySlotId;
+    delete this.offsetSlotId;
     this.inventoryLocationSlotIds.clear();
-    this.assetsSlotId = undefined;
-    this.texturesSlotId = undefined;
-    this.meshesSlotId = undefined;
-    this.materialsSlotId = undefined;
+    delete this.assetsSlotId;
+    delete this.texturesSlotId;
+    delete this.meshesSlotId;
+    delete this.materialsSlotId;
     return groupId;
   }
 
@@ -466,7 +466,7 @@ export class SlotBuilder {
       });
     }
     // "table" inventory location is always present and should remain visible.
-    await this.ensureInventoryLocationSlot('table', this.inventorySlotId);
+    await this.ensureInventoryLocationSlot(this.inventorySlotId, 'table');
 
     return {
       tablesSlotId: this.tablesSlotId,
@@ -502,9 +502,9 @@ export class SlotBuilder {
     };
   }
 
-  private findLargestTableCenter(objects: ResoniteObject[]): Vector3 | undefined {
+  private findLargestTableCenter(objects: ResoniteObject[]): Vector3 | null {
     let largestArea = -1;
-    let center: Vector3 | undefined;
+    let center: Vector3 | null = null;
 
     const visit = (obj: ResoniteObject): void => {
       const surface = obj.children.find((child) => child.id.endsWith('-surface'));
@@ -533,8 +533,8 @@ export class SlotBuilder {
   }
 
   private async ensureInventoryLocationSlot(
-    locationName: string | undefined,
-    inventorySlotId: string
+    inventorySlotId: string,
+    locationName?: string
   ): Promise<string> {
     const normalizedLocationName = locationName?.trim() || 'Unknown';
     const existingSlotId = this.inventoryLocationSlotIds.get(normalizedLocationName);

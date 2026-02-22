@@ -18,15 +18,15 @@ function normalizeIdentifier(identifier: string): string {
   return identifier.replace(/\\/g, '/').replace(/^\.\/+/, '');
 }
 
-function extractPathFromAbsoluteUrl(identifier: string): string | undefined {
+function extractPathFromAbsoluteUrl(identifier: string): string | null {
   if (!identifier.startsWith('http://') && !identifier.startsWith('https://')) {
-    return undefined;
+    return null;
   }
   try {
     const url = new URL(identifier);
     return normalizeIdentifier(url.pathname.replace(/^\/+/, ''));
   } catch {
-    return undefined;
+    return null;
   }
 }
 
@@ -75,7 +75,7 @@ function setRatioForIdentifier(
   }
 }
 
-function resolveKnownRatioForFile(file: ExtractedFile): number | undefined {
+function resolveKnownRatioForFile(file: ExtractedFile): number | null {
   const normalizedPath = normalizeIdentifier(file.path);
   const candidates = [file.name, file.path, normalizedPath, `./${normalizedPath}`];
   for (const candidate of candidates) {
@@ -84,10 +84,10 @@ function resolveKnownRatioForFile(file: ExtractedFile): number | undefined {
       return ratio;
     }
   }
-  return undefined;
+  return null;
 }
 
-function resolveKnownRatio(identifier: string): number | undefined {
+function resolveKnownRatio(identifier: string): number | null {
   const normalized = normalizeIdentifier(identifier);
   const knownImage = KNOWN_IMAGES.get(identifier);
   if (knownImage) {
@@ -122,10 +122,10 @@ function resolveKnownRatio(identifier: string): number | undefined {
       }
     }
   }
-  return undefined;
+  return null;
 }
 
-function resolveKnownBlendMode(identifier: string): ImageBlendMode | undefined {
+function resolveKnownBlendMode(identifier: string): ImageBlendMode | null {
   const normalized = normalizeIdentifier(identifier);
   const knownImage = KNOWN_IMAGES.get(identifier);
   if (knownImage) {
@@ -160,7 +160,7 @@ function resolveKnownBlendMode(identifier: string): ImageBlendMode | undefined {
       }
     }
   }
-  return undefined;
+  return null;
 }
 
 function seedKnownAspectRatioMap(map: Map<string, number>): void {
@@ -227,10 +227,10 @@ function collectImageIdentifiers(objects: UdonariumObject[]): string[] {
 
 export function lookupImageAspectRatio(
   imageAspectRatioMap: Map<string, number>,
-  identifier: string | undefined
-): number | undefined {
+  identifier?: string
+): number | null {
   if (!identifier) {
-    return undefined;
+    return null;
   }
 
   const normalized = normalizeIdentifier(identifier);
@@ -252,15 +252,15 @@ export function lookupImageAspectRatio(
     }
   }
 
-  return undefined;
+  return null;
 }
 
 function findImageBlendMode(
   imageBlendModeMap: Map<string, ImageBlendMode>,
-  identifier: string | undefined
-): ImageBlendMode | undefined {
+  identifier?: string
+): ImageBlendMode | null {
   if (!identifier) {
-    return undefined;
+    return null;
   }
 
   const normalized = normalizeIdentifier(identifier);
@@ -282,12 +282,12 @@ function findImageBlendMode(
     }
   }
 
-  return undefined;
+  return null;
 }
 
 export function lookupImageBlendMode(
-  imageBlendModeMap: Map<string, ImageBlendMode> | undefined,
-  identifier: string | undefined
+  imageBlendModeMap?: Map<string, ImageBlendMode>,
+  identifier?: string
 ): ImageBlendMode {
   if (!imageBlendModeMap) {
     return 'Cutout';
@@ -356,7 +356,7 @@ function setBlendModeForIdentifier(
   }
 }
 
-function resolveKnownBlendModeForFile(file: ExtractedFile): ImageBlendMode | undefined {
+function resolveKnownBlendModeForFile(file: ExtractedFile): ImageBlendMode | null {
   const normalizedPath = normalizeIdentifier(file.path);
   const candidates = [file.name, file.path, normalizedPath, `./${normalizedPath}`];
   for (const candidate of candidates) {
@@ -365,10 +365,10 @@ function resolveKnownBlendModeForFile(file: ExtractedFile): ImageBlendMode | und
       return blendMode;
     }
   }
-  return undefined;
+  return null;
 }
 
-function buildExternalProbeUrl(identifier: string): string | undefined {
+function buildExternalProbeUrl(identifier: string): string | null {
   if (identifier.startsWith('http://') || identifier.startsWith('https://')) {
     return identifier;
   }
@@ -376,24 +376,24 @@ function buildExternalProbeUrl(identifier: string): string | undefined {
   if (normalized.startsWith('assets/')) {
     return `https://udonarium.app/${normalized}`;
   }
-  return undefined;
+  return null;
 }
 
 async function probeBlendModeFromExternalUrl(
   url: string,
   options?: BlendModeMapOptions
-): Promise<ImageBlendMode | undefined> {
+): Promise<ImageBlendMode | null> {
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      return undefined;
+      return null;
     }
     const bytes = await response.arrayBuffer();
     const metadata = await sharp(Buffer.from(bytes)).metadata();
     const hasAlpha = metadata.hasAlpha ?? (metadata.channels ?? 0) >= 4;
     return hasAlpha ? (options?.semiTransparentMode ?? 'Alpha') : 'Opaque';
   } catch {
-    return undefined;
+    return null;
   }
 }
 
@@ -433,11 +433,11 @@ export async function buildImageBlendModeMap(
   const externalProbeTasks: Array<Promise<void>> = [];
   for (const identifier of collectImageIdentifiers(objects)) {
     const knownBlendMode = resolveKnownBlendMode(identifier);
-    if (knownBlendMode && findImageBlendMode(map, identifier) === undefined) {
+    if (knownBlendMode && findImageBlendMode(map, identifier) == null) {
       setBlendModeForIdentifier(map, identifier, knownBlendMode);
       continue;
     }
-    if (findImageBlendMode(map, identifier) !== undefined) {
+    if (findImageBlendMode(map, identifier) != null) {
       continue;
     }
     const probeUrl = buildExternalProbeUrl(identifier);

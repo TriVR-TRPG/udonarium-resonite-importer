@@ -13,8 +13,8 @@ type DataNode = {
 /**
  * Find data element by name attribute
  */
-export function findDataByName(data: unknown, name: string): DataNode | undefined {
-  if (!data) return undefined;
+export function findDataByName(data: unknown, name: string): DataNode | null {
+  if (!data) return null;
 
   // Handle array of data elements
   if (Array.isArray(data)) {
@@ -31,7 +31,7 @@ export function findDataByName(data: unknown, name: string): DataNode | undefine
         }
       }
     }
-    return undefined;
+    return null;
   }
 
   // Handle single data element
@@ -46,17 +46,17 @@ export function findDataByName(data: unknown, name: string): DataNode | undefine
     }
   }
 
-  return undefined;
+  return null;
 }
 
 /**
  * Get text value from data node
  */
-export function getTextValue(node: DataNode | undefined): string | undefined {
-  if (!node) return undefined;
+export function getTextValue(node?: DataNode | null): string | null {
+  if (!node) return null;
 
   // Direct text content
-  if (node['#text'] !== undefined) {
+  if (node['#text'] != null) {
     return String(node['#text']);
   }
 
@@ -64,23 +64,23 @@ export function getTextValue(node: DataNode | undefined): string | undefined {
   if (node.data) {
     if (Array.isArray(node.data)) {
       for (const item of node.data) {
-        if (item['#text'] !== undefined) {
+        if (item['#text'] != null) {
           return String(item['#text']);
         }
       }
-    } else if (node.data['#text'] !== undefined) {
+    } else if (node.data['#text'] != null) {
       return String(node.data['#text']);
     }
   }
 
-  return undefined;
+  return null;
 }
 
 /**
  * Get number value from data node or raw value
  */
-export function getNumberValue(nodeOrValue: unknown): number | undefined {
-  if (nodeOrValue === undefined || nodeOrValue === null) return undefined;
+export function getNumberValue(nodeOrValue: unknown): number | null {
+  if (nodeOrValue == null) return null;
 
   // Direct number
   if (typeof nodeOrValue === 'number') {
@@ -90,19 +90,21 @@ export function getNumberValue(nodeOrValue: unknown): number | undefined {
   // String number
   if (typeof nodeOrValue === 'string') {
     const num = parseFloat(nodeOrValue);
-    return isNaN(num) ? undefined : num;
+    if (isNaN(num)) return null;
+    return num;
   }
 
   // Data node
   if (typeof nodeOrValue === 'object' && nodeOrValue !== null) {
     const text = getTextValue(nodeOrValue as DataNode);
-    if (text !== undefined) {
+    if (text != null) {
       const num = parseFloat(text);
-      return isNaN(num) ? undefined : num;
+      if (isNaN(num)) return null;
+      return num;
     }
   }
 
-  return undefined;
+  return null;
 }
 
 /**
@@ -123,8 +125,8 @@ export function parsePosition(root: Record<string, unknown>): {
 /**
  * Get boolean value from data node or raw value
  */
-export function getBooleanValue(nodeOrValue: unknown): boolean | undefined {
-  if (nodeOrValue === undefined || nodeOrValue === null) return undefined;
+export function getBooleanValue(nodeOrValue: unknown): boolean | null {
+  if (nodeOrValue == null) return null;
 
   // Direct boolean
   if (typeof nodeOrValue === 'boolean') {
@@ -139,10 +141,10 @@ export function getBooleanValue(nodeOrValue: unknown): boolean | undefined {
   // Data node
   if (typeof nodeOrValue === 'object' && nodeOrValue !== null) {
     const text = getTextValue(nodeOrValue as DataNode);
-    if (text !== undefined) {
+    if (text != null) {
       return text.toLowerCase() === 'true';
     }
   }
 
-  return undefined;
+  return null;
 }

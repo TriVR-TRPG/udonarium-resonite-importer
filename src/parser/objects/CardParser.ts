@@ -72,9 +72,9 @@ export function parseCardStack(data: unknown, fileName: string): CardStack {
   const cards: Card[] = [];
   let cardElements = root.card;
   if (!cardElements) {
-    const nodeElement = root.node as Record<string, unknown> | undefined;
-    if (nodeElement) {
-      cardElements = nodeElement.card;
+    const nodeElement = root.node;
+    if (nodeElement && typeof nodeElement === 'object') {
+      cardElements = (nodeElement as Record<string, unknown>).card;
     }
   }
   if (Array.isArray(cardElements)) {

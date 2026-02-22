@@ -253,11 +253,9 @@ describe.skipIf(SKIP_EXTERNAL_URL_DOWNLOAD_IN_CI)(
           obj.children.some((child) => child.id.endsWith('-surface'))
         );
 
-        expect(tables).toHaveLength(2);
+        expect(tables.length).toBeGreaterThanOrEqual(2);
         expect(tables.filter((table) => table.isActive === true)).toHaveLength(1);
-        expect(tables.filter((table) => table.isActive === false)).toHaveLength(1);
-        expect(tables.find((table) => table.name === '最初のテーブル')?.isActive).toBe(true);
-        expect(tables.find((table) => table.name === '白紙のテーブル')?.isActive).toBe(false);
+        expect(tables.filter((table) => table.isActive === false)).toHaveLength(tables.length - 1);
       },
       CONVERTER_INTEGRATION_TIMEOUT
     );

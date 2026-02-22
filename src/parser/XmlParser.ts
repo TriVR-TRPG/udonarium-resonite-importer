@@ -55,7 +55,7 @@ type ParsedXml = Record<string, unknown>;
  * - card-stack: child cards are already handled by parseCardStack
  */
 function findObjectsRecursively(data: unknown, fileName: string, result: ParseResult): void {
-  if (data === null || data === undefined) return;
+  if (data == null) return;
 
   if (typeof data !== 'object') return;
 
@@ -64,7 +64,7 @@ function findObjectsRecursively(data: unknown, fileName: string, result: ParseRe
 
   // Check if current object has any supported tags
   for (const tag of SUPPORTED_TAGS) {
-    if (!(tag in obj) || obj[tag] === undefined) continue;
+    if (!(tag in obj) || obj[tag] == null) continue;
 
     const tagData = obj[tag];
     const items = Array.isArray(tagData) ? tagData : [tagData];

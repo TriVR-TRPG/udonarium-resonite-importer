@@ -26,7 +26,7 @@ export function convertDiceSymbol(
   const activeFaceName = udonObj.face;
 
   const parentBuilder = ResoniteObjectBuilder.create({
-    id: slotId,
+    ...(slotId != null ? { id: slotId } : {}),
     name: udonObj.name,
   })
     .setRotation({ x: 0, y: udonObj.rotate, z: 0 })

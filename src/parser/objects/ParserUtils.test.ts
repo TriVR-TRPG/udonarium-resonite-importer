@@ -9,9 +9,9 @@ import {
 
 describe('ParserUtils', () => {
   describe('findDataByName', () => {
-    it('should return undefined for null/undefined data', () => {
-      expect(findDataByName(null, 'test')).toBeUndefined();
-      expect(findDataByName(undefined, 'test')).toBeUndefined();
+    it('should return null for null/undefined data', () => {
+      expect(findDataByName(null, 'test')).toBeNull();
+      expect(findDataByName(undefined, 'test')).toBeNull();
     });
 
     it('should find node by @_name attribute in single object', () => {
@@ -20,10 +20,10 @@ describe('ParserUtils', () => {
       expect(result).toEqual(data);
     });
 
-    it('should return undefined when name not found in single object', () => {
+    it('should return null when name not found in single object', () => {
       const data = { '@_name': 'other', '#text': 'value' };
       const result = findDataByName(data, 'target');
-      expect(result).toBeUndefined();
+      expect(result).toBeNull();
     });
 
     it('should find node by @_name attribute in array', () => {
@@ -37,13 +37,13 @@ describe('ParserUtils', () => {
       expect(result).toEqual(target);
     });
 
-    it('should return undefined when name not found in array', () => {
+    it('should return null when name not found in array', () => {
       const data = [
         { '@_name': 'first', '#text': 'value1' },
         { '@_name': 'second', '#text': 'value2' },
       ];
       const result = findDataByName(data, 'target');
-      expect(result).toBeUndefined();
+      expect(result).toBeNull();
     });
 
     it('should search nested data in single object', () => {
@@ -83,7 +83,7 @@ describe('ParserUtils', () => {
 
     it('should handle empty array', () => {
       const result = findDataByName([], 'target');
-      expect(result).toBeUndefined();
+      expect(result).toBeNull();
     });
 
     it('should handle non-object items in array', () => {
@@ -94,8 +94,8 @@ describe('ParserUtils', () => {
   });
 
   describe('getTextValue', () => {
-    it('should return undefined for undefined node', () => {
-      expect(getTextValue(undefined)).toBeUndefined();
+    it('should return null for undefined node', () => {
+      expect(getTextValue(undefined)).toBeNull();
     });
 
     it('should return text from #text property', () => {
@@ -129,9 +129,9 @@ describe('ParserUtils', () => {
       expect(getTextValue(node)).toBe('first');
     });
 
-    it('should return undefined when no #text found', () => {
+    it('should return null when no #text found', () => {
       const node = { '@_name': 'notext' };
-      expect(getTextValue(node)).toBeUndefined();
+      expect(getTextValue(node)).toBeNull();
     });
 
     it('should handle empty string #text', () => {
@@ -146,9 +146,9 @@ describe('ParserUtils', () => {
   });
 
   describe('getNumberValue', () => {
-    it('should return undefined for null/undefined', () => {
-      expect(getNumberValue(null)).toBeUndefined();
-      expect(getNumberValue(undefined)).toBeUndefined();
+    it('should return null for null/undefined', () => {
+      expect(getNumberValue(null)).toBeNull();
+      expect(getNumberValue(undefined)).toBeNull();
     });
 
     it('should return number directly', () => {
@@ -165,9 +165,9 @@ describe('ParserUtils', () => {
       expect(getNumberValue('0')).toBe(0);
     });
 
-    it('should return undefined for non-numeric string', () => {
-      expect(getNumberValue('hello')).toBeUndefined();
-      expect(getNumberValue('')).toBeUndefined();
+    it('should return null for non-numeric string', () => {
+      expect(getNumberValue('hello')).toBeNull();
+      expect(getNumberValue('')).toBeNull();
     });
 
     it('should parse string with whitespace', () => {
@@ -184,13 +184,13 @@ describe('ParserUtils', () => {
       expect(getNumberValue(node)).toBe(50);
     });
 
-    it('should return undefined for DataNode without text', () => {
+    it('should return null for DataNode without text', () => {
       const node = { '@_name': 'novalue' };
-      expect(getNumberValue(node)).toBeUndefined();
+      expect(getNumberValue(node)).toBeNull();
     });
 
     it('should handle NaN result', () => {
-      expect(getNumberValue('NaN')).toBeUndefined();
+      expect(getNumberValue('NaN')).toBeNull();
     });
 
     it('should handle Infinity', () => {
@@ -200,9 +200,9 @@ describe('ParserUtils', () => {
   });
 
   describe('getBooleanValue', () => {
-    it('should return undefined for null/undefined', () => {
-      expect(getBooleanValue(null)).toBeUndefined();
-      expect(getBooleanValue(undefined)).toBeUndefined();
+    it('should return null for null/undefined', () => {
+      expect(getBooleanValue(null)).toBeNull();
+      expect(getBooleanValue(undefined)).toBeNull();
     });
 
     it('should return boolean directly', () => {
@@ -239,9 +239,9 @@ describe('ParserUtils', () => {
       expect(getBooleanValue(node)).toBe(true);
     });
 
-    it('should return undefined for DataNode without text', () => {
+    it('should return null for DataNode without text', () => {
       const node = { '@_name': 'novalue' };
-      expect(getBooleanValue(node)).toBeUndefined();
+      expect(getBooleanValue(node)).toBeNull();
     });
   });
 
