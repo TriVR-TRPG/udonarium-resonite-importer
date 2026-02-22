@@ -29,6 +29,8 @@
     "check:validate:types:gui": "tsc -p tsconfig.gui.json --noEmit",
     "check:validate:types:test": "tsc -p tsconfig.test.json --noEmit",
     "check:validate:types:scripts": "tsc -p tsconfig.scripts.json --noEmit",
+    "metrics:undefined:raw": "rg -n \"\\bundefined\\b\" src scripts --glob \"*.ts\" --glob \"!**/*.test.ts\"",
+    "metrics:undefined:count": "rg -n \"\\bundefined\\b\" src scripts --glob \"*.ts\" --glob \"!**/*.test.ts\" | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{const t=s.trim();console.log(t===''?0:t.split(/\\r?\\n/).length);});\"",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

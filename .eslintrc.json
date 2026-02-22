@@ -27,7 +27,15 @@
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-floating-promises": "error",
-    "@typescript-eslint/await-thenable": "error"
+    "@typescript-eslint/await-thenable": "error",
+    "no-undef-init": "warn",
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "ReturnStatement > Identifier[name='undefined']",
+        "message": "Prefer implicit return (no value) instead of `return undefined`."
+      }
+    ]
   },
   "ignorePatterns": ["dist/", "node_modules/", "*.js"]
 }
