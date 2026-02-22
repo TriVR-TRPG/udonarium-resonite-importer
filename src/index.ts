@@ -30,7 +30,6 @@ import { AssetImporter } from './resonite/AssetImporter';
 import { registerExternalUrls } from './resonite/registerExternalUrls';
 import { buildDryRunImageAssetInfoMap } from './resonite/dryRunImageAssetInfo';
 import {
-  SCALE_FACTOR,
   IMPORT_ROOT_TAG,
   getResoniteLinkPort,
   getResoniteLinkHost,
@@ -44,7 +43,6 @@ interface CLIOptions {
   input: string;
   port?: string;
   host?: string;
-  scale: number;
   dryRun: boolean;
   verbose: boolean;
   lang?: string;
@@ -87,7 +85,6 @@ program
   .requiredOption('-i, --input <path>', t('cli.help.input'))
   .option('-p, --port <number>', t('cli.help.port'))
   .option('-H, --host <string>', t('cli.help.host'))
-  .option('-s, --scale <number>', t('cli.help.scale'), String(SCALE_FACTOR))
   .option(
     '--enable-character-collider-on-locked-terrain',
     t('cli.help.enableCharacterColliderOnLockedTerrain'),

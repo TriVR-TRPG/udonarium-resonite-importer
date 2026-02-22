@@ -65,7 +65,6 @@
 | `--input`   | `-i`   | 入力ZIPファイルパス    | (必須)     |
 | `--port`    | `-p`   | ResoniteLinkポート（`RESONITELINK_PORT`でも指定可） | (必須、`--dry-run`時は不要) |
 | `--host`    | `-H`   | ResoniteLinkホスト（`RESONITELINK_HOST`でも指定可） | `localhost` |
-| `--scale`   | `-s`   | スケール係数           | `0.02`     |
 | `--enable-character-collider-on-locked-terrain` | - | ロックされた地形とテーブルの当たり判定にCharacterColliderを有効化 | `false` |
 | `--dry-run` | `-d`   | 解析のみ（接続しない） | false      |
 | `--verbose` | `-v`   | 詳細ログ出力           | false      |

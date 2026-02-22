@@ -26,7 +26,6 @@
       "input": "Input ZIP file path",
       "port": "ResoniteLink port (required, or set RESONITELINK_PORT env var)",
       "host": "ResoniteLink host (default: localhost, or set RESONITELINK_HOST env var)",
-      "scale": "Scale factor",
       "enableCharacterColliderOnLockedTerrain": "Enable CharacterCollider on locked Terrain and table visual collider",
       "dryRun": "Analyze only, do not connect to Resonite",
       "verbose": "Verbose output",

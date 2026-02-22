@@ -139,7 +139,6 @@ const enTranslations: Translations = {
       input: 'Input ZIP file path',
       port: 'ResoniteLink port (required, or set RESONITELINK_PORT env var)',
       host: 'ResoniteLink host (default: localhost, or set RESONITELINK_HOST env var)',
-      scale: 'Scale factor',
       enableCharacterColliderOnLockedTerrain:
         'Enable CharacterCollider on locked Terrain and table visual collider',
       dryRun: 'Analyze only, do not connect to Resonite',
@@ -227,7 +226,6 @@ const jaTranslations: Translations = {
       input: '入力ZIPファイルのパス',
       port: 'ResoniteLinkのポート（必須。RESONITELINK_PORT環境変数でも指定可）',
       host: 'ResoniteLinkのホスト（既定: localhost。RESONITELINK_HOST環境変数でも指定可）',
-      scale: 'スケール係数',
       enableCharacterColliderOnLockedTerrain:
         'ロックされたTerrainとテーブルの当たり判定にCharacterColliderを有効化',
       dryRun: '解析のみ実行し、Resoniteには接続しない',
