@@ -1,4 +1,4 @@
-﻿import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { buildImageAssetContext } from './imageAssetContext';
 
 describe('imageAssetContext', () => {
@@ -165,7 +165,7 @@ describe('imageAssetContext', () => {
     });
 
     expect(context.resolveTextureValue('known_icon')).toBe('texture-ref://shared-known-icon');
-    expect(context.resolveTextureValue('legacy_only.png')).toBeUndefined();
-    expect(context.getAssetInfo('legacy_only.png')).toBeUndefined();
+    expect(context.resolveTextureValue('legacy_only.png')).toBeNull();
+    expect(context.getAssetInfo('legacy_only.png')).toBeNull();
   });
 });
