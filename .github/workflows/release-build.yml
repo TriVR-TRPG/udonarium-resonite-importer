@@ -52,7 +52,7 @@ jobs:
       - name: Package GUI
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
-        run: npm run ${{ matrix.gui_script }}
+        run: npm run ${{ matrix.gui_script }} -- --publish never
 
       - name: Collect artifacts
         shell: pwsh
@@ -102,12 +102,13 @@ jobs:
       - name: Create release and upload assets
         uses: softprops/action-gh-release@v2
         with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          make_latest: false
           files: |
             release-artifacts/*.zip
             release-artifacts/*.exe
             release-artifacts/*-macos
             release-artifacts/*-linux
-            release-artifacts/*.dmg
             release-artifacts/*.AppImage
             release-artifacts/latest*.yml
-          fail_on_unmatched_files: true
+          fail_on_unmatched_files: false
