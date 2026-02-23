@@ -50,7 +50,7 @@ interface CLIOptions {
   rootScale: string;
   rootGrabbable: boolean;
   simpleAvatarProtection: boolean;
-  semiTransparentImageBlendMode: string;
+  transparentBlendMode: string;
   enableCharacterCollider: boolean;
 }
 
@@ -94,7 +94,7 @@ program
   .option('--root-grabbable', 'Add Grabbable to import root', false)
   .option('--no-simple-avatar-protection', 'Disable SimpleAvatarProtection components')
   .option(
-    '--semi-transparent-image-blend-mode <mode>',
+    '--transparent-blend-mode <mode>',
     'Blend mode for semi-transparent images (Cutout or Alpha)',
     'Cutout'
   )
@@ -176,7 +176,7 @@ async function run(options: CLIOptions): Promise<void> {
     console.error(chalk.red('Invalid root scale. Must be a positive number.'));
     process.exit(1);
   }
-  const semiTransparentImageBlendModeArg = options.semiTransparentImageBlendMode.trim();
+  const semiTransparentImageBlendModeArg = options.transparentBlendMode.trim();
   let semiTransparentMode: ImageBlendMode;
   if (semiTransparentImageBlendModeArg.toLowerCase() === 'alpha') {
     semiTransparentMode = 'Alpha';

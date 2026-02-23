@@ -70,7 +70,7 @@ Use the executable inside the extracted CLI ZIP package.
 | `--root-scale` | - | Import root scale | `1` |
 | `--root-grabbable` | - | Add Grabbable to import root | `false` |
 | `--simple-avatar-protection` / `--no-simple-avatar-protection` | - | Toggle SimpleAvatarProtection on imported root/object/texture slots | `true` |
-| `--semi-transparent-image-blend-mode` | - | Blend mode for semi-transparent images (`Cutout` or `Alpha`) | `Cutout` |
+| `--transparent-blend-mode` | - | Blend mode for semi-transparent images (`Cutout` or `Alpha`) | `Cutout` |
 | `--enable-character-collider` | - | Enable CharacterCollider on locked Terrain and table visual collider | `false` |
 | `--dry-run` | `-d`  | Analysis only (no connection) | false       |
 | `--verbose` | `-v`  | Verbose output                | false       |
