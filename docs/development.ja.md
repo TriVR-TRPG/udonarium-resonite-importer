@@ -126,9 +126,9 @@ npm run package:cli          # 現在のプラットフォームのみ
 
 出力先:
 
-- Windows: `dist/udonarium-resonite-importer-win/` と `dist/udonarium-resonite-importer-win.zip`
-- macOS: `dist/udonarium-resonite-importer-mac-bundle/` と `dist/udonarium-resonite-importer-mac-bundle.zip`
-- Linux: `dist/udonarium-resonite-importer-linux-bundle/` と `dist/udonarium-resonite-importer-linux-bundle.zip`
+- Windows: `dist/udonarium-resonite-importer-cli-win-bundle/` と `dist/udonarium-resonite-importer-cli-win-bundle.zip`
+- macOS: `dist/udonarium-resonite-importer-cli-macos-bundle/` と `dist/udonarium-resonite-importer-cli-macos-bundle.zip`
+- Linux: `dist/udonarium-resonite-importer-cli-linux-bundle/` と `dist/udonarium-resonite-importer-cli-linux-bundle.zip`
 
 `npm run package:cli` は、実行環境に応じて `package:cli:win` / `package:cli:mac` / `package:cli:linux` のいずれか1つだけを実行します。
 
@@ -144,6 +144,7 @@ npm run package:gui          # 現在のプラットフォームのみ
 出力先:
 
 - `release/`（electron-builder により現在プラットフォーム向け成果物を出力）
+- GUI zip の命名例: `release/udonarium-resonite-importer-gui-<version>-<os>-<arch>.zip`
 
 ## バージョンアップとリリース
 

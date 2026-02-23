@@ -1,6 +1,6 @@
 {
   "name": "udonarium-resonite-importer",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "Import Udonarium save data into Resonite via ResoniteLink",
   "main": "dist/gui/main.js",
   "bin": {
@@ -43,9 +43,9 @@
     "collect:resonitelink": "ts-node scripts/collect-resonitelink-data.ts",
     "package": "run-s package:cli package:gui",
     "package:cli": "node scripts/package-cli-current.cjs",
-    "package:cli:win": "node -e \"require('fs').rmSync('dist/udonarium-resonite-importer.exe',{recursive:true,force:true})\" && npx @yao-pkg/pkg dist/index.js --targets node20-win-x64 --output dist/udonarium-resonite-importer.exe && node scripts/package-cli-runtime.cjs --exe dist/udonarium-resonite-importer.exe --bundle dist/udonarium-resonite-importer-win --target win",
-    "package:cli:mac": "node -e \"require('fs').rmSync('dist/udonarium-resonite-importer-macos',{recursive:true,force:true})\" && npx @yao-pkg/pkg dist/index.js --targets node20-macos-x64 --output dist/udonarium-resonite-importer-macos && node scripts/package-cli-runtime.cjs --exe dist/udonarium-resonite-importer-macos --bundle dist/udonarium-resonite-importer-mac-bundle --target mac",
-    "package:cli:linux": "node -e \"require('fs').rmSync('dist/udonarium-resonite-importer-linux',{recursive:true,force:true})\" && npx @yao-pkg/pkg dist/index.js --targets node20-linux-x64 --output dist/udonarium-resonite-importer-linux && node scripts/package-cli-runtime.cjs --exe dist/udonarium-resonite-importer-linux --bundle dist/udonarium-resonite-importer-linux-bundle --target linux",
+    "package:cli:win": "node -e \"require('fs').rmSync('dist/udonarium-resonite-importer.exe',{recursive:true,force:true})\" && npx @yao-pkg/pkg dist/index.js --targets node20-win-x64 --output dist/udonarium-resonite-importer.exe && node scripts/package-cli-runtime.cjs --exe dist/udonarium-resonite-importer.exe --bundle dist/udonarium-resonite-importer-cli-win-bundle --target win",
+    "package:cli:mac": "node -e \"require('fs').rmSync('dist/udonarium-resonite-importer-macos',{recursive:true,force:true})\" && npx @yao-pkg/pkg dist/index.js --targets node20-macos-x64 --output dist/udonarium-resonite-importer-macos && node scripts/package-cli-runtime.cjs --exe dist/udonarium-resonite-importer-macos --bundle dist/udonarium-resonite-importer-cli-macos-bundle --target mac",
+    "package:cli:linux": "node -e \"require('fs').rmSync('dist/udonarium-resonite-importer-linux',{recursive:true,force:true})\" && npx @yao-pkg/pkg dist/index.js --targets node20-linux-x64 --output dist/udonarium-resonite-importer-linux && node scripts/package-cli-runtime.cjs --exe dist/udonarium-resonite-importer-linux --bundle dist/udonarium-resonite-importer-cli-linux-bundle --target linux",
     "package:gui": "node scripts/package-gui.cjs",
     "package:gui:win": "electron-builder --win --config.win.signAndEditExecutable=false",
     "package:gui:mac": "electron-builder --mac",
@@ -119,6 +119,7 @@
   "build": {
     "appId": "com.udonarium-resonite-importer",
     "productName": "Udonarium Resonite Importer",
+    "artifactName": "udonarium-resonite-importer-gui-${version}-${os}-${arch}.${ext}",
     "directories": {
       "output": "release"
     },
