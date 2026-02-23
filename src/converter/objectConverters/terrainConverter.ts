@@ -222,7 +222,12 @@ function buildTriangleWallSlot(
     { x: peakX, y: halfY, z: 0 },
   ];
   if (colliderOptions?.enabled) {
-    builder.addTriangleCollider(vertices, {
+    const colliderVertices: [
+      { x: number; y: number; z: number },
+      { x: number; y: number; z: number },
+      { x: number; y: number; z: number },
+    ] = scale?.x && scale.x < 0 ? [vertices[0], vertices[2], vertices[1]] : vertices;
+    builder.addTriangleCollider(colliderVertices, {
       characterCollider: colliderOptions.characterCollider,
     });
   }
