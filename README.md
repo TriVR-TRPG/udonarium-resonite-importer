@@ -33,6 +33,21 @@ Download the latest package from [GitHub Releases](https://github.com/TriVR-TRPG
 - GUI (Windows/macOS): download and extract the GUI ZIP package
 - CLI (Windows/macOS/Linux): download and extract the CLI ZIP package for your platform
 
+## Release Package Naming and Selection
+
+- CLI package filename rule: `udonarium-resonite-importer-cli-<platform>-bundle.zip`
+- `<platform>` is one of: `win`, `macos`, `linux`
+- GUI package filename rule: `udonarium-resonite-importer-gui-<version>-<os>-<arch>.<ext>`
+- GUI package extension is usually `.zip` (Windows/macOS), and can be `.AppImage` on Linux
+
+### Which package should I download?
+
+- If you want the desktop app UI: download the GUI package for your OS
+- If you want command-line operation or automation: download the CLI package for your OS
+- Windows users: choose `...-cli-win-bundle.zip` (CLI) or `...-gui-...-win-...zip` (GUI)
+- macOS users: choose `...-cli-macos-bundle.zip` (CLI) or `...-gui-...-mac-...zip` (GUI)
+- Linux users: choose `...-cli-linux-bundle.zip` (CLI), and use GUI only if a Linux GUI asset (such as `.AppImage`) is published
+
 ## Usage
 
 ### GUI Version (Recommended)
@@ -87,4 +102,3 @@ MIT
 - [Udonarium](https://github.com/TK11235/udonarium) - Web-based virtual tabletop
 - [ResoniteLink](https://github.com/Yellow-Dog-Man/ResoniteLink) - Resonite integration tool
 - [tsrl](https://www.npmjs.com/package/@eth0fox/tsrl) - TypeScript library used for ResoniteLink connectivity
-

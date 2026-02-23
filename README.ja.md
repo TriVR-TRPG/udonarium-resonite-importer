@@ -31,6 +31,21 @@
 - GUI版（Windows/macOS）: GUI ZIP をダウンロードして展開
 - CLI版（Windows/macOS/Linux）: 各OS向け CLI ZIP をダウンロードして展開
 
+## リリースパッケージ名のルールと選び方
+
+- CLI版のZIP名ルール: `udonarium-resonite-importer-cli-<platform>-bundle.zip`
+- `<platform>` は `win` / `macos` / `linux`
+- GUI版の成果物名ルール: `udonarium-resonite-importer-gui-<version>-<os>-<arch>.<ext>`
+- GUI版の拡張子は通常 `.zip`（Windows/macOS）、Linuxでは `.AppImage` になる場合があります
+
+### どれをダウンロードすればよいか
+
+- デスクトップアプリとして使いたい場合: 自分のOS向けGUI版を選択
+- ターミナル運用や自動化で使いたい場合: 自分のOS向けCLI版を選択
+- Windows: `...-cli-win-bundle.zip`（CLI）または `...-gui-...-win-...zip`（GUI）
+- macOS: `...-cli-macos-bundle.zip`（CLI）または `...-gui-...-mac-...zip`（GUI）
+- Linux: `...-cli-linux-bundle.zip`（CLI）。GUIは Linux 向け成果物（例: `.AppImage`）が公開されている場合に利用
+
 ## 使用方法
 
 ### GUI版（推奨）
