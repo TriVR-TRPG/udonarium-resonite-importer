@@ -67,7 +67,11 @@ Use the executable inside the extracted CLI ZIP package.
 | `--input`   | `-i`  | Input ZIP file path           | (required)  |
 | `--port`    | `-p`  | ResoniteLink port (or `RESONITELINK_PORT`) | (required, not needed in `--dry-run`) |
 | `--host`    | `-H`  | ResoniteLink host (or `RESONITELINK_HOST`) | `localhost` |
-| `--enable-character-collider-on-locked-terrain` | - | Enable CharacterCollider on locked Terrain and table visual collider | `false` |
+| `--root-scale` | - | Import root scale | `1` |
+| `--root-grabbable` | - | Add Grabbable to import root | `false` |
+| `--simple-avatar-protection` / `--no-simple-avatar-protection` | - | Toggle SimpleAvatarProtection on imported root/object/texture slots | `true` |
+| `--transparent-blend-mode` | - | Blend mode for semi-transparent images (`Cutout` or `Alpha`) | `Cutout` |
+| `--enable-character-collider` | - | Enable CharacterCollider on locked Terrain and table visual collider | `false` |
 | `--dry-run` | `-d`  | Analysis only (no connection) | false       |
 | `--verbose` | `-v`  | Verbose output                | false       |
 | `--lang`    | `-l`  | Language (en, ja)             | Auto-detect |

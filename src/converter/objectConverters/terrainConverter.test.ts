@@ -589,6 +589,13 @@ describe('convertTerrain', () => {
       fields?: { Vertex2?: { members?: { Position?: { value?: { x?: number } } } } };
     };
     expect(leftBackTriangle.fields?.Vertex2?.members?.Position?.value?.x).toBe(1);
+    const leftBackCollider = left.children
+      .find((child) => child.id.endsWith('-back'))
+      ?.components.find((component) => component.type === COMPONENT_TYPES.TRIANGLE_COLLIDER) as {
+      fields?: { B?: { value?: { y?: number } }; C?: { value?: { y?: number } } };
+    };
+    expect(leftBackCollider.fields?.B?.value?.y).toBe(1);
+    expect(leftBackCollider.fields?.C?.value?.y).toBe(-1);
 
     const right = convertTerrain(
       baseTerrain,
@@ -623,6 +630,13 @@ describe('convertTerrain', () => {
       fields?: { Vertex2?: { members?: { Position?: { value?: { x?: number } } } } };
     };
     expect(rightBackTriangle.fields?.Vertex2?.members?.Position?.value?.x).toBe(-1);
+    const rightBackCollider = right.children
+      .find((child) => child.id.endsWith('-back'))
+      ?.components.find((component) => component.type === COMPONENT_TYPES.TRIANGLE_COLLIDER) as {
+      fields?: { B?: { value?: { y?: number } }; C?: { value?: { y?: number } } };
+    };
+    expect(rightBackCollider.fields?.B?.value?.y).toBe(1);
+    expect(rightBackCollider.fields?.C?.value?.y).toBe(-1);
     expect(bottom.children.find((child) => child.id.endsWith('-left'))?.scale).toEqual({
       x: -1,
       y: 1,
@@ -634,5 +648,12 @@ describe('convertTerrain', () => {
       fields?: { Vertex2?: { members?: { Position?: { value?: { x?: number } } } } };
     };
     expect(bottomLeftTriangle.fields?.Vertex2?.members?.Position?.value?.x).toBe(1);
+    const bottomLeftCollider = bottom.children
+      .find((child) => child.id.endsWith('-left'))
+      ?.components.find((component) => component.type === COMPONENT_TYPES.TRIANGLE_COLLIDER) as {
+      fields?: { B?: { value?: { y?: number } }; C?: { value?: { y?: number } } };
+    };
+    expect(bottomLeftCollider.fields?.B?.value?.y).toBe(1);
+    expect(bottomLeftCollider.fields?.C?.value?.y).toBe(-1);
   });
 });
