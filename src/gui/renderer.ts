@@ -4,6 +4,7 @@
 
 import { ImportOptions, ImportResult, ProgressInfo, ElectronAPI } from './types';
 import { Locale, t, initI18n, getLocale, setLocale } from './i18n';
+import { APP_VERSION } from '../version';
 
 declare global {
   interface Window {
@@ -71,6 +72,7 @@ const advancedSection = document.getElementById('advanced-section') as HTMLEleme
 const advancedOpenBtn = document.getElementById('advanced-open-btn') as HTMLButtonElement;
 const advancedCloseBtn = document.getElementById('advanced-close-btn') as HTMLButtonElement;
 const localeSelect = document.getElementById('locale-select') as HTMLSelectElement;
+const appVersionText = document.getElementById('app-version') as HTMLParagraphElement;
 
 const LAST_PORT_STORAGE_KEY = 'udonarium_resonite_importer_last_port';
 const DEFAULT_PORT = 7869;
@@ -179,6 +181,7 @@ function applyTranslations(): void {
 
   const subtitleEl = document.querySelector('.subtitle');
   if (subtitleEl) subtitleEl.textContent = t('gui.subtitle');
+  if (appVersionText) appVersionText.textContent = `${t('app.title')} v${APP_VERSION}`;
 
   filePathInput.placeholder = t('gui.selectFilePlaceholder');
   selectFileBtn.textContent = t('gui.browse');
