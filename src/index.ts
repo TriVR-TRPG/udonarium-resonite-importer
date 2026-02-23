@@ -51,7 +51,7 @@ interface CLIOptions {
   rootGrabbable: boolean;
   simpleAvatarProtection: boolean;
   semiTransparentImageBlendMode: string;
-  enableCharacterColliderOnLockedTerrain: boolean;
+  enableCharacterCollider: boolean;
 }
 
 const NO_PARSED_OBJECTS_ERROR = 'No supported objects were found in the ZIP file.';
@@ -99,7 +99,7 @@ program
     'Cutout'
   )
   .option(
-    '--enable-character-collider-on-locked-terrain',
+    '--enable-character-collider',
     t('cli.help.enableCharacterColliderOnLockedTerrain'),
     false
   )
@@ -279,7 +279,7 @@ async function run(options: CLIOptions): Promise<void> {
       parseResult.objects,
       imageAssetContext,
       {
-        enableCharacterColliderOnLockedTerrain: options.enableCharacterColliderOnLockedTerrain,
+        enableCharacterColliderOnLockedTerrain: options.enableCharacterCollider,
       },
       parseResult.extensions
     );
@@ -397,7 +397,7 @@ async function run(options: CLIOptions): Promise<void> {
       parseResult.objects,
       imageAssetContext,
       {
-        enableCharacterColliderOnLockedTerrain: options.enableCharacterColliderOnLockedTerrain,
+        enableCharacterColliderOnLockedTerrain: options.enableCharacterCollider,
       },
       parseResult.extensions
     );
