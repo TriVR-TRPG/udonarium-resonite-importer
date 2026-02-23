@@ -62,11 +62,7 @@ jobs:
 
           $patterns = @(
             "dist/*.zip",
-            "dist/*.exe",
-            "dist/*-macos",
-            "dist/*-linux",
             "release/*.zip",
-            "release/*.exe",
             "release/*.dmg",
             "release/*.AppImage",
             "release/latest*.yml"
@@ -106,9 +102,6 @@ jobs:
           make_latest: false
           files: |
             release-artifacts/*.zip
-            release-artifacts/*.exe
-            release-artifacts/*-macos
-            release-artifacts/*-linux
             release-artifacts/*.AppImage
             release-artifacts/latest*.yml
           fail_on_unmatched_files: false
