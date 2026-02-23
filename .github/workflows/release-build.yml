@@ -52,7 +52,7 @@ jobs:
       - name: Package GUI
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
-        run: npm run ${{ matrix.gui_script }}
+        run: npm run ${{ matrix.gui_script }} -- --publish never
 
       - name: Collect artifacts
         shell: pwsh
