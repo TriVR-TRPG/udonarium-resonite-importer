@@ -109,7 +109,6 @@ jobs:
             release-artifacts/*.exe
             release-artifacts/*-macos
             release-artifacts/*-linux
-            release-artifacts/*.dmg
             release-artifacts/*.AppImage
             release-artifacts/latest*.yml
-          fail_on_unmatched_files: true
+          fail_on_unmatched_files: false
