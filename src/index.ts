@@ -31,8 +31,10 @@ import { registerExternalUrls } from './resonite/registerExternalUrls';
 import { buildDryRunImageAssetInfoMap } from './resonite/dryRunImageAssetInfo';
 import {
   IMPORT_ROOT_TAG,
+  IMPORT_GROUP_SCALE,
   getResoniteLinkPort,
   getResoniteLinkHost,
+  ImageBlendMode,
   VERIFIED_RESONITE_LINK_VERSION,
 } from './config/MappingConfig';
 import { t, setLocale, Locale } from './i18n';
@@ -45,6 +47,10 @@ interface CLIOptions {
   dryRun: boolean;
   verbose: boolean;
   lang?: string;
+  rootScale: string;
+  rootGrabbable: boolean;
+  simpleAvatarProtection: boolean;
+  semiTransparentImageBlendMode: string;
   enableCharacterColliderOnLockedTerrain: boolean;
 }
 
@@ -84,6 +90,14 @@ program
   .requiredOption('-i, --input <path>', t('cli.help.input'))
   .option('-p, --port <number>', t('cli.help.port'))
   .option('-H, --host <string>', t('cli.help.host'))
+  .option('--root-scale <number>', 'Import root scale (default: 1)', String(IMPORT_GROUP_SCALE))
+  .option('--root-grabbable', 'Add Grabbable to import root', false)
+  .option('--no-simple-avatar-protection', 'Disable SimpleAvatarProtection components')
+  .option(
+    '--semi-transparent-image-blend-mode <mode>',
+    'Blend mode for semi-transparent images (Cutout or Alpha)',
+    'Cutout'
+  )
   .option(
     '--enable-character-collider-on-locked-terrain',
     t('cli.help.enableCharacterColliderOnLockedTerrain'),
@@ -157,6 +171,21 @@ async function run(options: CLIOptions): Promise<void> {
 
   // Resolve host from CLI option or environment variable
   const host = options.host || getResoniteLinkHost();
+  const rootScale = Number.parseFloat(options.rootScale);
+  if (!Number.isFinite(rootScale) || rootScale <= 0) {
+    console.error(chalk.red('Invalid root scale. Must be a positive number.'));
+    process.exit(1);
+  }
+  const semiTransparentImageBlendModeArg = options.semiTransparentImageBlendMode.trim();
+  let semiTransparentMode: ImageBlendMode;
+  if (semiTransparentImageBlendModeArg.toLowerCase() === 'alpha') {
+    semiTransparentMode = 'Alpha';
+  } else if (semiTransparentImageBlendModeArg.toLowerCase() === 'cutout') {
+    semiTransparentMode = 'Cutout';
+  } else {
+    console.error(chalk.red('Invalid semi-transparent image blend mode. Use "Cutout" or "Alpha".'));
+    process.exit(1);
+  }
 
   // Validate input file
   const inputPath = path.resolve(options.input);
@@ -209,7 +238,7 @@ async function run(options: CLIOptions): Promise<void> {
   const imageBlendModeMap = await buildImageBlendModeMap(
     extractedData.imageFiles,
     parseResult.objects,
-    { semiTransparentMode: 'Cutout' }
+    { semiTransparentMode }
   );
 
   if (options.verbose) {
@@ -309,7 +338,14 @@ async function run(options: CLIOptions): Promise<void> {
 
     // Create import group
     const groupName = `Udonarium Import - ${path.basename(inputPath, '.zip')}`;
-    const groupId = await slotBuilder.createImportGroup(groupName, previousImport.transform);
+    const defaultScale = { x: rootScale, y: rootScale, z: rootScale };
+    const groupId = await slotBuilder.createImportGroup(
+      groupName,
+      previousImport.transform,
+      defaultScale,
+      options.rootGrabbable,
+      options.simpleAvatarProtection
+    );
 
     // Import images and move texture slots into the import group
     const rootChildIdsBefore = await client.getSlotChildIds('Root');
@@ -347,7 +383,8 @@ async function run(options: CLIOptions): Promise<void> {
       importedImageAssetInfoMap,
       (identifier, componentId) => {
         assetImporter.applyTextureReference(identifier, componentId);
-      }
+      },
+      options.simpleAvatarProtection
     );
 
     // Build objects after texture asset creation so materials reference shared StaticTexture2D components.
@@ -373,10 +410,14 @@ async function run(options: CLIOptions): Promise<void> {
 
     // Build slots
     let builtSlots = 0;
-    const slotResults = await slotBuilder.buildSlots(resoniteObjects, (current, total) => {
-      builtSlots = current;
-      importSpinner.text = `[4/4] ${t('cli.importingObjects', { current, total })}`;
-    });
+    const slotResults = await slotBuilder.buildSlots(
+      resoniteObjects,
+      (current, total) => {
+        builtSlots = current;
+        importSpinner.text = `[4/4] ${t('cli.importingObjects', { current, total })}`;
+      },
+      { enableSimpleAvatarProtection: options.simpleAvatarProtection }
+    );
 
     const failedSlots = slotResults.filter((r) => !r.success);
     if (failedSlots.length > 0 && options.verbose) {
