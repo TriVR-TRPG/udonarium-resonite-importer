@@ -145,6 +145,68 @@ npm run package:gui          # 現在のプラットフォームのみ
 
 - `release/`（electron-builder により現在プラットフォーム向け成果物を出力）
 
+## バージョンアップとリリース
+
+このプロジェクトでは、アプリのバージョンは `package.json` を唯一の正とします。
+`src/version.ts` は `npm run version:sync` で自動生成されます。
+
+そのため、`src/version.ts` / `src/index.ts` / GUIフッターのバージョン文字列を手で編集する必要はありません。
+
+### 1. バージョンを上げる
+
+`npm version` で `package.json` を更新し、同時に Git タグを作成します。
+
+```bash
+# patch / minor / major
+npm version patch
+```
+
+これでローカルに `vX.Y.Z` タグが作成されます。
+
+### 2. 公開前の確認
+
+```bash
+npm run check:validate
+npm run test
+```
+
+任意のローカル確認:
+
+```bash
+npm run dev -- --version
+npm run build
+```
+
+### 3. コミットとタグを push
+
+```bash
+git push
+git push --tags
+```
+
+`v*` タグの push により `.github/workflows/release-build.yml` が起動し、次を実行します。
+
+- クロスプラットフォームビルド（`windows-latest`, `macos-latest`, `ubuntu-latest`）
+- 各プラットフォームの CLI + GUI パッケージング
+- GitHub Release へのアセット添付（タグ実行時）
+
+### 4. リリース成果物の確認
+
+Actions 完了後に以下を確認します。
+
+- `Release Build` ワークフローが成功していること
+- GitHub Release に想定成果物があること:
+  - CLI バンドル（`dist/*.zip`、各OSバイナリ）
+  - GUI 成果物（`release/` 由来の `.zip`、`.AppImage` など）
+
+### リリース公開せずに動作確認する方法
+
+公開前にパッケージングだけ確認したい場合:
+
+1. Actions -> `Release Build` を開く
+2. `Run workflow`（`workflow_dispatch`）を実行
+3. 生成された artifacts（`bundles-windows`, `bundles-macos`, `bundles-linux`）を確認
+
 ## プロジェクト構成
 
 ```

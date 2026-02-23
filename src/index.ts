@@ -36,8 +36,7 @@ import {
   VERIFIED_RESONITE_LINK_VERSION,
 } from './config/MappingConfig';
 import { t, setLocale, Locale } from './i18n';
-
-const VERSION = '1.0.0';
+import { APP_VERSION } from './version';
 
 interface CLIOptions {
   input: string;
@@ -81,7 +80,7 @@ const program = new Command();
 program
   .name('udonarium-resonite-importer')
   .description(t('cli.description'))
-  .version(VERSION, '-V, --version', t('cli.help.version'))
+  .version(APP_VERSION, '-V, --version', t('cli.help.version'))
   .requiredOption('-i, --input <path>', t('cli.help.input'))
   .option('-p, --port <number>', t('cli.help.port'))
   .option('-H, --host <string>', t('cli.help.host'))
@@ -127,7 +126,7 @@ async function run(options: CLIOptions): Promise<void> {
     setLocale(options.lang as Locale);
   }
 
-  console.log(chalk.bold.cyan(`\n${t('app.title')} ${t('app.version', { version: VERSION })}`));
+  console.log(chalk.bold.cyan(`\n${t('app.title')} ${t('app.version', { version: APP_VERSION })}`));
   console.log(chalk.cyan('='.repeat(40)));
   console.log();
 
