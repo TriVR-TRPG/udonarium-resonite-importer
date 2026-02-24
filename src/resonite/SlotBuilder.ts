@@ -261,7 +261,6 @@ export class SlotBuilder {
       position,
       rotation,
       scale,
-      tag: IMPORT_ROOT_TAG,
     });
     await this.client.addComponent({
       id: `${groupId}-object-root`,
@@ -294,6 +293,13 @@ export class SlotBuilder {
     delete this.meshesSlotId;
     delete this.materialsSlotId;
     return groupId;
+  }
+
+  async tagImportGroupRoot(slotId: string): Promise<void> {
+    await this.client.updateSlot({
+      id: slotId,
+      tag: IMPORT_ROOT_TAG,
+    });
   }
 
   async createTextureAssetsWithUpdater(

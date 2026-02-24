@@ -217,7 +217,7 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     // rootScale from the UI is only used as the default for fresh imports.
     const groupName = `Udonarium Import - ${path.basename(filePath, '.zip')}`;
     const defaultScale = { x: rootScale, y: rootScale, z: rootScale };
-    await slotBuilder.createImportGroup(
+    const groupId = await slotBuilder.createImportGroup(
       groupName,
       previousImport.transform,
       defaultScale,
@@ -283,6 +283,8 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
       },
       { enableSimpleAvatarProtection }
     );
+
+    await slotBuilder.tagImportGroupRoot(groupId);
 
     client.disconnect();
     sendProgress('import', 100, '完了');

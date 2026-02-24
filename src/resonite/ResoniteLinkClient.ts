@@ -305,6 +305,7 @@ export class ResoniteLinkClient {
     position?: Vector3;
     rotation?: Vector3;
     scale?: Vector3;
+    tag?: string;
   }): Promise<void> {
     const link = this.getConnectedLink();
 
@@ -317,6 +318,9 @@ export class ResoniteLinkClient {
     }
     if (options.scale) {
       data.scale = createField(options.scale);
+    }
+    if (typeof options.tag === 'string') {
+      data.tag = createField(options.tag);
     }
 
     if (Object.keys(data).length === 0) {

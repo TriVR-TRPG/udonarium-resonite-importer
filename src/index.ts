@@ -426,6 +426,8 @@ async function run(options: CLIOptions): Promise<void> {
       }
     }
 
+    await slotBuilder.tagImportGroupRoot(groupId);
+
     const successImages = importedImages - failedImages.length;
     const successObjects = builtSlots - failedSlots.length;
     importSpinner.succeed(

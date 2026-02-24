@@ -141,6 +141,24 @@ describe('ResoniteLinkClient', () => {
     expect(payload.rotation?.value.w).toBeCloseTo(0, 5);
   });
 
+  it('updateSlot updates tag field when provided', async () => {
+    await client.connect();
+    mockLink.slotUpdate.mockResolvedValue({ success: true });
+
+    await client.updateSlot({
+      id: 'slot-tag',
+      tag: 'import-root',
+    });
+
+    expect(mockLink.slotUpdate).toHaveBeenCalledTimes(1);
+    const [slotId, payload] = mockLink.slotUpdate.mock.calls[0] as [
+      string,
+      { tag?: { value: string } },
+    ];
+    expect(slotId).toBe('slot-tag');
+    expect(payload.tag).toEqual(expect.objectContaining({ value: 'import-root' }));
+  });
+
   it('passes ws.WebSocket constructor to tsrl connect', async () => {
     await client.connect();
     expect(connectMock).toHaveBeenCalledTimes(1);

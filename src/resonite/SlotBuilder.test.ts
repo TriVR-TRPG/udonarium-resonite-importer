@@ -985,6 +985,17 @@ describe('SlotBuilder', () => {
     });
   });
 
+  describe('tagImportGroupRoot', () => {
+    it('should apply import root tag to specified slot', async () => {
+      await slotBuilder.tagImportGroupRoot('group-slot-id');
+
+      expect(mockClient.updateSlot).toHaveBeenCalledWith({
+        id: 'group-slot-id',
+        tag: IMPORT_ROOT_TAG,
+      });
+    });
+  });
+
   describe('createImportGroup', () => {
     it('should create a group slot with UUID-based ID', async () => {
       await slotBuilder.createImportGroup('My Import');
@@ -996,7 +1007,6 @@ describe('SlotBuilder', () => {
           position: { x: 0, y: IMPORT_GROUP_Y_OFFSET, z: 0 },
           rotation: { x: 0, y: 1, z: 0, w: 0 },
           scale: { x: IMPORT_GROUP_SCALE, y: IMPORT_GROUP_SCALE, z: IMPORT_GROUP_SCALE },
-          tag: IMPORT_ROOT_TAG,
         })
       );
 
@@ -1014,6 +1024,7 @@ describe('SlotBuilder', () => {
         componentType: COMPONENT_TYPES.SIMPLE_AVATAR_PROTECTION,
         fields: {},
       });
+      expect(mockClient.updateSlot).not.toHaveBeenCalled();
     });
 
     it('should return the group slot ID', async () => {
