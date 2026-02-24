@@ -24,27 +24,17 @@
 
 - Resonite + ResoniteLinkが有効化された状態
 
-## インストール
+## インストール（パッケージの選び方）
 
 最新パッケージは [GitHub Releases](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/latest) からダウンロードしてください。
 
-- GUI版（Windows/macOS）: GUI ZIP をダウンロードして展開
-- CLI版（Windows/macOS/Linux）: 各OS向け CLI ZIP をダウンロードして展開
-
-## リリースパッケージ名のルールと選び方
-
-- CLI版のZIP名ルール: `udonarium-resonite-importer-cli-<platform>-bundle.zip`
-- `<platform>` は `win` / `macos` / `linux`
-- GUI版の成果物名ルール: `udonarium-resonite-importer-gui-<version>-<os>-<arch>.<ext>`
-- GUI版の拡張子は通常 `.zip`（Windows/macOS）、Linuxでは `.AppImage` になる場合があります
-
-### どれをダウンロードすればよいか
-
-- デスクトップアプリとして使いたい場合: 自分のOS向けGUI版を選択
-- ターミナル運用や自動化で使いたい場合: 自分のOS向けCLI版を選択
-- Windows: `...-cli-win-bundle.zip`（CLI）または `...-gui-...-win-...zip`（GUI）
-- macOS: `...-cli-macos-bundle.zip`（CLI）または `...-gui-...-mac-...zip`（GUI）
-- Linux: `...-cli-linux-bundle.zip`（CLI）。GUIは Linux 向け成果物（例: `.AppImage`）が公開されている場合に利用
+- デスクトップアプリとして使いたい場合は **GUI版**、ターミナル運用や自動化で使いたい場合は **CLI版** を選択
+- CLI版のファイル名: `udonarium-resonite-importer-cli-<platform>-bundle.zip`（`<platform>` = `win` / `macos` / `linux`）
+- GUI版のファイル名: `udonarium-resonite-importer-gui-<version>-<os>-<arch>.<ext>`（Windows/macOSは通常 `.zip`、Linuxは `.AppImage` の場合あり）
+- OS別の目安
+  - Windows: `...-cli-win-bundle.zip` または `...-gui-...-win-...zip`
+  - macOS: `...-cli-macos-bundle.zip` または `...-gui-...-mac-...zip`
+  - Linux: `...-cli-linux-bundle.zip`（GUIは Linux 向け成果物が公開されている場合のみ）
 
 ## 使用方法
 
@@ -52,7 +42,7 @@
 
 1. Releases から GUI パッケージをダウンロードして展開
 2. `Udonarium Resonite Importer` を起動（Windows は `.exe`、macOS は `.app`）
-3. 「参照...」ボタンでUdonariumのZIPファイルを選択
+3. 「選択」ボタンでUdonariumのZIPファイルを選択
 4. ResoniteでResoniteLinkを有効化して、ポートを設定
 5. 「Resoniteにインポート」ボタンをクリック
 

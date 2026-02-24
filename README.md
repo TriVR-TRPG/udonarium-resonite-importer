@@ -26,27 +26,17 @@ A tool to import [Udonarium](https://github.com/TK11235/udonarium) save data int
 
 - Resonite with ResoniteLink enabled
 
-## Installation
+## Installation (Package Selection)
 
 Download the latest package from [GitHub Releases](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/latest).
 
-- GUI (Windows/macOS): download and extract the GUI ZIP package
-- CLI (Windows/macOS/Linux): download and extract the CLI ZIP package for your platform
-
-## Release Package Naming and Selection
-
-- CLI package filename rule: `udonarium-resonite-importer-cli-<platform>-bundle.zip`
-- `<platform>` is one of: `win`, `macos`, `linux`
-- GUI package filename rule: `udonarium-resonite-importer-gui-<version>-<os>-<arch>.<ext>`
-- GUI package extension is usually `.zip` (Windows/macOS), and can be `.AppImage` on Linux
-
-### Which package should I download?
-
-- If you want the desktop app UI: download the GUI package for your OS
-- If you want command-line operation or automation: download the CLI package for your OS
-- Windows users: choose `...-cli-win-bundle.zip` (CLI) or `...-gui-...-win-...zip` (GUI)
-- macOS users: choose `...-cli-macos-bundle.zip` (CLI) or `...-gui-...-mac-...zip` (GUI)
-- Linux users: choose `...-cli-linux-bundle.zip` (CLI), and use GUI only if a Linux GUI asset (such as `.AppImage`) is published
+- Choose **GUI** for desktop app usage, or **CLI** for command-line/automation usage
+- CLI filename pattern: `udonarium-resonite-importer-cli-<platform>-bundle.zip` (`<platform>` = `win` / `macos` / `linux`)
+- GUI filename pattern: `udonarium-resonite-importer-gui-<version>-<os>-<arch>.<ext>` (usually `.zip` on Windows/macOS, sometimes `.AppImage` on Linux)
+- OS quick guide
+  - Windows: `...-cli-win-bundle.zip` or `...-gui-...-win-...zip`
+  - macOS: `...-cli-macos-bundle.zip` or `...-gui-...-mac-...zip`
+  - Linux: `...-cli-linux-bundle.zip` (GUI only when a Linux GUI asset is published)
 
 ## Usage
 
