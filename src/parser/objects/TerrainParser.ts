@@ -34,9 +34,9 @@ export function parseTerrain(data: unknown, fileName: string): Terrain {
   // Parse common data
   const commonData = findDataByName(terrainData, 'common');
   const name = getTextValue(findDataByName(commonData, 'name')) || fileName;
-  const width = getNumberValue(findDataByName(commonData, 'width')) ?? 1;
-  const height = getNumberValue(findDataByName(commonData, 'height')) ?? 1;
-  const depth = getNumberValue(findDataByName(commonData, 'depth')) ?? 1;
+  const width = getNumberValue(findDataByName(commonData, 'width')) ?? 0;
+  const height = getNumberValue(findDataByName(commonData, 'height')) ?? 0;
+  const depth = getNumberValue(findDataByName(commonData, 'depth')) ?? 0;
 
   // Parse position
   const position = parsePosition(root);

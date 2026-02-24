@@ -73,7 +73,6 @@ describe('ResoniteLinkClient', () => {
       parentId: 'Root',
       name: 'Test',
       position: { x: 0, y: 0, z: 0 },
-      tag: 'tagged',
     });
 
     expect(id).toBe('slot-id');
@@ -83,7 +82,7 @@ describe('ResoniteLinkClient', () => {
     const data = payload.data as Record<string, unknown>;
     expect(data.id).toBe('slot-id');
     expect(data.parent).toEqual(expect.objectContaining({ targetId: 'Root' }));
-    expect(data.tag).toEqual(expect.objectContaining({ value: 'tagged' }));
+    expect(data).not.toHaveProperty('tag');
   });
 
   it('throws when not connected', async () => {
@@ -139,6 +138,24 @@ describe('ResoniteLinkClient', () => {
     expect(payload.rotation?.value.y).toBeCloseTo(0, 5);
     expect(payload.rotation?.value.z).toBeCloseTo(0.965926, 5);
     expect(payload.rotation?.value.w).toBeCloseTo(0, 5);
+  });
+
+  it('updateSlot updates tag field when provided', async () => {
+    await client.connect();
+    mockLink.slotUpdate.mockResolvedValue({ success: true });
+
+    await client.updateSlot({
+      id: 'slot-tag',
+      tag: 'import-root',
+    });
+
+    expect(mockLink.slotUpdate).toHaveBeenCalledTimes(1);
+    const [slotId, payload] = mockLink.slotUpdate.mock.calls[0] as [
+      string,
+      { tag?: { value: string } },
+    ];
+    expect(slotId).toBe('slot-tag');
+    expect(payload.tag).toEqual(expect.objectContaining({ value: 'import-root' }));
   });
 
   it('passes ws.WebSocket constructor to tsrl connect', async () => {

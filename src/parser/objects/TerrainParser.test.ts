@@ -57,7 +57,7 @@ describe('TerrainParser', () => {
       expect(result.name).toBe('fallback-terrain.xml');
     });
 
-    it('should default dimensions to 1', () => {
+    it('should default dimensions to 0', () => {
       const data = {
         data: [
           {
@@ -74,9 +74,9 @@ describe('TerrainParser', () => {
 
       const result = parseTerrain(data, 'test.xml');
 
-      expect(result.width).toBe(1);
-      expect(result.height).toBe(1);
-      expect(result.depth).toBe(1);
+      expect(result.width).toBe(0);
+      expect(result.height).toBe(0);
+      expect(result.depth).toBe(0);
     });
 
     it('should preserve depth=0 when explicitly provided', () => {
@@ -348,9 +348,9 @@ describe('TerrainParser', () => {
 
       expect(result.id).toBe('empty.xml');
       expect(result.name).toBe('empty.xml');
-      expect(result.width).toBe(1);
-      expect(result.height).toBe(1);
-      expect(result.depth).toBe(1);
+      expect(result.width).toBe(0);
+      expect(result.height).toBe(0);
+      expect(result.depth).toBe(0);
       expect(result.isLocked).toBe(false);
       expect(result.mode).toBe(0);
       expect(result.rotate).toBe(0);
