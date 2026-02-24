@@ -177,7 +177,7 @@ function applyTranslations(): void {
 
   // Update static text elements
   const titleEl = document.querySelector('h1');
-  if (titleEl) titleEl.textContent = t('gui.title');
+  if (titleEl) titleEl.textContent = t('app.title');
 
   const subtitleEl = document.querySelector('.subtitle');
   if (subtitleEl) subtitleEl.textContent = t('gui.subtitle');

@@ -41,11 +41,10 @@
     }
   },
   "gui": {
-    "title": "Udonarium Resonite Importer",
     "subtitle": "UdonariumのセーブデータをResoniteにインポート",
     "selectFile": "ZIPファイルを選択",
     "selectFilePlaceholder": "ファイルを選択してください...",
-    "browse": "参照...",
+    "browse": "選択",
     "analysisResult": "解析結果",
     "xmlFiles": "XMLファイル",
     "imageFiles": "画像ファイル",

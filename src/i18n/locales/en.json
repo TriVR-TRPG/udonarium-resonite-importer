@@ -41,7 +41,6 @@
     }
   },
   "gui": {
-    "title": "Udonarium Resonite Importer",
     "subtitle": "Import Udonarium save data into Resonite",
     "selectFile": "Select ZIP File",
     "selectFilePlaceholder": "Select a file...",
