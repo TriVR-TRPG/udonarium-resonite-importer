@@ -73,7 +73,6 @@ describe('ResoniteLinkClient', () => {
       parentId: 'Root',
       name: 'Test',
       position: { x: 0, y: 0, z: 0 },
-      tag: 'tagged',
     });
 
     expect(id).toBe('slot-id');
@@ -83,7 +82,7 @@ describe('ResoniteLinkClient', () => {
     const data = payload.data as Record<string, unknown>;
     expect(data.id).toBe('slot-id');
     expect(data.parent).toEqual(expect.objectContaining({ targetId: 'Root' }));
-    expect(data.tag).toEqual(expect.objectContaining({ value: 'tagged' }));
+    expect(data).not.toHaveProperty('tag');
   });
 
   it('throws when not connected', async () => {

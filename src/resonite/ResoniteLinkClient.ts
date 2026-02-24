@@ -63,7 +63,6 @@ interface RawAddSlotMessage {
     rotation: RawFieldValue<Quaternion>;
     isActive: RawFieldValue<boolean>;
     isPersistent: RawFieldValue<boolean>;
-    tag: RawFieldValue<string>;
     orderOffset: RawFieldValue<number>;
   };
 }
@@ -130,7 +129,6 @@ function toTsrlClientMessage(message: RawClientMessage): ClientMessage {
           rotation: message.data.rotation,
           isActive: message.data.isActive,
           isPersistent: message.data.isPersistent,
-          tag: message.data.tag,
           orderOffset: message.data.orderOffset,
         },
       };
@@ -273,7 +271,6 @@ export class ResoniteLinkClient {
     rotation?: Quaternion;
     scale?: Vector3;
     isActive?: boolean;
-    tag?: string;
   }): Promise<string> {
     const scale = options.scale ?? { x: 1, y: 1, z: 1 };
     const rotation = options.rotation ?? { x: 0, y: 0, z: 0, w: 1 };
@@ -288,7 +285,6 @@ export class ResoniteLinkClient {
         rotation: createField(rotation),
         isActive: createField(options.isActive ?? true),
         isPersistent: createField(true),
-        tag: createField(options.tag ?? ''),
         orderOffset: createField(0),
       },
     };
