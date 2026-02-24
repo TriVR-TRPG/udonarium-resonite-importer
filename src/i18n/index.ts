@@ -111,3 +111,6 @@ export function initI18n(locale?: Locale): void {
   const targetLocale = locale ?? detectLocale();
   loadLocale(targetLocale);
 }
+
+// Auto-initialize translations on module load
+initI18n();
