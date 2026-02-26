@@ -4,9 +4,9 @@ Resonite ユーザーが、ユドナリウムで配布されているセーブ�
 
 ## 紹介動画
 
-[![紹介動画（YouTube）](https://img.youtube.com/vi/MHxobH-TkKc/maxresdefault.jpg)](https://youtu.be/MHxobH-TkKc)
+[![紹介動画（YouTube）](https://img.youtube.com/vi/3CHq_KOcIwQ/maxresdefault.jpg)](https://youtu.be/3CHq_KOcIwQ)
 
-動画リンク: https://youtu.be/MHxobH-TkKc
+動画リンク: https://youtu.be/3CHq_KOcIwQ
 
 ## このツールで何ができる？
 
