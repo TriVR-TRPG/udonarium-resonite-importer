@@ -92,3 +92,12 @@ MIT
 - [Udonarium](https://github.com/TK11235/udonarium) - Web-based virtual tabletop
 - [ResoniteLink](https://github.com/Yellow-Dog-Man/ResoniteLink) - Resonite integration tool
 - [tsrl](https://www.npmjs.com/package/@eth0fox/tsrl) - TypeScript library used for ResoniteLink connectivity
+
+## MMC26 Entry
+
+This tool was submitted to Metaverse Maker Competition 2026.
+Version at the time of entry: [v1.0.0-beta.4](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/tag/v1.0.0-beta.4)
+
+- Event: [Metaverse Maker Competition 2026](https://youtu.be/MHxobH-TkKc)
+- Category: other tau
+- World: [[MMC26] Udonarium Resonite Importer - Resonite](https://go.resonite.com/world/G-1Nc5BgekFJQ/R-b0e1dc28-fec9-48cb-8fee-58459f3f637a)
