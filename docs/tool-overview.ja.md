@@ -94,6 +94,7 @@ Steam: https://store.steampowered.com/app/2519830
 使用ツール:
 
 - Vibe Coding & 翻訳: Claude Code, GitHub Copilot, ChatGPT/Codex
+- tsrl: ResoniteLink の TypeScript 実装ライブラリ https://www.npmjs.com/package/@eth0fox/tsrl
 - 動画編集: Davinci Resolve
 
 動画内で使用しているアセット:
@@ -101,3 +102,7 @@ Steam: https://store.steampowered.com/app/2519830
 - BGM: [魔王魂](https://maou.audio/bgm_cyber13/) - CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
 - ユドナ用ルームデータ（テーブル数47） | ouma https://ouma.booth.pm/items/5499018
 - 【D&D5版】ダンジョン＆ドラゴンズ第5版シナリオ「囚われの花嫁」 | しらたき置き場 https://nabenosoko.booth.pm/items/3694104
+
+
+
+
