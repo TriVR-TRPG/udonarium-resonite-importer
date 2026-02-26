@@ -1,6 +1,6 @@
 ﻿# Udonarium Resonite Importer
 
-Resonite ユーザーが、ユドナリウムで配布されているセーブデータを取り込んで遊ぶためのツールです。
+Resonite ユーザーが、ユドナリウムで配布されているセーブデータを取り込んで遊べるようにするツールです。
 
 ## 紹介動画
 
@@ -25,18 +25,18 @@ Resonite ユーザーが、ユドナリウムで配布されているセーブ�
 
 ### 1. アプリを入手
 
-[Booth](https://trivr.booth.pm/items/8034445) または [GitHub Releases](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/latest) から ZIP をダウンロードし、展開した `Udonarium Resonite Importer` を起動します。
+[Booth](https://trivr.booth.pm/items/8034445) または [GitHub Releases](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/latest) から ZIP をダウンロードし、展開した `Udonarium Resonite Importer` を起動してください。
 
 ### 2. Resonite 側を準備
 
-Resonite を起動し（未インストールの場合は Steam から導入）、新規ワールドを作成します。
+Resonite を起動し（未インストールの場合は Steam から導入）、新規ワールドを作成してください。
 ダッシュメニューのセッションタブで「ResoniteLinkを有効化」を実行し、「ResoniteLink がポート [数字] で動作中」と表示されたら準備完了です。
 
 Steam: https://store.steampowered.com/app/2519830
 
 ### 3. インポート実行
 
-アプリでユドナリウムのセーブ ZIP を選択し、手順 2 のポート番号を入力して「Resoniteにインポート」を押します。
+アプリでユドナリウムのセーブ ZIP を選択し、手順 2 のポート番号を入力して「Resoniteにインポート」を押してください。
 
 ![GUI版の使用イメージ](images/gui.ja.png)
 
@@ -54,26 +54,26 @@ Steam: https://store.steampowered.com/app/2519830
 
 ### 高度なオプション
 
-通常はデフォルトのまま利用できます。必要な場合のみ変更してください。
+通常はデフォルトのまま使えます。必要な場合のみ変更してください。
 
 - ルートにGrabbableを付ける（初期値: オフ）
   - 盤面全体を掴めるようにします。
 - ルートスケール（初期値: 1 (m)）
-  - ルートスケールを変更します。
+  - ルートスケールを変更できます。
   - 既存の `udonarium-resonite-importer:root` タグ付きスロットがある場合、そのスケールが優先されます。
-  - 初期状態では 1 マス = 1 m になるよう変換します。
+  - 初期状態では 1 マス = 1 m になるよう変換されます。
 - テーブルと固定された地形にコライダーを付ける（初期値: オフ）
-  - CharacterCollider を付与し、乗れるようにしつつ壁のすり抜けを防ぎます。
+  - CharacterCollider を付与し、乗れるようにしつつ壁のすり抜けを防げます。
   - 固定されていない地形には付与しません。
 - 半透明画像の描画方法（初期値: Cutout）
-  - 半透明画像の BlendMode を一括設定します（個別設定不可）。
+  - 半透明画像の BlendMode を一括で設定できます（個別設定はできません）。
   - `Cutout`: 透明度しきい値未満を描画しません（切り抜き向け）。
   - `Alpha`: 透明度に応じて描画します（重なり時に奥側の表示が欠ける場合あり）。
 - SimpleAvatarProtectionを付ける（初期値: オン）
-  - 自分以外が保存できないようにします。
+  - 自分以外が保存できないようにできます。
   - 誰でも保存してよいものをインポートする場合のみオフにしてください。
 - ResoniteLinkホスト（初期値: localhost）
-  - localhost 以外の ResoniteLink を使う場合に指定します（未検証）。
+  - localhost 以外の ResoniteLink を使う場合に指定できます（未検証）。
 
 ### MMC26 エントリー
 
