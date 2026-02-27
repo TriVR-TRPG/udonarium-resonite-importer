@@ -30,10 +30,9 @@ Download the ZIP from [Booth](https://trivr.booth.pm/items/8034445) or [GitHub R
 ### 2. Prepare Resonite
 
 Start Resonite, then create a new world. If not installed, install it from Steam.  
+Steam: https://store.steampowered.com/app/2519830
 
 Open the Session tab in the dash menu, enable "ResoniteLink," and wait until you see "ResoniteLink is running on port [number]".
-
-Steam: https://store.steampowered.com/app/2519830
 
 ### 3. Run Import
 
@@ -80,7 +79,7 @@ In most cases, default settings are fine. Change these only when needed.
 This tool was submitted to Metaverse Maker Competition 2026.  
 Version at the time of entry: [v1.0.0-beta.4](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/tag/v1.0.0-beta.4)
 
-- Event: [Metaverse Maker Competition 2026](https://youtu.be/MHxobH-TkKc)
+- Event: [Metaverse Maker Competition 2026](https://youtu.be/yOntKRvJ6_Q)
 - Category: `Other: TAU`
 - World: [[MMC26] Udonarium Resonite Importer - Resonite](https://go.resonite.com/world/G-1Nc5BgekFJQ/R-b0e1dc28-fec9-48cb-8fee-58459f3f637a)
 
@@ -105,5 +104,5 @@ Tools used:
 Assets used in the video:
 
 - BGM: MaouDamashii https://maou.audio/bgm_cyber13/ - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-- Udonarium room data (47 tables) | ouma https://ouma.booth.pm/items/5499018
-- [D&D 5e] Scenario "Toraware no Hanayome" | Shirataki Okiba https://nabenosoko.booth.pm/items/3694104
+- ユドナ用ルームデータ（テーブル数４７） | ouma https://ouma.booth.pm/items/5499018
+- 【D&D5版】ダンジョン＆ドラゴンズ第5版シナリオ「囚われの花嫁」 | しらたき置き場 https://nabenosoko.booth.pm/items/3694104
