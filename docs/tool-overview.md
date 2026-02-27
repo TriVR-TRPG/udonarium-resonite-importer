@@ -32,7 +32,7 @@ Download the ZIP from [Booth](https://trivr.booth.pm/items/8034445) or [GitHub R
 Start Resonite, then create a new world. If not installed, install it from Steam.  
 Steam: https://store.steampowered.com/app/2519830
 
-Open the Session tab in the dash menu, enable "ResoniteLink," and wait until you see "ResoniteLink is running on port [number]".
+Open the Session tab in the dash menu, click "Enable ResoniteLink", and wait until you see "ResoniteLink running on port [number]".
 
 ### 3. Run Import
 
@@ -56,16 +56,16 @@ In the app, choose a Udonarium save data ZIP, enter the port number from step 2,
 
 In most cases, default settings are fine. Change these only when needed.
 
-- Add Grabbable to Root (default: Off)
+- Add Grabbable to root (default: Off)
   - Makes the whole imported board grabbable.
 - Root Scale (default: 1 (m))
   - Changes the root scale.
   - If an existing slot with `udonarium-resonite-importer:root` exists, that slot's scale takes priority.
   - By default, size is converted so that 1 tile = 1 meter.
-- Add colliders to table and fixed terrain (default: Off)
+- Enable collider on table and locked terrain (default: Off)
   - Adds CharacterCollider so players can stand on them and not pass through walls.
   - Not applied to non-fixed terrain.
-- Transparent image render mode (default: Cutout)
+- Blend mode for semi-transparent images (default: Cutout)
   - Sets BlendMode for all transparent images in bulk (no per-image setting).
   - `Cutout`: Pixels below alpha threshold are not rendered (good for cutout images).
   - `Alpha`: Renders by transparency (overlap may cause objects behind to appear broken).
