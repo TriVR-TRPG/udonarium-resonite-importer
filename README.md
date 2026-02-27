@@ -9,6 +9,7 @@ A tool to import [Udonarium](https://github.com/TK11235/udonarium) save data int
 - Import by specifying a ZIP file and the ResoniteLink port
 - Supports major objects: characters, cards, terrain, tables, etc.
 - Automatic image asset import
+- For detailed usage, see the [English guide](docs/tool-overview.md).
 
 ## Supported Objects
 
