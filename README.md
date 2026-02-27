@@ -77,7 +77,7 @@ Use the executable inside the extracted CLI ZIP package.
 | `--root-grabbable` | - | Add Grabbable to Root | `false` |
 | `--simple-avatar-protection` / `--no-simple-avatar-protection` | - | Add SimpleAvatarProtection (toggle with `--no-simple-avatar-protection`) | `true` |
 | `--transparent-blend-mode` | - | Transparent image render mode (`Cutout` or `Alpha`) | `Cutout` |
-| `--enable-character-collider` | - | Add colliders to table and fixed terrain | `true` |
+| `--enable-character-collider` / `--disable-character-collider` | - | Add colliders to table and fixed terrain / disable them | `true` |
 | `--dry-run` | `-d`  | Analysis only (no connection) | false       |
 | `--verbose` | `-v`  | Verbose output                | false       |
 | `--lang`    | `-l`  | Language (en, ja)             | Auto-detect |

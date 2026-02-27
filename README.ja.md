@@ -75,7 +75,7 @@
 | `--root-grabbable` | - | ルートにGrabbableを付ける | `false` |
 | `--simple-avatar-protection` / `--no-simple-avatar-protection` | - | SimpleAvatarProtectionを付ける/外す | `true` |
 | `--transparent-blend-mode` | - | 半透明画像の描画方法（`Cutout` または `Alpha`） | `Cutout` |
-| `--enable-character-collider` | - | テーブルと固定された地形にコライダーを付ける | `true` |
+| `--enable-character-collider` / `--disable-character-collider` | - | テーブルと固定された地形にコライダーを付ける/付けない | `true` |
 | `--dry-run` | `-d`   | 解析のみ（接続しない） | false      |
 | `--verbose` | `-v`   | 詳細ログ出力           | false      |
 | `--lang`    | `-l`   | 言語（en, ja）         | 自動検出   |
