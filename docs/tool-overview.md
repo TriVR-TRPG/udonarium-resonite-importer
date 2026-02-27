@@ -4,9 +4,9 @@ A tool for Resonite users to import and play save data distributed for Udonarium
 
 ## Intro Video
 
-[![Intro Video (YouTube)](https://img.youtube.com/vi/3CHq_KOcIwQ/maxresdefault.jpg)](https://youtu.be/3CHq_KOcIwQ)
+[![Intro Video (YouTube)](https://img.youtube.com/vi/xHfjS185Dwc/maxresdefault.jpg)](https://youtu.be/xHfjS185Dwc)
 
-Video link: https://youtu.be/3CHq_KOcIwQ
+Video link: https://youtu.be/xHfjS185Dwc
 
 ## What Can This Tool Do?
 
