@@ -2,6 +2,10 @@
 
 [Udonarium](https://github.com/TK11235/udonarium)のセーブデータを、[ResoniteLink](https://github.com/Yellow-Dog-Man/ResoniteLink)経由で[Resonite](https://resonite.com/)にインポートするツールです。
 
+紹介動画: https://youtu.be/3CHq_KOcIwQ
+
+[![紹介動画（YouTube）](https://img.youtube.com/vi/3CHq_KOcIwQ/maxresdefault.jpg)](https://youtu.be/3CHq_KOcIwQ)
+
 ## 特徴
 
 - ZIPファイルとResoniteLinkのポートを指定してインポート可能
