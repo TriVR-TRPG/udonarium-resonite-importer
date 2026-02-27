@@ -70,11 +70,11 @@
 | `--input`   | `-i`   | 入力ZIPファイルパス    | (必須)     |
 | `--port`    | `-p`   | ResoniteLinkポート（`RESONITELINK_PORT`でも指定可） | (必須、`--dry-run`時は不要) |
 | `--host`    | `-H`   | ResoniteLinkホスト（`RESONITELINK_HOST`でも指定可） | `localhost` |
-| `--root-scale` | - | インポートルートのスケール | `1` |
-| `--root-grabbable` | - | インポートルートにGrabbableを追加 | `false` |
-| `--simple-avatar-protection` / `--no-simple-avatar-protection` | - | ルート/オブジェクト/テクスチャへのSimpleAvatarProtection付与を切り替え | `true` |
-| `--transparent-blend-mode` | - | 半透明画像の描画方式（`Cutout` または `Alpha`） | `Cutout` |
-| `--enable-character-collider` | - | ロックされた地形とテーブルの当たり判定にCharacterColliderを有効化 | `true` |
+| `--root-scale` | - | ルートスケール | `1` |
+| `--root-grabbable` | - | ルートにGrabbableを付ける | `false` |
+| `--simple-avatar-protection` / `--no-simple-avatar-protection` | - | SimpleAvatarProtectionを付ける/外す | `true` |
+| `--transparent-blend-mode` | - | 半透明画像の描画方法（`Cutout` または `Alpha`） | `Cutout` |
+| `--enable-character-collider` | - | テーブルと固定された地形にコライダーを付ける | `true` |
 | `--dry-run` | `-d`   | 解析のみ（接続しない） | false      |
 | `--verbose` | `-v`   | 詳細ログ出力           | false      |
 | `--lang`    | `-l`   | 言語（en, ja）         | 自動検出   |
