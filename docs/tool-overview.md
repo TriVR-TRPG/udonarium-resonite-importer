@@ -56,6 +56,8 @@ In the app, choose a Udonarium save ZIP, enter the port number from step 2, and 
 
 In most cases, default settings are fine. Change these only when needed.
 
+![Advanced options screen](images/gui.advanced-option.en.png)
+
 - Add Grabbable to Root (default: Off)
   - Makes the whole imported board grabbable.
 - Root Scale (default: 1 (m))

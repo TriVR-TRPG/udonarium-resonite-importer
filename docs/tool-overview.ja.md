@@ -56,6 +56,8 @@ Steam: https://store.steampowered.com/app/2519830
 
 通常はデフォルトのまま使えます。必要な場合のみ変更してください。
 
+![高度なオプション画面](images/gui.advanced-option.ja.png)
+
 - ルートにGrabbableを付ける（初期値: オフ）
   - 盤面全体を掴めるようにします。
 - ルートスケール（初期値: 1 (m)）
