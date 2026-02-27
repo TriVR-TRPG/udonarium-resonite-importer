@@ -62,7 +62,7 @@ In most cases, default settings are fine. Change these only when needed.
   - Changes the root scale.
   - If an existing slot with `udonarium-resonite-importer:root` exists, that slot's scale takes priority.
   - By default, size is converted so that 1 tile = 1 meter.
-- Add colliders to table and fixed terrain (default: Off)
+- Add colliders to table and fixed terrain (default: On)
   - Adds CharacterCollider so players can stand on them and not pass through walls.
   - Not applied to non-fixed terrain.
 - Transparent image render mode (default: Cutout)

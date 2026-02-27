@@ -62,7 +62,7 @@ Steam: https://store.steampowered.com/app/2519830
   - ルートスケールを変更できます。
   - 既存の `udonarium-resonite-importer:root` タグ付きスロットがある場合、そのスケールが優先されます。
   - 初期状態では 1 マス = 1 m になるよう変換されます。
-- テーブルと固定された地形にコライダーを付ける（初期値: オフ）
+- テーブルと固定された地形にコライダーを付ける（初期値: オン）
   - CharacterCollider を付与し、乗れるようにしつつ壁のすり抜けを防げます。
   - 固定されていない地形には付与しません。
 - 半透明画像の描画方法（初期値: Cutout）
@@ -106,7 +106,6 @@ Steam: https://store.steampowered.com/app/2519830
 - BGM: 魔王魂 https://maou.audio/bgm_cyber13/ - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - ユドナ用ルームデータ（テーブル数47） | ouma https://ouma.booth.pm/items/5499018
 - 【D&D5版】ダンジョン＆ドラゴンズ第5版シナリオ「囚われの花嫁」 | しらたき置き場 https://nabenosoko.booth.pm/items/3694104
-
 
 
 

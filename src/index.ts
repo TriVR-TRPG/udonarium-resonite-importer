@@ -98,11 +98,7 @@ program
     'Blend mode for semi-transparent images (Cutout or Alpha)',
     'Cutout'
   )
-  .option(
-    '--enable-character-collider',
-    t('cli.help.enableCharacterColliderOnLockedTerrain'),
-    false
-  )
+  .option('--enable-character-collider', t('cli.help.enableCharacterColliderOnLockedTerrain'), true)
   .option('-d, --dry-run', t('cli.help.dryRun'), false)
   .option('-v, --verbose', t('cli.help.verbose'), false)
   .option('-l, --lang <locale>', t('cli.help.lang'))

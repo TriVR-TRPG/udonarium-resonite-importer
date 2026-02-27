@@ -74,7 +74,7 @@
 | `--root-grabbable` | - | インポートルートにGrabbableを追加 | `false` |
 | `--simple-avatar-protection` / `--no-simple-avatar-protection` | - | ルート/オブジェクト/テクスチャへのSimpleAvatarProtection付与を切り替え | `true` |
 | `--transparent-blend-mode` | - | 半透明画像の描画方式（`Cutout` または `Alpha`） | `Cutout` |
-| `--enable-character-collider` | - | ロックされた地形とテーブルの当たり判定にCharacterColliderを有効化 | `false` |
+| `--enable-character-collider` | - | ロックされた地形とテーブルの当たり判定にCharacterColliderを有効化 | `true` |
 | `--dry-run` | `-d`   | 解析のみ（接続しない） | false      |
 | `--verbose` | `-v`   | 詳細ログ出力           | false      |
 | `--lang`    | `-l`   | 言語（en, ja）         | 自動検出   |

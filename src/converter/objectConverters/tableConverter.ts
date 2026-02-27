@@ -35,7 +35,7 @@ export function convertTable(
     })
     .addBoxCollider(
       { x: udonObj.width, y: udonObj.height, z: 0 },
-      { characterCollider: options?.enableCharacterColliderOnLockedTerrain ?? false }
+      { characterCollider: options?.enableCharacterColliderOnLockedTerrain ?? true }
     )
     .build();
 

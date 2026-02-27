@@ -483,12 +483,22 @@ describe('ObjectConverter', () => {
           obj.type === 'table' ? (result.children[0]?.components ?? []) : result.components;
         const collider = searchTarget.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
         expect(collider).toBeDefined();
-        expect(collider?.fields).toEqual({
-          Size: {
-            $type: 'float3',
-            value: expectedSizes[index],
-          },
-        });
+        if (obj.type === 'table') {
+          expect(collider?.fields).toEqual({
+            Size: {
+              $type: 'float3',
+              value: expectedSizes[index],
+            },
+            CharacterCollider: { $type: 'bool', value: true },
+          });
+        } else {
+          expect(collider?.fields).toEqual({
+            Size: {
+              $type: 'float3',
+              value: expectedSizes[index],
+            },
+          });
+        }
       }
     });
 
