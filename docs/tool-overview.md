@@ -95,7 +95,7 @@ Tools used:
 
 - Vibe Coding & translation: Claude Code, GitHub Copilot, ChatGPT/Codex
 - tsrl: TypeScript implementation library for ResoniteLink https://www.npmjs.com/package/@eth0fox/tsrl
-- Video editing: Davinci Resolve
+- Video editing: DaVinci Resolve
 - CreditPanelMaker https://uni-pocket.com/en/items/5844a937-4a1f-43b4-b104-f987b80792b7
 
 Assets used in the video:
