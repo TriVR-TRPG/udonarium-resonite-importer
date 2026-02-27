@@ -10,15 +10,15 @@ Resonite ユーザーが、ユドナリウムで配布されているセーブ�
 
 ## このツールで何ができる？
 
-ユドナリウムのセーブ ZIP を Resonite にインポートし、盤面の見た目と配置をまとめて再現できます。
+ユドナリウムのセーブデータ ZIP を Resonite にインポートし、盤面の見た目と配置をまとめて再現できます。  
 キャラクター、カードと山札、ダイス、テーブル、地形、マップマスクに対応しています。
 
 ## ユドナリウムって何？
 
-ユドナリウムは、Web ブラウザで動くオンラインセッション用ツール（Virtual Tabletop）です。
+ユドナリウムは、Web ブラウザで動くオンラインセッション用ツール（Virtual Tabletop）です。  
 主にボードゲーム、TTRPG、マーダーミステリーなどで使われています。
 
-日本語圏では、ユドナリウム用のセーブデータ（ZIP）が多数配布されています。
+日本語圏では、ユドナリウム用のセーブデータ（ZIP）が多数配布されています。  
 このツールは、それらのデータを Resonite に持ち込んで遊ぶことを目的にしています。
 
 ## どうやって使う？
@@ -29,14 +29,14 @@ Resonite ユーザーが、ユドナリウムで配布されているセーブ�
 
 ### 2. Resonite 側を準備
 
-Resonite を起動し（未インストールの場合は Steam から導入）、新規ワールドを作成してください。
-ダッシュメニューのセッションタブで「ResoniteLinkを有効化」を実行し、「ResoniteLink がポート [数字] で動作中」と表示されたら準備完了です。
-
+Resonite を起動し、新規ワールドを作成してください。未インストールの場合は Steam からインストールしてください。  
 Steam: https://store.steampowered.com/app/2519830
+
+ダッシュメニューのセッションタブで「ResoniteLinkを有効化」を実行し、「ResoniteLink がポート [数字] で動作中」と表示されたら準備完了です。
 
 ### 3. インポート実行
 
-アプリでユドナリウムのセーブ ZIP を選択し、手順 2 のポート番号を入力して「Resoniteにインポート」を押してください。
+アプリでユドナリウムのセーブデータ ZIP を選択し、手順 2 のポート番号を入力して「Resoniteにインポート」を押してください。
 
 ![GUI版の使用イメージ](images/gui.ja.png)
 
@@ -76,13 +76,16 @@ Steam: https://store.steampowered.com/app/2519830
   - localhost 以外の ResoniteLink を使う場合に指定できます（未検証）。
 
 ### MMC26 エントリー
+このツールは Metaverse Maker Competition 2026 にエントリーした作品です。  
+エントリー時点のバージョン: [v1.0.0-beta.4](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/tag/v1.0.0-beta.4)
 
 - イベント: [Metaverse Maker Competition 2026](https://youtu.be/MHxobH-TkKc)
-- カテゴリ: other tau
+- カテゴリ: `その他: TAU`
 - ワールド: [[MMC26] Udonarium Resonite Importer - Resonite](https://go.resonite.com/world/G-1Nc5BgekFJQ/R-b0e1dc28-fec9-48cb-8fee-58459f3f637a)
 
 ### クレジット
 
+- チーム: とらいばーる
 - 開発者: yoshi1123_
 - テスター: ankou, ifura, KTY, usaturn, Karabina
 - フィードバック: lill
@@ -93,13 +96,14 @@ Steam: https://store.steampowered.com/app/2519830
 
 使用ツール:
 
+- コーディング: VSCode
 - Vibe Coding & 翻訳: Claude Code, GitHub Copilot, ChatGPT/Codex
-- tsrl: ResoniteLink の TypeScript 実装ライブラリ https://www.npmjs.com/package/@eth0fox/tsrl
+- ResoniteLink ライブラリ: tsrl https://www.npmjs.com/package/@eth0fox/tsrl
 - 動画編集: Davinci Resolve
 
 動画内で使用しているアセット:
 
-- BGM: [魔王魂](https://maou.audio/bgm_cyber13/) - CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+- BGM: 魔王魂 https://maou.audio/bgm_cyber13/ - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - ユドナ用ルームデータ（テーブル数47） | ouma https://ouma.booth.pm/items/5499018
 - 【D&D5版】ダンジョン＆ドラゴンズ第5版シナリオ「囚われの花嫁」 | しらたき置き場 https://nabenosoko.booth.pm/items/3694104
 
