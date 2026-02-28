@@ -48,7 +48,7 @@ Root slot:
 
 Surface child slot (`-surface`):
 
-- `position = (width / 2, 0, -height / 2)`
+- `position = (width / 2, -0.0001, -height / 2)`
 - `rotation = (90, 0, 0)`
 
 This keeps the table container transform stable while aligning the visual mesh to table coordinates.
@@ -93,7 +93,7 @@ This ensures only selected table(s) are visible when multiple tables are present
 
 ## 8. Validation Points
 
-1. surface slot is created with center offset `(width/2, 0, -height/2)`
+1. surface slot is created with center offset `(width/2, -0.0001, -height/2)`
 2. table root rotation remains `(0,0,0)`
 3. surface has `QuadMesh` + `BoxCollider`
 4. child objects under the source table are converted as root children after `-surface`

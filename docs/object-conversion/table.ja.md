@@ -1,4 +1,4 @@
-# Table 変換仕様
+﻿# Table 変換仕様
 
 [English](table.md)
 
@@ -48,7 +48,7 @@ Udonarium の `game-table` オブジェクトを Resonite の slot/component へ
 
 天板子 slot（`-surface`）:
 
-- `position = (width / 2, 0, -height / 2)`
+- `position = (width / 2, -0.0001, -height / 2)`
 - `rotation = (90, 0, 0)`
 
 これにより、table コンテナの座標安定性を保ちつつ、天板メッシュを table 平面に一致させます。
@@ -93,7 +93,7 @@ table ルート slot:
 
 ## 8. 確認ポイント
 
-1. `-surface` が `(width/2, 0, -height/2)` に配置される
+1. `-surface` が `(width/2, -0.0001, -height/2)` に配置される
 2. table ルート回転が `(0,0,0)` に固定される
 3. `-surface` に `QuadMesh` と `BoxCollider` が付与される
 4. table 配下オブジェクトが `-surface` の後続子として変換される

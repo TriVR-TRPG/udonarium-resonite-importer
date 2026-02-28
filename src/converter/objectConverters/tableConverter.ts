@@ -3,6 +3,8 @@ import { ResoniteObject, Vector3 } from '../../domain/ResoniteObject';
 import { ResoniteObjectBuilder } from '../ResoniteObjectBuilder';
 import { ImageAssetContext } from '../imageAssetContext';
 
+const TABLE_SURFACE_Y_OFFSET = -0.0001;
+
 export function convertTable(
   udonObj: GameTable,
   basePosition: Vector3,
@@ -25,7 +27,7 @@ export function convertTable(
     id: surfaceId,
     name: `${udonObj.name}-surface`,
   })
-    .setPosition({ x: udonObj.width / 2, y: 0, z: -udonObj.height / 2 })
+    .setPosition({ x: udonObj.width / 2, y: TABLE_SURFACE_Y_OFFSET, z: -udonObj.height / 2 })
     .setRotation({ x: 90, y: 0, z: 0 })
     .addQuadMesh({
       ...(textureIdentifier != null ? { textureIdentifier } : {}),

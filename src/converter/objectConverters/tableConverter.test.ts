@@ -71,7 +71,7 @@ describe('convertTable', () => {
     expect(result.children).toHaveLength(2);
 
     const visual = result.children[0];
-    expect(visual.position).toEqual({ x: 10, y: 0, z: -5 });
+    expect(visual.position).toEqual({ x: 10, y: -0.0001, z: -5 });
     expect(visual.rotation).toEqual({ x: 90, y: 0, z: 0 });
     // QuadMesh + MeshRenderer + Material + StaticTexture2D + BoxCollider
     const collider = visual.components.find((c) => c.type === COMPONENT_TYPES.BOX_COLLIDER);
