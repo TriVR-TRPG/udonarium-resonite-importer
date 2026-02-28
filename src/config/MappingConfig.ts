@@ -18,9 +18,9 @@ export const IMPORT_GROUP_SCALE = 1;
 
 /**
  * Default Y-axis offset for the import root group slot.
- * Keeps imported content slightly above origin for visibility.
+ * The import root itself stays on origin; top-level content offset is handled by child slots.
  */
-export const IMPORT_GROUP_Y_OFFSET = 0.001;
+export const IMPORT_GROUP_Y_OFFSET = 0;
 
 /**
  * Tag applied to import root container slots.

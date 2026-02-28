@@ -52,6 +52,8 @@ function isCharacterObject(obj: ResoniteObject): obj is CharacterResoniteObject 
   return obj.sourceType === 'character';
 }
 
+const OFFSET_SLOT_Y_POSITION = 0.001;
+
 const UDONARIUM_OBJECT_TYPES = new Set<ObjectType>([
   'character',
   'dice-symbol',
@@ -498,12 +500,13 @@ export class SlotBuilder {
   private computeOffsetPositionFromLargestTableCenter(objects: ResoniteObject[]): Vector3 {
     const largestTableCenter = this.findLargestTableCenter(objects);
     if (!largestTableCenter) {
-      return { x: 0, y: 0, z: 0 };
+      return { x: 0, y: OFFSET_SLOT_Y_POSITION, z: 0 };
     }
-    // Move all content so the largest table center becomes the local origin.
+    // Move all content so the largest table center becomes the local origin on X/Z.
+    // Keep a small positive Y offset to avoid coplanar overlap with origin-aligned content.
     return {
       x: -largestTableCenter.x,
-      y: -largestTableCenter.y,
+      y: OFFSET_SLOT_Y_POSITION,
       z: -largestTableCenter.z,
     };
   }

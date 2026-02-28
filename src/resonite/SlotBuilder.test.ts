@@ -439,6 +439,7 @@ describe('SlotBuilder', () => {
         expect.objectContaining({
           parentId: 'Root',
           name: 'Offset',
+          position: { x: 0, y: 0.001, z: 0 },
         })
       );
       const offsetCallArgs = mockClient.addSlot.mock.calls[0][0] as { id: string };
@@ -547,6 +548,7 @@ describe('SlotBuilder', () => {
       expect(offsetCall?.name).toBe('Offset');
       expect(offsetCall?.parentId).toBe('Root');
       expect(offsetCall?.position?.x).toBe(-30);
+      expect(offsetCall?.position?.y).toBe(0.001);
       expect(offsetCall?.position?.z).toBe(15);
     });
 
