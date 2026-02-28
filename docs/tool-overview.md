@@ -79,7 +79,7 @@ In most cases, default settings are fine. Change these only when needed.
 
 ### MMC26 Entry
 This tool was submitted to Metaverse Maker Competition 2026.  
-Version at the time of entry: [v1.0.0-beta.4](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/tag/v1.0.0-beta.4)
+Version at the time of entry: [v1.0.0](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/tag/v1.0.0)
 
 - Event: [Metaverse Maker Competition 2026](https://youtu.be/yOntKRvJ6_Q)
 - Category: `Other: TAU`
@@ -109,3 +109,4 @@ Assets used in the video:
 - BGM: MaouDamashii https://maou.audio/bgm_cyber13/ - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - ユドナ用ルームデータ（テーブル数４７） | ouma https://ouma.booth.pm/items/5499018
 - 【D&D5版】ダンジョン＆ドラゴンズ第5版シナリオ「囚われの花嫁」 | しらたき置き場 https://nabenosoko.booth.pm/items/3694104
+
