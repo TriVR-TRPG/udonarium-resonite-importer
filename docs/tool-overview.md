@@ -10,15 +10,15 @@ Video link: https://youtu.be/3CHq_KOcIwQ
 
 ## What Can This Tool Do?
 
-You can import Udonarium save ZIP files into Resonite and recreate both the board visuals and object placement.
+You can import Udonarium save data ZIP files into Resonite and recreate both the board visuals and object placement.  
 It supports characters, cards/decks, dice, tables, terrain, and map masks.
 
 ## What Is Udonarium?
 
-Udonarium is an online session tool (Virtual Tabletop) that runs in a web browser.
+Udonarium is an online session tool (Virtual Tabletop) that runs in a web browser.  
 It is mainly used for board games, TTRPGs, and murder mystery games.
 
-In Japanese-speaking communities, many Udonarium save files (ZIP) are shared.
+In Japanese-speaking communities, many Udonarium save data files (ZIP) are shared.  
 This tool is built to bring those data sets into Resonite so you can play them there.
 
 ## How Do I Use It?
@@ -29,14 +29,14 @@ Download the ZIP from [Booth](https://trivr.booth.pm/items/8034445) or [GitHub R
 
 ### 2. Prepare Resonite
 
-Start Resonite (if not installed, install it from Steam), then create a new world.
-Open the Session tab in the dash menu, enable "ResoniteLink," and wait until you see "ResoniteLink is running on port [number]".
-
+Start Resonite, then create a new world. If not installed, install it from Steam.  
 Steam: https://store.steampowered.com/app/2519830
+
+Open the Session tab in the dash menu, click "Enable ResoniteLink", and wait until you see "ResoniteLink running on port [number]".
 
 ### 3. Run Import
 
-In the app, choose a Udonarium save ZIP, enter the port number from step 2, and click "Import to Resonite".
+In the app, choose a Udonarium save data ZIP, enter the port number from step 2, and click "Import to Resonite".
 
 ![GUI usage image](images/gui.en.png)
 
@@ -56,16 +56,16 @@ In the app, choose a Udonarium save ZIP, enter the port number from step 2, and 
 
 In most cases, default settings are fine. Change these only when needed.
 
-- Add Grabbable to Root (default: Off)
+- Add Grabbable to root (default: Off)
   - Makes the whole imported board grabbable.
 - Root Scale (default: 1 (m))
   - Changes the root scale.
   - If an existing slot with `udonarium-resonite-importer:root` exists, that slot's scale takes priority.
   - By default, size is converted so that 1 tile = 1 meter.
-- Add colliders to table and fixed terrain (default: Off)
+- Enable collider on table and locked terrain (default: Off)
   - Adds CharacterCollider so players can stand on them and not pass through walls.
   - Not applied to non-fixed terrain.
-- Transparent image render mode (default: Cutout)
+- Blend mode for semi-transparent images (default: Cutout)
   - Sets BlendMode for all transparent images in bulk (no per-image setting).
   - `Cutout`: Pixels below alpha threshold are not rendered (good for cutout images).
   - `Alpha`: Renders by transparency (overlap may cause objects behind to appear broken).
@@ -76,13 +76,16 @@ In most cases, default settings are fine. Change these only when needed.
   - Lets you specify a non-localhost ResoniteLink host (not verified).
 
 ### MMC26 Entry
+This tool was submitted to Metaverse Maker Competition 2026.  
+Version at the time of entry: [v1.0.0-beta.4](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/tag/v1.0.0-beta.4)
 
-- Event: [Metaverse Maker Competition 2026](https://youtu.be/MHxobH-TkKc)
-- Category: other tau
+- Event: [Metaverse Maker Competition 2026](https://youtu.be/yOntKRvJ6_Q)
+- Category: `Other: TAU`
 - World: [[MMC26] Udonarium Resonite Importer - Resonite](https://go.resonite.com/world/G-1Nc5BgekFJQ/R-b0e1dc28-fec9-48cb-8fee-58459f3f637a)
 
 ### Credits
 
+- Team: TriVR
 - Developer: yoshi1123_
 - Testers: ankou, ifura, KTY, usaturn, Karabina
 - Feedback: lill
@@ -93,12 +96,13 @@ Assets used:
 
 Tools used:
 
+- Coding: VSCode
 - Vibe Coding & translation: Claude Code, GitHub Copilot, ChatGPT/Codex
-- tsrl: TypeScript implementation library for ResoniteLink https://www.npmjs.com/package/@eth0fox/tsrl
+- ResoniteLink library: tsrl https://www.npmjs.com/package/@eth0fox/tsrl
 - Video editing: Davinci Resolve
 
 Assets used in the video:
 
-- BGM: [MaouDamashii](https://maou.audio/bgm_cyber13/) - CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
-- Udonarium room data (47 tables) | ouma https://ouma.booth.pm/items/5499018
-- [D&D 5e] Scenario "Toraware no Hanayome" | Shirataki Okiba https://nabenosoko.booth.pm/items/3694104
+- BGM: MaouDamashii https://maou.audio/bgm_cyber13/ - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- ユドナ用ルームデータ（テーブル数４７） | ouma https://ouma.booth.pm/items/5499018
+- 【D&D5版】ダンジョン＆ドラゴンズ第5版シナリオ「囚われの花嫁」 | しらたき置き場 https://nabenosoko.booth.pm/items/3694104

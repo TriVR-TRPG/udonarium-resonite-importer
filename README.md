@@ -95,9 +95,9 @@ MIT
 
 ## MMC26 Entry
 
-This tool was submitted to Metaverse Maker Competition 2026.
+This tool was submitted to Metaverse Maker Competition 2026.  
 Version at the time of entry: [v1.0.0-beta.4](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/tag/v1.0.0-beta.4)
 
-- Event: [Metaverse Maker Competition 2026](https://youtu.be/MHxobH-TkKc)
-- Category: other tau
+- Event: [Metaverse Maker Competition 2026](https://youtu.be/yOntKRvJ6_Q)
+- Category: `Other: TAU`
 - World: [[MMC26] Udonarium Resonite Importer - Resonite](https://go.resonite.com/world/G-1Nc5BgekFJQ/R-b0e1dc28-fec9-48cb-8fee-58459f3f637a)
