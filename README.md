@@ -4,9 +4,9 @@
 
 A tool to import [Udonarium](https://github.com/TK11235/udonarium) save data into [Resonite](https://resonite.com/) via [ResoniteLink](https://github.com/Yellow-Dog-Man/ResoniteLink).
 
-Intro video: https://youtu.be/xHfjS185Dwc
+Intro video: https://youtu.be/wRQq6zVO6fc
 
-[![Intro Video (YouTube)](https://img.youtube.com/vi/xHfjS185Dwc/maxresdefault.jpg)](https://youtu.be/xHfjS185Dwc)
+[![Intro Video (YouTube)](https://img.youtube.com/vi/wRQq6zVO6fc/maxresdefault.jpg)](https://youtu.be/wRQq6zVO6fc)
 
 ## Features
 

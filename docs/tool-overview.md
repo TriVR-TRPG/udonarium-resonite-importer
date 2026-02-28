@@ -4,9 +4,9 @@ A tool for Resonite users to import and play save data distributed for Udonarium
 
 ## Intro Video
 
-[![Intro Video (YouTube)](https://img.youtube.com/vi/xHfjS185Dwc/maxresdefault.jpg)](https://youtu.be/xHfjS185Dwc)
+[![Intro Video (YouTube)](https://img.youtube.com/vi/wRQq6zVO6fc/maxresdefault.jpg)](https://youtu.be/wRQq6zVO6fc)
 
-Video link: https://youtu.be/xHfjS185Dwc
+Video link: https://youtu.be/wRQq6zVO6fc
 
 ## What Can This Tool Do?
 
@@ -109,4 +109,3 @@ Assets used in the video:
 - BGM: MaouDamashii https://maou.audio/bgm_cyber13/ - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 - ユドナ用ルームデータ（テーブル数４７） | ouma https://ouma.booth.pm/items/5499018
 - 【D&D5版】ダンジョン＆ドラゴンズ第5版シナリオ「囚われの花嫁」 | しらたき置き場 https://nabenosoko.booth.pm/items/3694104
-
