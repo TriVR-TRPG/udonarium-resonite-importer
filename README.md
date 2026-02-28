@@ -1,14 +1,19 @@
 # Udonarium Resonite Importer
 
+[Japanese README](README.ja.md)
+
 A tool to import [Udonarium](https://github.com/TK11235/udonarium) save data into [Resonite](https://resonite.com/) via [ResoniteLink](https://github.com/Yellow-Dog-Man/ResoniteLink).
 
-[日本語版 README](README.ja.md)
+Intro video: https://youtu.be/xHfjS185Dwc
+
+[![Intro Video (YouTube)](https://img.youtube.com/vi/xHfjS185Dwc/maxresdefault.jpg)](https://youtu.be/xHfjS185Dwc)
 
 ## Features
 
 - Import by specifying a ZIP file and the ResoniteLink port
 - Supports major objects: characters, cards, terrain, tables, etc.
 - Automatic image asset import
+- For detailed usage, see the [English guide](docs/tool-overview.md).
 
 ## Supported Objects
 
@@ -72,11 +77,11 @@ Use the executable inside the extracted CLI ZIP package.
 | `--input`   | `-i`  | Input ZIP file path           | (required)  |
 | `--port`    | `-p`  | ResoniteLink port (or `RESONITELINK_PORT`) | (required, not needed in `--dry-run`) |
 | `--host`    | `-H`  | ResoniteLink host (or `RESONITELINK_HOST`) | `localhost` |
-| `--root-scale` | - | Import root scale | `1` |
-| `--root-grabbable` | - | Add Grabbable to import root | `false` |
-| `--simple-avatar-protection` / `--no-simple-avatar-protection` | - | Toggle SimpleAvatarProtection on imported root/object/texture slots | `true` |
-| `--transparent-blend-mode` | - | Blend mode for semi-transparent images (`Cutout` or `Alpha`) | `Cutout` |
-| `--enable-character-collider` | - | Enable CharacterCollider on locked Terrain and table visual collider | `false` |
+| `--root-scale` | - | Root Scale | `1` |
+| `--root-grabbable` | - | Add Grabbable to Root | `false` |
+| `--simple-avatar-protection` / `--no-simple-avatar-protection` | - | Add SimpleAvatarProtection (toggle with `--no-simple-avatar-protection`) | `true` |
+| `--transparent-blend-mode` | - | Transparent image render mode (`Cutout` or `Alpha`) | `Cutout` |
+| `--enable-character-collider` / `--disable-character-collider` | - | Add colliders to table and fixed terrain / disable them | `true` |
 | `--dry-run` | `-d`  | Analysis only (no connection) | false       |
 | `--verbose` | `-v`  | Verbose output                | false       |
 | `--lang`    | `-l`  | Language (en, ja)             | Auto-detect |

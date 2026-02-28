@@ -78,6 +78,7 @@ describe('convertTable', () => {
     expect(collider).toBeDefined();
     expect(collider!.fields).toEqual({
       Size: { $type: 'float3', value: { x: 20, y: 10, z: 0 } },
+      CharacterCollider: { $type: 'bool', value: true },
     });
     expect(visual.components[0].fields).toEqual({
       Size: { $type: 'float2', value: { x: 20, y: 10 } },

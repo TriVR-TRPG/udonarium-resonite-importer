@@ -1,12 +1,12 @@
-ï»¿# Udonarium Resonite Importer
+# Udonarium Resonite Importer
 
 A tool for Resonite users to import and play save data distributed for Udonarium.
 
 ## Intro Video
 
-[![Intro Video (YouTube)](https://img.youtube.com/vi/3CHq_KOcIwQ/maxresdefault.jpg)](https://youtu.be/3CHq_KOcIwQ)
+[![Intro Video (YouTube)](https://img.youtube.com/vi/xHfjS185Dwc/maxresdefault.jpg)](https://youtu.be/xHfjS185Dwc)
 
-Video link: https://youtu.be/3CHq_KOcIwQ
+Video link: https://youtu.be/xHfjS185Dwc
 
 ## What Can This Tool Do?
 
@@ -56,13 +56,15 @@ In the app, choose a Udonarium save data ZIP, enter the port number from step 2,
 
 In most cases, default settings are fine. Change these only when needed.
 
+![Advanced options screen](images/gui.advanced-option.en.png)
+
 - Add Grabbable to root (default: Off)
   - Makes the whole imported board grabbable.
 - Root Scale (default: 1 (m))
   - Changes the root scale.
   - If an existing slot with `udonarium-resonite-importer:root` exists, that slot's scale takes priority.
   - By default, size is converted so that 1 tile = 1 meter.
-- Enable collider on table and locked terrain (default: Off)
+- Add colliders to table and fixed terrain (default: On)
   - Adds CharacterCollider so players can stand on them and not pass through walls.
   - Not applied to non-fixed terrain.
 - Blend mode for semi-transparent images (default: Cutout)
@@ -99,10 +101,11 @@ Tools used:
 - Coding: VSCode
 - Vibe Coding & translation: Claude Code, GitHub Copilot, ChatGPT/Codex
 - ResoniteLink library: tsrl https://www.npmjs.com/package/@eth0fox/tsrl
-- Video editing: Davinci Resolve
+- Video editing: DaVinci Resolve
+- CreditPanelMaker https://uni-pocket.com/en/items/5844a937-4a1f-43b4-b104-f987b80792b7
 
 Assets used in the video:
 
 - BGM: MaouDamashii https://maou.audio/bgm_cyber13/ - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-- ãƒ¦ãƒ‰ãƒŠç”¨ãƒ«ãƒ¼ãƒ ãƒ‡ãƒ¼ã‚¿ï¼ˆãƒ†ãƒ¼ãƒ–ãƒ«æ•°ï¼”ï¼—ï¼‰ | ouma https://ouma.booth.pm/items/5499018
-- ã€D&D5ç‰ˆã€‘ãƒ€ãƒ³ã‚¸ãƒ§ãƒ³ï¼†ãƒ‰ãƒ©ã‚´ãƒ³ã‚ºç¬¬5ç‰ˆã‚·ãƒŠãƒªã‚ªã€Œå›šã‚ã‚Œã®èŠ±å«ã€ | ã—ã‚‰ãŸãç½®ãå ´ https://nabenosoko.booth.pm/items/3694104
+- ƒ†ƒhƒi—pƒ‹[ƒ€ƒf[ƒ^iƒe[ƒuƒ‹”‚S‚Vj | ouma https://ouma.booth.pm/items/5499018
+- yD&D5”Åzƒ_ƒ“ƒWƒ‡ƒ“•ƒhƒ‰ƒSƒ“ƒY‘æ5”ÅƒVƒiƒŠƒIuú‚í‚ê‚Ì‰Ô‰Åv | ‚µ‚ç‚½‚«’u‚«ê https://nabenosoko.booth.pm/items/3694104
