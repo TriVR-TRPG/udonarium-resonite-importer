@@ -4,9 +4,9 @@ A tool for Resonite users to import and play save data distributed for Udonarium
 
 ## Intro Video
 
-[![Intro Video (YouTube)](https://img.youtube.com/vi/3CHq_KOcIwQ/maxresdefault.jpg)](https://youtu.be/3CHq_KOcIwQ)
+[![Intro Video (YouTube)](https://img.youtube.com/vi/xHfjS185Dwc/maxresdefault.jpg)](https://youtu.be/xHfjS185Dwc)
 
-Video link: https://youtu.be/3CHq_KOcIwQ
+Video link: https://youtu.be/xHfjS185Dwc
 
 ## What Can This Tool Do?
 
@@ -56,6 +56,8 @@ In the app, choose a Udonarium save ZIP, enter the port number from step 2, and 
 
 In most cases, default settings are fine. Change these only when needed.
 
+![Advanced options screen](images/gui.advanced-option.en.png)
+
 - Add Grabbable to Root (default: Off)
   - Makes the whole imported board grabbable.
 - Root Scale (default: 1 (m))
@@ -95,7 +97,7 @@ Tools used:
 
 - Vibe Coding & translation: Claude Code, GitHub Copilot, ChatGPT/Codex
 - tsrl: TypeScript implementation library for ResoniteLink https://www.npmjs.com/package/@eth0fox/tsrl
-- Video editing: Davinci Resolve
+- Video editing: DaVinci Resolve
 - CreditPanelMaker https://uni-pocket.com/en/items/5844a937-4a1f-43b4-b104-f987b80792b7
 
 Assets used in the video:

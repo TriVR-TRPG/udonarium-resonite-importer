@@ -175,12 +175,12 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
 
   try {
     // Step 1: Extract ZIP
-    sendProgress('extract', 0, 'ZIPファイルを解凍中...');
+    sendProgress('extract', 0);
     const extractedData = extractZip(filePath);
     sendProgress('extract', 100);
 
     // Step 2: Parse objects
-    sendProgress('parse', 0, 'オブジェクトを解析中...');
+    sendProgress('parse', 0);
     const parseResult = parseXmlFiles(extractedData.xmlFiles);
     if (parseResult.objects.length === 0) {
       throw new Error(NO_PARSED_OBJECTS_ERROR);
@@ -206,7 +206,7 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     sendProgress('connect', 100);
 
     // Step 4: Import
-    sendProgress('import', 0, 'インポート中...');
+    sendProgress('import', 0);
     const assetImporter = new AssetImporter(client);
     const slotBuilder = new SlotBuilder(client);
     await registerExternalUrls(parseResult.objects, assetImporter);
@@ -233,13 +233,9 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
 
     const imageResults = await assetImporter.importImages(
       extractedData.imageFiles,
-      (current, total) => {
+      (current, _total) => {
         currentStep = current;
-        sendProgress(
-          'import',
-          Math.floor((currentStep / totalSteps) * 100),
-          `画像をインポート中... ${current}/${total}`
-        );
+        sendProgress('import', Math.floor((currentStep / totalSteps) * 100));
       }
     );
 
@@ -273,13 +269,9 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     // Build slots
     const slotResults = await slotBuilder.buildSlots(
       resoniteObjects,
-      (current, total) => {
+      (current, _total) => {
         currentStep = totalImages + current;
-        sendProgress(
-          'import',
-          Math.floor((currentStep / totalSteps) * 100),
-          `オブジェクトを作成中... ${current}/${total}`
-        );
+        sendProgress('import', Math.floor((currentStep / totalSteps) * 100));
       },
       { enableSimpleAvatarProtection }
     );
@@ -287,7 +279,7 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
     await slotBuilder.tagImportGroupRoot(groupId);
 
     client.disconnect();
-    sendProgress('import', 100, '完了');
+    sendProgress('complete', 100);
 
     const failedImages = imageResults.filter((r) => !r.success).length;
     const failedSlots = slotResults.filter((r) => !r.success).length;

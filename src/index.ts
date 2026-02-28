@@ -52,6 +52,7 @@ interface CLIOptions {
   simpleAvatarProtection: boolean;
   transparentBlendMode: string;
   enableCharacterCollider: boolean;
+  disableCharacterCollider: boolean;
 }
 
 const NO_PARSED_OBJECTS_ERROR = 'No supported objects were found in the ZIP file.';
@@ -99,6 +100,11 @@ program
     'Cutout'
   )
   .option('--enable-character-collider', t('cli.help.enableCharacterColliderOnLockedTerrain'), true)
+  .option(
+    '--disable-character-collider',
+    t('cli.help.disableCharacterColliderOnLockedTerrain'),
+    false
+  )
   .option('-d, --dry-run', t('cli.help.dryRun'), false)
   .option('-v, --verbose', t('cli.help.verbose'), false)
   .option('-l, --lang <locale>', t('cli.help.lang'))
@@ -167,6 +173,8 @@ async function run(options: CLIOptions): Promise<void> {
 
   // Resolve host from CLI option or environment variable
   const host = options.host || getResoniteLinkHost();
+  const enableCharacterColliderOnLockedTerrain =
+    options.enableCharacterCollider && !options.disableCharacterCollider;
   const rootScale = Number.parseFloat(options.rootScale);
   if (!Number.isFinite(rootScale) || rootScale <= 0) {
     console.error(chalk.red('Invalid root scale. Must be a positive number.'));
@@ -275,7 +283,7 @@ async function run(options: CLIOptions): Promise<void> {
       parseResult.objects,
       imageAssetContext,
       {
-        enableCharacterColliderOnLockedTerrain: options.enableCharacterCollider,
+        enableCharacterColliderOnLockedTerrain,
       },
       parseResult.extensions
     );
@@ -393,7 +401,7 @@ async function run(options: CLIOptions): Promise<void> {
       parseResult.objects,
       imageAssetContext,
       {
-        enableCharacterColliderOnLockedTerrain: options.enableCharacterCollider,
+        enableCharacterColliderOnLockedTerrain,
       },
       parseResult.extensions
     );

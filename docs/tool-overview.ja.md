@@ -56,6 +56,8 @@ Steam: https://store.steampowered.com/app/2519830
 
 通常はデフォルトのまま使えます。必要な場合のみ変更してください。
 
+![高度なオプション画面](images/gui.advanced-option.ja.png)
+
 - ルートにGrabbableを付ける（初期値: オフ）
   - 盤面全体を掴めるようにします。
 - ルートスケール（初期値: 1 (m)）
@@ -99,7 +101,7 @@ Steam: https://store.steampowered.com/app/2519830
 - コーディング: VSCode
 - Vibe Coding & 翻訳: Claude Code, GitHub Copilot, ChatGPT/Codex
 - ResoniteLink ライブラリ: tsrl https://www.npmjs.com/package/@eth0fox/tsrl
-- 動画編集: Davinci Resolve
+- 動画編集: DaVinci Resolve
 - CreditPanelMaker https://uni-pocket.com/ja/items/5844a937-4a1f-43b4-b104-f987b80792b7
 
 動画内で使用しているアセット:
