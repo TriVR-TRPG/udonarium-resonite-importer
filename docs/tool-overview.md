@@ -89,7 +89,7 @@ Version at the time of entry: [v1.0.0](https://github.com/TriVR-TRPG/udonarium-r
 
 - Team: TriVR
 - Developer: yoshi1123_
-- Testers: ankou, ifura, KTY, usaturn, Karabina
+- Testers: ankou, ifura, KTY, usaturn, Karabina, ä½ã€…å®®æ™ºå¿—
 - Feedback: lill
 
 Assets used:
@@ -107,6 +107,6 @@ Tools used:
 Assets used in the video:
 
 - BGM: MaouDamashii https://maou.audio/bgm_cyber13/ - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-- ƒ†ƒhƒi—pƒ‹[ƒ€ƒf[ƒ^iƒe[ƒuƒ‹”‚S‚Vj | ouma https://ouma.booth.pm/items/5499018
-- yD&D5”Åzƒ_ƒ“ƒWƒ‡ƒ“•ƒhƒ‰ƒSƒ“ƒY‘æ5”ÅƒVƒiƒŠƒIuú‚í‚ê‚Ì‰Ô‰Åv | ‚µ‚ç‚½‚«’u‚«ê https://nabenosoko.booth.pm/items/3694104
+- ãƒ¦ãƒ‰ãƒŠç”¨ãƒ«ãƒ¼ãƒ ãƒ‡ãƒ¼ã‚¿ï¼ˆãƒ†ãƒ¼ãƒ–ãƒ«æ•°ï¼”ï¼—ï¼‰ | ouma https://ouma.booth.pm/items/5499018
+- ã€D&D5ç‰ˆã€‘ãƒ€ãƒ³ã‚¸ãƒ§ãƒ³ï¼†ãƒ‰ãƒ©ã‚´ãƒ³ã‚ºç¬¬5ç‰ˆã‚·ãƒŠãƒªã‚ªã€Œå›šã‚ã‚Œã®èŠ±å«ã€ | ã—ã‚‰ãŸãç½®ãå ´ https://nabenosoko.booth.pm/items/3694104
 

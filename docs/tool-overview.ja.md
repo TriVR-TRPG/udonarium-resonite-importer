@@ -1,114 +1,114 @@
 # Udonarium Resonite Importer
 
-Resonite ���[�U�[���A���h�i���E���Ŕz�z����Ă���Z�[�u�f�[�^����荞��ŗV�ׂ�悤�ɂ���c�[���ł��B
+Resonite ユーザーが、ユドナリウムで配布されているセーブデータを取り込んで遊べるようにするツールです。
 
-## �Љ��
+## 紹介動画
 
-[![�Љ��iYouTube�j](https://img.youtube.com/vi/3CHq_KOcIwQ/maxresdefault.jpg)](https://youtu.be/3CHq_KOcIwQ)
+[![紹介動画（YouTube）](https://img.youtube.com/vi/3CHq_KOcIwQ/maxresdefault.jpg)](https://youtu.be/3CHq_KOcIwQ)
 
-���惊���N: https://youtu.be/3CHq_KOcIwQ
+動画リンク: https://youtu.be/3CHq_KOcIwQ
 
-## ���̃c�[���ŉ����ł���H
+## このツールで何ができる？
 
-���h�i���E���̃Z�[�u�f�[�^ ZIP �� Resonite �ɃC���|�[�g���A�Ֆʂ̌����ڂƔz�u���܂Ƃ߂čČ��ł��܂��B  
-�L�����N�^�[�A�J�[�h�ƎR�D�A�_�C�X�A�e�[�u���A�n�`�A�}�b�v�}�X�N�ɑΉ����Ă��܂��B
+ユドナリウムのセーブデータ ZIP を Resonite にインポートし、盤面の見た目と配置をまとめて再現できます。  
+キャラクター、カードと山札、ダイス、テーブル、地形、マップマスクに対応しています。
 
-## ���h�i���E�����ĉ��H
+## ユドナリウムって何？
 
-���h�i���E���́AWeb �u���E�U�œ����I�����C���Z�b�V�����p�c�[���iVirtual Tabletop�j�ł��B  
-��Ƀ{�[�h�Q�[���ATTRPG�A�}�[�_�[�~�X�e���[�ȂǂŎg���Ă��܂��B
+ユドナリウムは、Web ブラウザで動くオンラインセッション用ツール（Virtual Tabletop）です。  
+主にボードゲーム、TTRPG、マーダーミステリーなどで使われています。
 
-���{�ꌗ�ł́A���h�i���E���p�̃Z�[�u�f�[�^�iZIP�j�������z�z����Ă��܂��B  
-���̃c�[���́A�����̃f�[�^�� Resonite �Ɏ�������ŗV�Ԃ��Ƃ�ړI�ɂ��Ă��܂��B
+日本語圏では、ユドナリウム用のセーブデータ（ZIP）が多数配布されています。  
+このツールは、それらのデータを Resonite に持ち込んで遊ぶことを目的にしています。
 
-## �ǂ�����Ďg���H
+## どうやって使う？
 
-### 1. �A�v�������
+### 1. アプリを入手
 
-[Booth](https://trivr.booth.pm/items/8034445) �܂��� [GitHub Releases](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/latest) ���� ZIP ���_�E�����[�h���A�W�J���� `Udonarium Resonite Importer` ���N�����Ă��������B
+[Booth](https://trivr.booth.pm/items/8034445) または [GitHub Releases](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/latest) から ZIP をダウンロードし、展開した `Udonarium Resonite Importer` を起動してください。
 
-### 2. Resonite ��������
+### 2. Resonite 側を準備
 
-Resonite ���N�����A�V�K���[���h���쐬���Ă��������B���C���X�g�[���̏ꍇ�� Steam ����C���X�g�[�����Ă��������B  
+Resonite を起動し、新規ワールドを作成してください。未インストールの場合は Steam からインストールしてください。  
 Steam: https://store.steampowered.com/app/2519830
 
-�_�b�V�����j���[�̃Z�b�V�����^�u�ŁuResoniteLink��L�����v�����s���A�uResoniteLink ���|�[�g [����] �œ��쒆�v�ƕ\�����ꂽ�珀�������ł��B
+ダッシュメニューのセッションタブで「ResoniteLinkを有効化」を実行し、「ResoniteLink がポート [数字] で動作中」と表示されたら準備完了です。
 
-### 3. �C���|�[�g���s
+### 3. インポート実行
 
-�A�v���Ń��h�i���E���̃Z�[�u�f�[�^ ZIP ��I�����A�菇 2 �̃|�[�g�ԍ�����͂��āuResonite�ɃC���|�[�g�v�������Ă��������B
+アプリでユドナリウムのセーブデータ ZIP を選択し、手順 2 のポート番号を入力して「Resoniteにインポート」を押してください。
 
-![GUI�ł̎g�p�C���[�W](images/gui.ja.png)
+![GUI版の使用イメージ](images/gui.ja.png)
 
 ---
 
-## �����Əڂ���
+## もっと詳しく
 
-### �C���|�[�g���̋���
+### インポート時の挙動
 
-- �C���|�[�g�����I�u�W�F�N�g�� RootSlot �����ɐ�������܂��B
-- ���[�g�X���b�g���� `Udonarium Import - [ZIP�t�@�C����]` �ł��B
-- ���[�g�ɂ� `udonarium-resonite-importer:root` �^�O���t���܂��B
-- RootSlot �����ɓ��^�O���������X���b�g������ꍇ�́A�����X���b�g��u�������܂��B
-- �u���������͓��� Transform�i�ʒu�E��]�E�傫���j�ōĔz�u���܂��B
+- インポートしたオブジェクトは RootSlot 直下に生成されます。
+- ルートスロット名は `Udonarium Import - [ZIPファイル名]` です。
+- ルートには `udonarium-resonite-importer:root` タグが付きます。
+- RootSlot 直下に同タグを持つ既存スロットがある場合は、既存スロットを置き換えます。
+- 置き換え時は同じ Transform（位置・回転・大きさ）で再配置します。
 
-### ���x�ȃI�v�V����
+### 高度なオプション
 
-�ʏ�̓f�t�H���g�̂܂܎g���܂��B�K�v�ȏꍇ�̂ݕύX���Ă��������B
+通常はデフォルトのまま使えます。必要な場合のみ変更してください。
 
-![���x�ȃI�v�V�������](images/gui.advanced-option.ja.png)
+![高度なオプション画面](images/gui.advanced-option.ja.png)
 
-- ���[�g��Grabbable��t����i�����l: �I�t�j
-  - �ՖʑS�̂�͂߂�悤�ɂ��܂��B
-- ���[�g�X�P�[���i�����l: 1 (m)�j
-  - ���[�g�X�P�[����ύX�ł��܂��B
-  - ������ `udonarium-resonite-importer:root` �^�O�t���X���b�g������ꍇ�A���̃X�P�[�����D�悳��܂��B
-  - ������Ԃł� 1 �}�X = 1 m �ɂȂ�悤�ϊ�����܂��B
-- �e�[�u���ƌŒ肵���n�`�ɃR���C�_�[��t����i�����l: �I���j
-  - CharacterCollider ��t�^���A����悤�ɂ��ǂ̂��蔲����h���܂��B
-  - �Œ肳��Ă��Ȃ��n�`�ɂ͕t�^���܂���B
-- �������摜�̕`������i�����l: Cutout�j
-  - �������摜�� BlendMode ���ꊇ�Őݒ�ł��܂��i�ʐݒ�͂ł��܂���j�B
-  - `Cutout`: �����x�������l������`�悵�܂���i�؂蔲�������j�B
-  - `Alpha`: �����x�ɉ����ĕ`�悵�܂��i�d�Ȃ莞�ɉ����̕\����������ꍇ����j�B
-- SimpleAvatarProtection��t����i�����l: �I���j
-  - �����ȊO���ۑ��ł��Ȃ��悤�ɂł��܂��B
-  - �N�ł��ۑ����Ă悢���̂��C���|�[�g����ꍇ�̂݃I�t�ɂ��Ă��������B
-- ResoniteLink�z�X�g�i�����l: localhost�j
-  - localhost �ȊO�� ResoniteLink ���g���ꍇ�Ɏw��ł��܂��i�����؁j�B
+- ルートにGrabbableを付ける（初期値: オフ）
+  - 盤面全体を掴めるようにします。
+- ルートスケール（初期値: 1 (m)）
+  - ルートスケールを変更できます。
+  - 既存の `udonarium-resonite-importer:root` タグ付きスロットがある場合、そのスケールが優先されます。
+  - 初期状態では 1 マス = 1 m になるよう変換されます。
+- テーブルと固定した地形にコライダーを付ける（初期値: オン）
+  - CharacterCollider を付与し、乗れるようにしつつ壁のすり抜けを防げます。
+  - 固定されていない地形には付与しません。
+- 半透明画像の描画方式（初期値: Cutout）
+  - 半透明画像の BlendMode を一括で設定できます（個別設定はできません）。
+  - `Cutout`: 透明度しきい値未満を描画しません（切り抜き向け）。
+  - `Alpha`: 透明度に応じて描画します（重なり時に奥側の表示が欠ける場合あり）。
+- SimpleAvatarProtectionを付ける（初期値: オン）
+  - 自分以外が保存できないようにできます。
+  - 誰でも保存してよいものをインポートする場合のみオフにしてください。
+- ResoniteLinkホスト（初期値: localhost）
+  - localhost 以外の ResoniteLink を使う場合に指定できます（未検証）。
 
-### MMC26 �G���g���[
-���̃c�[���� Metaverse Maker Competition 2026 �ɃG���g���[������i�ł��B  
-�G���g���[���_�̃o�[�W����: [v1.0.0](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/tag/v1.0.0)
+### MMC26 エントリー
+このツールは Metaverse Maker Competition 2026 にエントリーした作品です。  
+エントリー時点のバージョン: [v1.0.0](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/tag/v1.0.0)
 
-- �C�x���g: [Metaverse Maker Competition 2026](https://youtu.be/MHxobH-TkKc)
-- �J�e�S��: `���̑�: TAU`
-- ���[���h: [[MMC26] Udonarium Resonite Importer - Resonite](https://go.resonite.com/world/G-1Nc5BgekFJQ/R-b0e1dc28-fec9-48cb-8fee-58459f3f637a)
+- イベント: [Metaverse Maker Competition 2026](https://youtu.be/MHxobH-TkKc)
+- カテゴリ: `その他: TAU`
+- ワールド: [[MMC26] Udonarium Resonite Importer - Resonite](https://go.resonite.com/world/G-1Nc5BgekFJQ/R-b0e1dc28-fec9-48cb-8fee-58459f3f637a)
 
-### �N���W�b�g
+### クレジット
 
-- �`�[��: �Ƃ炢�΁[��
-- �J����: yoshi1123_
-- �e�X�^�[: ankou, ifura, KTY, usaturn, Karabina
-- �t�B�[�h�o�b�N: lill
+- チーム: とらいばーる
+- 開発者: yoshi1123_
+- テスター: ankou, ifura, KTY, usaturn, Karabina, 佐々宮智志
+- フィードバック: lill
 
-�g�p�A�Z�b�g:
+使用アセット:
 
-- ���h�i���E�������A�Z�b�g: https://github.com/TK11235/udonarium
+- ユドナリウム公式アセット: https://github.com/TK11235/udonarium
 
-�g�p�c�[��:
+使用ツール:
 
-- �R�[�f�B���O: VSCode
-- Vibe Coding & �|��: Claude Code, GitHub Copilot, ChatGPT/Codex
-- ResoniteLink ���C�u����: tsrl https://www.npmjs.com/package/@eth0fox/tsrl
-- ����ҏW: DaVinci Resolve
+- コーディング: VSCode
+- Vibe Coding & 翻訳: Claude Code, GitHub Copilot, ChatGPT/Codex
+- ResoniteLink ライブラリ: tsrl https://www.npmjs.com/package/@eth0fox/tsrl
+- 動画編集: DaVinci Resolve
 - CreditPanelMaker https://uni-pocket.com/ja/items/5844a937-4a1f-43b4-b104-f987b80792b7
 
-������Ŏg�p���Ă���A�Z�b�g:
+動画内で使用しているアセット:
 
-- BGM: ������ https://maou.audio/bgm_cyber13/ - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
-- ���h�i�p���[���f�[�^�i�e�[�u����47�j | ouma https://ouma.booth.pm/items/5499018
-- �yD&D5�Łz�_���W�������h���S���Y��5�ŃV�i���I�u�����̉ԉŁv | ���炽���u���� https://nabenosoko.booth.pm/items/3694104
+- BGM: 魔王魂 https://maou.audio/bgm_cyber13/ - [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- ユドナ用ルームデータ（テーブル数47） | ouma https://ouma.booth.pm/items/5499018
+- 【D&D5版】ダンジョン＆ドラゴンズ第5版シナリオ「囚われの花嫁」 | しらたき置き場 https://nabenosoko.booth.pm/items/3694104
 
 
 
