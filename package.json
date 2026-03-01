@@ -1,6 +1,6 @@
 {
   "name": "udonarium-resonite-importer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Import Udonarium save data into Resonite via ResoniteLink",
   "main": "dist/gui/main.js",
   "bin": {

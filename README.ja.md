@@ -99,7 +99,7 @@ MIT
 ## MMC26 エントリー
 
 このツールは Metaverse Maker Competition 2026 にエントリーした作品です。  
-エントリー時点のバージョン: [v1.0.0](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/tag/v1.0.0)
+エントリー時点のバージョン: [v1.0.1](https://github.com/TriVR-TRPG/udonarium-resonite-importer/releases/tag/v1.0.1)
 
 - イベント: [Metaverse Maker Competition 2026](https://youtu.be/MHxobH-TkKc)
 - カテゴリ: `その他: TAU`
