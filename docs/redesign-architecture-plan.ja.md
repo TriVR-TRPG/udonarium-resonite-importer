@@ -13,6 +13,7 @@
 - 変換処理が中央集約されやすく、オブジェクト追加時の改修範囲が拡大しやすい。
 - dry-run と本番インポートの共通部分が暗黙的で、検証観点の再利用性が低い。
 - 「変換（純粋処理）」と「外部副作用（ResoniteLink 操作）」が同一ユースケース内に混在しやすい。
+- CLI 固有オプション（`--dry-run`, `--verbose`, `--root-scale` 等）と GUI 入力の正規化ルールが設計上未定義であり、Adapter 実装時の仕様の揺れが生じやすい。
 
 ### 1.3 再設計の目標
 1. **Core-first**: ドメインロジックを UI/実行環境から独立。
@@ -146,6 +147,32 @@ Analyze の結果を利用し、ImportPlan を適用して Resonite 側の実体
 - 参照解決可能（論理ID -> 実ID へのマッピング前提）。
 - 冪等再実行を想定（同一 logical key の再利用可否）。
 
+### ImportPlan の概念構造
+
+以下は設計方針を示す概念表現であり、実装言語の構文に依存しない。
+
+```
+ImportPlan
+  config: ImportConfig                  # 生成元設定（参照用）
+  assets: AssetPlanEntry[]             # テクスチャ等の外部アセット
+    logicalId, filePath, mimeType, expectedSize?
+  materials: MaterialPlanEntry[]       # マテリアル定義
+    logicalId, blendMode, textureLRef  # textureLRef = assets への論理参照
+  meshes: MeshPlanEntry[]              # メッシュ定義（Quad / Triangle / Box 等）
+    logicalId, meshType, vertices?, size?
+  slots: SlotPlanEntry[]               # スロット階層（再帰ネスト可）
+    logicalId, name, parentLRef?
+    position, rotation, scale
+    components: ComponentPlanEntry[]
+      type, members: { key -> value | LRef }
+    sourceType?, locationName?
+    groupHint: 'table' | 'object' | 'inventory'  # 配置先ルーティング用
+```
+
+**論理参照（LRef）**: `assets[id:xxx]` のような文字列形式で表し、Apply 段階で実 ID に解決する。これにより Compile と Apply を完全に分離できる。
+
+**Apply 順序保証**: assets → materials → meshes → slots（親から子の順）とする。循環参照は Compile 時に検出し ConversionError とする。
+
 ---
 
 ## 5. データ契約（実装言語非依存）
@@ -181,6 +208,27 @@ Analyze の結果を利用し、ImportPlan を適用して Resonite 側の実体
 - diagnostics: warning/error 一覧
 - artifacts: 生成ルートID等
 - performance: duration, step timings
+
+## 5.4 CLI オプション ↔ ImportConfig マッピング
+
+CLI Adapter は以下のマッピングで ImportConfig を構築する。GUI Adapter も同等のマッピングを独自 UI から構築する。
+
+| CLI オプション | ImportConfig フィールド | 備考 |
+|---|---|---|
+| `-i, --input` | `inputZipPath` | 必須 |
+| `-p, --port` | `resonite.port` | デフォルト: 実装定義 |
+| `-H, --host` | `resonite.host` | デフォルト: `localhost` |
+| `--root-scale` | `rootScale` | > 0 の実数 |
+| `--root-grabbable` | `rootGrabbable` | boolean flag |
+| `--enable-character-collider` / `--disable-character-collider` | `enableCharacterCollider` | 相互排他フラグ |
+| `--transparent-blend-mode` | `transparentBlendMode` | `Cutout` または `Alpha` |
+| `-d, --dry-run` | `dryRun` | 別フィールド（ImportOptions）でも可 |
+| `-v, --verbose` | ImportConfig 外 — `ProgressPort` の verbosity として注入 | ImportConfig を汚染しない |
+
+> **設計方針**: `verbose` と `dry-run` は実行制御であり、変換仕様には影響しない。
+> `verbose` は `ProgressPort` の実装（詳細ログ出力 Adapter）で吸収し、
+> `dry-run` は `ImportUseCase` への入力フラグ（`ImportOptions.dryRun`）として分離することを推奨する。
+> これにより `ImportConfig` が「何を変換するか」の純粋な設定として機能し、「どのように実行するか」が混入しない。
 
 ---
 
@@ -271,21 +319,25 @@ Analyze の結果を利用し、ImportPlan を適用して Resonite 側の実体
   - 設計レビュー承認
   - 主要ユースケースの現行テストが安定
 
-## Phase 1: Contract 抽出（1〜2週）
+## Phase 1: Contract 抽出 + 共通実行ロジック抽出（1〜2週）
 - タスク:
-  1. ImportConfig/Report/Event を定義
-  2. CLI/GUI を新契約に合わせる Adapter を作成
-  3. 既存処理は温存しつつ契約変換のみ導入
+  1. ImportConfig/Report/Event/ImportOptions を定義
+  2. **CLI/GUI の重複実行フロー（extract/parse/connect/import）を共通関数として抽出**
+     - 抽出先: `src/application/` 等の新ディレクトリ（UseCase 導入前の暫定層）
+     - CLI・GUI 双方がその共通関数を呼ぶよう切替
+  3. CLI/GUI を新契約に合わせる Adapter を作成（5.4 のマッピング適用）
 - リスク低減:
-  - 実処理は触らないため挙動変化を最小化
+  - 実処理のロジックは変えず「呼び出しの集約」のみ行うため挙動変化を最小化
+  - Phase 2 以降での UseCase 委譲先が明確になる
 
 ## Phase 2: UseCase 導入（2週）
 - タスク:
   1. AnalyzeUseCase を新規実装
   2. CLI dry-run/GUI analyze を UseCase 経由へ切替
-  3. ImportUseCase の雛形導入（内部は現行呼び出し委譲）
+  3. ImportUseCase の雛形導入（Phase 1 で抽出した共通関数に委譲）
 - 完了条件:
   - CLI/GUI の解析結果一致
+  - ImportUseCase を経由して現行と同等のインポートが動作すること
 
 ## Phase 3: Compile/Apply 分離（2〜3週）
 - タスク:
@@ -295,13 +347,16 @@ Analyze の結果を利用し、ImportPlan を適用して Resonite 側の実体
 - 完了条件:
   - dry-run と live import が同一 Compile パス使用
 
-## Phase 4: Converter Registry 化（2週）
+## Phase 4: Converter Registry 化（任意実施）
+> **注: 優先度「低」** — 現行の switch ベース実装は新オブジェクト追加時に「型定義 + Converter ファイル作成 + switch への case 追加」の3ステップで完結しており、拡張コストは小さい。本 Phase は技術負債整理の一環として、必要性が高まった時点で実施を検討する。
+
 - タスク:
-  1. 各 object converter を Plugin 化
-  2. switch 実装の段階廃止
+  1. 各 object converter を Plugin インタフェース（`canHandle` / `convert`）に合わせてラップ
+  2. switch 実装を Registry 呼び出しへ段階的に置換
   3. Converter 契約テスト導入
 - 完了条件:
   - 既存 fixture の変換互換を維持
+- **実施判断基準**: 管理対象オブジェクト種別が大幅増加する、または外部 Plugin 提供が必要になった場合に優先度を上げる
 
 ## Phase 5: 技術負債整理（1〜2週）
 - タスク:
@@ -343,9 +398,12 @@ Analyze の結果を利用し、ImportPlan を適用して Resonite 側の実体
 2. **性能劣化**
    - 対策: Step duration の継続計測
 3. **設計過剰化**
-   - 対策: Phase ごとに ROI 評価、不要抽象化を禁止
+   - 対策: Phase ごとに ROI 評価、不要抽象化を禁止（Phase 4 の Registry 化は ROI 低の場合は見送り）
 4. **移行長期化**
    - 対策: 垂直スライス（analyze -> import）で先に価値提供
+5. **CLI 固有オプションの仕様散逸**
+   - 状況: `--verbose` や `--dry-run` は変換仕様ではなく実行制御に属するが、ImportConfig に混入すると Core が汚染される
+   - 対策: Section 5.4 のマッピング定義を Adapter 実装の仕様書として使用し、CLI/GUI Adapter レビュー時に逸脱を検出する
 
 ---
 
