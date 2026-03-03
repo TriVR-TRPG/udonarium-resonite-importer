@@ -35,10 +35,13 @@
 
 ### 2.3 Explicit Contract
 暗黙の共有状態を禁止し、以下を明示契約とする。
-- `ImportConfig`（入力設定）
+- `ImportConfig`（変換仕様・接続設定 — 「何を変換するか」）
+- `ImportOptions`（実行制御 — 「どのように実行するか」: dry-run, verbose 等）
 - `ImportPlan`（作成計画）
 - `ImportReport`（結果）
 - `ProgressEvent`（進捗）
+
+> `ImportConfig` と `ImportOptions` を分離することで、Core が実行制御を知らなくて済む。
 
 ### 2.4 Determinism First
 同じ ZIP + Config + Extension から同じ ImportPlan が得られることを保証。再現性をテスト可能にする。
@@ -72,8 +75,16 @@
 ## 3.2 境界（Ports）
 
 ### Inbound Ports（UseCase 呼び出し）
-- `AnalyzeInput -> AnalyzeOutput`
-- `ImportInput -> ImportOutput`
+
+**AnalyzeUseCase**
+- 入力 `AnalyzeInput`: `{ config: ImportConfig, options: ImportOptions }`
+- 出力 `AnalyzeOutput`: `analysisSummary`（objectCount, imageCount, typeCounts, warnings, errors, estimatedPlanStats）
+
+**ImportUseCase**
+- 入力 `ImportInput`: `{ config: ImportConfig, options: ImportOptions }`
+- 出力 `ImportOutput`: `ImportReport`（Section 5.3 参照）
+
+> 両 UseCase は同じ `{ config, options }` シグネチャを持つ。AnalyzeUseCase の出力を ImportUseCase に渡す必要はなく、ImportUseCase は Compile ステップで内部的に同等の解析を再実行する。
 
 ### Outbound Ports（外部依存）
 - `ZipRepositoryPort`
@@ -95,9 +106,8 @@
 副作用最小で ZIP 解析と変換可能性を評価する。
 
 ### 入力
-- `zipPath`
-- `config`
-- `options`（verbose, language など）
+- `config: ImportConfig`（`inputZipPath` を含む）
+- `options: ImportOptions`（verbose など実行制御）
 
 ### 出力
 - `analysisSummary`
@@ -121,21 +131,19 @@ Analyze の結果を利用し、ImportPlan を適用して Resonite 側の実体
 4. Finalize（タグ付け・集計・レポート）
 
 ### 出力
-- `ImportReport`
-  - total/success/failed（image/object/component）
-  - warnings
-  - durationMs
-  - importRootId
+- `ImportReport`（詳細は Section 5.3 を正とする）
 
 ## 4.3 Conversion Engine
 
 ### 方針
-- 現在の switch ベースを、**Registry + Converter Plugin** に置換。
-- Converter は `canHandle(type)` と `convert(input, ctx)` を実装。
+- **当面は現行の switch ベースを維持する**（Phase 4 は任意実施）。
+- 将来的に管理対象オブジェクト種別が大幅増加した場合は、**Registry + Converter Plugin** への移行を検討する。
+- Converter Plugin のインタフェース（移行時の参考）: `canHandle(type): boolean` / `convert(input, ctx): SlotPlanEntry`
 
-### 期待効果
-- オブジェクト種別追加時の変更点を局所化。
-- Converter 単体テストが容易。
+### 現行方式での新オブジェクト追加手順（3ステップ）
+1. `ObjectType` 型定義に種別を追加
+2. `objectConverters/` に Converter ファイルを作成
+3. `ObjectConverter.ts` の switch に `case` を追加
 
 ## 4.4 Plan Builder
 
@@ -197,38 +205,65 @@ ImportPlan
 - transparentBlendMode: {Cutout, Alpha}
 
 ## 5.2 ProgressEvent
-- `phase`: extract|parse|compile|connect|apply|finalize
-- `current`, `total`
-- `message`
-- `level`: info|warn|error
-- `timestamp`
+```
+ProgressEvent
+  phase:     extract | parse | compile | connect | cleanup | apply | finalize
+  current:   number   # 現在の処理数
+  total:     number   # 対象の総数（不明な場合は 0）
+  message:   string
+  level:     info | warn | error
+  timestamp: number   # Unix ms
+```
+
+**`phase` と実行ステップの対応**
+
+| phase | 対応する実行ステップ |
+|---|---|
+| `extract` | ZIP 読込・展開 |
+| `parse` | XML 抽出・パース・正規化・画像メタ推定 |
+| `compile` | オブジェクト変換・ImportPlan 生成 |
+| `connect` | ResoniteLink 接続・Preflight 検証 |
+| `cleanup` | Pre-cleanup（旧インポート削除） |
+| `apply` | Asset/Material/Mesh/Slot 適用（全 Apply ステップ共通） |
+| `finalize` | タグ付け・結果集計 |
 
 ## 5.3 ImportReport
-- summary: 成功/失敗数
-- diagnostics: warning/error 一覧
-- artifacts: 生成ルートID等
-- performance: duration, step timings
+```
+ImportReport
+  summary:
+    images:    { total, success, failed }
+    objects:   { total, success, failed }
+    components:{ total, success, failed }
+  diagnostics: DiagnosticEntry[]   # warning/error の一覧
+    { level: 'warn'|'error', code, message, objectId? }
+  artifacts:
+    importRootId: string           # Resonite 上のルートスロット ID
+  performance:
+    durationMs: number             # 全体所要時間
+    stepTimings: { [phase]: number }  # 各フェーズの所要時間
+```
 
 ## 5.4 CLI オプション ↔ ImportConfig マッピング
 
 CLI Adapter は以下のマッピングで ImportConfig を構築する。GUI Adapter も同等のマッピングを独自 UI から構築する。
 
-| CLI オプション | ImportConfig フィールド | 備考 |
-|---|---|---|
-| `-i, --input` | `inputZipPath` | 必須 |
-| `-p, --port` | `resonite.port` | デフォルト: 実装定義 |
-| `-H, --host` | `resonite.host` | デフォルト: `localhost` |
-| `--root-scale` | `rootScale` | > 0 の実数 |
-| `--root-grabbable` | `rootGrabbable` | boolean flag |
-| `--enable-character-collider` / `--disable-character-collider` | `enableCharacterCollider` | 相互排他フラグ |
-| `--transparent-blend-mode` | `transparentBlendMode` | `Cutout` または `Alpha` |
-| `-d, --dry-run` | `dryRun` | 別フィールド（ImportOptions）でも可 |
-| `-v, --verbose` | ImportConfig 外 — `ProgressPort` の verbosity として注入 | ImportConfig を汚染しない |
+| CLI オプション | 格納先 | フィールド名 | デフォルト | 備考 |
+|---|---|---|---|---|
+| `-i, --input` | `ImportConfig` | `inputZipPath` | （必須） | |
+| `-p, --port` | `ImportConfig` | `resonite.port` | `20080` | 現行実装のデフォルト値 |
+| `-H, --host` | `ImportConfig` | `resonite.host` | `localhost` | |
+| `--root-scale` | `ImportConfig` | `rootScale` | `1.0` | > 0 の実数 |
+| `--root-grabbable` | `ImportConfig` | `rootGrabbable` | `false` | |
+| `--no-simple-avatar-protection` | `ImportConfig` | `simpleAvatarProtection` | `true` | フラグ指定で `false` |
+| `--enable-character-collider` | `ImportConfig` | `enableCharacterCollider` | `true` | |
+| `--disable-character-collider` | `ImportConfig` | `enableCharacterCollider` | — | `--enable-` と相互排他 |
+| `--transparent-blend-mode` | `ImportConfig` | `transparentBlendMode` | `Cutout` | `Cutout` または `Alpha` |
+| `-d, --dry-run` | **`ImportOptions`** | `dryRun` | `false` | ImportConfig には**入れない** |
+| `-v, --verbose` | **`ImportOptions`** | `verbose` | `false` | `ProgressPort` の実装で参照 |
 
-> **設計方針**: `verbose` と `dry-run` は実行制御であり、変換仕様には影響しない。
-> `verbose` は `ProgressPort` の実装（詳細ログ出力 Adapter）で吸収し、
-> `dry-run` は `ImportUseCase` への入力フラグ（`ImportOptions.dryRun`）として分離することを推奨する。
-> これにより `ImportConfig` が「何を変換するか」の純粋な設定として機能し、「どのように実行するか」が混入しない。
+> **設計方針**: `dry-run` と `verbose` は「どのように実行するか」の制御であり、変換仕様（ImportConfig）と混在させない。
+> `ImportOptions` として UseCase への別引数とし、Core は ImportOptions を知らなくてよい。
+> `verbose` は `ProgressPort` の実装（詳細ログ出力 Adapter）内で `ImportOptions.verbose` を参照する。
 
 ---
 
@@ -250,8 +285,17 @@ CLI Adapter は以下のマッピングで ImportConfig を構築する。GUI Ad
 4. Asset 適用
 5. Material/Mesh 適用
 6. Slot/Component 適用
-7. タグ付け
+7. タグ付け（Finalize）
 8. 結果集計
+
+### Pre-cleanup の仕様
+Pre-cleanup は前回インポートの残留スロットを除去し、ルートのトランスフォームを引き継ぐための処理である。
+
+- **検出方法**: ルートスロット直下の子スロットのうち、特定のタグ（`UdonariumImport` または実装定義のタグ文字列）を持つものを対象とする。
+- **保持するもの**: ルートスロット自体のトランスフォーム（位置・回転・スケール）。以前のインポート位置を次回インポートに引き継ぐ。
+- **削除するもの**: タグを持つ子スロット（Tables / Objects / Inventory 等の直下グループ）を削除する。
+- **タグ付けのタイミング**: Finalize ステップ（ステップ 7）でインポートグループに同タグを付与する。これにより次回 Pre-cleanup で正しく検出される。
+- **タグ名の管理**: タグ文字列は ImportConfig または定数として一元管理し、Compile / Apply / Finalize で共有する。
 
 ---
 
@@ -266,7 +310,9 @@ CLI Adapter は以下のマッピングで ImportConfig を構築する。GUI Ad
 
 ### 7.2 失敗戦略
 - Compile 中の致命エラーは即中断。
-- Apply 中は「継続可能な単位」で続行し、最終レポートで失敗件数を提示。
+- Apply 中は **SlotPlanEntry 単位**（= Udonarium オブジェクト1件）で継続する。1件の Apply 失敗は PartialApplyError として記録し、次の SlotPlanEntry の処理を続ける。
+  - Asset/Material/Mesh の Apply 失敗はそれを参照する Slot も失敗扱いとし、Slot の Apply はスキップする。
+  - Component 単位での部分失敗（Slot は作成できたが一部コンポーネント追加失敗）も PartialApplyError として記録する。
 - 例外は UseCase 境界で必ずドメインエラーへ正規化。
 
 ---
@@ -360,8 +406,8 @@ CLI Adapter は以下のマッピングで ImportConfig を構築する。GUI Ad
 
 ## Phase 5: 技術負債整理（1〜2週）
 - タスク:
-  1. 重複コード削減（CLI/GUI）
-  2. ログ/メトリクス標準化
+  1. Phase 1〜3 で対処しきれなかった残留重複コードの削減
+  2. ログ/メトリクス標準化（correlationId, step timings の実装）
   3. パフォーマンス最適化（必要時）
 
 ---
@@ -372,7 +418,7 @@ CLI Adapter は以下のマッピングで ImportConfig を構築する。GUI Ad
 2. dry-run/live import で Compile ロジックが共通。
 3. 主要 fixture で現行互換（object/image 成功数一致）。
 4. 失敗時に ImportReport で原因分類が可能。
-5. 新オブジェクト追加時に変更箇所が Registry + Converter + Test に閉じる。
+5. 新オブジェクト追加時の変更箇所が `ObjectType` 定義・Converter ファイル・switch case・テストの4点に閉じる（Registry 化完了後は Converter + Test の2点）。
 
 ---
 
@@ -409,21 +455,28 @@ CLI Adapter は以下のマッピングで ImportConfig を構築する。GUI Ad
 
 ## 14. 実装開始時の最初の 10 チケット（例）
 
-1. ARCH-001: ImportConfig 契約定義
-2. ARCH-002: ProgressEvent 契約定義
-3. APP-001: AnalyzeUseCase scaffold
-4. APP-002: CLI dry-run を AnalyzeUseCase 経由化
-5. APP-003: GUI analyze を AnalyzeUseCase 経由化
-6. APP-004: ImportUseCase scaffold
-7. CORE-001: ImportPlan モデル定義
-8. CORE-002: Plan Builder 初版
-9. INF-001: ResoniteGatewayPort + adapter
+Phase 0:
+1. ARCH-001: ImportConfig / ImportOptions 契約定義（Section 5.1 / 5.4 に基づく）
+2. ARCH-002: ProgressEvent / ImportReport 契約定義（Section 5.2 / 5.3 に基づく）
+
+Phase 1:
+3. ARCH-003: CLI/GUI 共通実行フローを `src/application/` へ抽出
+4. ARCH-004: CLI Adapter を ImportConfig + ImportOptions にマッピング（Section 5.4）
+5. ARCH-005: GUI Adapter を ImportConfig + ImportOptions にマッピング
+
+Phase 2:
+6. APP-001: AnalyzeUseCase scaffold（入力: `{ config, options }`, 出力: AnalyzeOutput）
+7. APP-002: CLI dry-run / GUI analyze を AnalyzeUseCase 経由化
+8. APP-003: ImportUseCase scaffold（Phase 1 共通関数へ委譲）
+
+Phase 3 準備:
+9. CORE-001: ImportPlan モデル定義（Section 4.4 の概念構造に基づく）
 10. QA-001: Plan snapshot テスト基盤
 
 ---
 
 ## 15. まとめ
 
-- 本再設計は「全面書き換え」ではなく、**契約抽出 -> UseCase 統合 -> Compile/Apply 分離 -> Plugin 化**の順で安全に進める。
+- 本再設計は「全面書き換え」ではなく、**契約抽出 -> 共通ロジック抽出 -> UseCase 統合 -> Compile/Apply 分離**の順で安全に進める（Converter Registry 化は任意）。
 - 成果は「重複削減」「拡張容易性」「テスト容易性」「失敗時診断性」の4点で測る。
 - ドキュメントを仕様の単一情報源とし、実装は常に本設計との差分説明を伴って進める。
