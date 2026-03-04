@@ -92,6 +92,33 @@ export interface DiagnosticEntry {
   objectId?: string;
 }
 
+// ---------------------------------------------------------------------------
+// AnalyzeOutput — 解析結果（dry-run / GUI analyze 共通）
+// ---------------------------------------------------------------------------
+
+export interface AnalyzeOutput {
+  summary: {
+    xmlCount: number;
+    imageCount: number;
+    objectCount: number;
+    typeCounts: Record<string, number>;
+  };
+  /** 変換後オブジェクト概要（verbose / GUI プレビュー用） */
+  convertedObjects: Array<{
+    name: string;
+    id: string;
+    position: { x: number; y: number; z: number };
+  }>;
+  diagnostics: DiagnosticEntry[];
+  performance: {
+    durationMs: number;
+  };
+}
+
+// ---------------------------------------------------------------------------
+// ImportReport — 実行結果
+// ---------------------------------------------------------------------------
+
 export interface ImportReport {
   summary: {
     images: { total: number; success: number; failed: number };

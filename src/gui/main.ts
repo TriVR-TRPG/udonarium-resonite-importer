@@ -7,11 +7,10 @@
 
 import { app, BrowserWindow, ipcMain, dialog, IpcMainInvokeEvent } from 'electron';
 import * as path from 'path';
-import { extractZip } from '../parser/ZipExtractor';
-import { parseXmlFiles } from '../parser/XmlParser';
 import { IMPORT_GROUP_SCALE } from '../config/MappingConfig';
 import { AnalyzeResult, DefaultConfig, ImportOptions, ImportResult } from './types';
-import { runImport } from '../application/importRunner';
+import { analyze } from '../application/analyzeUseCase';
+import { importToResonite } from '../application/importUseCase';
 import type {
   ImportConfig,
   ImportOptions as AppImportOptions,
@@ -19,7 +18,6 @@ import type {
 } from '../application/contracts';
 
 let mainWindow: BrowserWindow | null = null;
-const NO_PARSED_OBJECTS_ERROR = 'No supported objects were found in the ZIP file.';
 const NO_PARSED_OBJECTS_ERROR_CODE: ImportResult['errorCode'] = 'NO_PARSED_OBJECTS';
 
 function createWindow(): void {
@@ -83,26 +81,28 @@ ipcMain.handle('select-file', async (): Promise<string | null> => {
   return result.filePaths[0];
 });
 
-function handleAnalyzeZip(filePath: string): AnalyzeResult {
+async function handleAnalyzeZip(filePath: string): Promise<AnalyzeResult> {
+  const minimalConfig: ImportConfig = {
+    inputZipPath: filePath,
+    resonite: { host: 'localhost', port: 0 },
+    rootScale: 1,
+    rootGrabbable: false,
+    simpleAvatarProtection: true,
+    transparentBlendMode: 'Cutout',
+    enableCharacterCollider: true,
+  };
   try {
-    const extractedData = extractZip(filePath);
-    const parseResult = parseXmlFiles(extractedData.xmlFiles);
-    const hasObjects = parseResult.objects.length > 0;
-
-    // Count by type
-    const typeCounts: Record<string, number> = {};
-    for (const obj of parseResult.objects) {
-      typeCounts[obj.type] = (typeCounts[obj.type] || 0) + 1;
-    }
-
+    const output = await analyze(minimalConfig, { dryRun: true, verbose: false });
+    const hasErrors = output.diagnostics.some((d) => d.level === 'error');
+    const errorMsg = output.diagnostics.find((d) => d.level === 'error')?.message;
     return {
-      success: hasObjects,
-      ...(hasObjects ? {} : { error: NO_PARSED_OBJECTS_ERROR }),
-      xmlCount: extractedData.xmlFiles.length,
-      imageCount: extractedData.imageFiles.length,
-      objectCount: parseResult.objects.length,
-      typeCounts,
-      errors: parseResult.errors.map((e) => `${e.file}: ${e.message}`),
+      success: !hasErrors,
+      ...(hasErrors ? { error: errorMsg } : {}),
+      xmlCount: output.summary.xmlCount,
+      imageCount: output.summary.imageCount,
+      objectCount: output.summary.objectCount,
+      typeCounts: output.summary.typeCounts,
+      errors: output.diagnostics.filter((d) => d.code === 'PARSE_WARNING').map((d) => d.message),
     };
   } catch (error) {
     return {
@@ -117,10 +117,13 @@ function handleAnalyzeZip(filePath: string): AnalyzeResult {
   }
 }
 
-ipcMain.handle('analyze-zip', (_event: IpcMainInvokeEvent, ...args: unknown[]): AnalyzeResult => {
-  const filePath = args[0] as string;
-  return handleAnalyzeZip(filePath);
-});
+ipcMain.handle(
+  'analyze-zip',
+  async (_event: IpcMainInvokeEvent, ...args: unknown[]): Promise<AnalyzeResult> => {
+    const filePath = args[0] as string;
+    return handleAnalyzeZip(filePath);
+  }
+);
 
 // ---------------------------------------------------------------------------
 // GUI Adapter: GUI ImportOptions → ImportConfig + AppImportOptions
@@ -185,7 +188,7 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
   };
 
   try {
-    const report = await runImport(config, appOptions, onProgress);
+    const report = await importToResonite(config, appOptions, onProgress);
 
     sendProgress('complete', 100);
 
@@ -200,7 +203,9 @@ async function handleImportToResonite(options: ImportOptions): Promise<ImportRes
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     const errorCode: ImportResult['errorCode'] =
-      errorMessage === NO_PARSED_OBJECTS_ERROR ? NO_PARSED_OBJECTS_ERROR_CODE : 'UNKNOWN';
+      errorMessage === 'No supported objects were found in the ZIP file.'
+        ? NO_PARSED_OBJECTS_ERROR_CODE
+        : 'UNKNOWN';
 
     return {
       success: false,

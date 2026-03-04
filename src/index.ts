@@ -17,12 +17,6 @@ import ora from 'ora';
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { extractZip } from './parser/ZipExtractor';
-import { parseXmlFiles } from './parser/XmlParser';
-import { convertObjectsWithImageAssetContext } from './converter/ObjectConverter';
-import { buildImageAspectRatioMap, buildImageBlendModeMap } from './converter/imageAspectRatioMap';
-import { buildImageAssetContext } from './converter/imageAssetContext';
-import { buildDryRunImageAssetInfoMap } from './resonite/dryRunImageAssetInfo';
 import {
   IMPORT_GROUP_SCALE,
   getResoniteLinkPort,
@@ -31,7 +25,8 @@ import {
 import { t, setLocale, Locale } from './i18n';
 import { APP_VERSION } from './version';
 
-import { runImport } from './application/importRunner';
+import { analyze } from './application/analyzeUseCase';
+import { importToResonite } from './application/importUseCase';
 import type { ImportConfig, ImportOptions, ProgressEvent } from './application/contracts';
 
 interface CLIOptions {
@@ -48,8 +43,6 @@ interface CLIOptions {
   enableCharacterCollider: boolean;
   disableCharacterCollider: boolean;
 }
-
-const NO_PARSED_OBJECTS_ERROR = 'No supported objects were found in the ZIP file.';
 
 function parseLocaleFromArgv(argv: string[]) {
   for (let i = 0; i < argv.length; i++) {
@@ -219,91 +212,76 @@ async function run(options: CLIOptions): Promise<void> {
     process.exit(1);
   }
 
-  // --- dry-run パス（Phase 2 で AnalyzeUseCase に移行予定）---
+  // --- dry-run パス（AnalyzeUseCase 経由）---
 
   if (options.dryRun) {
-    const semiTransparentMode =
-      semiTransparentImageBlendModeArg.toLowerCase() === 'alpha' ? 'Alpha' : ('Cutout' as const);
-    const enableCharacterColliderOnLockedTerrain =
-      options.enableCharacterCollider && !options.disableCharacterCollider;
+    const config = buildImportConfig(options, port ?? 0, host);
+    const importOptions = buildImportOptions(options);
 
-    const extractSpinner = ora(`[1/4] ${t('cli.extracting')}`).start();
-    let extractedData;
+    type SpinnerRef = {
+      isSpinning: boolean;
+      succeed(text?: string): SpinnerRef;
+      fail(text?: string): SpinnerRef;
+    };
+    const spinnerRef = { current: null as SpinnerRef | null };
+    let lastPhase: ProgressEvent['phase'] | null = null;
+
+    let analyzeOutput;
     try {
-      extractedData = extractZip(inputPath);
-      extractSpinner.succeed(
-        `[1/4] ${t('cli.extracted', { xml: extractedData.xmlFiles.length, images: extractedData.imageFiles.length })}`
-      );
+      analyzeOutput = await analyze(config, importOptions, (event) => {
+        if (event.phase !== lastPhase) {
+          if (spinnerRef.current?.isSpinning) spinnerRef.current.succeed();
+          lastPhase = event.phase;
+          if (event.phase === 'extract') {
+            spinnerRef.current = ora(
+              `[1/2] ${t('cli.extracting')}`
+            ).start() as unknown as SpinnerRef;
+          } else if (event.phase === 'parse') {
+            spinnerRef.current = ora(`[2/2] ${t('cli.parsing')}`).start() as unknown as SpinnerRef;
+          }
+        }
+        if (event.level === 'warn') {
+          console.warn(chalk.yellow(`  ⚠ ${event.message}`));
+        }
+      });
     } catch (error) {
-      extractSpinner.fail(`[1/4] ${t('cli.error.extractFailed')}`);
+      if (spinnerRef.current?.isSpinning) spinnerRef.current.fail();
       console.error(chalk.red(error instanceof Error ? error.message : 'Unknown error'));
       process.exit(1);
     }
 
-    const parseSpinner = ora(`[2/4] ${t('cli.parsing')}`).start();
-    const parseResult = parseXmlFiles(extractedData.xmlFiles);
-
-    if (parseResult.errors.length > 0 && options.verbose) {
-      for (const err of parseResult.errors) {
-        console.warn(chalk.yellow(`  Warning: ${err.file} - ${err.message}`));
-      }
+    if (spinnerRef.current?.isSpinning) {
+      spinnerRef.current.succeed(
+        `[2/2] ${t('cli.parsed', { count: analyzeOutput.summary.objectCount })}`
+      );
     }
 
-    if (parseResult.objects.length === 0) {
-      parseSpinner.fail(`[2/4] ${t('cli.parsed', { count: 0 })}`);
-      console.error(chalk.red(NO_PARSED_OBJECTS_ERROR));
+    const errorDiags = analyzeOutput.diagnostics.filter((d) => d.level === 'error');
+    if (errorDiags.length > 0) {
+      for (const diag of errorDiags) console.error(chalk.red(diag.message));
       process.exit(1);
     }
 
-    parseSpinner.succeed(`[2/4] ${t('cli.parsed', { count: parseResult.objects.length })}`);
-
     if (options.verbose) {
-      const typeCounts = new Map<string, number>();
-      for (const obj of parseResult.objects) {
-        typeCounts.set(obj.type, (typeCounts.get(obj.type) || 0) + 1);
+      for (const diag of analyzeOutput.diagnostics.filter((d) => d.level === 'warn')) {
+        console.warn(chalk.yellow(`  Warning: ${diag.message}`));
       }
-      for (const [type, count] of typeCounts) {
-        const typeName = t(`objectTypes.${type}`);
-        console.log(chalk.gray(`      - ${typeName}: ${count}`));
+      for (const [type, count] of Object.entries(analyzeOutput.summary.typeCounts)) {
+        console.log(chalk.gray(`      - ${t(`objectTypes.${type}`)}: ${count}`));
       }
     }
-
-    const imageAspectRatioMap = await buildImageAspectRatioMap(
-      extractedData.imageFiles,
-      parseResult.objects
-    );
-    const imageBlendModeMap = await buildImageBlendModeMap(
-      extractedData.imageFiles,
-      parseResult.objects,
-      { semiTransparentMode }
-    );
-    const imageAssetInfoMap = buildDryRunImageAssetInfoMap(
-      extractedData.imageFiles,
-      parseResult.objects
-    );
-    const imageAssetContext = buildImageAssetContext({
-      imageAssetInfoMap,
-      imageAspectRatioMap,
-      imageBlendModeMap,
-    });
-    const resoniteObjects = convertObjectsWithImageAssetContext(
-      parseResult.objects,
-      imageAssetContext,
-      { enableCharacterColliderOnLockedTerrain },
-      parseResult.extensions
-    );
 
     console.log();
     console.log(chalk.yellow(t('cli.dryRunMode')));
     console.log();
     console.log(chalk.bold(t('cli.summary')));
-    console.log(`  ${t('cli.objectsToImport', { count: resoniteObjects.length })}`);
-    console.log(`  ${t('cli.imagesToImport', { count: extractedData.imageFiles.length })}`);
+    console.log(`  ${t('cli.objectsToImport', { count: analyzeOutput.summary.objectCount })}`);
+    console.log(`  ${t('cli.imagesToImport', { count: analyzeOutput.summary.imageCount })}`);
     console.log();
 
     if (options.verbose) {
       console.log(chalk.bold('Converted Resonite Objects:'));
-      for (const obj of resoniteObjects) {
+      for (const obj of analyzeOutput.convertedObjects) {
         console.log(
           `  - ${obj.name} (${obj.id}) at (${obj.position.x.toFixed(2)}, ${obj.position.y.toFixed(2)}, ${obj.position.z.toFixed(2)})`
         );
@@ -359,7 +337,7 @@ async function run(options: CLIOptions): Promise<void> {
   });
 
   try {
-    const report = await runImport(config, importOptions, onProgress);
+    const report = await importToResonite(config, importOptions, onProgress);
 
     // finalize 完了 → apply スピナーを閉じる
     const successSpinner = spinnerRef.current;
