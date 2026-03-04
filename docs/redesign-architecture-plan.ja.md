@@ -474,9 +474,9 @@ Phase 2（✅ 完了）:
 7. ~~APP-002: CLI dry-run / GUI analyze を AnalyzeUseCase 経由化~~ ✅ → `src/index.ts`, `src/gui/main.ts`
 8. ~~APP-003: ImportUseCase scaffold（Phase 1 共通関数へ委譲）~~ ✅ → `src/application/importUseCase.ts`
 
-Phase 3 準備:
-9. CORE-001: ImportPlan モデル定義（Section 4.4 の概念構造に基づく）
-10. QA-001: Plan snapshot テスト基盤
+Phase 3 準備（✅ 完了）:
+9. ~~CORE-001: ImportPlan モデル定義（Section 4.4 の概念構造に基づく）~~ ✅ → `src/application/importPlan.ts`
+10. ~~QA-001: Plan snapshot テスト基盤~~ ✅ → `src/application/analyzeUseCase.snapshot.test.ts`（7 tests + 6 snapshots）
 
 ---
 
