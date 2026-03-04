@@ -2,6 +2,9 @@
 /**
  * Udonarium Resonite Importer
  * Import Udonarium save data into Resonite via ResoniteLink
+ *
+ * CLI Adapter (Phase 1)
+ * CLIOptions → ImportConfig + ImportOptions → runImport()
  */
 
 import * as dotenv from 'dotenv';
@@ -19,26 +22,17 @@ import { parseXmlFiles } from './parser/XmlParser';
 import { convertObjectsWithImageAssetContext } from './converter/ObjectConverter';
 import { buildImageAspectRatioMap, buildImageBlendModeMap } from './converter/imageAspectRatioMap';
 import { buildImageAssetContext } from './converter/imageAssetContext';
-import { prepareSharedMeshDefinitions, resolveSharedMeshReferences } from './converter/sharedMesh';
-import {
-  prepareSharedMaterialDefinitions,
-  resolveSharedMaterialReferences,
-} from './converter/sharedMaterial';
-import { ResoniteLinkClient } from './resonite/ResoniteLinkClient';
-import { SlotBuilder } from './resonite/SlotBuilder';
-import { AssetImporter } from './resonite/AssetImporter';
-import { registerExternalUrls } from './resonite/registerExternalUrls';
 import { buildDryRunImageAssetInfoMap } from './resonite/dryRunImageAssetInfo';
 import {
-  IMPORT_ROOT_TAG,
   IMPORT_GROUP_SCALE,
   getResoniteLinkPort,
   getResoniteLinkHost,
-  ImageBlendMode,
-  VERIFIED_RESONITE_LINK_VERSION,
 } from './config/MappingConfig';
 import { t, setLocale, Locale } from './i18n';
 import { APP_VERSION } from './version';
+
+import { runImport } from './application/importRunner';
+import type { ImportConfig, ImportOptions, ProgressEvent } from './application/contracts';
 
 interface CLIOptions {
   input: string;
@@ -111,33 +105,64 @@ program
   .helpOption('-h, --help', t('cli.help.help'))
   .action(run);
 
-async function warnResoniteLinkVersionIfChanged(client: ResoniteLinkClient): Promise<void> {
-  try {
-    const sessionData = await client.getSessionData();
-    const runtimeVersion = sessionData.resoniteLinkVersion;
+// ---------------------------------------------------------------------------
+// CLI Adapter: CLIOptions → ImportConfig + ImportOptions
+// ---------------------------------------------------------------------------
 
-    if (!runtimeVersion) {
-      return;
-    }
-
-    if (runtimeVersion !== VERIFIED_RESONITE_LINK_VERSION) {
-      console.warn(
-        chalk.yellow(
-          `⚠ ResoniteLink version changed: expected ${VERIFIED_RESONITE_LINK_VERSION}, connected ${runtimeVersion}. Please validate compatibility.`
-        )
-      );
-    }
-  } catch (error) {
-    console.warn(
-      chalk.yellow(
-        `⚠ Warning: Failed to check ResoniteLink version: ${error instanceof Error ? error.message : String(error)}`
-      )
-    );
-  }
+function buildImportConfig(options: CLIOptions, port: number, host: string): ImportConfig {
+  const rootScale = Number.parseFloat(options.rootScale);
+  const transparentBlendMode = (() => {
+    const mode = options.transparentBlendMode.trim().toLowerCase();
+    if (mode === 'alpha') return 'Alpha' as const;
+    return 'Cutout' as const;
+  })();
+  return {
+    inputZipPath: path.resolve(options.input),
+    resonite: { host, port },
+    rootScale,
+    rootGrabbable: options.rootGrabbable,
+    simpleAvatarProtection: options.simpleAvatarProtection,
+    transparentBlendMode,
+    enableCharacterCollider: options.enableCharacterCollider && !options.disableCharacterCollider,
+  };
 }
 
+function buildImportOptions(options: CLIOptions): ImportOptions {
+  return {
+    dryRun: options.dryRun,
+    verbose: options.verbose,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// ProgressEvent → CLI スピナー表示
+// ---------------------------------------------------------------------------
+
+function makeProgressHandler(
+  verbose: boolean,
+  onPhaseChange: (phase: ProgressEvent['phase']) => void
+): (event: ProgressEvent) => void {
+  let lastPhase: ProgressEvent['phase'] | null = null;
+  return (event: ProgressEvent) => {
+    if (event.phase !== lastPhase) {
+      lastPhase = event.phase;
+      onPhaseChange(event.phase);
+    }
+    if (event.level === 'warn') {
+      console.warn(chalk.yellow(`  ⚠ ${event.message}`));
+    } else if (event.level === 'error') {
+      console.error(chalk.red(`  ✖ ${event.message}`));
+    } else if (verbose && event.message) {
+      // verbose モードでは info メッセージも表示
+    }
+  };
+}
+
+// ---------------------------------------------------------------------------
+// メイン実行
+// ---------------------------------------------------------------------------
+
 async function run(options: CLIOptions): Promise<void> {
-  // Set locale if specified
   if (options.lang) {
     setLocale(options.lang as Locale);
   }
@@ -146,7 +171,8 @@ async function run(options: CLIOptions): Promise<void> {
   console.log(chalk.cyan('='.repeat(40)));
   console.log();
 
-  // Resolve port from CLI option or environment variable
+  // --- バリデーション ---
+
   let port: number | null = null;
   if (options.port) {
     port = parseInt(options.port, 10);
@@ -158,7 +184,6 @@ async function run(options: CLIOptions): Promise<void> {
     port = getResoniteLinkPort() ?? null;
   }
 
-  // Port is required unless dry-run mode
   if (!port && !options.dryRun) {
     console.error(
       chalk.red(
@@ -171,104 +196,87 @@ async function run(options: CLIOptions): Promise<void> {
     process.exit(1);
   }
 
-  // Resolve host from CLI option or environment variable
   const host = options.host || getResoniteLinkHost();
-  const enableCharacterColliderOnLockedTerrain =
-    options.enableCharacterCollider && !options.disableCharacterCollider;
+
   const rootScale = Number.parseFloat(options.rootScale);
   if (!Number.isFinite(rootScale) || rootScale <= 0) {
     console.error(chalk.red('Invalid root scale. Must be a positive number.'));
     process.exit(1);
   }
+
   const semiTransparentImageBlendModeArg = options.transparentBlendMode.trim();
-  let semiTransparentMode: ImageBlendMode;
-  if (semiTransparentImageBlendModeArg.toLowerCase() === 'alpha') {
-    semiTransparentMode = 'Alpha';
-  } else if (semiTransparentImageBlendModeArg.toLowerCase() === 'cutout') {
-    semiTransparentMode = 'Cutout';
-  } else {
+  if (
+    semiTransparentImageBlendModeArg.toLowerCase() !== 'alpha' &&
+    semiTransparentImageBlendModeArg.toLowerCase() !== 'cutout'
+  ) {
     console.error(chalk.red('Invalid semi-transparent image blend mode. Use "Cutout" or "Alpha".'));
     process.exit(1);
   }
 
-  // Validate input file
   const inputPath = path.resolve(options.input);
   if (!fs.existsSync(inputPath)) {
     console.error(chalk.red(t('cli.error.fileNotFound', { path: inputPath })));
     process.exit(1);
   }
 
-  // Step 1: Extract ZIP
-  const extractSpinner = ora(`[1/4] ${t('cli.extracting')}`).start();
-  let extractedData;
-  try {
-    extractedData = extractZip(inputPath);
-    extractSpinner.succeed(
-      `[1/4] ${t('cli.extracted', { xml: extractedData.xmlFiles.length, images: extractedData.imageFiles.length })}`
-    );
-  } catch (error) {
-    extractSpinner.fail(`[1/4] ${t('cli.error.extractFailed')}`);
-    console.error(chalk.red(error instanceof Error ? error.message : 'Unknown error'));
-    process.exit(1);
-  }
+  // --- dry-run パス（Phase 2 で AnalyzeUseCase に移行予定）---
 
-  // Step 2: Parse objects
-  const parseSpinner = ora(`[2/4] ${t('cli.parsing')}`).start();
-  const parseResult = parseXmlFiles(extractedData.xmlFiles);
-
-  if (parseResult.errors.length > 0 && options.verbose) {
-    for (const err of parseResult.errors) {
-      console.warn(chalk.yellow(`  Warning: ${err.file} - ${err.message}`));
-    }
-  }
-
-  // Count by type
-  const typeCounts = new Map<string, number>();
-  for (const obj of parseResult.objects) {
-    typeCounts.set(obj.type, (typeCounts.get(obj.type) || 0) + 1);
-  }
-
-  if (parseResult.objects.length === 0) {
-    parseSpinner.fail(`[2/4] ${t('cli.parsed', { count: 0 })}`);
-    console.error(chalk.red(NO_PARSED_OBJECTS_ERROR));
-    process.exit(1);
-  }
-
-  parseSpinner.succeed(`[2/4] ${t('cli.parsed', { count: parseResult.objects.length })}`);
-  const imageAspectRatioMap = await buildImageAspectRatioMap(
-    extractedData.imageFiles,
-    parseResult.objects
-  );
-  const imageBlendModeMap = await buildImageBlendModeMap(
-    extractedData.imageFiles,
-    parseResult.objects,
-    { semiTransparentMode }
-  );
-
-  if (options.verbose) {
-    for (const [type, count] of typeCounts) {
-      const typeName = t(`objectTypes.${type}`);
-      console.log(chalk.gray(`      - ${typeName}: ${count}`));
-    }
-  }
-
-  // In dev mode (ts-node), always dump parsed objects to JSON for debugging
-  if (__filename.endsWith('.ts')) {
-    const replacer = (_key: string, value: unknown): unknown =>
-      value instanceof Map ? Object.fromEntries(value as Map<string, unknown>) : value;
-    const jsonContent = JSON.stringify(parseResult.objects, replacer, 2);
-    const parsedDir = path.resolve(__dirname, '..', 'parsed');
-    if (!fs.existsSync(parsedDir)) {
-      fs.mkdirSync(parsedDir, { recursive: true });
-    }
-    const baseName = path.basename(inputPath).replace(/\.zip$/i, '') + '.parsed.json';
-    const jsonPath = path.join(parsedDir, baseName);
-    fs.writeFileSync(jsonPath, jsonContent, 'utf-8');
-    console.log(chalk.gray(`  [dev] Parsed JSON → ${jsonPath}`));
-  }
-
-  // Dry run - stop here
   if (options.dryRun) {
+    const semiTransparentMode =
+      semiTransparentImageBlendModeArg.toLowerCase() === 'alpha' ? 'Alpha' : ('Cutout' as const);
+    const enableCharacterColliderOnLockedTerrain =
+      options.enableCharacterCollider && !options.disableCharacterCollider;
+
+    const extractSpinner = ora(`[1/4] ${t('cli.extracting')}`).start();
+    let extractedData;
+    try {
+      extractedData = extractZip(inputPath);
+      extractSpinner.succeed(
+        `[1/4] ${t('cli.extracted', { xml: extractedData.xmlFiles.length, images: extractedData.imageFiles.length })}`
+      );
+    } catch (error) {
+      extractSpinner.fail(`[1/4] ${t('cli.error.extractFailed')}`);
+      console.error(chalk.red(error instanceof Error ? error.message : 'Unknown error'));
+      process.exit(1);
+    }
+
+    const parseSpinner = ora(`[2/4] ${t('cli.parsing')}`).start();
+    const parseResult = parseXmlFiles(extractedData.xmlFiles);
+
+    if (parseResult.errors.length > 0 && options.verbose) {
+      for (const err of parseResult.errors) {
+        console.warn(chalk.yellow(`  Warning: ${err.file} - ${err.message}`));
+      }
+    }
+
+    if (parseResult.objects.length === 0) {
+      parseSpinner.fail(`[2/4] ${t('cli.parsed', { count: 0 })}`);
+      console.error(chalk.red(NO_PARSED_OBJECTS_ERROR));
+      process.exit(1);
+    }
+
+    parseSpinner.succeed(`[2/4] ${t('cli.parsed', { count: parseResult.objects.length })}`);
+
+    if (options.verbose) {
+      const typeCounts = new Map<string, number>();
+      for (const obj of parseResult.objects) {
+        typeCounts.set(obj.type, (typeCounts.get(obj.type) || 0) + 1);
+      }
+      for (const [type, count] of typeCounts) {
+        const typeName = t(`objectTypes.${type}`);
+        console.log(chalk.gray(`      - ${typeName}: ${count}`));
+      }
+    }
+
+    const imageAspectRatioMap = await buildImageAspectRatioMap(
+      extractedData.imageFiles,
+      parseResult.objects
+    );
+    const imageBlendModeMap = await buildImageBlendModeMap(
+      extractedData.imageFiles,
+      parseResult.objects,
+      { semiTransparentMode }
+    );
     const imageAssetInfoMap = buildDryRunImageAssetInfoMap(
       extractedData.imageFiles,
       parseResult.objects
@@ -278,13 +286,10 @@ async function run(options: CLIOptions): Promise<void> {
       imageAspectRatioMap,
       imageBlendModeMap,
     });
-    // Convert to Resonite objects (dry-run only)
     const resoniteObjects = convertObjectsWithImageAssetContext(
       parseResult.objects,
       imageAssetContext,
-      {
-        enableCharacterColliderOnLockedTerrain,
-      },
+      { enableCharacterColliderOnLockedTerrain },
       parseResult.extensions
     );
 
@@ -307,151 +312,88 @@ async function run(options: CLIOptions): Promise<void> {
     return;
   }
 
-  // Step 3: Connect to ResoniteLink
-  // At this point, port is guaranteed to be defined (validated above, not dry-run)
-  const resolvedPort = port as number;
-  const connectSpinner = ora(`[3/4] ${t('cli.connecting', { host, port: resolvedPort })}`).start();
+  // --- ライブインポートパス ---
 
-  const client = new ResoniteLinkClient({
-    host,
-    port: resolvedPort,
+  const config = buildImportConfig(options, port as number, host);
+  const importOptions = buildImportOptions(options);
+
+  // In dev mode (ts-node), dump parsed objects to JSON for debugging
+  // (dry-run では上で処理済み; ライブインポートは runner 実行前にパースしないためスキップ)
+
+  // スピナー管理
+  // TypeScript CFA で let 変数をクロージャ内で書き換えると never に narrowing される問題を
+  // ref オブジェクトパターンで回避する
+  type Spinner = {
+    isSpinning: boolean;
+    succeed(text?: string): Spinner;
+    fail(text?: string): Spinner;
+  };
+  const spinnerLabels: Partial<Record<ProgressEvent['phase'], string>> = {
+    extract: `[1/4] ${t('cli.extracting')}`,
+    parse: `[2/4] ${t('cli.parsing')}`,
+    connect: `[3/4] ${t('cli.connecting', { host: config.resonite.host, port: config.resonite.port })}`,
+    apply: `[4/4] ${t('cli.importing')}`,
+  };
+  const spinnerRef = { current: null as Spinner | null };
+  let currentPhase: ProgressEvent['phase'] | null = null;
+
+  const onProgress = makeProgressHandler(options.verbose, (phase) => {
+    // 前フェーズのスピナーを完了
+    if (spinnerRef.current?.isSpinning) {
+      spinnerRef.current.succeed();
+    }
+
+    // cleanup/apply/finalize は同じスピナー [4/4]
+    const spinnerPhase = phase === 'cleanup' || phase === 'finalize' ? 'apply' : phase;
+    const label = spinnerLabels[spinnerPhase];
+
+    if (
+      label &&
+      (spinnerPhase !== 'apply' ||
+        currentPhase === null ||
+        (currentPhase !== 'cleanup' && currentPhase !== 'apply'))
+    ) {
+      spinnerRef.current = ora(label).start() as unknown as Spinner;
+    }
+    currentPhase = phase;
   });
 
   try {
-    await client.connect();
-    await warnResoniteLinkVersionIfChanged(client);
-    connectSpinner.succeed(`[3/4] ${t('cli.connected')}`);
+    const report = await runImport(config, importOptions, onProgress);
+
+    // finalize 完了 → apply スピナーを閉じる
+    const successSpinner = spinnerRef.current;
+    if (successSpinner && successSpinner.isSpinning) {
+      const { images, objects } = report.summary;
+      successSpinner.succeed(
+        `[4/4] ${t('cli.importComplete', {
+          images: `${images.success}/${images.total}`,
+          objects: `${objects.success}/${objects.total}`,
+        })}`
+      );
+    }
+
+    // 詳細警告を verbose 時に表示
+    if (options.verbose) {
+      for (const diag of report.diagnostics) {
+        if (diag.level === 'warn') {
+          console.warn(chalk.yellow(`  Warning: ${diag.message}`));
+        }
+      }
+    }
+
+    console.log();
+    console.log(chalk.green.bold(t('cli.success')));
+    console.log(chalk.green(t('cli.checkResonite')));
+    console.log();
   } catch (error) {
-    connectSpinner.fail(`[3/4] ${t('cli.error.connectFailed')}`);
-    console.error(chalk.red(`\n${t('cli.error.ensureResonite')}`));
+    const failSpinner = spinnerRef.current;
+    if (failSpinner && failSpinner.isSpinning) {
+      failSpinner.fail();
+    }
     console.error(chalk.red(error instanceof Error ? error.message : 'Unknown error'));
     process.exit(1);
   }
-
-  // Step 4: Import
-  const importSpinner = ora(`[4/4] ${t('cli.importing')}`).start();
-
-  const assetImporter = new AssetImporter(client);
-
-  // Register external URL references (e.g., ./assets/images/tex.jpg → https://udonarium.app/assets/images/tex.jpg)
-  await registerExternalUrls(parseResult.objects, assetImporter);
-
-  try {
-    const slotBuilder = new SlotBuilder(client);
-    const previousImport = await client.captureTransformAndRemoveRootChildrenByTag(IMPORT_ROOT_TAG);
-
-    // Create import group
-    const groupName = `Udonarium Import - ${path.basename(inputPath, '.zip')}`;
-    const defaultScale = { x: rootScale, y: rootScale, z: rootScale };
-    const groupId = await slotBuilder.createImportGroup(
-      groupName,
-      previousImport.transform,
-      defaultScale,
-      options.rootGrabbable,
-      options.simpleAvatarProtection
-    );
-
-    // Import images and move texture slots into the import group
-    const rootChildIdsBefore = await client.getSlotChildIds('Root');
-
-    let importedImages = 0;
-    const imageResults = await assetImporter.importImages(
-      extractedData.imageFiles,
-      (current, total) => {
-        importedImages = current;
-        importSpinner.text = `[4/4] ${t('cli.importingImages', { current, total })}`;
-      }
-    );
-
-    const failedImages = imageResults.filter((r) => !r.success);
-    if (failedImages.length > 0 && options.verbose) {
-      for (const img of failedImages) {
-        console.warn(chalk.yellow(`  Warning: Failed to import ${img.identifier}: ${img.error}`));
-      }
-    }
-
-    // Move newly created texture slots into the import group
-    const rootChildIdsAfter = await client.getSlotChildIds('Root');
-    const beforeSet = new Set(rootChildIdsBefore);
-    const newSlotIds = rootChildIdsAfter.filter((id) => !beforeSet.has(id));
-    for (const slotId of newSlotIds) {
-      try {
-        await client.reparentSlot(slotId, groupId);
-      } catch {
-        // Non-critical: texture slot stays at root
-      }
-    }
-
-    const importedImageAssetInfoMap = assetImporter.getImportedImageAssetInfoMap();
-    await slotBuilder.createTextureAssetsWithUpdater(
-      importedImageAssetInfoMap,
-      (identifier, componentId) => {
-        assetImporter.applyTextureReference(identifier, componentId);
-      },
-      options.simpleAvatarProtection
-    );
-
-    // Build objects after texture asset creation so materials reference shared StaticTexture2D components.
-    const imageAssetContext = buildImageAssetContext({
-      imageAssetInfoMap: assetImporter.getImportedImageAssetInfoMap(),
-      imageAspectRatioMap,
-      imageBlendModeMap,
-    });
-    const resoniteObjects = convertObjectsWithImageAssetContext(
-      parseResult.objects,
-      imageAssetContext,
-      {
-        enableCharacterColliderOnLockedTerrain,
-      },
-      parseResult.extensions
-    );
-    const sharedMeshDefinitions = prepareSharedMeshDefinitions(resoniteObjects);
-    const meshReferenceMap = await slotBuilder.createMeshAssets(sharedMeshDefinitions);
-    resolveSharedMeshReferences(resoniteObjects, meshReferenceMap);
-    const sharedMaterialDefinitions = prepareSharedMaterialDefinitions(resoniteObjects);
-    const materialReferenceMap = await slotBuilder.createMaterialAssets(sharedMaterialDefinitions);
-    resolveSharedMaterialReferences(resoniteObjects, materialReferenceMap);
-
-    // Build slots
-    let builtSlots = 0;
-    const slotResults = await slotBuilder.buildSlots(
-      resoniteObjects,
-      (current, total) => {
-        builtSlots = current;
-        importSpinner.text = `[4/4] ${t('cli.importingObjects', { current, total })}`;
-      },
-      { enableSimpleAvatarProtection: options.simpleAvatarProtection }
-    );
-
-    const failedSlots = slotResults.filter((r) => !r.success);
-    if (failedSlots.length > 0 && options.verbose) {
-      for (const slot of failedSlots) {
-        console.warn(chalk.yellow(`  Warning: Failed to create ${slot.slotId}: ${slot.error}`));
-      }
-    }
-
-    await slotBuilder.tagImportGroupRoot(groupId);
-
-    const successImages = importedImages - failedImages.length;
-    const successObjects = builtSlots - failedSlots.length;
-    importSpinner.succeed(
-      `[4/4] ${t('cli.importComplete', { images: `${successImages}/${importedImages}`, objects: `${successObjects}/${builtSlots}` })}`
-    );
-
-    client.disconnect();
-  } catch (error) {
-    importSpinner.fail(`[4/4] ${t('cli.error.importFailed')}`);
-    console.error(chalk.red(error instanceof Error ? error.message : 'Unknown error'));
-    client.disconnect();
-    process.exit(1);
-  } finally {
-    assetImporter.cleanup();
-  }
-
-  console.log();
-  console.log(chalk.green.bold(t('cli.success')));
-  console.log(chalk.green(t('cli.checkResonite')));
-  console.log();
 }
 
 program.parse();
