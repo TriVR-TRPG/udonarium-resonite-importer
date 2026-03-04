@@ -1,18 +1,14 @@
 /**
- * AnalyzeUseCase — ZIP 解析・変換可能性評価 (Phase 2)
+ * AnalyzeUseCase — ZIP 解析・変換可能性評価 (Phase 2 → Phase 3)
  *
  * 副作用最小で ZIP を解析し、変換結果のプレビューを返す。
  * Resonite 未起動でも実行可能。同一入力で決定的結果。
  *
  * CLI dry-run と GUI analyze の共通ロジック。
+ * Phase 3 より buildImportPlan() (共通 Compile パス) を使用する。
  */
 
-import { extractZip } from '../parser/ZipExtractor';
-import { parseXmlFiles } from '../parser/XmlParser';
-import { buildImageAspectRatioMap, buildImageBlendModeMap } from '../converter/imageAspectRatioMap';
-import { buildImageAssetContext } from '../converter/imageAssetContext';
-import { convertObjectsWithImageAssetContext } from '../converter/ObjectConverter';
-import { buildDryRunImageAssetInfoMap } from '../resonite/dryRunImageAssetInfo';
+import { buildImportPlan } from './compilePlan';
 
 import type {
   ImportConfig,
@@ -60,32 +56,21 @@ export async function analyze(
   const diagnostics: DiagnosticEntry[] = [];
 
   // -------------------------------------------------------------------------
-  // Phase: extract
+  // Phase: extract + parse + compile (共通パス)
   // -------------------------------------------------------------------------
   emit(onProgress, 'extract', 0, 1, 'Extracting ZIP...');
-  const extractedData = extractZip(config.inputZipPath);
+
+  const { plan, parseStats, diagnostics: compileDiagnostics } = await buildImportPlan(config);
+
+  diagnostics.push(...compileDiagnostics);
+
   emit(onProgress, 'extract', 1, 1, 'ZIP extracted');
 
-  // -------------------------------------------------------------------------
-  // Phase: parse
-  // -------------------------------------------------------------------------
-  emit(onProgress, 'parse', 0, 1, 'Parsing XML files...');
-
-  const parseResult = parseXmlFiles(extractedData.xmlFiles);
-
-  for (const err of parseResult.errors) {
-    diagnostics.push({
-      level: 'warn',
-      code: 'PARSE_WARNING',
-      message: `${err.file}: ${err.message}`,
-    });
-  }
-
-  if (parseResult.objects.length === 0) {
+  if (parseStats.objectCount === 0) {
     return {
       summary: {
-        xmlCount: extractedData.xmlFiles.length,
-        imageCount: extractedData.imageFiles.length,
+        xmlCount: parseStats.xmlCount,
+        imageCount: parseStats.imageCount,
         objectCount: 0,
         typeCounts: {},
       },
@@ -102,47 +87,12 @@ export async function analyze(
     };
   }
 
-  // typeCounts 集計
-  const typeCounts: Record<string, number> = {};
-  for (const obj of parseResult.objects) {
-    typeCounts[obj.type] = (typeCounts[obj.type] || 0) + 1;
-  }
-
-  // -------------------------------------------------------------------------
-  // 画像メタデータ解析 + オブジェクト変換
-  // -------------------------------------------------------------------------
-  const imageAspectRatioMap = await buildImageAspectRatioMap(
-    extractedData.imageFiles,
-    parseResult.objects
-  );
-  const imageBlendModeMap = await buildImageBlendModeMap(
-    extractedData.imageFiles,
-    parseResult.objects,
-    { semiTransparentMode: config.transparentBlendMode }
-  );
-  const imageAssetInfoMap = buildDryRunImageAssetInfoMap(
-    extractedData.imageFiles,
-    parseResult.objects
-  );
-  const imageAssetContext = buildImageAssetContext({
-    imageAssetInfoMap,
-    imageAspectRatioMap,
-    imageBlendModeMap,
-  });
-
-  const resoniteObjects = convertObjectsWithImageAssetContext(
-    parseResult.objects,
-    imageAssetContext,
-    { enableCharacterColliderOnLockedTerrain: config.enableCharacterCollider },
-    parseResult.extensions
-  );
-
   emit(
     onProgress,
     'parse',
     1,
     1,
-    `Parsed ${parseResult.objects.length} objects, ${extractedData.imageFiles.length} images`
+    `Parsed ${parseStats.objectCount} objects, ${parseStats.imageCount} images`
   );
 
   // -------------------------------------------------------------------------
@@ -150,15 +100,15 @@ export async function analyze(
   // -------------------------------------------------------------------------
   return {
     summary: {
-      xmlCount: extractedData.xmlFiles.length,
-      imageCount: extractedData.imageFiles.length,
-      objectCount: resoniteObjects.length,
-      typeCounts,
+      xmlCount: parseStats.xmlCount,
+      imageCount: parseStats.imageCount,
+      objectCount: parseStats.objectCount,
+      typeCounts: parseStats.typeCounts,
     },
-    convertedObjects: resoniteObjects.map((obj) => ({
-      name: obj.name,
-      id: obj.id,
-      position: { x: obj.position.x, y: obj.position.y, z: obj.position.z },
+    convertedObjects: plan.slots.map((slot) => ({
+      name: slot.name,
+      id: slot.logicalId,
+      position: { x: slot.position.x, y: slot.position.y, z: slot.position.z },
     })),
     diagnostics,
     performance: { durationMs: Date.now() - startTime },

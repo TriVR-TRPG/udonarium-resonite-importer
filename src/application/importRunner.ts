@@ -1,19 +1,20 @@
 /**
- * importRunner — 共通インポート実行ロジック (Phase 1)
+ * importRunner — ライブインポート実行ロジック (Phase 3)
  *
  * CLI と GUI の両方が呼び出す共通実行関数。
- * "Functional Core, Imperative Shell" の「Shell」に相当し、
- * 外部副作用（ResoniteLink 操作・ファイルIO）を担当する。
+ * Phase 3 より buildImportPlan()（共通 Compile パス）を使用する。
  *
- * dry-run は Phase 2 で AnalyzeUseCase として分離予定。
- * Phase 1 ではライブインポートのみを扱う。
+ * フロー:
+ *   Compile (buildImportPlan) → Connect → Cleanup → Apply → Finalize
+ *
+ * NOTE: Apply ステップでは実アップロード済み画像 ID を用いて
+ *       オブジェクト変換を再実行する（テクスチャ参照解決のため）。
+ *       Phase 4/5 で ImportPlan.slots から直接 Apply できるよう改善予定。
  */
 
 import * as path from 'path';
 
-import { extractZip } from '../parser/ZipExtractor';
-import { parseXmlFiles } from '../parser/XmlParser';
-import { buildImageAspectRatioMap, buildImageBlendModeMap } from '../converter/imageAspectRatioMap';
+import { buildImportPlan } from './compilePlan';
 import { buildImageAssetContext } from '../converter/imageAssetContext';
 import { convertObjectsWithImageAssetContext } from '../converter/ObjectConverter';
 import { prepareSharedMeshDefinitions, resolveSharedMeshReferences } from '../converter/sharedMesh';
@@ -59,7 +60,7 @@ function emit(
  * ライブインポートを実行する。
  *
  * @param config  変換仕様・接続設定
- * @param _options 実行制御（Phase 1 では dry-run は未サポート、CLI 側で処理）
+ * @param _options 実行制御（dry-run は AnalyzeUseCase 側で処理）
  * @param onProgress 進捗コールバック（任意）
  * @returns ImportReport
  * @throws ZIP 展開失敗 / パースエラー / 接続失敗 / 致命的な Apply エラー
@@ -74,46 +75,24 @@ export async function runImport(
   const diagnostics: DiagnosticEntry[] = [];
 
   // -------------------------------------------------------------------------
-  // Phase: extract
+  // Phase: extract + parse + compile (共通パス)
   // -------------------------------------------------------------------------
   let phaseStart = Date.now();
   emit(onProgress, 'extract', 0, 1, 'Extracting ZIP...');
-  const extractedData = extractZip(config.inputZipPath);
-  emit(onProgress, 'extract', 1, 1, 'ZIP extracted');
-  stepTimings['extract'] = Date.now() - phaseStart;
 
-  // -------------------------------------------------------------------------
-  // Phase: parse
-  // -------------------------------------------------------------------------
-  phaseStart = Date.now();
-  emit(onProgress, 'parse', 0, 1, 'Parsing XML files...');
+  const compileResult = await buildImportPlan(config);
 
-  const parseResult = parseXmlFiles(extractedData.xmlFiles);
+  diagnostics.push(...compileResult.diagnostics);
 
-  for (const err of parseResult.errors) {
-    diagnostics.push({
-      level: 'warn',
-      code: 'PARSE_WARNING',
-      message: `${err.file}: ${err.message}`,
-    });
-  }
+  const { parseStats, _compiled } = compileResult;
 
-  if (parseResult.objects.length === 0) {
+  if (parseStats.objectCount === 0) {
     throw new Error('No supported objects were found in the ZIP file.');
   }
 
-  const imageAspectRatioMap = await buildImageAspectRatioMap(
-    extractedData.imageFiles,
-    parseResult.objects
-  );
-  const imageBlendModeMap = await buildImageBlendModeMap(
-    extractedData.imageFiles,
-    parseResult.objects,
-    { semiTransparentMode: config.transparentBlendMode }
-  );
-
-  emit(onProgress, 'parse', 1, 1, `Parsed ${parseResult.objects.length} objects`);
-  stepTimings['parse'] = Date.now() - phaseStart;
+  emit(onProgress, 'parse', 1, 1, `Parsed ${parseStats.objectCount} objects`);
+  stepTimings['extract'] = Date.now() - phaseStart;
+  stepTimings['parse'] = stepTimings['extract'];
 
   // -------------------------------------------------------------------------
   // Phase: connect
@@ -133,7 +112,6 @@ export async function runImport(
   });
   await client.connect();
 
-  // バージョン確認（不一致は警告として記録）
   try {
     const sessionData = await client.getSessionData();
     const runtimeVersion = sessionData.resoniteLinkVersion;
@@ -164,7 +142,7 @@ export async function runImport(
     phaseStart = Date.now();
     emit(onProgress, 'cleanup', 0, 1, 'Removing previous import...');
 
-    await registerExternalUrls(parseResult.objects, assetImporter);
+    await registerExternalUrls(_compiled.parsedObjects, assetImporter);
     const previousImport = await client.captureTransformAndRemoveRootChildrenByTag(IMPORT_ROOT_TAG);
 
     emit(onProgress, 'cleanup', 1, 1, 'Previous import removed');
@@ -185,15 +163,15 @@ export async function runImport(
       config.simpleAvatarProtection
     );
 
-    const totalImages = extractedData.imageFiles.length;
-    const totalObjects = parseResult.objects.length;
+    const totalImages = _compiled.imageFiles.length;
+    const totalObjects = parseStats.objectCount;
     const totalSteps = totalImages + totalObjects;
 
-    // 画像インポート前のルート子スロット一覧を記録（後でテクスチャスロットをグループに移動）
+    // 画像インポート前のルート子スロット一覧を記録
     const rootChildIdsBefore = await client.getSlotChildIds('Root');
 
     const imageResults = await assetImporter.importImages(
-      extractedData.imageFiles,
+      _compiled.imageFiles,
       (current, total) => {
         emit(onProgress, 'apply', current, totalSteps, `Importing images (${current}/${total})...`);
       }
@@ -220,29 +198,33 @@ export async function runImport(
       config.simpleAvatarProtection
     );
 
-    const imageAssetContext = buildImageAssetContext({
+    // テクスチャ参照解決のため、実アップロード済み ID で imageAssetContext を再構築し
+    // オブジェクト変換を再実行する。
+    // NOTE: Compile ステップが dry-run ID で変換済みの _compiled.resoniteObjects とは別に
+    //       実 ID 版を生成する。Phase 4/5 で ImportPlan.slots ベースの Apply に移行予定。
+    const liveImageAssetContext = buildImageAssetContext({
       imageAssetInfoMap: assetImporter.getImportedImageAssetInfoMap(),
-      imageAspectRatioMap,
-      imageBlendModeMap,
+      imageAspectRatioMap: _compiled.imageAspectRatioMap,
+      imageBlendModeMap: _compiled.imageBlendModeMap,
     });
 
-    const resoniteObjects = convertObjectsWithImageAssetContext(
-      parseResult.objects,
-      imageAssetContext,
+    const liveResoniteObjects = convertObjectsWithImageAssetContext(
+      _compiled.parsedObjects,
+      liveImageAssetContext,
       { enableCharacterColliderOnLockedTerrain: config.enableCharacterCollider },
-      parseResult.extensions
+      _compiled.parsedExtensions
     );
 
-    const sharedMeshDefinitions = prepareSharedMeshDefinitions(resoniteObjects);
-    const meshReferenceMap = await slotBuilder.createMeshAssets(sharedMeshDefinitions);
-    resolveSharedMeshReferences(resoniteObjects, meshReferenceMap);
+    const liveSharedMeshDefs = prepareSharedMeshDefinitions(liveResoniteObjects);
+    const meshReferenceMap = await slotBuilder.createMeshAssets(liveSharedMeshDefs);
+    resolveSharedMeshReferences(liveResoniteObjects, meshReferenceMap);
 
-    const sharedMaterialDefinitions = prepareSharedMaterialDefinitions(resoniteObjects);
-    const materialReferenceMap = await slotBuilder.createMaterialAssets(sharedMaterialDefinitions);
-    resolveSharedMaterialReferences(resoniteObjects, materialReferenceMap);
+    const liveSharedMaterialDefs = prepareSharedMaterialDefinitions(liveResoniteObjects);
+    const materialReferenceMap = await slotBuilder.createMaterialAssets(liveSharedMaterialDefs);
+    resolveSharedMaterialReferences(liveResoniteObjects, materialReferenceMap);
 
     const slotResults = await slotBuilder.buildSlots(
-      resoniteObjects,
+      liveResoniteObjects,
       (current, _total) => {
         emit(
           onProgress,
