@@ -9,6 +9,7 @@
  */
 
 import { buildImportPlan } from './compilePlan';
+import { emitProgress } from './_progressEmit';
 
 import type {
   ImportConfig,
@@ -16,23 +17,7 @@ import type {
   AnalyzeOutput,
   DiagnosticEntry,
   ProgressEvent,
-  ProgressPhase,
 } from './contracts';
-
-// ---------------------------------------------------------------------------
-// ヘルパー
-// ---------------------------------------------------------------------------
-
-function emit(
-  onProgress: ((event: ProgressEvent) => void) | undefined,
-  phase: ProgressPhase,
-  current: number,
-  total: number,
-  message: string,
-  level: ProgressEvent['level'] = 'info'
-): void {
-  onProgress?.({ phase, current, total, message, level, timestamp: Date.now() });
-}
 
 // ---------------------------------------------------------------------------
 // analyze
@@ -58,13 +43,13 @@ export async function analyze(
   // -------------------------------------------------------------------------
   // Phase: extract + parse + compile (共通パス)
   // -------------------------------------------------------------------------
-  emit(onProgress, 'extract', 0, 1, 'Extracting ZIP...');
+  emitProgress(onProgress, 'extract', 0, 1, 'Extracting ZIP...');
 
   const { plan, parseStats, diagnostics: compileDiagnostics } = await buildImportPlan(config);
 
   diagnostics.push(...compileDiagnostics);
 
-  emit(onProgress, 'extract', 1, 1, 'ZIP extracted');
+  emitProgress(onProgress, 'extract', 1, 1, 'ZIP extracted');
 
   if (parseStats.objectCount === 0) {
     return {
@@ -87,7 +72,7 @@ export async function analyze(
     };
   }
 
-  emit(
+  emitProgress(
     onProgress,
     'parse',
     1,

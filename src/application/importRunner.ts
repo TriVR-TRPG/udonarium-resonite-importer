@@ -15,6 +15,7 @@
 import * as path from 'path';
 
 import { buildImportPlan } from './compilePlan';
+import { emitProgress } from './_progressEmit';
 import { buildImageAssetContext } from '../converter/imageAssetContext';
 import { convertObjectsWithImageAssetContext } from '../converter/ObjectConverter';
 import { prepareSharedMeshDefinitions, resolveSharedMeshReferences } from '../converter/sharedMesh';
@@ -36,21 +37,6 @@ import type {
   ProgressEvent,
   ProgressPhase,
 } from './contracts';
-
-// ---------------------------------------------------------------------------
-// ヘルパー
-// ---------------------------------------------------------------------------
-
-function emit(
-  onProgress: ((event: ProgressEvent) => void) | undefined,
-  phase: ProgressPhase,
-  current: number,
-  total: number,
-  message: string,
-  level: ProgressEvent['level'] = 'info'
-): void {
-  onProgress?.({ phase, current, total, message, level, timestamp: Date.now() });
-}
 
 // ---------------------------------------------------------------------------
 // runImport
@@ -77,8 +63,7 @@ export async function runImport(
   // -------------------------------------------------------------------------
   // Phase: extract + parse + compile (共通パス)
   // -------------------------------------------------------------------------
-  let phaseStart = Date.now();
-  emit(onProgress, 'extract', 0, 1, 'Extracting ZIP...');
+  emitProgress(onProgress, 'extract', 0, 1, 'Extracting ZIP...');
 
   const compileResult = await buildImportPlan(config);
 
@@ -90,15 +75,16 @@ export async function runImport(
     throw new Error('No supported objects were found in the ZIP file.');
   }
 
-  emit(onProgress, 'parse', 1, 1, `Parsed ${parseStats.objectCount} objects`);
-  stepTimings['extract'] = Date.now() - phaseStart;
-  stepTimings['parse'] = stepTimings['extract'];
+  emitProgress(onProgress, 'parse', 1, 1, `Parsed ${parseStats.objectCount} objects`);
+
+  // compileTimings には extract / parse / compile の個別タイミングが入っている
+  Object.assign(stepTimings, compileResult.compileTimings);
 
   // -------------------------------------------------------------------------
   // Phase: connect
   // -------------------------------------------------------------------------
-  phaseStart = Date.now();
-  emit(
+  let phaseStart = Date.now();
+  emitProgress(
     onProgress,
     'connect',
     0,
@@ -120,15 +106,15 @@ export async function runImport(
         `ResoniteLink version changed: expected ${VERIFIED_RESONITE_LINK_VERSION}, ` +
         `connected ${runtimeVersion}. Please validate compatibility.`;
       diagnostics.push({ level: 'warn', code: 'VERSION_MISMATCH', message: warnMsg });
-      emit(onProgress, 'connect', 1, 1, warnMsg, 'warn');
+      emitProgress(onProgress, 'connect', 1, 1, warnMsg, 'warn');
     }
   } catch (error) {
     const warnMsg = `Failed to check ResoniteLink version: ${error instanceof Error ? error.message : String(error)}`;
     diagnostics.push({ level: 'warn', code: 'VERSION_CHECK_FAILED', message: warnMsg });
-    emit(onProgress, 'connect', 1, 1, warnMsg, 'warn');
+    emitProgress(onProgress, 'connect', 1, 1, warnMsg, 'warn');
   }
 
-  emit(onProgress, 'connect', 1, 1, 'Connected to ResoniteLink');
+  emitProgress(onProgress, 'connect', 1, 1, 'Connected to ResoniteLink');
   stepTimings['connect'] = Date.now() - phaseStart;
 
   const assetImporter = new AssetImporter(client);
@@ -140,12 +126,12 @@ export async function runImport(
     // Phase: cleanup（旧インポート削除）
     // -----------------------------------------------------------------------
     phaseStart = Date.now();
-    emit(onProgress, 'cleanup', 0, 1, 'Removing previous import...');
+    emitProgress(onProgress, 'cleanup', 0, 1, 'Removing previous import...');
 
     await registerExternalUrls(_compiled.parsedObjects, assetImporter);
     const previousImport = await client.captureTransformAndRemoveRootChildrenByTag(IMPORT_ROOT_TAG);
 
-    emit(onProgress, 'cleanup', 1, 1, 'Previous import removed');
+    emitProgress(onProgress, 'cleanup', 1, 1, 'Previous import removed');
     stepTimings['cleanup'] = Date.now() - phaseStart;
 
     // -----------------------------------------------------------------------
@@ -173,7 +159,13 @@ export async function runImport(
     const imageResults = await assetImporter.importImages(
       _compiled.imageFiles,
       (current, total) => {
-        emit(onProgress, 'apply', current, totalSteps, `Importing images (${current}/${total})...`);
+        emitProgress(
+          onProgress,
+          'apply',
+          current,
+          totalSteps,
+          `Importing images (${current}/${total})...`
+        );
       }
     );
 
@@ -226,7 +218,7 @@ export async function runImport(
     const slotResults = await slotBuilder.buildSlots(
       liveResoniteObjects,
       (current, _total) => {
-        emit(
+        emitProgress(
           onProgress,
           'apply',
           totalImages + current,
@@ -243,14 +235,14 @@ export async function runImport(
     // Phase: finalize
     // -----------------------------------------------------------------------
     phaseStart = Date.now();
-    emit(onProgress, 'finalize', 0, 1, 'Finalizing import...');
+    emitProgress(onProgress, 'finalize', 0, 1, 'Finalizing import...');
 
     await slotBuilder.tagImportGroupRoot(groupId);
 
     connected = false;
     client.disconnect();
 
-    emit(onProgress, 'finalize', 1, 1, 'Import complete');
+    emitProgress(onProgress, 'finalize', 1, 1, 'Import complete');
     stepTimings['finalize'] = Date.now() - phaseStart;
 
     // -----------------------------------------------------------------------

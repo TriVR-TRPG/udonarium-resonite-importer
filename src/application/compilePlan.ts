@@ -25,7 +25,7 @@ import { COMPONENT_TYPES } from '../config/ResoniteComponentTypes';
 import type { ImageBlendMode } from '../config/MappingConfig';
 import type { UdonariumObject } from '../domain/UdonariumObject';
 
-import type { ImportConfig, DiagnosticEntry } from './contracts';
+import type { ImportConfig, DiagnosticEntry, ProgressPhase } from './contracts';
 import type {
   ImportPlan,
   AssetPlanEntry,
@@ -53,6 +53,7 @@ export interface ParseStats {
  *
  * `plan` は JSON シリアライズ可能。dry-run 出力・デバッグ検査に使用する。
  * `_compiled` は Apply ステップが使用する内部ランタイムデータ（バイナリ含む）。
+ * `compileTimings` は importRunner の stepTimings に統合して ImportReport に反映する。
  *
  * Phase 3 では Apply ステップが `_compiled` を直接消費する。
  * Phase 4/5 で Apply が `plan` のみを消費するよう段階的に移行する予定。
@@ -67,14 +68,17 @@ export interface CompileResult {
     parsedObjects: UdonariumObject[];
     /** ZIP から得た拡張データ（Apply 時の再変換で再利用） */
     parsedExtensions: ReturnType<typeof parseXmlFiles>['extensions'];
-    resoniteObjects: ResoniteObject[];
-    sharedMeshDefinitions: SharedMeshDefinition[];
-    sharedMaterialDefinitions: SharedMaterialDefinition[];
     imageAspectRatioMap: Map<string, number>;
     imageBlendModeMap: Map<string, ImageBlendMode>;
   };
   parseStats: ParseStats;
   diagnostics: DiagnosticEntry[];
+  /**
+   * Compile 内各ステップの所要時間 (ms)。
+   * extract / parse / compile フェーズを個別に計測。
+   * importRunner の stepTimings に統合して ImportReport に反映する。
+   */
+  compileTimings: Partial<Record<ProgressPhase, number>>;
 }
 
 // ---------------------------------------------------------------------------
@@ -202,16 +206,21 @@ function buildMaterialPlanEntries(defs: SharedMaterialDefinition[]): MaterialPla
  */
 export async function buildImportPlan(config: ImportConfig): Promise<CompileResult> {
   const diagnostics: DiagnosticEntry[] = [];
+  const compileTimings: Partial<Record<ProgressPhase, number>> = {};
 
   // -------------------------------------------------------------------------
   // 1. Extract
   // -------------------------------------------------------------------------
+  let t = Date.now();
   const extractedData = extractZip(config.inputZipPath);
+  compileTimings['extract'] = Date.now() - t;
 
   // -------------------------------------------------------------------------
   // 2. Parse
   // -------------------------------------------------------------------------
+  t = Date.now();
   const parseResult = parseXmlFiles(extractedData.xmlFiles);
+  compileTimings['parse'] = Date.now() - t;
 
   for (const err of parseResult.errors) {
     diagnostics.push({
@@ -227,8 +236,10 @@ export async function buildImportPlan(config: ImportConfig): Promise<CompileResu
   }
 
   // -------------------------------------------------------------------------
-  // 3. Build image maps (reads actual image binaries via sharp)
+  // 3–6. Compile: image maps → convert → prepare mesh/material defs
   // -------------------------------------------------------------------------
+  t = Date.now();
+
   const imageAspectRatioMap = await buildImageAspectRatioMap(
     extractedData.imageFiles,
     parseResult.objects
@@ -236,14 +247,9 @@ export async function buildImportPlan(config: ImportConfig): Promise<CompileResu
   const imageBlendModeMap = await buildImageBlendModeMap(
     extractedData.imageFiles,
     parseResult.objects,
-    {
-      semiTransparentMode: config.transparentBlendMode,
-    }
+    { semiTransparentMode: config.transparentBlendMode }
   );
 
-  // -------------------------------------------------------------------------
-  // 4. Build dry-run image asset context (logical IDs = filenames/URLs)
-  // -------------------------------------------------------------------------
   const imageAssetInfoMap = buildDryRunImageAssetInfoMap(
     extractedData.imageFiles,
     parseResult.objects
@@ -254,9 +260,6 @@ export async function buildImportPlan(config: ImportConfig): Promise<CompileResu
     imageBlendModeMap,
   });
 
-  // -------------------------------------------------------------------------
-  // 5. Convert objects
-  // -------------------------------------------------------------------------
   const resoniteObjects = convertObjectsWithImageAssetContext(
     parseResult.objects,
     imageAssetContext,
@@ -264,14 +267,12 @@ export async function buildImportPlan(config: ImportConfig): Promise<CompileResu
     parseResult.extensions
   );
 
-  // -------------------------------------------------------------------------
-  // 6. Prepare shared mesh / material definitions
-  //    prepareSharedMeshDefinitions / prepareSharedMaterialDefinitions mutate
-  //    resoniteObjects (replace components with mesh-ref:// / material-ref://)
-  //    so must run after conversion.
-  // -------------------------------------------------------------------------
+  // NOTE: prepareShared*Definitions mutate resoniteObjects (replace components
+  //       with *-ref:// placeholders) — must run AFTER conversion.
   const sharedMeshDefinitions = prepareSharedMeshDefinitions(resoniteObjects);
   const sharedMaterialDefinitions = prepareSharedMaterialDefinitions(resoniteObjects);
+
+  compileTimings['compile'] = Date.now() - t;
 
   // -------------------------------------------------------------------------
   // 7. Build ImportPlan
@@ -296,9 +297,6 @@ export async function buildImportPlan(config: ImportConfig): Promise<CompileResu
       imageFiles: extractedData.imageFiles,
       parsedObjects: parseResult.objects,
       parsedExtensions: parseResult.extensions,
-      resoniteObjects,
-      sharedMeshDefinitions,
-      sharedMaterialDefinitions,
       imageAspectRatioMap,
       imageBlendModeMap,
     },
@@ -309,5 +307,6 @@ export async function buildImportPlan(config: ImportConfig): Promise<CompileResu
       typeCounts,
     },
     diagnostics,
+    compileTimings,
   };
 }
