@@ -267,6 +267,14 @@ export async function runImport(
         message: `Failed to build slot ${slot.slotId}: ${slot.error ?? 'unknown'}`,
       });
     }
+    for (const failure of slotResults.flatMap((r) => r.componentFailures)) {
+      diagnostics.push({
+        level: 'warn',
+        code: 'COMPONENT_ADD_FAILED',
+        message: `Failed to add component ${failure.componentType} to slot ${failure.slotId}: ${failure.error}`,
+        objectId: failure.objectId,
+      });
+    }
 
     return {
       summary: {

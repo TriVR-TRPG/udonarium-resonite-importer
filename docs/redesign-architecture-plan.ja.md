@@ -533,16 +533,17 @@ DoD 全5項目は充足済み。以下はバックログとして管理する。
 
 ---
 
-### 16.3 コンポーネント単位のエラー分離（将来対応）
+### 16.3 コンポーネント単位のエラー分離 ✅ 対処済み
 
-**現象**: Section 7.2 に「Component 単位での部分失敗（Slot は作成できたが一部コンポーネント追加失敗）も PartialApplyError として記録する」と定義されているが、現在は Slot が失敗した場合にのみ診断エントリが記録される。1 Slot 内の一部コンポーネント失敗は追跡されない。
+**現象（修正前）**: Section 7.2 に「Component 単位での部分失敗（Slot は作成できたが一部コンポーネント追加失敗）も PartialApplyError として記録する」と定義されているが、1 Slot 内の一部コンポーネント失敗は `ImportReport.diagnostics` に記録されていなかった。
 
-**原因**: `SlotBuilder` がコンポーネント追加をまとめて実行しており、コンポーネント単位の戻り値を持たない。
+**実施済み変更**:
+- `SlotBuilder` に `ComponentFailure` 型を新設（`contracts.ts` への依存を持ち込まないよう InfraLayer 内で閉じる）
+- `SlotBuildResult` に `componentFailures: ComponentFailure[]` を追加
+- `buildSlot()` の各 `addComponent` 失敗時に `ComponentFailure` エントリを生成し、子スロット分を再帰的に集約
+- `addSlot` 自体が失敗した場合は `componentFailures: []`（コンポーネント追加は試みていないため）
+- `importRunner.ts` で `componentFailures` を `DiagnosticEntry`（コード `COMPONENT_ADD_FAILED`）に変換して `diagnostics` に追加
+- 新規テスト 5 件を `SlotBuilder.test.ts` に追加（429 tests passed）
 
-**対応方針（将来）**:
-1. `SlotBuilder` のコンポーネント追加処理をコンポーネント単位で try/catch し、部分失敗を返す
-2. `importRunner.ts` で `diagnostics` に `PartialApplyError` として記録
-3. `summary.components` の追跡（16.2）と同時実施が望ましい
-
-**優先度**: 低（Slot レベルで失敗が分かれば診断上は許容範囲）
-**予定フェーズ**: Phase 4/5 で SlotBuilder をリファクタリングする際に実施
+**設計上の判断**:
+- `SlotBuilder`（Infrastructure 層）が `DiagnosticEntry`（Application 層）を直接使用することは Dependency Rule 違反となるため、`ComponentFailure` を InfraLayer のローカル型として定義し、Application 層（`importRunner.ts`）で変換するアーキテクチャを採用した。

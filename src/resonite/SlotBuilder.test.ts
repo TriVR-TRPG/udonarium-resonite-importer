@@ -535,6 +535,101 @@ describe('SlotBuilder', () => {
         expect(result.componentFailed).toBe(3);
       });
     });
+
+    describe('component failure diagnostics', () => {
+      it('returns empty componentFailures when all components succeed', async () => {
+        const obj = createResoniteObject({
+          components: [{ id: 'c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} }],
+        });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        expect(result.componentFailures).toHaveLength(0);
+      });
+
+      it('records ComponentFailure with slotId, componentType, error and objectId', async () => {
+        mockClient.addComponent.mockRejectedValue(new Error('ResoniteLink timeout'));
+        const obj = createResoniteObject({
+          id: 'obj-001',
+          components: [{ id: 'c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} }],
+        });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        expect(result.componentFailures).toHaveLength(1);
+        expect(result.componentFailures[0]).toMatchObject({
+          slotId: 'created-slot-id',
+          componentType: 'FrooxEngine.ValueField`1[System.String]',
+          error: 'ResoniteLink timeout',
+          objectId: 'obj-001',
+        });
+      });
+
+      it('records one failure per failed addComponent call', async () => {
+        let callCount = 0;
+        mockClient.addComponent.mockImplementation(() => {
+          callCount++;
+          if (callCount % 2 === 0) return Promise.reject(new Error('fail'));
+          return Promise.resolve('created-component-id');
+        });
+        const obj = createResoniteObject({
+          components: [
+            { id: 'c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} },
+            { id: 'c2', type: 'FrooxEngine.ValueField`1[System.Single]', fields: {} },
+            { id: 'c3', type: 'FrooxEngine.ValueField`1[System.Boolean]', fields: {} },
+          ],
+        });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        expect(result.componentFailures).toHaveLength(1);
+        expect(result.componentFailures[0]?.componentType).toBe(
+          'FrooxEngine.ValueField`1[System.Single]'
+        );
+      });
+
+      it('propagates child componentFailures to parent result', async () => {
+        let callCount = 0;
+        mockClient.addComponent.mockImplementation(() => {
+          callCount++;
+          // fail on the 2nd addComponent call (child's component)
+          if (callCount === 2) return Promise.reject(new Error('child component fail'));
+          return Promise.resolve('created-component-id');
+        });
+        const child = createResoniteObject({
+          id: 'child-001',
+          components: [{ id: 'cc1', type: 'FrooxEngine.ValueField`1[System.Single]', fields: {} }],
+        });
+        const parent = createResoniteObject({
+          id: 'parent-001',
+          components: [{ id: 'pc1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} }],
+          children: [child],
+        });
+
+        const result = await slotBuilder.buildSlot(parent);
+
+        expect(result.success).toBe(true);
+        expect(result.componentFailures).toHaveLength(1);
+        expect(result.componentFailures[0]).toMatchObject({
+          objectId: 'child-001',
+          componentType: 'FrooxEngine.ValueField`1[System.Single]',
+        });
+      });
+
+      it('returns empty componentFailures when addSlot itself fails', async () => {
+        mockClient.addSlot.mockRejectedValue(new Error('Connection failed'));
+        const obj = createResoniteObject({
+          id: 'fail-id',
+          components: [{ id: 'c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} }],
+        });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        expect(result.success).toBe(false);
+        // addSlot failed before any addComponent was attempted
+        expect(result.componentFailures).toHaveLength(0);
+      });
+    });
   });
 
   describe('buildSlots', () => {

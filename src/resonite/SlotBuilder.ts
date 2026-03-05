@@ -69,6 +69,21 @@ function isUdonariumObjectRoot(obj: ResoniteObject): boolean {
   return typeof obj.sourceType === 'string' && UDONARIUM_OBJECT_TYPES.has(obj.sourceType);
 }
 
+/**
+ * コンポーネント追加失敗の詳細。
+ * importRunner が DiagnosticEntry へ変換して ImportReport.diagnostics に追加する。
+ */
+export interface ComponentFailure {
+  /** コンポーネントを追加しようとしたスロットの実 ID */
+  slotId: string;
+  /** 追加に失敗したコンポーネントの型 */
+  componentType: string;
+  /** エラーメッセージ */
+  error: string;
+  /** 元の Udonarium オブジェクト ID（ImportReport.diagnostics の objectId に使用） */
+  objectId: string;
+}
+
 export interface SlotBuildResult {
   slotId: string;
   success: boolean;
@@ -79,6 +94,11 @@ export interface SlotBuildResult {
   componentSuccess: number;
   /** 失敗したコンポーネント追加数 */
   componentFailed: number;
+  /**
+   * コンポーネント追加失敗の詳細一覧（サブツリー分を含む）。
+   * addSlot 失敗時は空配列（コンポーネント追加は試みられていないため）。
+   */
+  componentFailures: ComponentFailure[];
 }
 
 /**
@@ -139,6 +159,7 @@ export class SlotBuilder {
     let componentTotal = 0;
     let componentSuccess = 0;
     let componentFailed = 0;
+    const componentFailures: ComponentFailure[] = [];
 
     try {
       const slotId = await this.client.addSlot({
@@ -184,8 +205,14 @@ export class SlotBuilder {
             await this.client.updateListFields(componentId, listFields);
           }
           componentSuccess++;
-        } catch {
+        } catch (err) {
           componentFailed++;
+          componentFailures.push({
+            slotId,
+            componentType: component.type,
+            error: err instanceof Error ? err.message : 'Unknown error',
+            objectId: obj.id,
+          });
         }
       }
 
@@ -202,23 +229,38 @@ export class SlotBuilder {
             `${obj.id}-simple-avatar-protection`
           );
           componentSuccess++;
-        } catch {
+        } catch (err) {
           componentFailed++;
+          componentFailures.push({
+            slotId,
+            componentType: COMPONENT_TYPES.SIMPLE_AVATAR_PROTECTION,
+            error: err instanceof Error ? err.message : 'Unknown error',
+            objectId: obj.id,
+          });
         }
       }
 
-      // Build children recursively and accumulate their component counts
+      // Build children recursively and accumulate their component counts and failures
       for (const child of obj.children) {
         const childResult = await this.buildSlot(child, slotId, options);
         componentTotal += childResult.componentTotal;
         componentSuccess += childResult.componentSuccess;
         componentFailed += childResult.componentFailed;
+        componentFailures.push(...childResult.componentFailures);
       }
 
-      return { slotId, success: true, componentTotal, componentSuccess, componentFailed };
+      return {
+        slotId,
+        success: true,
+        componentTotal,
+        componentSuccess,
+        componentFailed,
+        componentFailures,
+      };
     } catch (error) {
       // Slot creation itself failed — count all declared components in the subtree as failed.
       // Auto-added SimpleAvatarProtection is excluded since it cannot be determined pre-execution.
+      // componentFailures is empty: no addComponent was attempted.
       const subtreeCount = countDeclaredComponentsInTree(obj);
       return {
         slotId: obj.id,
@@ -227,6 +269,7 @@ export class SlotBuilder {
         componentTotal: subtreeCount,
         componentSuccess: 0,
         componentFailed: subtreeCount,
+        componentFailures: [],
       };
     }
   }
