@@ -73,6 +73,23 @@ export interface SlotBuildResult {
   slotId: string;
   success: boolean;
   error?: string;
+  /** このスロットのサブツリー（自身＋子孫）で試みたコンポーネント追加の総数 */
+  componentTotal: number;
+  /** 成功したコンポーネント追加数 */
+  componentSuccess: number;
+  /** 失敗したコンポーネント追加数 */
+  componentFailed: number;
+}
+
+/**
+ * サブツリー内の宣言済みコンポーネント総数を返す（再帰）。
+ * スロット作成失敗時の失敗数推計に使用する。
+ * 自動追加 SimpleAvatarProtection は含まない（実行前に確定できないため）。
+ */
+function countDeclaredComponentsInTree(obj: ResoniteObject): number {
+  return (
+    obj.components.length + obj.children.reduce((n, c) => n + countDeclaredComponentsInTree(c), 0)
+  );
 }
 
 export type TextureReferenceUpdater = (
@@ -119,6 +136,10 @@ export class SlotBuilder {
     }
   ): Promise<SlotBuildResult> {
     const enableSimpleAvatarProtection = options?.enableSimpleAvatarProtection ?? true;
+    let componentTotal = 0;
+    let componentSuccess = 0;
+    let componentFailed = 0;
+
     try {
       const slotId = await this.client.addSlot({
         id: obj.id,
@@ -141,6 +162,7 @@ export class SlotBuilder {
       // SyncList fields (e.g. Materials) require a 2-step update protocol:
       //  1. addComponent with non-list fields only
       //  2. updateListFields: add elements, fetch element IDs, set references
+      // Each addComponent call is individually try/caught to track partial failures.
       let hasMeshRenderer = false;
       const hasSimpleAvatarProtection = obj.components.some(
         (component) => component.type === COMPONENT_TYPES.SIMPLE_AVATAR_PROTECTION
@@ -149,17 +171,21 @@ export class SlotBuilder {
         if (component.type === COMPONENT_TYPES.MESH_RENDERER) {
           hasMeshRenderer = true;
         }
-        const { creationFields, listFields } = splitListFields(component.fields);
-
-        const componentId = await this.client.addComponent({
-          ...(component.id != null ? { id: component.id } : {}),
-          slotId,
-          componentType: component.type,
-          fields: creationFields,
-        });
-
-        if (Object.keys(listFields).length > 0) {
-          await this.client.updateListFields(componentId, listFields);
+        componentTotal++;
+        try {
+          const { creationFields, listFields } = splitListFields(component.fields);
+          const componentId = await this.client.addComponent({
+            ...(component.id != null ? { id: component.id } : {}),
+            slotId,
+            componentType: component.type,
+            fields: creationFields,
+          });
+          if (Object.keys(listFields).length > 0) {
+            await this.client.updateListFields(componentId, listFields);
+          }
+          componentSuccess++;
+        } catch {
+          componentFailed++;
         }
       }
 
@@ -169,20 +195,38 @@ export class SlotBuilder {
         shouldAddSimpleAvatarProtection &&
         !hasSimpleAvatarProtection
       ) {
-        await this.addSimpleAvatarProtectionComponent(slotId, `${obj.id}-simple-avatar-protection`);
+        componentTotal++;
+        try {
+          await this.addSimpleAvatarProtectionComponent(
+            slotId,
+            `${obj.id}-simple-avatar-protection`
+          );
+          componentSuccess++;
+        } catch {
+          componentFailed++;
+        }
       }
 
-      // Build children recursively
+      // Build children recursively and accumulate their component counts
       for (const child of obj.children) {
-        await this.buildSlot(child, slotId, options);
+        const childResult = await this.buildSlot(child, slotId, options);
+        componentTotal += childResult.componentTotal;
+        componentSuccess += childResult.componentSuccess;
+        componentFailed += childResult.componentFailed;
       }
 
-      return { slotId, success: true };
+      return { slotId, success: true, componentTotal, componentSuccess, componentFailed };
     } catch (error) {
+      // Slot creation itself failed — count all declared components in the subtree as failed.
+      // Auto-added SimpleAvatarProtection is excluded since it cannot be determined pre-execution.
+      const subtreeCount = countDeclaredComponentsInTree(obj);
       return {
         slotId: obj.id,
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
+        componentTotal: subtreeCount,
+        componentSuccess: 0,
+        componentFailed: subtreeCount,
       };
     }
   }

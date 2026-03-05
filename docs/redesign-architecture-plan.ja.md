@@ -514,19 +514,22 @@ DoD 全5項目は充足済み。以下はバックログとして管理する。
 
 ---
 
-### 16.2 `ImportReport.summary.components` が常にゼロ（バックログ）
+### 16.2 `ImportReport.summary.components` が常にゼロ ✅ 対処済み
 
-**現象**: `importRunner.ts` の ImportReport 組み立て部で `components` が `{ total: 0, success: 0, failed: 0 }` ハードコードになっている。
-`contracts.ts` のコメント「Phase 1 では未追跡（常に 0）」が根拠。
+**現象（修正前）**: `importRunner.ts` の ImportReport 組み立て部で `components` が `{ total: 0, success: 0, failed: 0 }` ハードコードになっていた。
 
-**原因**: `SlotBuilder.buildSlots()` の戻り値がスロット単位の成否であり、スロット内コンポーネントの単位追跡を行っていない。
+**原因**: `SlotBuilder.buildSlots()` の戻り値 `SlotBuildResult` がスロット単位の成否のみを持ち、コンポーネント単位の追跡情報を返さなかった。
 
-**対応方針（将来）**:
-1. `SlotBuilder` がコンポーネント追加結果をコンポーネント単位で返すよう拡張
-2. `importRunner.ts` で集計して `summary.components` に反映
-
-**優先度**: 低（現時点では objects/images の成否で診断可能）
-**予定フェーズ**: Phase 4/5 の Apply 改善時に合わせて実施
+**実施済み変更（案 B: コンポーネント単位 try/catch）**:
+- `SlotBuildResult` に `componentTotal / componentSuccess / componentFailed` を追加
+- `buildSlot()` の各 `addComponent` 呼び出しを個別 try/catch で囲み、成否を計上
+  - 失敗しても後続コンポーネントの処理は継続する（部分失敗許容）
+  - 自動追加 SimpleAvatarProtection も計上対象
+  - 子スロット（再帰）のカウントを親に集約
+  - `addSlot` 自体の失敗時は宣言済みコンポーネント数をすべて失敗扱いとして返す
+- `importRunner.ts` の `summary.components` を `slotResults` から集計するよう変更
+- `contracts.ts` の「Phase 1 では未追跡（常に 0）」コメントを削除
+- 新規テスト 6 件を `SlotBuilder.test.ts` に追加（424 tests passed）
 
 ---
 

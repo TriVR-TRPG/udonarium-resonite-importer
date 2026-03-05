@@ -280,7 +280,11 @@ export async function runImport(
           success: totalObjects - failedObjects,
           failed: failedObjects,
         },
-        components: { total: 0, success: 0, failed: 0 },
+        components: {
+          total: slotResults.reduce((n, r) => n + r.componentTotal, 0),
+          success: slotResults.reduce((n, r) => n + r.componentSuccess, 0),
+          failed: slotResults.reduce((n, r) => n + r.componentFailed, 0),
+        },
       },
       diagnostics,
       artifacts: { importRootId: groupId },

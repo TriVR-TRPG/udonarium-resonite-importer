@@ -123,7 +123,6 @@ export interface ImportReport {
   summary: {
     images: { total: number; success: number; failed: number };
     objects: { total: number; success: number; failed: number };
-    /** Phase 1 では未追跡（常に 0） */
     components: { total: number; success: number; failed: number };
   };
   diagnostics: DiagnosticEntry[];
