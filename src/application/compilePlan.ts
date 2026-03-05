@@ -1,10 +1,10 @@
 /**
- * compilePlan — Compile ステップ (Phase 3)
+ * compilePlan — Compile ステップ
  *
  * ZIP → ParseResult → ImportPlan の変換。
  * Resonite 接続不要。dry-run / live import の共通パス。
  *
- * See: docs/redesign-architecture-plan.ja.md Section 4.4 / Phase 3
+ * See: docs/architecture.ja.md Section 4.4
  */
 
 import * as path from 'path';

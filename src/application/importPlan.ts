@@ -10,7 +10,7 @@
  * - Apply 順序: assets → meshes → materials → slots（親から子の順）
  * - 循環参照は Compile 時に検出し ConversionError とする（Phase 3 で実装）
  *
- * See: docs/redesign-architecture-plan.ja.md Section 4.4
+ * See: docs/architecture.ja.md Section 4.4
  */
 
 // ---------------------------------------------------------------------------

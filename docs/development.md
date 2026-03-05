@@ -239,11 +239,17 @@ udonarium-resonite-importer/
 │   ├── i18n/                    # Internationalization
 │   └── __fixtures__/            # Test fixtures
 ├── docs/                        # Design and specification documents
-│   └── redesign-architecture-plan.ja.md  # Architecture redesign plan
+│   └── architecture.ja.md       # Architecture design reference (Japanese)
 ├── scripts/                     # Utility scripts
 └── .github/
     └── workflows/               # CI/CD pipelines
 ```
+
+## Architecture Reference
+
+Design principles, layer structure, data contracts, and execution flows are documented here:
+
+- [docs/architecture.ja.md](architecture.ja.md)
 
 ## Conversion Specifications
 

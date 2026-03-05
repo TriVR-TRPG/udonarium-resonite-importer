@@ -239,11 +239,17 @@ udonarium-resonite-importer/
 │   ├── i18n/                    # 国際化
 │   └── __fixtures__/            # テストフィクスチャ
 ├── docs/                        # 設計書・仕様書
-│   └── redesign-architecture-plan.ja.md  # アーキテクチャ再設計計画書
+│   └── architecture.ja.md       # アーキテクチャ設計書
 ├── scripts/                     # ユーティリティスクリプト
 └── .github/
     └── workflows/               # CI/CDパイプライン
 ```
+
+## アーキテクチャ設計書
+
+設計原則・レイヤ構成・データ契約・実行フローの詳細は以下を参照してください。
+
+- [docs/architecture.ja.md](architecture.ja.md)
 
 ## 変換仕様ドキュメント
 
