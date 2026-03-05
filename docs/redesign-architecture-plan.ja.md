@@ -494,3 +494,52 @@ Phase 3 準備（✅ 完了）:
 - 本再設計は「全面書き換え」ではなく、**契約抽出 -> 共通ロジック抽出 -> UseCase 統合 -> Compile/Apply 分離**の順で安全に進める（Converter Registry 化は任意）。
 - 成果は「重複削減」「拡張容易性」「テスト容易性」「失敗時診断性」の4点で測る。
 - ドキュメントを仕様の単一情報源とし、実装は常に本設計との差分説明を伴って進める。
+
+---
+
+## 16. 実装監査結果と残課題（2026-03-05 時点）
+
+Phase 0〜3 完了後の実装監査（418 tests passed）で判明した残課題を記録する。
+DoD 全5項目は充足済み。以下はバックログとして管理する。
+
+### 16.1 `compile` フェーズの ProgressEvent 未 emit ✅ 対処済み
+
+**現象（修正前）**: `contracts.ts` で `'compile'` が `ProgressPhase` に定義されているにもかかわらず、`analyzeUseCase.ts` および `importRunner.ts` のいずれも `buildImportPlan()` 完了後に `compile` フェーズの `ProgressEvent` を emit していなかった。呼び出し元には `extract → parse → connect` のように `compile` フェーズが飛ばされて見えていた。
+
+**修正方針**: `buildImportPlan()` 完了直後（`parse` emit の後）に `compile` フェーズの emit を追加する。
+
+**実施済み変更**:
+- `src/application/analyzeUseCase.ts`: `parse` emit 直後に `compile` (1/1) を emit
+- `src/application/importRunner.ts`: `parse` emit 直後に `compile` (1/1) を emit
+
+---
+
+### 16.2 `ImportReport.summary.components` が常にゼロ（バックログ）
+
+**現象**: `importRunner.ts` の ImportReport 組み立て部で `components` が `{ total: 0, success: 0, failed: 0 }` ハードコードになっている。
+`contracts.ts` のコメント「Phase 1 では未追跡（常に 0）」が根拠。
+
+**原因**: `SlotBuilder.buildSlots()` の戻り値がスロット単位の成否であり、スロット内コンポーネントの単位追跡を行っていない。
+
+**対応方針（将来）**:
+1. `SlotBuilder` がコンポーネント追加結果をコンポーネント単位で返すよう拡張
+2. `importRunner.ts` で集計して `summary.components` に反映
+
+**優先度**: 低（現時点では objects/images の成否で診断可能）
+**予定フェーズ**: Phase 4/5 の Apply 改善時に合わせて実施
+
+---
+
+### 16.3 コンポーネント単位のエラー分離（将来対応）
+
+**現象**: Section 7.2 に「Component 単位での部分失敗（Slot は作成できたが一部コンポーネント追加失敗）も PartialApplyError として記録する」と定義されているが、現在は Slot が失敗した場合にのみ診断エントリが記録される。1 Slot 内の一部コンポーネント失敗は追跡されない。
+
+**原因**: `SlotBuilder` がコンポーネント追加をまとめて実行しており、コンポーネント単位の戻り値を持たない。
+
+**対応方針（将来）**:
+1. `SlotBuilder` のコンポーネント追加処理をコンポーネント単位で try/catch し、部分失敗を返す
+2. `importRunner.ts` で `diagnostics` に `PartialApplyError` として記録
+3. `summary.components` の追跡（16.2）と同時実施が望ましい
+
+**優先度**: 低（Slot レベルで失敗が分かれば診断上は許容範囲）
+**予定フェーズ**: Phase 4/5 で SlotBuilder をリファクタリングする際に実施

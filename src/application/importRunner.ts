@@ -77,6 +77,8 @@ export async function runImport(
 
   emitProgress(onProgress, 'parse', 1, 1, `Parsed ${parseStats.objectCount} objects`);
 
+  emitProgress(onProgress, 'compile', 1, 1, 'Import plan compiled');
+
   // compileTimings には extract / parse / compile の個別タイミングが入っている
   Object.assign(stepTimings, compileResult.compileTimings);
 

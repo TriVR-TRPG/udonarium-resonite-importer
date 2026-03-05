@@ -80,6 +80,8 @@ export async function analyze(
     `Parsed ${parseStats.objectCount} objects, ${parseStats.imageCount} images`
   );
 
+  emitProgress(onProgress, 'compile', 1, 1, 'Import plan compiled');
+
   // -------------------------------------------------------------------------
   // AnalyzeOutput を組み立てて返す
   // -------------------------------------------------------------------------
