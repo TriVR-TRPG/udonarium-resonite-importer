@@ -73,7 +73,7 @@ npm run test:integration
 | Scope | Location | Description |
 |------|----------|-------------|
 | Unit | `src/**/?(*.)test.ts` | Fast tests with explicit input data and mocked dependencies |
-| Integration (fixture-based) | `src/parser/integration.test.ts`, `src/converter/integration.test.ts` | End-to-end flow using fixture ZIP files (`extract -> parse -> convert`) |
+| Integration (fixture-based) | `src/parser/integration.test.ts`, `src/converter/integration.test.ts`, `src/application/analyzeUseCase.snapshot.test.ts` | End-to-end flow using fixture ZIP files (`extract -> parse -> convert`), plus AnalyzeOutput snapshot validation |
 | Integration (live ResoniteLink) | `src/resonite/integration.test.ts` | Tests against a running Resonite + ResoniteLink environment |
 
 Only live ResoniteLink integration tests are **skipped by default** and run when `RESONITE_LINK_AVAILABLE=true` is set. Fixture-based integration tests run in normal `npm run test`.
@@ -88,6 +88,14 @@ Fixture-based converter integration currently covers:
 - `sample-card.zip` (`card`, `card-stack`)
 - `sample-mapmask.zip` (`table-mask`)
 - `sample-terrain.zip` (`terrain`)
+- `sample-terrain-lily.zip` (`terrain`)
+- `sample-table.zip` (`table`)
+- `sample-character.zip` (`character`)
+
+Analyzer snapshot tests currently cover:
+- `sample-dice.zip`, `sample-card.zip`, `sample-table.zip`, `sample-terrain.zip`, `sample-character.zip`
+- `sample-all-object.zip` (all object types)
+- `sample-blank-data.zip` (no objects: validates `NO_OBJECTS` diagnostic)
 
 ### ResoniteLink Mock Data Collection
 
@@ -214,6 +222,14 @@ To verify packaging behavior without publishing a release:
 udonarium-resonite-importer/
 ├── src/
 │   ├── index.ts                 # CLI entry point
+│   ├── application/             # Application layer (UseCases, contracts, shared run logic)
+│   │   ├── contracts.ts         # ImportConfig / ImportOptions / ProgressEvent / ImportReport
+│   │   ├── importPlan.ts        # ImportPlan model
+│   │   ├── compilePlan.ts       # Compile step (ZIP → ImportPlan, no side effects)
+│   │   ├── analyzeUseCase.ts    # AnalyzeUseCase (dry-run / GUI analysis)
+│   │   ├── importUseCase.ts     # ImportUseCase (live import)
+│   │   ├── importRunner.ts      # Shared import run logic for CLI and GUI
+│   │   └── _progressEmit.ts    # Progress event emit helper
 │   ├── config/                  # Configuration
 │   ├── parser/                  # ZIP/XML parsing
 │   │   └── objects/             # Object-specific parsers
@@ -222,6 +238,8 @@ udonarium-resonite-importer/
 │   ├── gui/                     # Electron GUI
 │   ├── i18n/                    # Internationalization
 │   └── __fixtures__/            # Test fixtures
+├── docs/                        # Design and specification documents
+│   └── redesign-architecture-plan.ja.md  # Architecture redesign plan
 ├── scripts/                     # Utility scripts
 └── .github/
     └── workflows/               # CI/CD pipelines
