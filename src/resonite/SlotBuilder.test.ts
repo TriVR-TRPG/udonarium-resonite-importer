@@ -896,6 +896,41 @@ describe('SlotBuilder', () => {
       expect(results[1].success).toBe(true);
     });
 
+    it('normalizes component fields when outer slot preparation fails', async () => {
+      // Simulate ensureInventoryLocationSlot failing (outer catch in buildSlots).
+      // Before the fix, the fallback result lacked componentFailures/Total/etc.,
+      // causing importRunner's flatMap to crash on undefined.
+      let callCount = 0;
+      mockClient.addSlot.mockImplementation(() => {
+        callCount += 1;
+        // calls: 1=offsetSlot, 2=tablesSlot, 3=objectsSlot, 4=inventorySlot, 5=locationSlot (throws)
+        if (callCount === 5) {
+          return Promise.reject(new Error('Grouping slot failed'));
+        }
+        return Promise.resolve('created-slot-id');
+      });
+
+      const character = createResoniteObject({
+        id: 'char-1',
+        sourceType: 'character',
+        components: [
+          { id: 'c1', type: 'FrooxEngine.SomeComponent', fields: {} },
+          { id: 'c2', type: 'FrooxEngine.AnotherComponent', fields: {} },
+        ],
+      });
+
+      const results = await slotBuilder.buildSlots([character]);
+
+      expect(results).toHaveLength(1);
+      const result = results[0];
+      expect(result.success).toBe(false);
+      // Component fields must be present and not undefined
+      expect(result.componentFailures).toEqual([]);
+      expect(result.componentTotal).toBe(2);
+      expect(result.componentFailed).toBe(2);
+      expect(result.componentSuccess).toBe(0);
+    });
+
     it('should return empty array for empty input', async () => {
       const results = await slotBuilder.buildSlots([]);
 

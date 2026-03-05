@@ -307,10 +307,15 @@ export class SlotBuilder {
             : objectsSlotId;
         result = await this.buildSlot(object, parentId, options);
       } catch (error) {
+        const subtreeCount = countDeclaredComponentsInTree(object);
         result = {
           slotId: object.id,
           success: false,
           error: error instanceof Error ? error.message : 'Unknown error',
+          componentTotal: subtreeCount,
+          componentSuccess: 0,
+          componentFailed: subtreeCount,
+          componentFailures: [],
         };
       }
       results.push(result);
