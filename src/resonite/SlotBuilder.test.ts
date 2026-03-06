@@ -419,6 +419,217 @@ describe('SlotBuilder', () => {
       expect(result.success).toBe(false);
       expect(result.error).toBe('Unknown error');
     });
+
+    describe('component counting', () => {
+      it('returns zero counts when no components are declared and no SAP is auto-added', async () => {
+        const obj = createResoniteObject({ components: [] });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        expect(result.componentTotal).toBe(0);
+        expect(result.componentSuccess).toBe(0);
+        expect(result.componentFailed).toBe(0);
+      });
+
+      it('counts declared components as success when all addComponent calls succeed', async () => {
+        const obj = createResoniteObject({
+          components: [
+            { id: 'c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} },
+            { id: 'c2', type: 'FrooxEngine.ValueField`1[System.Single]', fields: {} },
+          ],
+        });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        expect(result.componentTotal).toBe(2);
+        expect(result.componentSuccess).toBe(2);
+        expect(result.componentFailed).toBe(0);
+      });
+
+      it('counts auto-added SimpleAvatarProtection in component totals', async () => {
+        const obj = createResoniteObject({
+          components: [{ id: 'mr-1', type: COMPONENT_TYPES.MESH_RENDERER, fields: {} }],
+        });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        // MeshRenderer (declared) + SimpleAvatarProtection (auto-added)
+        expect(result.componentTotal).toBe(2);
+        expect(result.componentSuccess).toBe(2);
+        expect(result.componentFailed).toBe(0);
+      });
+
+      it('counts failed addComponent without aborting remaining components', async () => {
+        let componentCallCount = 0;
+        mockClient.addComponent.mockImplementation(() => {
+          componentCallCount++;
+          if (componentCallCount === 2) {
+            return Promise.reject(new Error('addComponent failed'));
+          }
+          return Promise.resolve('created-component-id');
+        });
+
+        const obj = createResoniteObject({
+          components: [
+            { id: 'c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} },
+            { id: 'c2', type: 'FrooxEngine.ValueField`1[System.Single]', fields: {} },
+            { id: 'c3', type: 'FrooxEngine.ValueField`1[System.Boolean]', fields: {} },
+          ],
+        });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        expect(result.success).toBe(true);
+        expect(result.componentTotal).toBe(3);
+        expect(result.componentSuccess).toBe(2);
+        expect(result.componentFailed).toBe(1);
+      });
+
+      it('accumulates component counts from children recursively', async () => {
+        const grandchild = createResoniteObject({
+          id: 'gc-001',
+          components: [
+            { id: 'gc-c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} },
+          ],
+        });
+        const child = createResoniteObject({
+          id: 'c-001',
+          components: [
+            { id: 'ch-c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} },
+          ],
+          children: [grandchild],
+        });
+        const parent = createResoniteObject({
+          id: 'p-001',
+          components: [{ id: 'p-c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} }],
+          children: [child],
+        });
+
+        const result = await slotBuilder.buildSlot(parent);
+
+        expect(result.componentTotal).toBe(3);
+        expect(result.componentSuccess).toBe(3);
+        expect(result.componentFailed).toBe(0);
+      });
+
+      it('counts all declared components in subtree as failed when addSlot fails', async () => {
+        mockClient.addSlot.mockRejectedValue(new Error('Connection failed'));
+        const child = createResoniteObject({
+          id: 'child-id',
+          components: [{ id: 'cc1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} }],
+        });
+        const obj = createResoniteObject({
+          id: 'fail-id',
+          components: [
+            { id: 'pc1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} },
+            { id: 'pc2', type: 'FrooxEngine.ValueField`1[System.Single]', fields: {} },
+          ],
+          children: [child],
+        });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        expect(result.success).toBe(false);
+        expect(result.componentTotal).toBe(3); // 2 parent + 1 child (SAP excluded)
+        expect(result.componentSuccess).toBe(0);
+        expect(result.componentFailed).toBe(3);
+      });
+    });
+
+    describe('component failure diagnostics', () => {
+      it('returns empty componentFailures when all components succeed', async () => {
+        const obj = createResoniteObject({
+          components: [{ id: 'c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} }],
+        });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        expect(result.componentFailures).toHaveLength(0);
+      });
+
+      it('records ComponentFailure with slotId, componentType, error and objectId', async () => {
+        mockClient.addComponent.mockRejectedValue(new Error('ResoniteLink timeout'));
+        const obj = createResoniteObject({
+          id: 'obj-001',
+          components: [{ id: 'c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} }],
+        });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        expect(result.componentFailures).toHaveLength(1);
+        expect(result.componentFailures[0]).toMatchObject({
+          slotId: 'created-slot-id',
+          componentType: 'FrooxEngine.ValueField`1[System.String]',
+          error: 'ResoniteLink timeout',
+          objectId: 'obj-001',
+        });
+      });
+
+      it('records one failure per failed addComponent call', async () => {
+        let callCount = 0;
+        mockClient.addComponent.mockImplementation(() => {
+          callCount++;
+          if (callCount % 2 === 0) return Promise.reject(new Error('fail'));
+          return Promise.resolve('created-component-id');
+        });
+        const obj = createResoniteObject({
+          components: [
+            { id: 'c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} },
+            { id: 'c2', type: 'FrooxEngine.ValueField`1[System.Single]', fields: {} },
+            { id: 'c3', type: 'FrooxEngine.ValueField`1[System.Boolean]', fields: {} },
+          ],
+        });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        expect(result.componentFailures).toHaveLength(1);
+        expect(result.componentFailures[0]?.componentType).toBe(
+          'FrooxEngine.ValueField`1[System.Single]'
+        );
+      });
+
+      it('propagates child componentFailures to parent result', async () => {
+        let callCount = 0;
+        mockClient.addComponent.mockImplementation(() => {
+          callCount++;
+          // fail on the 2nd addComponent call (child's component)
+          if (callCount === 2) return Promise.reject(new Error('child component fail'));
+          return Promise.resolve('created-component-id');
+        });
+        const child = createResoniteObject({
+          id: 'child-001',
+          components: [{ id: 'cc1', type: 'FrooxEngine.ValueField`1[System.Single]', fields: {} }],
+        });
+        const parent = createResoniteObject({
+          id: 'parent-001',
+          components: [{ id: 'pc1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} }],
+          children: [child],
+        });
+
+        const result = await slotBuilder.buildSlot(parent);
+
+        expect(result.success).toBe(true);
+        expect(result.componentFailures).toHaveLength(1);
+        expect(result.componentFailures[0]).toMatchObject({
+          objectId: 'child-001',
+          componentType: 'FrooxEngine.ValueField`1[System.Single]',
+        });
+      });
+
+      it('returns empty componentFailures when addSlot itself fails', async () => {
+        mockClient.addSlot.mockRejectedValue(new Error('Connection failed'));
+        const obj = createResoniteObject({
+          id: 'fail-id',
+          components: [{ id: 'c1', type: 'FrooxEngine.ValueField`1[System.String]', fields: {} }],
+        });
+
+        const result = await slotBuilder.buildSlot(obj);
+
+        expect(result.success).toBe(false);
+        // addSlot failed before any addComponent was attempted
+        expect(result.componentFailures).toHaveLength(0);
+      });
+    });
   });
 
   describe('buildSlots', () => {
@@ -683,6 +894,41 @@ describe('SlotBuilder', () => {
       expect(results[0].success).toBe(false);
       expect(results[0].error).toBe('Failed to create inventory location slot');
       expect(results[1].success).toBe(true);
+    });
+
+    it('normalizes component fields when outer slot preparation fails', async () => {
+      // Simulate ensureInventoryLocationSlot failing (outer catch in buildSlots).
+      // Before the fix, the fallback result lacked componentFailures/Total/etc.,
+      // causing importRunner's flatMap to crash on undefined.
+      let callCount = 0;
+      mockClient.addSlot.mockImplementation(() => {
+        callCount += 1;
+        // calls: 1=offsetSlot, 2=tablesSlot, 3=objectsSlot, 4=inventorySlot, 5=locationSlot (throws)
+        if (callCount === 5) {
+          return Promise.reject(new Error('Grouping slot failed'));
+        }
+        return Promise.resolve('created-slot-id');
+      });
+
+      const character = createResoniteObject({
+        id: 'char-1',
+        sourceType: 'character',
+        components: [
+          { id: 'c1', type: 'FrooxEngine.SomeComponent', fields: {} },
+          { id: 'c2', type: 'FrooxEngine.AnotherComponent', fields: {} },
+        ],
+      });
+
+      const results = await slotBuilder.buildSlots([character]);
+
+      expect(results).toHaveLength(1);
+      const result = results[0];
+      expect(result.success).toBe(false);
+      // Component fields must be present and not undefined
+      expect(result.componentFailures).toEqual([]);
+      expect(result.componentTotal).toBe(2);
+      expect(result.componentFailed).toBe(2);
+      expect(result.componentSuccess).toBe(0);
     });
 
     it('should return empty array for empty input', async () => {

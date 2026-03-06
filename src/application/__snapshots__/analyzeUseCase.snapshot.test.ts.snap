@@ -1,0 +1,554 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AnalyzeOutput snapshot (QA-001) > sample-all-object.zip — 全オブジェクト種別が含まれる 1`] = `
+{
+  "convertedObjects": [
+    {
+      "name": "モンスターA",
+      "position": {
+        "x": 5.5,
+        "y": 0.6,
+        "z": -9.5,
+      },
+    },
+    {
+      "name": "モンスターB",
+      "position": {
+        "x": 8.5,
+        "y": 0.6,
+        "z": -8.5,
+      },
+    },
+    {
+      "name": "モンスターC",
+      "position": {
+        "x": 5.5,
+        "y": 1.6500000000000001,
+        "z": -3.5,
+      },
+    },
+    {
+      "name": "キャラクターA",
+      "position": {
+        "x": 6.5,
+        "y": 0.65,
+        "z": -11.5,
+      },
+    },
+    {
+      "name": "キャラクターB",
+      "position": {
+        "x": 12.5,
+        "y": 0.6,
+        "z": -12.5,
+      },
+    },
+    {
+      "name": "キャラクターC",
+      "position": {
+        "x": 5.5,
+        "y": 0.5,
+        "z": -13.5,
+      },
+    },
+    {
+      "name": "新しいキャラクター",
+      "position": {
+        "x": 13.454546388829872,
+        "y": 0.5,
+        "z": -8.85009303173826,
+      },
+    },
+    {
+      "name": "D4",
+      "position": {
+        "x": 15.375628471518715,
+        "y": 0.5,
+        "z": -12.942705261557728,
+      },
+    },
+    {
+      "name": "カード",
+      "position": {
+        "x": 19,
+        "y": 0.001,
+        "z": -12.5,
+      },
+    },
+    {
+      "name": "トランプ山札",
+      "position": {
+        "x": 16,
+        "y": 0.001,
+        "z": -10,
+      },
+    },
+    {
+      "name": "最初のテーブル",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": -0,
+      },
+    },
+    {
+      "name": "共有メモ",
+      "position": {
+        "x": 17,
+        "y": 0,
+        "z": -8.5,
+      },
+    },
+  ],
+  "diagnostics": [],
+  "summary": {
+    "imageCount": 0,
+    "objectCount": 12,
+    "typeCounts": {
+      "card": 1,
+      "card-stack": 1,
+      "character": 7,
+      "dice-symbol": 1,
+      "table": 1,
+      "text-note": 1,
+    },
+    "xmlCount": 3,
+  },
+}
+`;
+
+exports[`AnalyzeOutput snapshot (QA-001) > sample-card.zip — summary + diagnostics + convertedObjects 1`] = `
+{
+  "convertedObjects": [
+    {
+      "name": "カード-default",
+      "position": {
+        "x": 10.5,
+        "y": 0.001,
+        "z": -5,
+      },
+    },
+    {
+      "name": "カード-back",
+      "position": {
+        "x": 13,
+        "y": 0.001,
+        "z": -5,
+      },
+    },
+    {
+      "name": "カード-self-only",
+      "position": {
+        "x": 15.5,
+        "y": 0.001,
+        "z": -5,
+      },
+    },
+    {
+      "name": "カード-rotated",
+      "position": {
+        "x": 1,
+        "y": 0.001,
+        "z": -1.5,
+      },
+    },
+    {
+      "name": "カード-frontImage",
+      "position": {
+        "x": 10.5,
+        "y": 0.001,
+        "z": -9,
+      },
+    },
+    {
+      "name": "カード-backImage",
+      "position": {
+        "x": 13,
+        "y": 0.001,
+        "z": -9,
+      },
+    },
+    {
+      "name": "カード-back-rotated",
+      "position": {
+        "x": 19,
+        "y": 0.001,
+        "z": -1.5,
+      },
+    },
+    {
+      "name": "トランプ山札-hiddenCount",
+      "position": {
+        "x": 4,
+        "y": 0.001,
+        "z": -8.5,
+      },
+    },
+    {
+      "name": "山札-rotated",
+      "position": {
+        "x": 7.5,
+        "y": 0.001,
+        "z": -9,
+      },
+    },
+    {
+      "name": "山札-逆位置",
+      "position": {
+        "x": 7,
+        "y": 0.001,
+        "z": -13,
+      },
+    },
+    {
+      "name": "山札-back",
+      "position": {
+        "x": 4,
+        "y": 0.001,
+        "z": -13,
+      },
+    },
+    {
+      "name": "山札-zero",
+      "position": {
+        "x": 0.5,
+        "y": 0.001,
+        "z": -10,
+      },
+    },
+    {
+      "name": "トランプ山札-default",
+      "position": {
+        "x": 4.041178419282662,
+        "y": 0.001,
+        "z": -4.313701843306224,
+      },
+    },
+    {
+      "name": "最初のテーブル",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": -0,
+      },
+    },
+  ],
+  "diagnostics": [],
+  "summary": {
+    "imageCount": 0,
+    "objectCount": 14,
+    "typeCounts": {
+      "card": 7,
+      "card-stack": 6,
+      "table": 1,
+    },
+    "xmlCount": 3,
+  },
+}
+`;
+
+exports[`AnalyzeOutput snapshot (QA-001) > sample-character.zip — summary + diagnostics + convertedObjects 1`] = `
+{
+  "convertedObjects": [
+    {
+      "name": "モンスターA",
+      "position": {
+        "x": 5.5,
+        "y": 0.6,
+        "z": -9.5,
+      },
+    },
+    {
+      "name": "モンスターB",
+      "position": {
+        "x": 8.5,
+        "y": 0.6,
+        "z": -8.5,
+      },
+    },
+    {
+      "name": "モンスターC",
+      "position": {
+        "x": 5.5,
+        "y": 1.6500000000000001,
+        "z": -3.5,
+      },
+    },
+    {
+      "name": "キャラクターA",
+      "position": {
+        "x": 6.5,
+        "y": 0.65,
+        "z": -11.5,
+      },
+    },
+    {
+      "name": "キャラクターB",
+      "position": {
+        "x": 12.5,
+        "y": 0.6,
+        "z": -12.5,
+      },
+    },
+    {
+      "name": "キャラクターC",
+      "position": {
+        "x": 5.5,
+        "y": 0.5,
+        "z": -13.5,
+      },
+    },
+    {
+      "name": "新しいキャラクター-change-image",
+      "position": {
+        "x": 1.5,
+        "y": 0.75,
+        "z": -0.5,
+      },
+    },
+    {
+      "name": "新しいキャラクター-blank-image",
+      "position": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": -0.5,
+      },
+    },
+    {
+      "name": "キャラクターA-共有",
+      "position": {
+        "x": 2.5,
+        "y": 0.65,
+        "z": -0.5,
+      },
+    },
+    {
+      "name": "キャラクターA-個人",
+      "position": {
+        "x": 3.5,
+        "y": 0.65,
+        "z": -0.5,
+      },
+    },
+    {
+      "name": "キャラクターA-墓場",
+      "position": {
+        "x": 4.5,
+        "y": 0.65,
+        "z": -0.5,
+      },
+    },
+    {
+      "name": "キャラクターA-rotated",
+      "position": {
+        "x": 1.5,
+        "y": 0.65,
+        "z": -2.5,
+      },
+    },
+    {
+      "name": "キャラクターA-rotated2",
+      "position": {
+        "x": 2.5,
+        "y": 0.65,
+        "z": -2.5,
+      },
+    },
+    {
+      "name": "最初のテーブル",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": -0,
+      },
+    },
+  ],
+  "diagnostics": [],
+  "summary": {
+    "imageCount": 0,
+    "objectCount": 14,
+    "typeCounts": {
+      "character": 13,
+      "table": 1,
+    },
+    "xmlCount": 3,
+  },
+}
+`;
+
+exports[`AnalyzeOutput snapshot (QA-001) > sample-dice.zip — summary + diagnostics + convertedObjects 1`] = `
+{
+  "convertedObjects": [
+    {
+      "name": "D4",
+      "position": {
+        "x": 1.5,
+        "y": 0.5,
+        "z": -1.5,
+      },
+    },
+    {
+      "name": "D6",
+      "position": {
+        "x": 3.5,
+        "y": 0.5,
+        "z": -1.5,
+      },
+    },
+    {
+      "name": "D8",
+      "position": {
+        "x": 5.5,
+        "y": 0.5,
+        "z": -1.5,
+      },
+    },
+    {
+      "name": "D10",
+      "position": {
+        "x": 7.5,
+        "y": 0.5,
+        "z": -1.5,
+      },
+    },
+    {
+      "name": "D10",
+      "position": {
+        "x": 9.5,
+        "y": 0.5,
+        "z": -1.5,
+      },
+    },
+    {
+      "name": "D12",
+      "position": {
+        "x": 11.5,
+        "y": 0.5,
+        "z": -1.5,
+      },
+    },
+    {
+      "name": "D20",
+      "position": {
+        "x": 13.5,
+        "y": 0.5,
+        "z": -1.5,
+      },
+    },
+    {
+      "name": "D4-出目変更",
+      "position": {
+        "x": 1.5,
+        "y": 0.5,
+        "z": -3.5,
+      },
+    },
+    {
+      "name": "D4-自分だけ見る",
+      "position": {
+        "x": 3.5,
+        "y": 0.5,
+        "z": -3.5,
+      },
+    },
+    {
+      "name": "D4-画像変更",
+      "position": {
+        "x": 5.5,
+        "y": 0.75,
+        "z": -3.5,
+      },
+    },
+    {
+      "name": "D4-回転",
+      "position": {
+        "x": 7.5,
+        "y": 0.5,
+        "z": -3.5,
+      },
+    },
+    {
+      "name": "最初のテーブル",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": -0,
+      },
+    },
+  ],
+  "diagnostics": [],
+  "summary": {
+    "imageCount": 0,
+    "objectCount": 12,
+    "typeCounts": {
+      "dice-symbol": 11,
+      "table": 1,
+    },
+    "xmlCount": 3,
+  },
+}
+`;
+
+exports[`AnalyzeOutput snapshot (QA-001) > sample-table.zip — summary + diagnostics + convertedObjects 1`] = `
+{
+  "convertedObjects": [
+    {
+      "name": "最初のテーブル",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": -0,
+      },
+    },
+    {
+      "name": "白紙のテーブル",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": -0,
+      },
+    },
+    {
+      "name": "白紙のテーブル2",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": -0,
+      },
+    },
+  ],
+  "diagnostics": [],
+  "summary": {
+    "imageCount": 0,
+    "objectCount": 3,
+    "typeCounts": {
+      "table": 3,
+    },
+    "xmlCount": 3,
+  },
+}
+`;
+
+exports[`AnalyzeOutput snapshot (QA-001) > sample-terrain.zip — summary + diagnostics + convertedObjects 1`] = `
+{
+  "convertedObjects": [
+    {
+      "name": "最初のテーブル",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "z": -0,
+      },
+    },
+  ],
+  "diagnostics": [],
+  "summary": {
+    "imageCount": 0,
+    "objectCount": 1,
+    "typeCounts": {
+      "table": 1,
+    },
+    "xmlCount": 3,
+  },
+}
+`;
