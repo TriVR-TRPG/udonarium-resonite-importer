@@ -204,9 +204,11 @@ function prepareObjectForSharedMeshes(
     }
   }
 
+  // Only remove mesh components that were successfully keyed for sharing.
+  // Meshes that could not be keyed (e.g. zero-width) stay inline to avoid dangling renderer refs.
+  const keyedMeshIds = new Set(localMeshIdToKey.keys());
   obj.components = obj.components.filter(
-    (component) =>
-      component.type !== COMPONENT_TYPES.BOX_MESH && component.type !== COMPONENT_TYPES.QUAD_MESH
+    (component) => !component.id || !keyedMeshIds.has(component.id)
   );
 
   // Apply uniform scale to the slot when mesh size differs from canonical

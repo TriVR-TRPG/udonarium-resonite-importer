@@ -155,6 +155,22 @@ describe('sharedMesh', () => {
     });
   });
 
+  it('preserves zero-width mesh inline to avoid dangling renderer references', () => {
+    const objects: ResoniteObject[] = [
+      createObject('quad-zero', COMPONENT_TYPES.QUAD_MESH, { x: 0, y: 3 }),
+    ];
+
+    const definitions = prepareSharedMeshDefinitions(objects);
+
+    expect(definitions).toHaveLength(0);
+    // Mesh component should remain inline
+    const mesh = objects[0].components.find((c) => c.type === COMPONENT_TYPES.QUAD_MESH);
+    expect(mesh).toBeDefined();
+    // Renderer should still reference the inline mesh
+    const renderer = objects[0].components.find((c) => c.type === COMPONENT_TYPES.MESH_RENDERER);
+    expect((renderer?.fields.Mesh as { targetId?: string })?.targetId).toBe('quad-zero-mesh');
+  });
+
   it('replaces mesh placeholders with created shared mesh component ids', () => {
     const objects: ResoniteObject[] = [
       createObject('quad-a', COMPONENT_TYPES.QUAD_MESH, { x: 4, y: 5 }),
