@@ -15,7 +15,7 @@
  * Options:
  *   --slot-id <id>     Export a specific slot by ID (skip interactive selection)
  *   --depth <n>        Maximum depth to traverse (default: 20)
- *   --output <path>    Output file path (default: stdout)
+ *   --output <path>    Output file path (default: src/__fixtures__/resonitelink/exported/<name>.json)
  *   --include-internal Include internal fields (persistent, UpdateOrder, etc.)
  */
 
@@ -23,9 +23,12 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import * as fs from 'fs';
+import * as path from 'path';
 import * as readline from 'readline';
 import { ResoniteLinkClient } from '../src/resonite/ResoniteLinkClient';
 import { getResoniteLinkPort, getResoniteLinkHost } from '../src/config/MappingConfig';
+
+const EXPORT_DIR = path.join(__dirname, '../src/__fixtures__/resonitelink/exported');
 
 // ── Types ───────────────────────────────────────────────────────────
 
@@ -401,7 +404,7 @@ Usage: npx ts-node scripts/export-slot-tree.ts [options]
 Options:
   --slot-id <id>       Export a specific slot by ID (skip interactive selection)
   --depth <n>          Maximum depth to traverse (default: 20)
-  --output, -o <path>  Output file path (default: stdout)
+  --output, -o <path>  Output file path (default: src/__fixtures__/resonitelink/exported/<name>.json)
   --include-internal   Include internal fields (persistent, UpdateOrder, Enabled)
   --help, -h           Show this help message
 
@@ -410,6 +413,15 @@ Environment:
   RESONITELINK_HOST    ResoniteLink host (default: localhost)
 
 `);
+}
+
+function sanitizeFilename(name: string): string {
+  return name.replace(/[^a-zA-Z0-9_\-.\u3000-\u9fff\uff00-\uffef]/g, '_').replace(/_+/g, '_');
+}
+
+function resolveDefaultOutputPath(slotName: string): string {
+  const filename = `${sanitizeFilename(slotName)}.json`;
+  return path.join(EXPORT_DIR, filename);
 }
 
 // ── Main ────────────────────────────────────────────────────────────
@@ -479,12 +491,10 @@ async function main(): Promise<void> {
     // Output
     const json = JSON.stringify(exported, null, 2) + '\n';
 
-    if (args.outputPath) {
-      fs.writeFileSync(args.outputPath, json);
-      process.stderr.write(`  Saved to: ${args.outputPath}\n`);
-    } else {
-      process.stdout.write(json);
-    }
+    const outputPath = args.outputPath ?? resolveDefaultOutputPath(exported.name || targetSlotId);
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, json);
+    process.stderr.write(`  Saved to: ${outputPath}\n`);
   } finally {
     client.disconnect();
     process.stderr.write('Disconnected.\n');
