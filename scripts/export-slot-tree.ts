@@ -30,11 +30,13 @@ import { getResoniteLinkPort, getResoniteLinkHost } from '../src/config/MappingC
 // ── Types ───────────────────────────────────────────────────────────
 
 interface ExportedComponent {
+  id: string;
   componentType: string;
   members: Record<string, unknown>;
 }
 
 interface ExportedSlot {
+  id: string;
   name: string;
   tag: string;
   position: { x: number; y: number; z: number };
@@ -61,6 +63,7 @@ interface RawSlotData {
 }
 
 interface RawComponentData {
+  id: string;
   componentType: string;
   members: Record<string, RawMemberValue>;
 }
@@ -197,6 +200,7 @@ function convertComponent(raw: RawComponentData, options: ExportOptions): Export
     members[name] = cleanMemberValue(value);
   }
   return {
+    id: raw.id,
     componentType: raw.componentType,
     members,
   };
@@ -226,6 +230,7 @@ async function convertSlotTree(
       } else {
         // Fallback: include component type without members
         components.push({
+          id: comp.id,
           componentType: comp.componentType ?? 'unknown',
           members: {},
         });
@@ -249,6 +254,7 @@ async function convertSlotTree(
   }
 
   return {
+    id: raw.id,
     name: raw.name?.value ?? '',
     tag: raw.tag?.value ?? '',
     position: raw.position?.value ?? { x: 0, y: 0, z: 0 },
